@@ -1,6 +1,6 @@
 telegram.bot:
   name: "trgb"
-  token: ${TRGB_TOKEN:2034549046:AAHxoDA7F8vVlU5oYrCx7SREJ0b7NsQfTGE}
+  token: ${TRGB_TOKEN}
 
 spring.datasource:
   driver-class-name: org.postgresql.Driver
