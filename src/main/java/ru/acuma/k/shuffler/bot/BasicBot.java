@@ -1,7 +1,7 @@
 package ru.acuma.k.shuffler.bot;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,7 +11,7 @@ import ru.acuma.k.shuffler.service.NonCommandService;
 
 import java.util.Objects;
 
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
 public class BasicBot extends TelegramLongPollingCommandBot {
 

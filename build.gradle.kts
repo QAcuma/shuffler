@@ -3,8 +3,8 @@ plugins {
     id("java-library")
     id("application")
     id("idea")
-    id("org.springframework.boot") version "2.5.5"
-    id("org.flywaydb.flyway") version "7.15.0"
+    id("org.springframework.boot") version "2.6.1"
+    id("org.flywaydb.flyway") version "8.2.3"
     id("nu.studer.jooq") version "5.2"
 }
 
@@ -27,23 +27,24 @@ val dbName = System.getenv("K_SHUFFLER_DB_NAME") ?: "k_shuffler" as String?
 val dbUser = System.getenv("K_SHUFFLER_DB_USER") ?: "k_shuffler" as String?
 val dbPassword = System.getenv("K_SHUFFLER_DB_PASSWORD") ?: "root" as String?
 
-var springBootVersion = "2.5.5"
-var lombokBootVersion = "1.18.20"
+var springBootVersion = "2.6.1"
+var lombokBootVersion = "1.18.22"
 var lang3Version = "3.12.0"
 var log4jVersion = "1.2.17"
 var junitVersion = "5.8.1"
-var telegramBotVersion = "5.3.0"
-var psqlVersion = "42.2.18"
-var flywayVersion = "7.15.0"
-var jooqVersion = "3.14.8"
-val codeGsonVersion = "2.8.8"
-val orikaVersion = "1.5.4"
+var telegramBotVersion = "5.5.0"
+var psqlVersion = "42.3.1"
+var flywayVersion = "8.2.3"
+var jooqVersion = "3.15.5"
+val codeGsonVersion = "2.8.9"
+val orikaVersion = "2.2.2"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jooq:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jooq:$springBootVersion")
+    implementation("dev.akkinoc.spring.boot:orika-spring-boot-starter:$orikaVersion")
 
     implementation("org.telegram:telegrambots:$telegramBotVersion")
     implementation("org.telegram:telegrambotsextensions:$telegramBotVersion")
@@ -57,8 +58,6 @@ dependencies {
     jooqGenerator("org.postgresql:postgresql:$psqlVersion")
 
     implementation("org.apache.commons:commons-lang3:$lang3Version")
-    implementation("log4j:log4j:$log4jVersion")
-    implementation("ma.glasnost.orika:orika-core:$orikaVersion")
 
     compileOnly("org.projectlombok:lombok:$lombokBootVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokBootVersion")

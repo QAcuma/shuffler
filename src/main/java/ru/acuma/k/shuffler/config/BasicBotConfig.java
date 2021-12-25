@@ -2,6 +2,7 @@ package ru.acuma.k.shuffler.config;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.acuma.k.shuffler.bot.BasicBot;
 
-@Log4j2
+@Slf4j
 @Configuration
 public class BasicBotConfig {
 
