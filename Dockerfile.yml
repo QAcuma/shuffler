@@ -3,8 +3,8 @@ services:
   postgres:
     image: postgres:13.3
     environment:
-      POSTGRES_DB: "trgb"
-      POSTGRES_USER: "trgb"
-      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: ${K_SHUFFLER_DB_NAME:localhost}
+      POSTGRES_USER: ${K_SHUFFLER_DB_USER:localhost}
+      POSTGRES_PASSWORD: ${K_SHUFFLER_DB_PASSWORD:localhost}
     ports:
       - "5432:5432"

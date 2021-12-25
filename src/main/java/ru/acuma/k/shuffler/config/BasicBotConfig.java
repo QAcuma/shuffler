@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffle.config;
+package ru.acuma.k.shuffler.config;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.acuma.k.shuffle.bot.BasicBot;
+import ru.acuma.k.shuffler.bot.BasicBot;
 
 @Log4j2
 @Configuration

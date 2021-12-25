@@ -1,9 +1,9 @@
-package ru.acuma.k.shuffle.service.impl;
+package ru.acuma.k.shuffler.service.impl;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.k.shuffle.service.MessageService;
+import ru.acuma.k.shuffler.service.MessageService;
 
 @Log4j2
 @Service

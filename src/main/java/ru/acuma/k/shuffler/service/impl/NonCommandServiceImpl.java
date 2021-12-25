@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffle.service.impl;
+package ru.acuma.k.shuffler.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -7,11 +7,11 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.acuma.k.shuffle.model.enums.ConstantReplies;
-import ru.acuma.k.shuffle.service.MessageService;
-import ru.acuma.k.shuffle.service.MessageWayService;
-import ru.acuma.k.shuffle.service.NonCommandService;
-import ru.acuma.k.shuffle.service.UserService;
+import ru.acuma.k.shuffler.model.enums.ConstantReplies;
+import ru.acuma.k.shuffler.service.MessageService;
+import ru.acuma.k.shuffler.service.MessageWayService;
+import ru.acuma.k.shuffler.service.NonCommandService;
+import ru.acuma.k.shuffler.service.UserService;
 
 import java.util.Objects;
 

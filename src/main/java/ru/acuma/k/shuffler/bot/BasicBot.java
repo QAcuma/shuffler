@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffle.bot;
+package ru.acuma.k.shuffler.bot;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -7,7 +7,7 @@ import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingC
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.acuma.k.shuffle.service.NonCommandService;
+import ru.acuma.k.shuffler.service.NonCommandService;
 
 import java.util.Objects;
 

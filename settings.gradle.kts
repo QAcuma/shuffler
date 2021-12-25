@@ -1,4 +1,4 @@
-rootProject.name = "trgb"
+rootProject.name = "k-shuffler"
 
 pluginManagement {
     repositories {

@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffle.config;
+package ru.acuma.k.shuffler.config;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.ExecuteListener;

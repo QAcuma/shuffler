@@ -21,11 +21,11 @@ repositories {
     mavenCentral()
 }
 
-val dbHost = System.getenv("TRGB_DB_SERVER_HOST") ?: "localhost" as String?
-val dbPort = System.getenv("TRGB_DB_SERVER_PORT") ?: "5432" as String?
-val dbName = System.getenv("TRGB_DB_NAME") ?: "trgb" as String?
-val dbUser = System.getenv("TRGB_DB_USER") ?: "trgb" as String?
-val dbPassword = System.getenv("TRGB_DB_PASSWORD") ?: "root" as String?
+val dbHost = System.getenv("K_SHUFFLER_DB_SERVER_HOST") ?: "localhost" as String?
+val dbPort = System.getenv("K_SHUFFLER_DB_SERVER_PORT") ?: "5432" as String?
+val dbName = System.getenv("K_SHUFFLER_DB_NAME") ?: "k_shuffler" as String?
+val dbUser = System.getenv("K_SHUFFLER_DB_USER") ?: "k_shuffler" as String?
+val dbPassword = System.getenv("K_SHUFFLER_DB_PASSWORD") ?: "root" as String?
 
 var springBootVersion = "2.5.5"
 var lombokBootVersion = "1.18.20"
@@ -62,14 +62,6 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok:$lombokBootVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokBootVersion")
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion") {
-        exclude(
-            group = "org.junit.vintage",
-            module = "junit-vintage-engine"
-        )
-    }
 }
 
 flyway {
@@ -123,7 +115,7 @@ jooq {
                         isFluentSetters = true
                     }
                     target.apply {
-                        packageName = "ru.acuma.trgb"
+                        packageName = "ru.acuma.k.shuffler"
                         directory = "jooq"
                     }
                     strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"

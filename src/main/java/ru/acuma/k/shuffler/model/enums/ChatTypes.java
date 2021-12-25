@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffle.model.enums;
+package ru.acuma.k.shuffler.model.enums;
 
 import lombok.Getter;
 

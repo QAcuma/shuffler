@@ -1,12 +1,12 @@
-package ru.acuma.k.shuffle.dao.impl;
+package ru.acuma.k.shuffler.dao.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Repository;
-import ru.acuma.k.shuffle.tables.pojos.UserInfo;
-import ru.acuma.k.shuffle.tables.records.UserInfoRecord;
-import ru.acuma.k.shuffle.dao.UserDao;
+import ru.acuma.k.shuffler.tables.pojos.UserInfo;
+import ru.acuma.k.shuffler.tables.records.UserInfoRecord;
+import ru.acuma.k.shuffler.dao.UserDao;
 
 import java.util.Objects;
 
@@ -24,33 +24,33 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Boolean isExists(Long telegramId) {
         return dsl.fetchExists(
-                dsl.selectFrom(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO)
-                        .where(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO.TELEGRAM_ID.eq(telegramId)));
+                dsl.selectFrom(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO)
+                        .where(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO.TELEGRAM_ID.eq(telegramId)));
     }
 
     @Override
     public Boolean isAllowed(Long telegramId) {
         return dsl.fetchExists(
-                dsl.selectFrom(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO)
-                        .where(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO.TELEGRAM_ID.eq(telegramId)
-                                .and(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO.IS_BLOCKED.eq(Boolean.FALSE)
-                                        .and(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO.DELETED_AT.isNull()
+                dsl.selectFrom(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO)
+                        .where(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO.TELEGRAM_ID.eq(telegramId)
+                                .and(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO.IS_BLOCKED.eq(Boolean.FALSE)
+                                        .and(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO.DELETED_AT.isNull()
                                         ))));
     }
 
     @Override
     public UserInfo get(Long telegramId) {
         Record record = dsl.select()
-                .from(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO)
-                .where(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO.TELEGRAM_ID.eq(telegramId))
+                .from(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO)
+                .where(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO.TELEGRAM_ID.eq(telegramId))
                 .fetchOne();
-        UserInfoRecord userInfoRecord = Objects.requireNonNull(record).into(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO);
+        UserInfoRecord userInfoRecord = Objects.requireNonNull(record).into(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO);
         return userInfoRecord.into(UserInfo.class);
     }
 
     @Override
     public Long save(UserInfo userInfo) {
-        UserInfoRecord record = dsl.newRecord(ru.acuma.k.shuffle.tables.UserInfo.USER_INFO, userInfo);
+        UserInfoRecord record = dsl.newRecord(ru.acuma.k.shuffler.tables.UserInfo.USER_INFO, userInfo);
         return (long) record.store();
     }
 
