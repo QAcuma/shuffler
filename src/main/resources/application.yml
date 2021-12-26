@@ -27,5 +27,7 @@ server:
     threads:
       max: 1000
       min-spare: 50
-
+java:
+  runtime:
+    version: 11
 
