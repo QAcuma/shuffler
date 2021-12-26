@@ -109,14 +109,16 @@ public class FlywaySchemaHistory extends TableImpl<FlywaySchemaHistoryRecord> {
     }
 
     /**
-     * Create an aliased <code>public.flyway_schema_history</code> table reference
+     * Create an aliased <code>public.flyway_schema_history</code> table
+     * reference
      */
     public FlywaySchemaHistory(String alias) {
         this(DSL.name(alias), FLYWAY_SCHEMA_HISTORY);
     }
 
     /**
-     * Create an aliased <code>public.flyway_schema_history</code> table reference
+     * Create an aliased <code>public.flyway_schema_history</code> table
+     * reference
      */
     public FlywaySchemaHistory(Name alias) {
         this(alias, FLYWAY_SCHEMA_HISTORY);
@@ -135,22 +137,17 @@ public class FlywaySchemaHistory extends TableImpl<FlywaySchemaHistoryRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return aliased() ? null : Public.PUBLIC;
     }
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.FLYWAY_SCHEMA_HISTORY_S_IDX);
+        return Arrays.asList(Indexes.FLYWAY_SCHEMA_HISTORY_S_IDX);
     }
 
     @Override
     public UniqueKey<FlywaySchemaHistoryRecord> getPrimaryKey() {
         return Keys.FLYWAY_SCHEMA_HISTORY_PK;
-    }
-
-    @Override
-    public List<UniqueKey<FlywaySchemaHistoryRecord>> getKeys() {
-        return Arrays.<UniqueKey<FlywaySchemaHistoryRecord>>asList(Keys.FLYWAY_SCHEMA_HISTORY_PK);
     }
 
     @Override

@@ -639,4 +639,29 @@ public class UserInfoRecord extends UpdatableRecordImpl<UserInfoRecord> implemen
         setUpdatedAt(updatedAt);
         setDeletedAt(deletedAt);
     }
+
+    /**
+     * Create a detached, initialised UserInfoRecord
+     */
+    public UserInfoRecord(ru.acuma.k.shuffler.tables.pojos.UserInfo value) {
+        super(UserInfo.USER_INFO);
+
+        if (value != null) {
+            setId(value.getId());
+            setTelegramId(value.getTelegramId());
+            setLanguageCode(value.getLanguageCode());
+            setIsBot(value.getIsBot());
+            setFirstName(value.getFirstName());
+            setLastName(value.getLastName());
+            setUserName(value.getUserName());
+            setIsBlocked(value.getIsBlocked());
+            setCanJoinGroups(value.getCanJoinGroups());
+            setCanReadAllGroupMessage(value.getCanReadAllGroupMessage());
+            setSupportInlineQueries(value.getSupportInlineQueries());
+            setLastMessageAt(value.getLastMessageAt());
+            setCreatedAt(value.getCreatedAt());
+            setUpdatedAt(value.getUpdatedAt());
+            setDeletedAt(value.getDeletedAt());
+        }
+    }
 }

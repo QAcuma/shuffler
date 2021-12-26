@@ -22,7 +22,6 @@ public class UserServiceImpl implements UserService {
         return userDao.get(telegramId);
     }
 
-    @Override
     public Boolean isStored(Long telegramId) {
         return userDao.isExists(telegramId);
     }

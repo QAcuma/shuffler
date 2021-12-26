@@ -4,19 +4,26 @@
 package ru.acuma.k.shuffler;
 
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 
+import ru.acuma.k.shuffler.tables.Event;
 import ru.acuma.k.shuffler.tables.FlywaySchemaHistory;
+import ru.acuma.k.shuffler.tables.Game;
+import ru.acuma.k.shuffler.tables.GroupInfo;
 import ru.acuma.k.shuffler.tables.UserInfo;
-import ru.acuma.k.shuffler.tables.records.UserInfoRecord;
+import ru.acuma.k.shuffler.tables.records.EventRecord;
 import ru.acuma.k.shuffler.tables.records.FlywaySchemaHistoryRecord;
+import ru.acuma.k.shuffler.tables.records.GameRecord;
+import ru.acuma.k.shuffler.tables.records.GroupInfoRecord;
+import ru.acuma.k.shuffler.tables.records.UserInfoRecord;
 
 
 /**
- * A class modelling foreign key relationships and constraints of tables in 
+ * A class modelling foreign key relationships and constraints of tables in
  * public.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
@@ -26,6 +33,15 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<EventRecord> EVENT_PKEY = Internal.createUniqueKey(Event.EVENT, DSL.name("event_pkey"), new TableField[] { Event.EVENT.ID }, true);
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
+    public static final UniqueKey<GameRecord> GAME_PKEY = Internal.createUniqueKey(Game.GAME, DSL.name("game_pkey"), new TableField[] { Game.GAME.ID }, true);
+    public static final UniqueKey<GroupInfoRecord> GROUP_INFO_PKEY = Internal.createUniqueKey(GroupInfo.GROUP_INFO, DSL.name("group_info_pkey"), new TableField[] { GroupInfo.GROUP_INFO.ID }, true);
     public static final UniqueKey<UserInfoRecord> USER_INFO_PKEY = Internal.createUniqueKey(UserInfo.USER_INFO, DSL.name("user_info_pkey"), new TableField[] { UserInfo.USER_INFO.ID }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<GameRecord, EventRecord> GAME__FK_EXISTS_GROUP = Internal.createForeignKey(Game.GAME, DSL.name("fk_exists_group"), new TableField[] { Game.GAME.EVENT_ID }, Keys.EVENT_PKEY, new TableField[] { Event.EVENT.ID }, true);
 }

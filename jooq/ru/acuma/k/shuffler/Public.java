@@ -11,7 +11,10 @@ import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
+import ru.acuma.k.shuffler.tables.Event;
 import ru.acuma.k.shuffler.tables.FlywaySchemaHistory;
+import ru.acuma.k.shuffler.tables.Game;
+import ru.acuma.k.shuffler.tables.GroupInfo;
 import ru.acuma.k.shuffler.tables.UserInfo;
 
 
@@ -29,9 +32,24 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
+     * The table <code>public.event</code>.
+     */
+    public final Event EVENT = Event.EVENT;
+
+    /**
      * The table <code>public.flyway_schema_history</code>.
      */
     public final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
+
+    /**
+     * The table <code>public.game</code>.
+     */
+    public final Game GAME = Game.GAME;
+
+    /**
+     * The table <code>public.group_info</code>.
+     */
+    public final GroupInfo GROUP_INFO = GroupInfo.GROUP_INFO;
 
     /**
      * The table <code>public.user_info</code>.
@@ -53,8 +71,12 @@ public class Public extends SchemaImpl {
 
     @Override
     public final List<Table<?>> getTables() {
-        return Arrays.<Table<?>>asList(
+        return Arrays.asList(
+            Event.EVENT,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
-            UserInfo.USER_INFO);
+            Game.GAME,
+            GroupInfo.GROUP_INFO,
+            UserInfo.USER_INFO
+        );
     }
 }

@@ -1,16 +1,14 @@
 package ru.acuma.k.shuffler.model.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum ChatTypes {
 
     GROUP("group"),
     PRIVATE("private");
 
-    public String value;
-
-    ChatTypes(String value) {
-        this.value = value;
-    }
+    public final String value;
 }

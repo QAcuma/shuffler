@@ -1,5 +1,5 @@
 telegram.bot:
-  name: "k-shuffler"
+  name: "kicker_shuffler_bot"
   token: ${K_SHUFFLER_TOKEN:5009812908:AAFcQMWnf4q8elnFM2vtFCTadHVUtxb_jL8}
 
 spring.datasource:

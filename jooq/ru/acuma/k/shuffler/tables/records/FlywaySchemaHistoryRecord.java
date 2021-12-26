@@ -449,4 +449,24 @@ public class FlywaySchemaHistoryRecord extends UpdatableRecordImpl<FlywaySchemaH
         setExecutionTime(executionTime);
         setSuccess(success);
     }
+
+    /**
+     * Create a detached, initialised FlywaySchemaHistoryRecord
+     */
+    public FlywaySchemaHistoryRecord(ru.acuma.k.shuffler.tables.pojos.FlywaySchemaHistory value) {
+        super(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY);
+
+        if (value != null) {
+            setInstalledRank(value.getInstalledRank());
+            setVersion(value.getVersion());
+            setDescription(value.getDescription());
+            setType(value.getType());
+            setScript(value.getScript());
+            setChecksum(value.getChecksum());
+            setInstalledBy(value.getInstalledBy());
+            setInstalledOn(value.getInstalledOn());
+            setExecutionTime(value.getExecutionTime());
+            setSuccess(value.getSuccess());
+        }
+    }
 }

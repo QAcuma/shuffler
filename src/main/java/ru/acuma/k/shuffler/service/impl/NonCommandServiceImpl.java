@@ -32,7 +32,7 @@ public class NonCommandServiceImpl implements NonCommandService {
      */
     private String getUserName(Message msg) {
         User user = msg.getFrom();
-        return Objects.isNull(user.getFirstName()) ? user.getFirstName() : user.getUserName();
+        return user.getFirstName() == null ? user.getFirstName() : user.getUserName();
     }
 
     /**
@@ -57,6 +57,6 @@ public class NonCommandServiceImpl implements NonCommandService {
         if (!userService.validate(message.getFrom())) {
             return setAnswer(message.getChatId(), ConstantReplies.SERVICE_UNAVAILABLE.getValue());
         }
-        return setAnswer(message.getChatId(), ConstantReplies.PONG.getValue());
+        return setAnswer(message.getChatId(), ConstantReplies.UNSUPPORTED_COMMAND.getValue());
     }
 }

@@ -4,7 +4,10 @@
 package ru.acuma.k.shuffler;
 
 
+import ru.acuma.k.shuffler.tables.Event;
 import ru.acuma.k.shuffler.tables.FlywaySchemaHistory;
+import ru.acuma.k.shuffler.tables.Game;
+import ru.acuma.k.shuffler.tables.GroupInfo;
 import ru.acuma.k.shuffler.tables.UserInfo;
 
 
@@ -15,9 +18,24 @@ import ru.acuma.k.shuffler.tables.UserInfo;
 public class Tables {
 
     /**
+     * The table <code>public.event</code>.
+     */
+    public static final Event EVENT = Event.EVENT;
+
+    /**
      * The table <code>public.flyway_schema_history</code>.
      */
     public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
+
+    /**
+     * The table <code>public.game</code>.
+     */
+    public static final Game GAME = Game.GAME;
+
+    /**
+     * The table <code>public.group_info</code>.
+     */
+    public static final GroupInfo GROUP_INFO = GroupInfo.GROUP_INFO;
 
     /**
      * The table <code>public.user_info</code>.
