@@ -9,5 +9,5 @@ public interface UserService {
 
     Boolean hasAccess(Long telegramId);
 
-    Boolean validate(User user);
+    Boolean authenticate(User user);
 }

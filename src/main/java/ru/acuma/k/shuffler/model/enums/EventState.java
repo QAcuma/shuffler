@@ -7,10 +7,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum EventState {
 
-    CREATED,
-    READY,
-    CHECKING,
-    PLAYING,
-    FINISHED
+    CREATED(2),
+    CANCEL_CHECKING(1),
+    READY(3),
+    PLAYING(2),
+    MEMBER_CHECKING(1),
+    FINISH_CHECKING(1),
+    FINISHED(2);
+
+    private final int rows;
 
 }

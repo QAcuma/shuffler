@@ -19,19 +19,16 @@ public class UserDaoImpl implements UserDao {
     private final DSLContext dsl;
 
     @Override
-    public Boolean isActual(UserInfo userInfo) {
-        return Boolean.TRUE;
-    }
-
-    @Override
-    public Boolean isExists(Long telegramId) {
+    public boolean isBlocked(Long telegramId) {
         return dsl.fetchExists(
                 dsl.selectFrom(USER_INFO)
-                        .where(USER_INFO.TELEGRAM_ID.eq(telegramId)));
+                        .where(USER_INFO.TELEGRAM_ID.eq(telegramId)
+                                .and(USER_INFO.IS_BLOCKED.eq(Boolean.TRUE)
+                                )));
     }
 
     @Override
-    public Boolean isAllowed(Long telegramId) {
+    public boolean isActive(Long telegramId) {
         return dsl.fetchExists(
                 dsl.selectFrom(USER_INFO)
                         .where(USER_INFO.TELEGRAM_ID.eq(telegramId)

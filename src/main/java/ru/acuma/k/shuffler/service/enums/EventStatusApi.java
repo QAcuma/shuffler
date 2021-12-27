@@ -6,4 +6,6 @@ public interface EventStatusApi {
 
     public String getAlias();
 
+    public int getRow();
+
 }

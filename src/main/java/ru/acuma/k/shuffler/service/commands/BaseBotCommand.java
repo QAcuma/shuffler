@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import ru.acuma.k.shuffler.cache.EventHolder;
+import ru.acuma.k.shuffler.cache.EventContextService;
 
-public abstract class CallbackBotCommand extends BotCommand {
+public abstract class BaseBotCommand extends BotCommand {
 
     @Autowired
-    private EventHolder eventHolder;
+    private EventContextService eventContextService;
 
     /**
      * Construct a command
@@ -18,13 +18,15 @@ public abstract class CallbackBotCommand extends BotCommand {
      *                          enter into chat)
      * @param description       the description of this command
      */
-    public CallbackBotCommand(String commandIdentifier, String description) {
+    public BaseBotCommand(String commandIdentifier, String description) {
         super(commandIdentifier, description);
     }
 
     @Override
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
-        eventHolder.setSourceMessage(message.getChatId(), message.getMessageId());
-        super.processMessage(absSender, message, arguments);
+        if (message.getChat() != null && eventContextService.isActive(message.getChatId())) {
+            eventContextService.getEvent(message.getChatId()).getMessages().add(message.getMessageId());
+        }
+        super.processMessage(absSender, message, new String[]{message.getMessageId().toString()});
     }
 }

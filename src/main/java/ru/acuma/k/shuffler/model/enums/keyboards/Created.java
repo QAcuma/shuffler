@@ -9,10 +9,12 @@ import ru.acuma.k.shuffler.service.enums.EventStatusApi;
 @AllArgsConstructor
 public enum Created implements EventStatusApi {
 
-    BUTTON_JOIN(Command.JOIN.getValue(), "Играю!"),
-    BUTTON_LEAVE(Command.LEAVE.getValue(), "Не смогу :(");
+    BUTTON_JOIN(Command.JOIN.getCommand(), "⚽️ Играю!", 1),
+    BUTTON_LEAVE(Command.LEAVE.getCommand(), "\uD83E\uDDD1\uD83C\uDFFF\u200D\uD83E\uDDBC Не могу", 1),
+    BUTTON_CANCEL(Command.CANCEL.getCommand(), "❌ Отменить турнир ❌", 2);
 
     public final String action;
     public final String alias;
+    public final int row;
 
 }

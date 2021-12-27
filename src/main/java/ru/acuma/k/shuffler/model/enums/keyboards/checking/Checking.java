@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffler.model.enums.keyboards;
+package ru.acuma.k.shuffler.model.enums.keyboards.checking;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,11 @@ import ru.acuma.k.shuffler.service.enums.EventStatusApi;
 @AllArgsConstructor
 public enum Checking implements EventStatusApi {
 
-    BUTTON_YES(Command.YES.getValue(), "Да"),
-    BUTTON_NO(Command.NO.getValue(), "Нет");
+    BUTTON_YES(Command.YES.getCommand(), "Да", 1),
+    BUTTON_NO(Command.NO.getCommand(), "Нет", 1);
 
     public final String action;
     public final String alias;
+    public final int row;
 
 }

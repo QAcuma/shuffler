@@ -4,11 +4,9 @@ import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 
 public interface UserDao {
 
-    Boolean isActual(UserInfo user);
+    boolean isActive(Long telegramId);
 
-    Boolean isExists(Long telegramId);
-
-    Boolean isAllowed(Long telegramId);
+    boolean isBlocked(Long telegramId);
 
     UserInfo get(Long telegramId);
 

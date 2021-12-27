@@ -7,16 +7,18 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Command {
 
-    START("start"),
     KICKER("kicker"),
     JOIN("join"),
     LEAVE("leave"),
-    SHUFFLE("shuffle"),
+    CANCEL("cancel"),
+    WAIT("wait"),
     YES("yes"),
     NO("no"),
+    SHUFFLE("shuffle"),
     RESULT("result"),
     FINISH("finish"),
+    RESET("reset"),
     BEGIN("begin");
 
-    private final String value;
+    private final String command;
 }

@@ -9,11 +9,16 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.k.shuffler.service.NonCommandService;
-import ru.acuma.k.shuffler.service.commands.BeginCommand;
+import ru.acuma.k.shuffler.service.UserService;
+import ru.acuma.k.shuffler.service.commands.CancelCommand;
 import ru.acuma.k.shuffler.service.commands.JoinCommand;
 import ru.acuma.k.shuffler.service.commands.KickerCommand;
 import ru.acuma.k.shuffler.service.commands.LeaveCommand;
+import ru.acuma.k.shuffler.service.commands.NoCommand;
+import ru.acuma.k.shuffler.service.commands.ResetCommand;
 import ru.acuma.k.shuffler.service.commands.ShuffleCommand;
+import ru.acuma.k.shuffler.service.commands.WaitCommand;
+import ru.acuma.k.shuffler.service.commands.YesCommand;
 
 import javax.annotation.PostConstruct;
 import java.util.Objects;
@@ -23,6 +28,9 @@ public class KickerBot extends TelegramLongPollingCommandBot {
 
     private final String BOT_NAME;
     private final String BOT_TOKEN;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private NonCommandService nonCommandService;
@@ -37,10 +45,22 @@ public class KickerBot extends TelegramLongPollingCommandBot {
     private LeaveCommand leaveCommand;
 
     @Autowired
+    private CancelCommand cancelCommand;
+
+    @Autowired
     private ShuffleCommand shuffleCommand;
 
     @Autowired
-    private BeginCommand beginCommand;
+    private YesCommand yesCommand;
+
+    @Autowired
+    private NoCommand noCommand;
+
+    @Autowired
+    private WaitCommand waitCommand;
+
+    @Autowired
+    private ResetCommand resetCommand;
 
 
     public KickerBot(String botName, String botToken) {
@@ -54,13 +74,17 @@ public class KickerBot extends TelegramLongPollingCommandBot {
         register(kickerCommand);
         register(joinCommand);
         register(leaveCommand);
+        register(cancelCommand);
         register(shuffleCommand);
-        register(beginCommand);
+        register(yesCommand);
+        register(noCommand);
+        register(waitCommand);
+        register(resetCommand);
     }
 
     @Override
     protected boolean filter(Message message) {
-        return !message.getChat().isGroupChat();
+        return !message.getChat().isGroupChat() || !userService.authenticate(message.getFrom());
     }
 
     @Override

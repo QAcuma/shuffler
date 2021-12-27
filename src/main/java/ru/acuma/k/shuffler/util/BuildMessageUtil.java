@@ -1,7 +1,5 @@
 package ru.acuma.k.shuffler.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.acuma.k.shuffler.cache.EventHolder;
 import ru.acuma.k.shuffler.model.domain.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
 import ru.acuma.k.shuffler.service.enums.EventConstantApi;
@@ -9,9 +7,6 @@ import ru.acuma.k.shuffler.service.enums.EventConstantApi;
 import java.util.stream.Collectors;
 
 public final class BuildMessageUtil {
-
-    @Autowired
-    private EventHolder eventHolder;
 
     private BuildMessageUtil() {
     }
@@ -23,6 +18,19 @@ public final class BuildMessageUtil {
                         " " +
                         user.getLastName())
                 .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    public static String buildCancelMessage(KickerEvent event) {
+        switch (event.getEventState()) {
+            case CANCEL_CHECKING:
+                return EventConstant.CANCEL_CHECKING_MESSAGE.getText();
+            case MEMBER_CHECKING:
+                return EventConstant.MEMBER_CHECKING_MESSAGE.getText();
+            case FINISH_CHECKING:
+                return EventConstant.FINISH_CHECKING_MESSAGE.getText();
+            default:
+                return EventConstant.UNEXPECTED_CHECKING_MESSAGE.getText();
+        }
     }
 
 

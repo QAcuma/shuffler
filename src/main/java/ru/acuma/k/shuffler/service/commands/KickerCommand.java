@@ -1,62 +1,52 @@
 package ru.acuma.k.shuffler.service.commands;
 
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import ru.acuma.k.shuffler.cache.EventHolder;
-import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.cache.EventContextService;
 import ru.acuma.k.shuffler.model.enums.Command;
-import ru.acuma.k.shuffler.model.enums.EventState;
-import ru.acuma.k.shuffler.model.enums.keyboards.Created;
 import ru.acuma.k.shuffler.service.KeyboardService;
+import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.util.BuildMessageUtil;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 @Component
-public class KickerCommand extends BotCommand {
+public class KickerCommand extends BaseBotCommand {
 
-    @Autowired
-    private EventHolder eventHolder;
+    private final EventContextService eventContextService;
 
-    @Autowired
-    private KeyboardService keyboardService;
+    private final KeyboardService keyboardService;
 
-    public KickerCommand() {
-        super(Command.KICKER.getValue(), "Время покрутить шашлыки");
+    private final MaintenanceService maintenanceService;
+
+    public KickerCommand(EventContextService eventContextService, KeyboardService keyboardService, MaintenanceService maintenanceService) {
+        super(Command.KICKER.getCommand(), "Время покрутить шашлыки");
+        this.eventContextService = eventContextService;
+        this.keyboardService = keyboardService;
+        this.maintenanceService = maintenanceService;
     }
 
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        if (eventHolder.isActive(chat.getId())) {
+        maintenanceService.sweepFromArgs(absSender, arguments, chat.getId());
+        if (eventContextService.isActive(chat.getId())) {
             return;
         }
+        var event = eventContextService.buildEvent(chat.getId());
+        var keyboard = keyboardService.getKeyboard(event.getEventState());
 
-        KickerEvent event = KickerEvent.builder()
-                .eventState(EventState.CREATED)
-                .groupId(chat.getId())
-                .startedAt(LocalDateTime.now())
-                .build();
-
-        eventHolder.addEvent(event);
-
-        var keyboard = keyboardService.getKeyboard(chat.getId());
         SendMessage response = SendMessage.builder()
-                .text(BuildMessageUtil.buildCreatedMessage(eventHolder.getEvent(chat.getId())))
-                .chatId(chat.getId().toString())
+                .text(BuildMessageUtil.buildCreatedMessage(event))
+                .chatId(String.valueOf(event.getGroupId()))
                 .replyMarkup(keyboard)
                 .build();
-        absSender.execute(response);
+
+        event.getMessages().add(absSender.execute(response).getMessageId());
     }
 }
