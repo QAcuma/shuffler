@@ -41,7 +41,7 @@ public class CancelCommand extends BaseBotCommand {
                 .build();
 
         SendMessage response = SendMessage.builder()
-                .text(BuildMessageUtil.buildCancelMessage(event))
+                .text(BuildMessageUtil.buildCheckingMessage(event))
                 .chatId(String.valueOf(chat.getId()))
                 .replyMarkup(keyboardService.getTimedCheckingKeyboard(delayedService.getTimeout()))
                 .build();

@@ -33,8 +33,12 @@ public class ResetCommand extends BaseBotCommand {
         if (user.getId().equals(ID)) {
             log.info("User {} initialize reset process in chat {}", user.getFirstName(), chat.getTitle());
             var event = eventContextService.getEvent(chat.getId());
-            maintenanceService.sweepChat(absSender, event.getMessages(), chat.getId());
-            maintenanceService.sweepEvent(event, false);
+            try {
+                maintenanceService.sweepChat(absSender, event.getMessages(), chat.getId());
+                maintenanceService.sweepEvent(event, false);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
         }
     }
 }

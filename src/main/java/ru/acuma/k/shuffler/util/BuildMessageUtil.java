@@ -20,10 +20,12 @@ public final class BuildMessageUtil {
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 
-    public static String buildCancelMessage(KickerEvent event) {
+    public static String buildCheckingMessage(KickerEvent event) {
         switch (event.getEventState()) {
             case CANCEL_CHECKING:
                 return EventConstant.CANCEL_CHECKING_MESSAGE.getText();
+            case BEGIN_CHECKING:
+                return EventConstant.BEGIN_CHECKING_MESSAGE.getText();
             case MEMBER_CHECKING:
                 return EventConstant.MEMBER_CHECKING_MESSAGE.getText();
             case FINISH_CHECKING:
@@ -32,6 +34,4 @@ public final class BuildMessageUtil {
                 return EventConstant.UNEXPECTED_CHECKING_MESSAGE.getText();
         }
     }
-
-
 }

@@ -36,6 +36,7 @@ public class NoCommand extends BaseBotCommand {
         maintenanceService.sweepFromArgs(absSender, arguments, chat.getId());
         switch (event.getEventState()) {
             case CANCEL_CHECKING:
+            case BEGIN_CHECKING:
                 var newState = event.getMembers().size() >= eventContextService.getReadySize() ? EventState.READY : EventState.CREATED;
                 event.setEventState(newState);
                 break;

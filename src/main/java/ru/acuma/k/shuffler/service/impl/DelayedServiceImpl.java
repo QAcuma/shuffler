@@ -36,7 +36,7 @@ public class DelayedServiceImpl implements DelayedService {
         EditMessageText update = EditMessageText.builder()
                 .chatId(String.valueOf(event.getGroupId()))
                 .messageId(messageId)
-                .text(BuildMessageUtil.buildCancelMessage(event))
+                .text(BuildMessageUtil.buildCheckingMessage(event))
                 .build();
 
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
