@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Repository;
+import ru.acuma.k.shuffler.dao.UserDao;
 import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 import ru.acuma.k.shuffler.tables.records.UserInfoRecord;
-import ru.acuma.k.shuffler.dao.UserDao;
 
 import java.util.Objects;
 

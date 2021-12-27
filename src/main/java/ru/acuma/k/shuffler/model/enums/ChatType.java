@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ChatTypes {
+public enum ChatType {
 
     GROUP("group"),
     PRIVATE("private");

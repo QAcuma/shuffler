@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ConstantReplies {
+public enum ConstantReply {
 
     SERVICE_UNAVAILABLE("Прости малышка, сервис недоступен для тебя"),
     UNSUPPORTED_COMMAND("Команда не поддерживается"),

@@ -1,14 +1,13 @@
 package ru.acuma.k.shuffler.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.acuma.k.shuffler.model.enums.ConstantReplies;
+import ru.acuma.k.shuffler.model.enums.ConstantReply;
 import ru.acuma.k.shuffler.service.MessageService;
 import ru.acuma.k.shuffler.service.MessageWayService;
 import ru.acuma.k.shuffler.service.NonCommandService;
@@ -55,8 +54,8 @@ public class NonCommandServiceImpl implements NonCommandService {
             return null;
         }
         if (!userService.validate(message.getFrom())) {
-            return setAnswer(message.getChatId(), ConstantReplies.SERVICE_UNAVAILABLE.getValue());
+            return setAnswer(message.getChatId(), ConstantReply.SERVICE_UNAVAILABLE.getValue());
         }
-        return setAnswer(message.getChatId(), ConstantReplies.UNSUPPORTED_COMMAND.getValue());
+        return setAnswer(message.getChatId(), ConstantReply.UNSUPPORTED_COMMAND.getValue());
     }
 }
