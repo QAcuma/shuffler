@@ -12,7 +12,7 @@ public enum Ready implements EventStatusApi {
     BUTTON_JOIN(Command.JOIN.getCommand(), "Играю!", 1),
     BUTTON_LEAVE(Command.LEAVE.getCommand(), "Не смогу :(", 1),
     BUTTON_CANCEL(Command.CANCEL.getCommand(), "❌ Отменить турнир ❌", 2),
-    BUTTON_SHUFFLE(Command.SHUFFLE.getCommand(), "✅ Начать турнир ✅", 3);
+    BUTTON_SHUFFLE(Command.BEGIN.getCommand(), "✅ Начать турнир ✅", 3);
 
     public final String action;
     public final String alias;

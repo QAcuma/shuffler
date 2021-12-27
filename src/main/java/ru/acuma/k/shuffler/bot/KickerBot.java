@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.k.shuffler.service.NonCommandService;
 import ru.acuma.k.shuffler.service.UserService;
+import ru.acuma.k.shuffler.service.commands.BeginCommand;
 import ru.acuma.k.shuffler.service.commands.CancelCommand;
 import ru.acuma.k.shuffler.service.commands.JoinCommand;
 import ru.acuma.k.shuffler.service.commands.KickerCommand;
@@ -60,6 +61,9 @@ public class KickerBot extends TelegramLongPollingCommandBot {
     private WaitCommand waitCommand;
 
     @Autowired
+    private BeginCommand beginCommand;
+
+    @Autowired
     private ResetCommand resetCommand;
 
 
@@ -79,6 +83,7 @@ public class KickerBot extends TelegramLongPollingCommandBot {
         register(yesCommand);
         register(noCommand);
         register(waitCommand);
+        register(beginCommand);
         register(resetCommand);
     }
 

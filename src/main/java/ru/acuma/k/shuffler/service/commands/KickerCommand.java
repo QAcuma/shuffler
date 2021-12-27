@@ -19,9 +19,7 @@ import java.util.Collections;
 public class KickerCommand extends BaseBotCommand {
 
     private final EventContextService eventContextService;
-
     private final KeyboardService keyboardService;
-
     private final MaintenanceService maintenanceService;
 
     public KickerCommand(EventContextService eventContextService, KeyboardService keyboardService, MaintenanceService maintenanceService) {

@@ -7,10 +7,10 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.k.shuffler.model.enums.Command;
 
 @Component
-public class ShuffleCommand extends BaseBotCommand {
+public class BeginCommand extends BaseBotCommand {
 
-    public ShuffleCommand() {
-        super(Command.SHUFFLE.getCommand(), "Распределить команды");
+    public BeginCommand() {
+        super(Command.BEGIN.getCommand(), "Начать турнир");
     }
 
     @Override
