@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.k.shuffler.cache.EventContextService;
+import ru.acuma.k.shuffler.model.domain.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.model.enums.keyboards.Created;
 import ru.acuma.k.shuffler.model.enums.keyboards.Finished;
@@ -31,9 +32,15 @@ public class KeyboardServiceImpl implements KeyboardService {
     private final EventContextService eventContextService;
 
     @Override
-    public InlineKeyboardMarkup getKeyboard(EventState eventState) {
-        var names = getButtons(eventState);
+    public InlineKeyboardMarkup getKeyboard(KickerEvent event) {
+        var names = getButtons(event.getEventState());
         return buildKeyboard(names);
+    }
+
+    @Override
+    public InlineKeyboardMarkup getEmptyKeyboard() {
+        return InlineKeyboardMarkup.builder()
+                .build();
     }
 
     @Override
@@ -102,6 +109,7 @@ public class KeyboardServiceImpl implements KeyboardService {
             case READY:
                 return List.of(Ready.values());
             case CANCEL_CHECKING:
+            case BEGIN_CHECKING:
             case MEMBER_CHECKING:
             case FINISH_CHECKING:
                 return List.of(Checking.values());

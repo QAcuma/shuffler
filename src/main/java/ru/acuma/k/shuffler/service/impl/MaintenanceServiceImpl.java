@@ -30,6 +30,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
                     .build();
             try {
                 absSender.execute(deleteMessage);
+                eventContextService.unregisterMessage(groupId, id);
             } catch (TelegramApiException e) {
                 log.error(e.getMessage());
             }
@@ -40,6 +41,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     public void sweepFromArgs(AbsSender absSender, String[] args, Long groupId) {
         Integer messageId = Integer.valueOf(Arrays.stream(args).findFirst().orElse("0"));
         sweepChat(absSender, Collections.singleton(messageId), groupId);
+        eventContextService.unregisterMessage(groupId, messageId);
     }
 
     @Override

@@ -1,9 +1,17 @@
 package ru.acuma.k.shuffler.service;
 
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.model.enums.messages.MessageType;
 
 public interface MessageService {
 
-    Message income(Message message);
+    BotApiMethod<Message> sendMessage(KickerEvent event, MessageType type);
+
+    EditMessageText updateMessage(KickerEvent event, Integer messageId, MessageType type);
+
+    EditMessageText updateLobbyMessage(KickerEvent event);
 
 }

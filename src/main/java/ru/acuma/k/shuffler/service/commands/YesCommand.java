@@ -10,7 +10,7 @@ import ru.acuma.k.shuffler.cache.EventContextService;
 import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
-import ru.acuma.k.shuffler.service.KeyboardService;
+import ru.acuma.k.shuffler.service.EventService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 
 import java.util.Collections;
@@ -22,13 +22,14 @@ import java.util.concurrent.TimeUnit;
 public class YesCommand extends BaseBotCommand {
 
     private final EventContextService eventContextService;
-
     private final MaintenanceService maintenanceService;
+    private final EventService eventService;
 
-    public YesCommand(EventContextService eventContextService, KeyboardService keyboardService, MaintenanceService maintenanceService) {
+    public YesCommand(EventContextService eventContextService, MaintenanceService maintenanceService, EventService eventService) {
         super(Command.YES.getCommand(), "Да");
         this.eventContextService = eventContextService;
         this.maintenanceService = maintenanceService;
+        this.eventService = eventService;
     }
 
     @SneakyThrows

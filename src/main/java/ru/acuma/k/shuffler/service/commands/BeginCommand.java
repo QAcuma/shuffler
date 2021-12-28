@@ -10,45 +10,38 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.k.shuffler.cache.EventContextService;
 import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.model.enums.EventState;
-import ru.acuma.k.shuffler.service.DelayedService;
-import ru.acuma.k.shuffler.service.KeyboardService;
+import ru.acuma.k.shuffler.model.enums.messages.MessageType;
+import ru.acuma.k.shuffler.service.EventStateService;
+import ru.acuma.k.shuffler.service.ExecuteService;
+import ru.acuma.k.shuffler.service.MessageService;
 import ru.acuma.k.shuffler.util.BuildMessageUtil;
+
+import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
 
 @Component
 public class BeginCommand extends BaseBotCommand {
 
     private final EventContextService eventContextService;
-    private final KeyboardService keyboardService;
-    private final DelayedService delayedService;
+    private final EventStateService eventStateService;
+    private final ExecuteService executeService;
+    private final MessageService messageService;
 
-    public BeginCommand(EventContextService eventContextService, KeyboardService keyboardService, DelayedService delayedService) {
+    public BeginCommand(EventContextService eventContextService, EventStateService eventStateService, ExecuteService executeService, MessageService messageService) {
         super(Command.BEGIN.getCommand(), "Начать турнир");
         this.eventContextService = eventContextService;
-        this.keyboardService = keyboardService;
-        this.delayedService = delayedService;
+        this.eventStateService = eventStateService;
+        this.executeService = executeService;
+        this.messageService = messageService;
     }
 
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-
         var event = eventContextService.buildEvent(chat.getId());
-        event.setEventState(EventState.BEGIN_CHECKING);
 
-        EditMessageText edited = EditMessageText.builder()
-                .chatId(String.valueOf(chat.getId()))
-                .messageId(event.getBaseMessage())
-                .text(BuildMessageUtil.buildCreatedMessage(event))
-                .build();
-
-        SendMessage response = SendMessage.builder()
-                .text(BuildMessageUtil.buildCheckingMessage(event))
-                .chatId(String.valueOf(chat.getId()))
-                .replyMarkup(keyboardService.getTimedCheckingKeyboard(delayedService.getTimeout()))
-                .build();
-
-        absSender.execute(edited);
-        delayedService.processCheckingTimer(absSender, response, event);
+        eventStateService.beginCheckState(event);
+        executeService.execute(absSender, messageService.updateLobbyMessage(event));
+        executeService.executeAsync(absSender, event, messageService.sendMessage(event, CHECKING_TIMED));
     }
 }
 

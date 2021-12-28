@@ -18,13 +18,13 @@ public class KickerEvent {
 
     private Long Id;
 
-    private Long groupId;
+    private Long chatId;
 
     private final Set<Integer> messages = new TreeSet<>();
 
     private EventState eventState;
 
-    private final List<User> members = new LinkedList<>();
+    private final List<User> players = new LinkedList<>();
 
     private LocalDateTime startedAt;
 
