@@ -9,6 +9,7 @@ public enum EventState {
 
     CREATED(2),
     CANCEL_CHECKING(1),
+    CANCELLED(0),
     READY(3),
     BEGIN_CHECKING(1),
     PLAYING(2),

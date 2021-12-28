@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.k.shuffler.cache.EventContextService;
 import ru.acuma.k.shuffler.model.domain.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.Values;
@@ -14,10 +15,12 @@ import ru.acuma.k.shuffler.service.KeyboardService;
 import ru.acuma.k.shuffler.service.MessageService;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static ru.acuma.k.shuffler.model.enums.Values.CANCELLED_MESSAGE_TIMEOUT;
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
 
 @Service
@@ -39,7 +42,13 @@ public class ExecuteServiceImpl implements ExecuteService {
     }
 
     @Override
-    public void executeAsync(AbsSender absSender, KickerEvent event, BotApiMethod<Message> message) {
+    public void executeAsync(AbsSender absSender, Runnable method, Long delay) {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.schedule(method, CANCELLED_MESSAGE_TIMEOUT, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void executeAsyncTimer(AbsSender absSender, KickerEvent event, BotApiMethod<Message> message) {
         var msg = execute(absSender, message);
         eventContextService.registerMessage(msg.getChatId(), msg.getMessageId());
         var update = messageService.updateMessage(event, msg.getMessageId(), CHECKING_TIMED);

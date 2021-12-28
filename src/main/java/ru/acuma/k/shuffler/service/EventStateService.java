@@ -8,6 +8,7 @@ public interface EventStateService {
     void createdState(KickerEvent event);
     void readyState(KickerEvent event);
     void cancelCheckState(KickerEvent event);
+    void cancelledState(KickerEvent event);
     void beginCheckState(KickerEvent event);
     void playingState(KickerEvent event);
     void finishCheckState(KickerEvent event);

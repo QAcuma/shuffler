@@ -10,6 +10,7 @@ public enum MessageType {
     LOBBY,
     CHECKING,
     CHECKING_TIMED,
+    CANCELLED,
     GAME,
     STAT;
 

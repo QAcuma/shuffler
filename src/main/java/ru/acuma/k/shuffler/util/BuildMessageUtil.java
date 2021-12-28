@@ -16,7 +16,8 @@ public final class BuildMessageUtil {
 
     public static String buildText(KickerEvent event, MessageType type) {
             switch (type) {
-                case LOBBY: return buildLobbyText(event);
+                case LOBBY:
+                case CANCELLED: return buildLobbyText(event);
                 case CHECKING:
                 case CHECKING_TIMED: return buildCheckingText(event);
                 case GAME: return buildGameText(event);
@@ -38,6 +39,8 @@ public final class BuildMessageUtil {
             case BEGIN_CHECKING:
                 header = EventConstant.LOBBY_MESSAGE;
                 break;
+            case CANCELLED:
+                return EventConstant.LOBBY_CANCELED_MESSAGE.getText();
             case FINISHED:
                 header = EventConstant.LOBBY_FINISHED_MESSAGE;
                 break;

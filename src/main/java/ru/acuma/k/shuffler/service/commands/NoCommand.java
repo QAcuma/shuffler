@@ -12,8 +12,6 @@ import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
 
-import static ru.acuma.k.shuffler.model.enums.messages.MessageType.LOBBY;
-
 @Component
 public class NoCommand extends BaseBotCommand {
 
@@ -36,7 +34,7 @@ public class NoCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
         var event = eventContextService.getEvent(chat.getId());
-        maintenanceService.sweepFromArgs(absSender, arguments, chat.getId());
+        maintenanceService.sweepContext(absSender, arguments, chat.getId());
         switch (event.getEventState()) {
             case CANCEL_CHECKING:
             case BEGIN_CHECKING:

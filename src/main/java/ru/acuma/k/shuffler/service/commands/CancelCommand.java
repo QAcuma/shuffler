@@ -36,7 +36,7 @@ public class CancelCommand extends BaseBotCommand {
 
         eventStateService.cancelCheckState(event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));
-        executeService.executeAsync(absSender, event, messageService.sendMessage(event, CHECKING_TIMED));
+        executeService.executeAsyncTimer(absSender, event, messageService.sendMessage(event, CHECKING_TIMED));
     }
 }
 

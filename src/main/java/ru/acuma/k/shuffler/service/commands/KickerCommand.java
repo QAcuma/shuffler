@@ -33,7 +33,7 @@ public class KickerCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        maintenanceService.sweepFromArgs(absSender, arguments, chat.getId());
+        maintenanceService.sweepContext(absSender, arguments, chat.getId());
         if (eventContextService.isActive(chat.getId())) {
             return;
         }

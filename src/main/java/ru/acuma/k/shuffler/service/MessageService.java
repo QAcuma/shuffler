@@ -1,6 +1,7 @@
 package ru.acuma.k.shuffler.service;
 
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.k.shuffler.model.domain.KickerEvent;
@@ -13,5 +14,7 @@ public interface MessageService {
     EditMessageText updateMessage(KickerEvent event, Integer messageId, MessageType type);
 
     EditMessageText updateLobbyMessage(KickerEvent event);
+
+    DeleteMessage deleteMessage(Long chatId, Integer messageId);
 
 }

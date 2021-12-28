@@ -7,6 +7,7 @@ import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.service.EventStateService;
 
 import static ru.acuma.k.shuffler.model.enums.EventState.BEGIN_CHECKING;
+import static ru.acuma.k.shuffler.model.enums.EventState.CANCELLED;
 import static ru.acuma.k.shuffler.model.enums.EventState.CANCEL_CHECKING;
 import static ru.acuma.k.shuffler.model.enums.EventState.CREATED;
 import static ru.acuma.k.shuffler.model.enums.EventState.READY;
@@ -41,6 +42,11 @@ public class EventStateServiceImpl implements EventStateService {
     @Override
     public void cancelCheckState(KickerEvent event) {
         event.setEventState(CANCEL_CHECKING);
+    }
+
+    @Override
+    public void cancelledState(KickerEvent event) {
+        event.setEventState(CANCELLED);
     }
 
     @Override

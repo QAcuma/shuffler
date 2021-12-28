@@ -8,10 +8,13 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.k.shuffler.cache.EventContextService;
 import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
+import ru.acuma.k.shuffler.service.MessageService;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
@@ -20,17 +23,17 @@ import java.util.Set;
 public class MaintenanceServiceImpl implements MaintenanceService {
 
     private final EventContextService eventContextService;
+    private final ExecuteService executeService;
+    private final MessageService messageService;
 
     @Override
-    public void sweepChat(AbsSender absSender, Set<Integer> messages, Long groupId) {
-        messages.forEach(id -> {
-            DeleteMessage deleteMessage = DeleteMessage.builder()
-                    .chatId(String.valueOf(groupId))
-                    .messageId(id)
-                    .build();
+    public void sweepChat(AbsSender absSender, Set<Integer> messages, Long chatId) {
+        Set<Integer> copyIds = new HashSet<>(messages);
+        copyIds.forEach(id -> {
+            var deleteMessage = messageService.deleteMessage(chatId, id);
             try {
-                absSender.execute(deleteMessage);
-                eventContextService.unregisterMessage(groupId, id);
+                executeService.execute(absSender, deleteMessage);
+                eventContextService.unregisterMessage(chatId, id);
             } catch (TelegramApiException e) {
                 log.error(e.getMessage());
             }
@@ -38,10 +41,10 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     }
 
     @Override
-    public void sweepFromArgs(AbsSender absSender, String[] args, Long groupId) {
+    public void sweepContext(AbsSender absSender, String[] args, Long chatId) {
         Integer messageId = Integer.valueOf(Arrays.stream(args).findFirst().orElse("0"));
-        sweepChat(absSender, Collections.singleton(messageId), groupId);
-        eventContextService.unregisterMessage(groupId, messageId);
+        sweepChat(absSender, Collections.singleton(messageId), chatId);
+        eventContextService.unregisterMessage(chatId, messageId);
     }
 
     @Override

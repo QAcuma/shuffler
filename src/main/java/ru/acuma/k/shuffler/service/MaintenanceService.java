@@ -7,9 +7,9 @@ import java.util.Set;
 
 public interface MaintenanceService {
 
-    void sweepChat(AbsSender absSender, Set<Integer> messages, Long groupId);
+    void sweepChat(AbsSender absSender, Set<Integer> messages, Long chatId);
 
-    void sweepFromArgs(AbsSender absSender, String[] args, Long groupId);
+    void sweepContext(AbsSender absSender, String[] args, Long chatId);
 
     void sweepEvent(KickerEvent event, boolean store);
 
