@@ -3,10 +3,9 @@ package ru.acuma.k.shuffler.service.commands;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import ru.acuma.k.shuffler.cache.EventContextService;
+import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 
@@ -16,10 +15,10 @@ public class ResetCommand extends BaseBotCommand {
 
     private static final Long ID = 285250417L;
 
-    private final EventContextService eventContextService;
+    private final EventContextServiceImpl eventContextService;
     private final MaintenanceService maintenanceService;
 
-    public ResetCommand(EventContextService eventContextService, MaintenanceService maintenanceService) {
+    public ResetCommand(EventContextServiceImpl eventContextService, MaintenanceService maintenanceService) {
         super(Command.RESET.getCommand(), "Сбросить бота");
         this.eventContextService = eventContextService;
         this.maintenanceService = maintenanceService;
@@ -27,13 +26,13 @@ public class ResetCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        maintenanceService.sweepContext(absSender, arguments, chat.getId());
-        if (user.getId().equals(ID)) {
-            log.info("User {} initialize reset process in chat {}", user.getFirstName(), chat.getTitle());
-            var event = eventContextService.getEvent(chat.getId());
+    public void execute(AbsSender absSender, Message message) {
+        maintenanceService.sweepMessage(absSender, message);
+        if (message.getFrom().getId().equals(ID)) {
+            log.info("User {} initialize reset process in chat {}", message.getFrom().getFirstName(), message.getChat().getTitle());
+            final var event = eventContextService.getEvent(message.getChatId());
             try {
-                maintenanceService.sweepChat(absSender, event.getMessages(), chat.getId());
+                maintenanceService.sweepChat(absSender, event);
                 maintenanceService.sweepEvent(event, false);
             } catch (Exception e) {
                 log.error(e.getMessage());

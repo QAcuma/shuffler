@@ -12,6 +12,8 @@ public class Player extends User {
 
     private Long rating;
 
+    private Long chatId;
+
     public String getName() {
         StringBuilder builder = new StringBuilder();
         builder.append(super.getFirstName())

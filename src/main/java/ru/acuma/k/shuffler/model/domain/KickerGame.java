@@ -21,5 +21,4 @@ public class KickerGame {
     private LocalDateTime finishedAt;
 
 
-
 }

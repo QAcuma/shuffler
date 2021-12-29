@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.acuma.k.shuffler.cache.EventContextService;
+import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.k.shuffler.model.domain.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.model.enums.keyboards.Created;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class KeyboardServiceImpl implements KeyboardService {
 
-    private final EventContextService eventContextService;
+    private final EventContextServiceImpl eventContextService;
 
     @Override
     public InlineKeyboardMarkup getKeyboard(KickerEvent event) {

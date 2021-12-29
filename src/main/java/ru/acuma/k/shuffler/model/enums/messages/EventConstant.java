@@ -24,8 +24,8 @@ public enum EventConstant implements EventConstantApi {
     UNEXPECTED_CHECKING_MESSAGE("Завершить игру?"),
     FINISH_CHECKING_MESSAGE("За работу?"),
     LOBBY_FINISHED_MESSAGE("🍢 Славно поиграли! 🍢\n" +
-                                   "\n" +
-                                   "Участники:\n");
+            "\n" +
+            "Участники:\n");
 
     private final String text;
 

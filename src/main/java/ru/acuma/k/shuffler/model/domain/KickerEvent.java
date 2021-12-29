@@ -7,8 +7,9 @@ import ru.acuma.k.shuffler.model.enums.EventState;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,7 +25,7 @@ public class KickerEvent {
 
     private EventState eventState;
 
-    private final Set<EventPlayer> players = new HashSet<>();
+    private final Map<Long, EventPlayer> players = new HashMap<>();
 
     private LocalDateTime startedAt;
 
@@ -34,6 +35,30 @@ public class KickerEvent {
 
     public Integer getBaseMessage() {
         return Collections.min(this.messages);
+    }
+
+    public boolean isPresent(Long playerId) {
+        return players.containsKey(playerId);
+    }
+
+    public void joinPlayer(Player player) {
+        this.players.put(player.getId(), new EventPlayer(player));
+    }
+
+    public void leavePlayer(Long playerId) {
+        this.players.remove(playerId);
+    }
+
+    public boolean isPresent(Integer messageId) {
+        return messages.contains(messageId);
+    }
+
+    public void watchMessage(Integer messageId) {
+        this.messages.add(messageId);
+    }
+
+    public void missMessage(Integer messageId) {
+        this.messages.remove(messageId);
     }
 
 }

@@ -12,7 +12,7 @@ public interface ExecuteService {
 
     <T extends Serializable, Method extends BotApiMethod<T>> T execute(AbsSender absSender, Method method) throws TelegramApiException;
 
-    void executeAsync(AbsSender absSender, Runnable method, Long delay) throws TelegramApiException;
+    void executeLater(AbsSender absSender, Runnable method, Long delay) throws TelegramApiException;
 
     void executeAsyncTimer(AbsSender absSender, KickerEvent event, BotApiMethod<Message> message);
 

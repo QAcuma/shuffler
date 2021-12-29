@@ -2,10 +2,9 @@ package ru.acuma.k.shuffler.service.commands;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import ru.acuma.k.shuffler.cache.EventContextService;
+import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
@@ -16,12 +15,12 @@ import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIME
 @Component
 public class CancelCommand extends BaseBotCommand {
 
-    private final EventContextService eventContextService;
+    private final EventContextServiceImpl eventContextService;
     private final EventStateService eventStateService;
     private final ExecuteService executeService;
     private final MessageService messageService;
 
-    public CancelCommand(EventContextService eventContextService, EventStateService eventStateService, ExecuteService executeService, MessageService messageService) {
+    public CancelCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, ExecuteService executeService, MessageService messageService) {
         super(Command.CANCEL.getCommand(), "Отменить турнир");
         this.eventContextService = eventContextService;
         this.eventStateService = eventStateService;
@@ -31,8 +30,8 @@ public class CancelCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        var event = eventContextService.buildEvent(chat.getId());
+    public void execute(AbsSender absSender, Message message) {
+        final var event = eventContextService.buildEvent(message.getChatId());
 
         eventStateService.cancelCheckState(event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));

@@ -6,8 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.acuma.k.shuffler.cache.EventContextService;
+import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.k.shuffler.model.domain.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.Values;
 import ru.acuma.k.shuffler.service.ExecuteService;
@@ -15,19 +14,17 @@ import ru.acuma.k.shuffler.service.KeyboardService;
 import ru.acuma.k.shuffler.service.MessageService;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static ru.acuma.k.shuffler.model.enums.Values.CANCELLED_MESSAGE_TIMEOUT;
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
 
 @Service
 @RequiredArgsConstructor
 public class ExecuteServiceImpl implements ExecuteService {
 
-    private final EventContextService eventContextService;
+    private final EventContextServiceImpl eventContextService;
     private final MessageService messageService;
     private final KeyboardService keyboardService;
 
@@ -36,21 +33,23 @@ public class ExecuteServiceImpl implements ExecuteService {
     public <T extends Serializable, Method extends BotApiMethod<T>> T execute(AbsSender absSender, Method method) {
         var msg = absSender.execute(method);
         if (msg instanceof Message) {
-            eventContextService.registerMessage(((Message) msg).getChatId(), ((Message) msg).getMessageId());
+            var message = (Message) msg;
+            final var event = eventContextService.getEvent(message.getChatId());
+            event.watchMessage(message.getMessageId());
         }
         return msg;
     }
 
     @Override
-    public void executeAsync(AbsSender absSender, Runnable method, Long delay) {
+    public void executeLater(AbsSender absSender, Runnable method, Long delay) {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.schedule(method, CANCELLED_MESSAGE_TIMEOUT, TimeUnit.SECONDS);
+        executorService.schedule(method, delay, TimeUnit.SECONDS);
     }
 
     @Override
     public void executeAsyncTimer(AbsSender absSender, KickerEvent event, BotApiMethod<Message> message) {
         var msg = execute(absSender, message);
-        eventContextService.registerMessage(msg.getChatId(), msg.getMessageId());
+        event.watchMessage(msg.getMessageId());
         var update = messageService.updateMessage(event, msg.getMessageId(), CHECKING_TIMED);
 
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();

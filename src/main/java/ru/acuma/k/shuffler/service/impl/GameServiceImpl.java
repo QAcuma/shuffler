@@ -17,7 +17,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public KickerGame buildGame(KickerEvent event) {
-        event.getPlayers().forEach(playerService::authenticate);
 
         return null;
     }

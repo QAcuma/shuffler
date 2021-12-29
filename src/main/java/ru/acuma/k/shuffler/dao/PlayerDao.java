@@ -5,6 +5,4 @@ public interface PlayerDao {
     boolean isActive(Long telegramId);
 
 
-
-
 }

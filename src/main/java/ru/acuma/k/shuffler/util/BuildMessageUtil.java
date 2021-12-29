@@ -1,6 +1,5 @@
 package ru.acuma.k.shuffler.util;
 
-import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.k.shuffler.model.domain.KickerEvent;
 import ru.acuma.k.shuffler.model.domain.Player;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
@@ -17,15 +16,20 @@ public final class BuildMessageUtil {
     }
 
     public static String buildText(KickerEvent event, MessageType type) {
-            switch (type) {
-                case LOBBY:
-                case CANCELLED: return buildLobbyText(event);
-                case CHECKING:
-                case CHECKING_TIMED: return buildCheckingText(event);
-                case GAME: return buildGameText(event);
-                case STAT: return buildStatText(event);
-                default: return DEFAULT_MESSAGE.getText();
-            }
+        switch (type) {
+            case LOBBY:
+            case CANCELLED:
+                return buildLobbyText(event);
+            case CHECKING:
+            case CHECKING_TIMED:
+                return buildCheckingText(event);
+            case GAME:
+                return buildGameText(event);
+            case STAT:
+                return buildStatText(event);
+            default:
+                return DEFAULT_MESSAGE.getText();
+        }
     }
 
     private static String buildGameText(KickerEvent event) {
@@ -50,7 +54,8 @@ public final class BuildMessageUtil {
                 header = EventConstant.LOBBY_PLAYING_MESSAGE;
                 break;
         }
-        return header.getText() + event.getPlayers().stream()
+        return header.getText() + event.getPlayers().values()
+                .stream()
                 .map(Player::getName)
                 .collect(Collectors.joining(System.lineSeparator()));
     }

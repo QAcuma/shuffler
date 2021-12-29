@@ -2,10 +2,9 @@ package ru.acuma.k.shuffler.service.commands;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import ru.acuma.k.shuffler.cache.EventContextService;
+import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
@@ -17,12 +16,12 @@ import static ru.acuma.k.shuffler.model.enums.messages.MessageType.LOBBY;
 @Component
 public class KickerCommand extends BaseBotCommand {
 
-    private final EventContextService eventContextService;
+    private final EventContextServiceImpl eventContextService;
     private final MaintenanceService maintenanceService;
     private final MessageService messageService;
     private final ExecuteService executeService;
 
-    public KickerCommand(EventContextService eventContextService, MaintenanceService maintenanceService, MessageService messageService, ExecuteService executeService, EventStateService eventStateService) {
+    public KickerCommand(EventContextServiceImpl eventContextService, MaintenanceService maintenanceService, MessageService messageService, ExecuteService executeService, EventStateService eventStateService) {
         super(Command.KICKER.getCommand(), "Время покрутить шашлыки");
         this.eventContextService = eventContextService;
         this.maintenanceService = maintenanceService;
@@ -32,12 +31,13 @@ public class KickerCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        maintenanceService.sweepContext(absSender, arguments, chat.getId());
-        if (eventContextService.isActive(chat.getId())) {
+    public void execute(AbsSender absSender, Message message) {
+        maintenanceService.sweepMessage(absSender, message);
+        if (eventContextService.isActive(message.getChatId())) {
             return;
         }
-        var event = eventContextService.buildEvent(chat.getId());
-        executeService.execute(absSender, messageService.sendMessage(event, LOBBY));
+        final var event = eventContextService.buildEvent(message.getChatId());
+        var baseMessage = executeService.execute(absSender, messageService.sendMessage(event, LOBBY));
+        event.watchMessage(baseMessage.getMessageId());
     }
 }

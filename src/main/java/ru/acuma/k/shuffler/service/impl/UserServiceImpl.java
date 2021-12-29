@@ -8,8 +8,6 @@ import ru.acuma.k.shuffler.mapper.UserMapper;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 
-import java.time.OffsetDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
