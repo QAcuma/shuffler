@@ -1,7 +1,7 @@
 package ru.acuma.k.shuffler.util;
 
-import ru.acuma.k.shuffler.model.domain.KickerEvent;
-import ru.acuma.k.shuffler.model.domain.Player;
+import ru.acuma.k.shuffler.model.entity.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerPlayer;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
 import ru.acuma.k.shuffler.model.enums.messages.MessageType;
 import ru.acuma.k.shuffler.service.enums.EventConstantApi;
@@ -56,7 +56,7 @@ public final class BuildMessageUtil {
         }
         return header.getText() + event.getPlayers().values()
                 .stream()
-                .map(Player::getName)
+                .map(KickerPlayer::getName)
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 

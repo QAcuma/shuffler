@@ -21,7 +21,7 @@ public class Event implements Serializable {
     private Long           id;
     private Long           chatId;
     private JSONB          messages;
-    private JSONB          players;
+    private JSONB          kickerplayers;
     private String         status;
     private OffsetDateTime startedAt;
     private OffsetDateTime finishedAt;
@@ -32,7 +32,7 @@ public class Event implements Serializable {
         this.id = value.id;
         this.chatId = value.chatId;
         this.messages = value.messages;
-        this.players = value.players;
+        this.kickerplayers = value.kickerplayers;
         this.status = value.status;
         this.startedAt = value.startedAt;
         this.finishedAt = value.finishedAt;
@@ -42,7 +42,7 @@ public class Event implements Serializable {
         Long           id,
         Long           chatId,
         JSONB          messages,
-        JSONB          players,
+        JSONB          kickerplayers,
         String         status,
         OffsetDateTime startedAt,
         OffsetDateTime finishedAt
@@ -50,7 +50,7 @@ public class Event implements Serializable {
         this.id = id;
         this.chatId = chatId;
         this.messages = messages;
-        this.players = players;
+        this.kickerplayers = kickerplayers;
         this.status = status;
         this.startedAt = startedAt;
         this.finishedAt = finishedAt;
@@ -102,17 +102,17 @@ public class Event implements Serializable {
     }
 
     /**
-     * Getter for <code>public.event.players</code>.
+     * Getter for <code>public.event.kickerplayers</code>.
      */
-    public JSONB getPlayers() {
-        return this.players;
+    public JSONB getKickerplayers() {
+        return this.kickerplayers;
     }
 
     /**
-     * Setter for <code>public.event.players</code>.
+     * Setter for <code>public.event.kickerplayers</code>.
      */
-    public Event setPlayers(JSONB players) {
-        this.players = players;
+    public Event setKickerplayers(JSONB kickerplayers) {
+        this.kickerplayers = kickerplayers;
         return this;
     }
 
@@ -168,7 +168,7 @@ public class Event implements Serializable {
         sb.append(id);
         sb.append(", ").append(chatId);
         sb.append(", ").append(messages);
-        sb.append(", ").append(players);
+        sb.append(", ").append(kickerplayers);
         sb.append(", ").append(status);
         sb.append(", ").append(startedAt);
         sb.append(", ").append(finishedAt);

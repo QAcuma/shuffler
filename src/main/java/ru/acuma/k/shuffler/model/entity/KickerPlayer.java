@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffler.model.domain;
+package ru.acuma.k.shuffler.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Getter
 @Setter
-public class Player extends User {
+public class KickerPlayer extends User {
 
     private Long rating;
 

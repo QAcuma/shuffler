@@ -18,6 +18,7 @@ public class Game implements Serializable {
 
     private Long           id;
     private Long           eventId;
+    private Long           winnerId;
     private Integer        index;
     private OffsetDateTime startedAt;
     private OffsetDateTime finishedAt;
@@ -27,6 +28,7 @@ public class Game implements Serializable {
     public Game(Game value) {
         this.id = value.id;
         this.eventId = value.eventId;
+        this.winnerId = value.winnerId;
         this.index = value.index;
         this.startedAt = value.startedAt;
         this.finishedAt = value.finishedAt;
@@ -35,12 +37,14 @@ public class Game implements Serializable {
     public Game(
         Long           id,
         Long           eventId,
+        Long           winnerId,
         Integer        index,
         OffsetDateTime startedAt,
         OffsetDateTime finishedAt
     ) {
         this.id = id;
         this.eventId = eventId;
+        this.winnerId = winnerId;
         this.index = index;
         this.startedAt = startedAt;
         this.finishedAt = finishedAt;
@@ -73,6 +77,21 @@ public class Game implements Serializable {
      */
     public Game setEventId(Long eventId) {
         this.eventId = eventId;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.game.winner_id</code>.
+     */
+    public Long getWinnerId() {
+        return this.winnerId;
+    }
+
+    /**
+     * Setter for <code>public.game.winner_id</code>.
+     */
+    public Game setWinnerId(Long winnerId) {
+        this.winnerId = winnerId;
         return this;
     }
 
@@ -127,6 +146,7 @@ public class Game implements Serializable {
 
         sb.append(id);
         sb.append(", ").append(eventId);
+        sb.append(", ").append(winnerId);
         sb.append(", ").append(index);
         sb.append(", ").append(startedAt);
         sb.append(", ").append(finishedAt);

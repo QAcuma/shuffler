@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffler.model.domain;
+package ru.acuma.k.shuffler.model.entity;
 
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +25,7 @@ public class KickerEvent {
 
     private EventState eventState;
 
-    private final Map<Long, EventPlayer> players = new HashMap<>();
+    private final Map<Long, KickerEventPlayer> players = new HashMap<>();
 
     private LocalDateTime startedAt;
 
@@ -41,8 +41,8 @@ public class KickerEvent {
         return players.containsKey(playerId);
     }
 
-    public void joinPlayer(Player player) {
-        this.players.put(player.getId(), new EventPlayer(player));
+    public void joinPlayer(KickerPlayer kickerPlayer) {
+        this.players.put(kickerPlayer.getId(), new KickerEventPlayer(kickerPlayer));
     }
 
     public void leavePlayer(Long playerId) {

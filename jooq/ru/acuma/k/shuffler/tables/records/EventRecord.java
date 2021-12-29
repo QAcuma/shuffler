@@ -70,17 +70,17 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
     }
 
     /**
-     * Setter for <code>public.event.players</code>.
+     * Setter for <code>public.event.kickerplayers</code>.
      */
-    public EventRecord setPlayers(JSONB value) {
+    public EventRecord setKickerplayers(JSONB value) {
         set(3, value);
         return this;
     }
 
     /**
-     * Getter for <code>public.event.players</code>.
+     * Getter for <code>public.event.kickerplayers</code>.
      */
-    public JSONB getPlayers() {
+    public JSONB getKickerplayers() {
         return (JSONB) get(3);
     }
 
@@ -169,7 +169,7 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
 
     @Override
     public Field<JSONB> field4() {
-        return Event.EVENT.PLAYERS;
+        return Event.EVENT.KICKERPLAYERS;
     }
 
     @Override
@@ -204,7 +204,7 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
 
     @Override
     public JSONB component4() {
-        return getPlayers();
+        return getKickerplayers();
     }
 
     @Override
@@ -239,7 +239,7 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
 
     @Override
     public JSONB value4() {
-        return getPlayers();
+        return getKickerplayers();
     }
 
     @Override
@@ -277,7 +277,7 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
 
     @Override
     public EventRecord value4(JSONB value) {
-        setPlayers(value);
+        setKickerplayers(value);
         return this;
     }
 
@@ -325,13 +325,13 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
     /**
      * Create a detached, initialised EventRecord
      */
-    public EventRecord(Long id, Long chatId, JSONB messages, JSONB players, String status, OffsetDateTime startedAt, OffsetDateTime finishedAt) {
+    public EventRecord(Long id, Long chatId, JSONB messages, JSONB kickerplayers, String status, OffsetDateTime startedAt, OffsetDateTime finishedAt) {
         super(Event.EVENT);
 
         setId(id);
         setChatId(chatId);
         setMessages(messages);
-        setPlayers(players);
+        setKickerplayers(kickerplayers);
         setStatus(status);
         setStartedAt(startedAt);
         setFinishedAt(finishedAt);
@@ -347,7 +347,7 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
             setId(value.getId());
             setChatId(value.getChatId());
             setMessages(value.getMessages());
-            setPlayers(value.getPlayers());
+            setKickerplayers(value.getKickerplayers());
             setStatus(value.getStatus());
             setStartedAt(value.getStartedAt());
             setFinishedAt(value.getFinishedAt());

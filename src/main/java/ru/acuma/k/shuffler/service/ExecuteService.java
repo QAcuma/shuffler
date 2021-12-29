@@ -4,7 +4,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerEvent;
 
 import java.io.Serializable;
 

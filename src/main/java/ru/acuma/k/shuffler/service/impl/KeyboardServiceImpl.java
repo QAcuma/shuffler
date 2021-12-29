@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
-import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.model.enums.keyboards.Created;
 import ru.acuma.k.shuffler.model.enums.keyboards.Finished;

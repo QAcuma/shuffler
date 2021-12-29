@@ -1,7 +1,7 @@
 package ru.acuma.k.shuffler.cache;
 
 import org.springframework.stereotype.Component;
-import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerEvent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

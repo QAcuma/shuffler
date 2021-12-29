@@ -66,9 +66,9 @@ public class Event extends TableImpl<EventRecord> {
     public final TableField<EventRecord, JSONB> MESSAGES = createField(DSL.name("messages"), SQLDataType.JSONB, this, "");
 
     /**
-     * The column <code>public.event.players</code>.
+     * The column <code>public.event.kickerplayers</code>.
      */
-    public final TableField<EventRecord, JSONB> PLAYERS = createField(DSL.name("players"), SQLDataType.JSONB, this, "");
+    public final TableField<EventRecord, JSONB> KICKERPLAYERS = createField(DSL.name("kickerplayers"), SQLDataType.JSONB, this, "");
 
     /**
      * The column <code>public.event.status</code>.

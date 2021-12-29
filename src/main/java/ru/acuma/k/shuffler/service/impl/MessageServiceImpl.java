@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.model.enums.Values;
 import ru.acuma.k.shuffler.model.enums.messages.MessageType;

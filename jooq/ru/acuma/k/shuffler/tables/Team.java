@@ -11,10 +11,9 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
-import org.jooq.JSONB;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -59,16 +58,6 @@ public class Team extends TableImpl<TeamRecord> {
      * The column <code>public.team.game_id</code>.
      */
     public final TableField<TeamRecord, Long> GAME_ID = createField(DSL.name("game_id"), SQLDataType.BIGINT.nullable(false), this, "");
-
-    /**
-     * The column <code>public.team.messages</code>.
-     */
-    public final TableField<TeamRecord, JSONB> MESSAGES = createField(DSL.name("messages"), SQLDataType.JSONB, this, "");
-
-    /**
-     * The column <code>public.team.players</code>.
-     */
-    public final TableField<TeamRecord, JSONB> PLAYERS = createField(DSL.name("players"), SQLDataType.JSONB, this, "");
 
     /**
      * The column <code>public.team.started_at</code>.
@@ -169,11 +158,11 @@ public class Team extends TableImpl<TeamRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Long, Long, JSONB, JSONB, OffsetDateTime, OffsetDateTime> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row4<Long, Long, OffsetDateTime, OffsetDateTime> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

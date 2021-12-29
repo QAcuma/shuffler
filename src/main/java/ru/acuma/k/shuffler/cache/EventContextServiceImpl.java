@@ -2,7 +2,7 @@ package ru.acuma.k.shuffler.cache;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.service.EventContextService;
 

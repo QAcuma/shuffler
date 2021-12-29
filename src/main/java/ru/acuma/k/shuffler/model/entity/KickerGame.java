@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffler.model.domain;
+package ru.acuma.k.shuffler.model.entity;
 
 import lombok.Data;
 import ru.acuma.k.shuffler.model.enums.GameState;
@@ -12,9 +12,9 @@ public class KickerGame {
 
     private GameState state;
 
-    private Team red;
+    private KickerTeam red;
 
-    private Team blue;
+    private KickerTeam blue;
 
     private LocalDateTime startedAt;
 
