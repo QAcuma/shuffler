@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.acuma.k.shuffler.service.GroupService;
 import ru.acuma.k.shuffler.service.NonCommandService;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.service.commands.BeginCommand;
@@ -32,6 +33,9 @@ public class KickerBot extends TelegramLongPollingCommandBot {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
 
     @Autowired
     private NonCommandService nonCommandService;
@@ -89,7 +93,7 @@ public class KickerBot extends TelegramLongPollingCommandBot {
 
     @Override
     protected boolean filter(Message message) {
-        return !message.getChat().isGroupChat() || !userService.authenticate(message.getFrom());
+        return groupService.authenticate(message.getChat()) && !userService.authenticate(message.getFrom());
     }
 
     @Override

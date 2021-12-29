@@ -8,10 +8,9 @@ import java.time.OffsetDateTime;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row15;
+import org.jooq.Row14;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -46,11 +45,6 @@ public class UserInfo extends TableImpl<UserInfoRecord> {
     public Class<UserInfoRecord> getRecordType() {
         return UserInfoRecord.class;
     }
-
-    /**
-     * The column <code>public.user_info.id</code>.
-     */
-    public final TableField<UserInfoRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>public.user_info.telegram_id</code>.
@@ -161,11 +155,6 @@ public class UserInfo extends TableImpl<UserInfoRecord> {
     }
 
     @Override
-    public Identity<UserInfoRecord, Long> getIdentity() {
-        return (Identity<UserInfoRecord, Long>) super.getIdentity();
-    }
-
-    @Override
     public UniqueKey<UserInfoRecord> getPrimaryKey() {
         return Keys.USER_INFO_PKEY;
     }
@@ -197,11 +186,11 @@ public class UserInfo extends TableImpl<UserInfoRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row15 type methods
+    // Row14 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row15<Long, Long, String, Boolean, String, String, String, Boolean, Boolean, Boolean, Boolean, OffsetDateTime, OffsetDateTime, OffsetDateTime, OffsetDateTime> fieldsRow() {
-        return (Row15) super.fieldsRow();
+    public Row14<Long, String, Boolean, String, String, String, Boolean, Boolean, Boolean, Boolean, OffsetDateTime, OffsetDateTime, OffsetDateTime, OffsetDateTime> fieldsRow() {
+        return (Row14) super.fieldsRow();
     }
 }

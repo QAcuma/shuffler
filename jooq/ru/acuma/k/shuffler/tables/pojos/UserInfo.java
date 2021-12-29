@@ -16,7 +16,6 @@ public class UserInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long           id;
     private Long           telegramId;
     private String         languageCode;
     private Boolean        isBot;
@@ -35,7 +34,6 @@ public class UserInfo implements Serializable {
     public UserInfo() {}
 
     public UserInfo(UserInfo value) {
-        this.id = value.id;
         this.telegramId = value.telegramId;
         this.languageCode = value.languageCode;
         this.isBot = value.isBot;
@@ -53,7 +51,6 @@ public class UserInfo implements Serializable {
     }
 
     public UserInfo(
-        Long           id,
         Long           telegramId,
         String         languageCode,
         Boolean        isBot,
@@ -69,7 +66,6 @@ public class UserInfo implements Serializable {
         OffsetDateTime updatedAt,
         OffsetDateTime deletedAt
     ) {
-        this.id = id;
         this.telegramId = telegramId;
         this.languageCode = languageCode;
         this.isBot = isBot;
@@ -84,21 +80,6 @@ public class UserInfo implements Serializable {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
-    }
-
-    /**
-     * Getter for <code>public.user_info.id</code>.
-     */
-    public Long getId() {
-        return this.id;
-    }
-
-    /**
-     * Setter for <code>public.user_info.id</code>.
-     */
-    public UserInfo setId(Long id) {
-        this.id = id;
-        return this;
     }
 
     /**
@@ -315,8 +296,7 @@ public class UserInfo implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("UserInfo (");
 
-        sb.append(id);
-        sb.append(", ").append(telegramId);
+        sb.append(telegramId);
         sb.append(", ").append(languageCode);
         sb.append(", ").append(isBot);
         sb.append(", ").append(firstName);

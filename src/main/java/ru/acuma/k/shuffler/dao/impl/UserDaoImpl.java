@@ -8,6 +8,7 @@ import ru.acuma.k.shuffler.dao.UserDao;
 import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 import ru.acuma.k.shuffler.tables.records.UserInfoRecord;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import static ru.acuma.k.shuffler.Tables.USER_INFO;
@@ -48,9 +49,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Long save(UserInfo userInfo) {
+    public long save(UserInfo userInfo) {
         UserInfoRecord record = dsl.newRecord(USER_INFO, userInfo);
-        return (long) record.store();
+        return record.store();
     }
 
     @Override
@@ -59,7 +60,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void delete(Long userId) {
-
+    public void delete(Long telegramId) {
+        dsl.update(USER_INFO)
+                .set(USER_INFO.DELETED_AT, OffsetDateTime.now())
+                .set(USER_INFO.IS_BLOCKED, true)
+                .where(USER_INFO.TELEGRAM_ID.eq(telegramId));
     }
 }

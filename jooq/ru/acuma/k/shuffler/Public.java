@@ -15,6 +15,8 @@ import ru.acuma.k.shuffler.tables.Event;
 import ru.acuma.k.shuffler.tables.FlywaySchemaHistory;
 import ru.acuma.k.shuffler.tables.Game;
 import ru.acuma.k.shuffler.tables.GroupInfo;
+import ru.acuma.k.shuffler.tables.Player;
+import ru.acuma.k.shuffler.tables.Team;
 import ru.acuma.k.shuffler.tables.UserInfo;
 
 
@@ -52,6 +54,16 @@ public class Public extends SchemaImpl {
     public final GroupInfo GROUP_INFO = GroupInfo.GROUP_INFO;
 
     /**
+     * The table <code>public.player</code>.
+     */
+    public final Player PLAYER = Player.PLAYER;
+
+    /**
+     * The table <code>public.team</code>.
+     */
+    public final Team TEAM = Team.TEAM;
+
+    /**
      * The table <code>public.user_info</code>.
      */
     public final UserInfo USER_INFO = UserInfo.USER_INFO;
@@ -76,6 +88,8 @@ public class Public extends SchemaImpl {
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Game.GAME,
             GroupInfo.GROUP_INFO,
+            Player.PLAYER,
+            Team.TEAM,
             UserInfo.USER_INFO
         );
     }

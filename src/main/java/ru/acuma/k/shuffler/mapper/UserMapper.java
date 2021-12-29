@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 
+import java.time.OffsetDateTime;
+
 @Component
 public class UserMapper {
 
@@ -19,7 +21,8 @@ public class UserMapper {
                 .register();
         MapperFacade mapper = mapperFactory.getMapperFacade();
         UserInfo userInfo = mapper.map(user, UserInfo.class);
-        userInfo.setIsBlocked(Boolean.FALSE);
+        userInfo.setIsBlocked(Boolean.FALSE)
+                .setCreatedAt(OffsetDateTime.now());
         return userInfo;
     }
 

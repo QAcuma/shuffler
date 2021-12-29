@@ -11,10 +11,9 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
-import org.jooq.JSONB;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row8;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -58,32 +57,17 @@ public class Game extends TableImpl<GameRecord> {
     /**
      * The column <code>public.game.event_id</code>.
      */
-    public final TableField<GameRecord, Long> EVENT_ID = createField(DSL.name("event_id"), SQLDataType.BIGINT, this, "");
-
-    /**
-     * The column <code>public.game.team_a</code>.
-     */
-    public final TableField<GameRecord, JSONB> TEAM_A = createField(DSL.name("team_a"), SQLDataType.JSONB, this, "");
-
-    /**
-     * The column <code>public.game.team_b</code>.
-     */
-    public final TableField<GameRecord, JSONB> TEAM_B = createField(DSL.name("team_b"), SQLDataType.JSONB, this, "");
+    public final TableField<GameRecord, Long> EVENT_ID = createField(DSL.name("event_id"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * The column <code>public.game.index</code>.
      */
-    public final TableField<GameRecord, Integer> INDEX = createField(DSL.name("index"), SQLDataType.INTEGER, this, "");
-
-    /**
-     * The column <code>public.game.result</code>.
-     */
-    public final TableField<GameRecord, String> RESULT = createField(DSL.name("result"), SQLDataType.CLOB, this, "");
+    public final TableField<GameRecord, Integer> INDEX = createField(DSL.name("index"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>public.game.started_at</code>.
      */
-    public final TableField<GameRecord, OffsetDateTime> STARTED_AT = createField(DSL.name("started_at"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
+    public final TableField<GameRecord, OffsetDateTime> STARTED_AT = createField(DSL.name("started_at"), SQLDataType.TIMESTAMPWITHTIMEZONE(6).nullable(false), this, "");
 
     /**
      * The column <code>public.game.finished_at</code>.
@@ -140,14 +124,14 @@ public class Game extends TableImpl<GameRecord> {
 
     @Override
     public List<ForeignKey<GameRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.GAME__FK_EXISTS_GROUP);
+        return Arrays.asList(Keys.GAME__FK_EXISTS_EVENT);
     }
 
     private transient Event _event;
 
     public Event event() {
         if (_event == null)
-            _event = new Event(this, Keys.GAME__FK_EXISTS_GROUP);
+            _event = new Event(this, Keys.GAME__FK_EXISTS_EVENT);
 
         return _event;
     }
@@ -179,11 +163,11 @@ public class Game extends TableImpl<GameRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row8 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<Long, Long, JSONB, JSONB, Integer, String, OffsetDateTime, OffsetDateTime> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row5<Long, Long, Integer, OffsetDateTime, OffsetDateTime> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 }

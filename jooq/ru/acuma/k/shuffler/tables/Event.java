@@ -5,6 +5,8 @@ package ru.acuma.k.shuffler.tables;
 
 
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
@@ -12,7 +14,7 @@ import org.jooq.Identity;
 import org.jooq.JSONB;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row7;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -54,19 +56,24 @@ public class Event extends TableImpl<EventRecord> {
     public final TableField<EventRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>public.event.group_id</code>.
+     * The column <code>public.event.chat_id</code>.
      */
-    public final TableField<EventRecord, Long> GROUP_ID = createField(DSL.name("group_id"), SQLDataType.BIGINT, this, "");
+    public final TableField<EventRecord, Long> CHAT_ID = createField(DSL.name("chat_id"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>public.event.members</code>.
+     * The column <code>public.event.messages</code>.
      */
-    public final TableField<EventRecord, JSONB> MEMBERS = createField(DSL.name("members"), SQLDataType.JSONB, this, "");
+    public final TableField<EventRecord, JSONB> MESSAGES = createField(DSL.name("messages"), SQLDataType.JSONB, this, "");
 
     /**
-     * The column <code>public.event.games</code>.
+     * The column <code>public.event.players</code>.
      */
-    public final TableField<EventRecord, Integer> GAMES = createField(DSL.name("games"), SQLDataType.INTEGER, this, "");
+    public final TableField<EventRecord, JSONB> PLAYERS = createField(DSL.name("players"), SQLDataType.JSONB, this, "");
+
+    /**
+     * The column <code>public.event.status</code>.
+     */
+    public final TableField<EventRecord, String> STATUS = createField(DSL.name("status"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>public.event.started_at</code>.
@@ -127,6 +134,20 @@ public class Event extends TableImpl<EventRecord> {
     }
 
     @Override
+    public List<ForeignKey<EventRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.EVENT__FK_EXISTS_CHAT);
+    }
+
+    private transient GroupInfo _groupInfo;
+
+    public GroupInfo groupInfo() {
+        if (_groupInfo == null)
+            _groupInfo = new GroupInfo(this, Keys.EVENT__FK_EXISTS_CHAT);
+
+        return _groupInfo;
+    }
+
+    @Override
     public Event as(String alias) {
         return new Event(DSL.name(alias), this);
     }
@@ -153,11 +174,11 @@ public class Event extends TableImpl<EventRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Long, Long, JSONB, Integer, OffsetDateTime, OffsetDateTime> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row7<Long, Long, JSONB, JSONB, String, OffsetDateTime, OffsetDateTime> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 }

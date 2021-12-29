@@ -10,6 +10,7 @@ import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MessageService;
+import ru.acuma.k.shuffler.service.PlayerService;
 
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.LOBBY;
 
@@ -20,13 +21,15 @@ public class JoinCommand extends BaseBotCommand {
     private final EventStateService eventStateService;
     private final MessageService messageService;
     private final ExecuteService executeService;
+    private final PlayerService playerService;
 
-    public JoinCommand(EventContextService eventContextService, EventStateService eventStateService, MessageService messageService, ExecuteService executeService) {
+    public JoinCommand(EventContextService eventContextService, EventStateService eventStateService, MessageService messageService, ExecuteService executeService, PlayerService playerService) {
         super(Command.JOIN.getCommand(), "Присоединиться к игре");
         this.eventContextService = eventContextService;
         this.eventStateService = eventStateService;
         this.messageService = messageService;
         this.executeService = executeService;
+        this.playerService = playerService;
     }
 
     @SneakyThrows

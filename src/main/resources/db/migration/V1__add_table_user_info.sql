@@ -1,7 +1,6 @@
 create table if not exists user_info
 (
-    id                         bigint generated always as identity primary key,
-    telegram_id                bigint      not null,
+    telegram_id                bigint primary key,
     language_code              text,
     is_bot                     boolean,
     first_name                 text,

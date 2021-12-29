@@ -22,21 +22,18 @@ public class UserServiceImpl implements UserService {
         return userDao.get(telegramId);
     }
 
-    @Override
-    public Boolean hasAccess(Long telegramId) {
+    private Boolean hasAccess(Long telegramId) {
         return (userDao.isActive(telegramId));
     }
 
     @Override
-    public Boolean authenticate(User user) {
+    public boolean authenticate(User user) {
         if (hasAccess(user.getId())) {
-            return Boolean.TRUE;
+            return true;
         } else if (!userDao.isBlocked(user.getId())) {
-            UserInfo userInfo = userMapper.toUserInfo(user);
-            userInfo.setCreatedAt(OffsetDateTime.now());
-            userDao.save(userInfo);
-            return Boolean.TRUE;
+            userDao.save(userMapper.toUserInfo(user));
+            return true;
         }
-        return Boolean.FALSE;
+        return false;
     }
 }

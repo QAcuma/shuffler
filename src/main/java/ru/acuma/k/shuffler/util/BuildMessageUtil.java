@@ -1,6 +1,8 @@
 package ru.acuma.k.shuffler.util;
 
+import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.k.shuffler.model.domain.KickerEvent;
+import ru.acuma.k.shuffler.model.domain.Player;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
 import ru.acuma.k.shuffler.model.enums.messages.MessageType;
 import ru.acuma.k.shuffler.service.enums.EventConstantApi;
@@ -49,9 +51,7 @@ public final class BuildMessageUtil {
                 break;
         }
         return header.getText() + event.getPlayers().stream()
-                .map(user -> user.getFirstName() +
-                        " " +
-                        user.getLastName())
+                .map(Player::getName)
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 

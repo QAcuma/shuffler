@@ -8,6 +8,8 @@ import ru.acuma.k.shuffler.tables.Event;
 import ru.acuma.k.shuffler.tables.FlywaySchemaHistory;
 import ru.acuma.k.shuffler.tables.Game;
 import ru.acuma.k.shuffler.tables.GroupInfo;
+import ru.acuma.k.shuffler.tables.Player;
+import ru.acuma.k.shuffler.tables.Team;
 import ru.acuma.k.shuffler.tables.UserInfo;
 
 
@@ -36,6 +38,16 @@ public class Tables {
      * The table <code>public.group_info</code>.
      */
     public static final GroupInfo GROUP_INFO = GroupInfo.GROUP_INFO;
+
+    /**
+     * The table <code>public.player</code>.
+     */
+    public static final Player PLAYER = Player.PLAYER;
+
+    /**
+     * The table <code>public.team</code>.
+     */
+    public static final Team TEAM = Team.TEAM;
 
     /**
      * The table <code>public.user_info</code>.

@@ -2,12 +2,12 @@ package ru.acuma.k.shuffler.model.domain;
 
 import lombok.Builder;
 import lombok.Data;
-import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.k.shuffler.model.enums.EventState;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -24,11 +24,13 @@ public class KickerEvent {
 
     private EventState eventState;
 
-    private final List<User> players = new LinkedList<>();
+    private final Set<EventPlayer> players = new HashSet<>();
 
     private LocalDateTime startedAt;
 
     private LocalDateTime finishedAt;
+
+    private final List<KickerGame> games = new ArrayList<>();
 
     public Integer getBaseMessage() {
         return Collections.min(this.messages);

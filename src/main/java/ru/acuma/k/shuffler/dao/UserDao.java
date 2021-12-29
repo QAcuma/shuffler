@@ -10,7 +10,7 @@ public interface UserDao {
 
     UserInfo get(Long telegramId);
 
-    Long save(UserInfo user);
+    long save(UserInfo user);
 
     UserInfo update(Long telegramId);
 

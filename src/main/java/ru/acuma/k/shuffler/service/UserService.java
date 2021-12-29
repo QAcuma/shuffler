@@ -7,7 +7,5 @@ public interface UserService {
 
     UserInfo getUser(Long telegramId);
 
-    Boolean hasAccess(Long telegramId);
-
-    Boolean authenticate(User user);
+    boolean authenticate(User user);
 }

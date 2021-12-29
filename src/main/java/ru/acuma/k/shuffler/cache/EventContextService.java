@@ -55,7 +55,8 @@ public class EventContextService {
 
     public void registerPlayer(Long chatId, User user) {
         if (isActive(chatId)) {
-            getEvent(chatId).getPlayers().add(user);
+
+//            getEvent(chatId).getPlayers().add(user);
         }
     }
 
