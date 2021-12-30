@@ -24,6 +24,7 @@ public enum EventConstant implements EventConstantApi {
     UNEXPECTED_CHECKING_MESSAGE("Завершить игру?"),
     FINISH_CHECKING_MESSAGE("За работу?"),
     GAME_MESSAGE("Игра №"),
+    STARTED_GAME_MESSAGE("Отметьте победителя после окончания матча!"),
     CANCELLED_GAME_MESSAGE("Игра была отменена"),
     FINISHED_GAME_MESSAGE("Победители: "),
     LOBBY_FINISHED_MESSAGE("🍢 Славно поиграли! 🍢\n" +

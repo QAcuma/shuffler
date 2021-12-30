@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS;
+import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class ShuffleServiceImpl implements ShuffleService {
                 .filter(member -> !member.isLeft())
                 .collect(Collectors.toList());
 
-        if (members.size() < GAME_PLAYERS) {
+        if (members.size() < GAME_PLAYERS_COUNT) {
             return null;
         }
 
@@ -46,7 +46,7 @@ public class ShuffleServiceImpl implements ShuffleService {
         }
         List<KickerEventPlayer> players = new ArrayList<>();
         for (int i = minGames; i <= maxGames; i++) {
-            int vacancy = GAME_PLAYERS - players.size();
+            int vacancy = GAME_PLAYERS_COUNT - players.size();
             var shuffled = shufflePriority(members, i);
 
             if (shuffled.size() >= vacancy) {
@@ -64,7 +64,7 @@ public class ShuffleServiceImpl implements ShuffleService {
     @SneakyThrows
     private List<KickerEventPlayer> shuffleEvenly(List<KickerEventPlayer> members) {
         Collections.shuffle(members, SecureRandom.getInstance("SHA1PRNG", "SUN"));
-        return members.subList(0, GAME_PLAYERS);
+        return members.subList(0, GAME_PLAYERS_COUNT);
     }
 
     @SneakyThrows
@@ -72,7 +72,7 @@ public class ShuffleServiceImpl implements ShuffleService {
         List<KickerEventPlayer> priority = members.stream()
                 .filter(member -> member.getGameCount() == index)
                 .collect(Collectors.toList());
-        if (priority.size() > GAME_PLAYERS) {
+        if (priority.size() > GAME_PLAYERS_COUNT) {
             return shuffleEvenly(priority);
         }
         Collections.shuffle(members, SecureRandom.getInstance("SHA1PRNG", "SUN"));

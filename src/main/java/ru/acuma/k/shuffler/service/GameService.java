@@ -5,6 +5,6 @@ import ru.acuma.k.shuffler.model.entity.KickerGame;
 
 public interface GameService {
 
-    KickerGame buildGame(KickerEvent event);
+    void buildGame(KickerEvent event);
 
 }

@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.model.enums.keyboards.Created;
 import ru.acuma.k.shuffler.model.enums.keyboards.Finished;
+import ru.acuma.k.shuffler.model.enums.keyboards.Game;
 import ru.acuma.k.shuffler.model.enums.keyboards.Playing;
 import ru.acuma.k.shuffler.model.enums.keyboards.Ready;
 import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking;
@@ -17,6 +17,7 @@ import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking2;
 import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking3;
 import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking4;
 import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking5;
+import ru.acuma.k.shuffler.model.enums.messages.MessageType;
 import ru.acuma.k.shuffler.service.KeyboardService;
 import ru.acuma.k.shuffler.service.enums.EventStatusApi;
 
@@ -29,12 +30,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class KeyboardServiceImpl implements KeyboardService {
 
-    private final EventContextServiceImpl eventContextService;
-
     @Override
-    public InlineKeyboardMarkup getKeyboard(KickerEvent event) {
-        var names = getButtons(event.getEventState());
-        return buildKeyboard(names);
+    public InlineKeyboardMarkup getKeyboard(KickerEvent event, MessageType type) {
+        EventState state = event.getEventState();
+        switch (type) {
+            case GAME:
+                return buildKeyboard(buildGameButtons(state));
+            case CHECKING:
+            default:
+                return buildKeyboard(buildButtons(state));
+        }
     }
 
     @Override
@@ -44,8 +49,8 @@ public class KeyboardServiceImpl implements KeyboardService {
     }
 
     @Override
-    public InlineKeyboardMarkup getTimedCheckingKeyboard(int time) {
-        var names = getTimedButtons(time);
+    public InlineKeyboardMarkup getTimedKeyboard(int time) {
+        var names = buildTimedButtons(time);
         return buildKeyboard(names);
     }
 
@@ -85,7 +90,7 @@ public class KeyboardServiceImpl implements KeyboardService {
                 .build();
     }
 
-    public List<EventStatusApi> getTimedButtons(int time) {
+    public List<EventStatusApi> buildTimedButtons(int time) {
         switch (time) {
             case 5:
                 return List.of(Checking5.values());
@@ -102,7 +107,7 @@ public class KeyboardServiceImpl implements KeyboardService {
         }
     }
 
-    private List<EventStatusApi> getButtons(EventState eventState) {
+    private List<EventStatusApi> buildButtons(EventState eventState) {
         switch (eventState) {
             case CREATED:
                 return List.of(Created.values());
@@ -117,6 +122,15 @@ public class KeyboardServiceImpl implements KeyboardService {
                 return List.of(Playing.values());
             case FINISHED:
                 return List.of(Finished.values());
+            default:
+                return new ArrayList<>();
+        }
+    }
+
+    private List<EventStatusApi> buildGameButtons(EventState eventState) {
+        switch (eventState) {
+            case PLAYING:
+                return List.of(Game.values());
             default:
                 return new ArrayList<>();
         }

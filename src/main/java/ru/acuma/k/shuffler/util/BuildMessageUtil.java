@@ -14,6 +14,7 @@ import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.CANCELLED_G
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.DEFAULT_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.FINISHED_GAME_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.GAME_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.STARTED_GAME_MESSAGE;
 
 public final class BuildMessageUtil {
 
@@ -45,35 +46,43 @@ public final class BuildMessageUtil {
 
         StringBuilder builder = new StringBuilder();
         builder
-                .append(GAME_MESSAGE)
+                .append(System.lineSeparator())
+                .append(GAME_MESSAGE.getText())
                 .append(game.getIndex())
                 .append(System.lineSeparator())
+                .append(System.lineSeparator())
+                .append(StringUtils.repeat("    ", 6))
+                .append(game.getRedTeam().getRating())
                 .append(System.lineSeparator())
                 .append("♦️")
                 .append(game.getRedTeam().toString())
                 .append("♦️ ")
-                .append(game.getRedTeam().getRating())
                 .append(System.lineSeparator())
-                .append(StringUtils.repeat(' ', game.getRedTeam().getPlayer1().getName().length() + 1))
-                .append(" ⚡️")
+                .append(StringUtils.repeat("    ", 5))
+                .append("⚡️⚡️⚡️")
                 .append(System.lineSeparator())
                 .append("\uD83D\uDD37")
                 .append(game.getBlueTeam().toString())
                 .append("\uD83D\uDD37 ")
+                .append(System.lineSeparator())
+                .append(StringUtils.repeat("    ", 6))
                 .append(game.getBlueTeam().getRating());
 
         switch (game.getState()) {
             case STARTED:
+                builder.append(System.lineSeparator())
+                        .append(System.lineSeparator())
+                        .append(STARTED_GAME_MESSAGE.getText());
                 break;
             case CANCELLED:
                 builder.append(System.lineSeparator())
                         .append(System.lineSeparator())
-                        .append(CANCELLED_GAME_MESSAGE);
+                        .append(CANCELLED_GAME_MESSAGE.getText());
                 break;
             case FINISHED:
                 builder.append(System.lineSeparator())
                         .append(System.lineSeparator())
-                        .append(FINISHED_GAME_MESSAGE)
+                        .append(FINISHED_GAME_MESSAGE.getText())
                         .append(game.getWinnerTeam().toString())
                         .append(game.getWinnerTeam().getRatingChange());
         }
@@ -103,7 +112,7 @@ public final class BuildMessageUtil {
         }
         return header.getText() + event.getPlayers().values()
                 .stream()
-                .map(KickerEventPlayer::getMark)
+                .map(KickerEventPlayer::getName)
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 

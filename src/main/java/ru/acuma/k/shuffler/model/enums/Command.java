@@ -18,7 +18,9 @@ public enum Command {
     RESULT("result"),
     FINISH("finish"),
     RESET("reset"),
-    BEGIN("begin");
+    BEGIN("begin"),
+    RED("red"),
+    BLUE("blue");
 
     private final String command;
 }

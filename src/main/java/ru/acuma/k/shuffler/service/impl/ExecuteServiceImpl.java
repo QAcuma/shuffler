@@ -57,7 +57,7 @@ public class ExecuteServiceImpl implements ExecuteService {
         for (int i = 1; i <= Values.TIMEOUT; i++) {
             final int current = i;
             executorService.schedule(() -> {
-                update.setReplyMarkup(keyboardService.getTimedCheckingKeyboard(Values.TIMEOUT - current));
+                update.setReplyMarkup(keyboardService.getTimedKeyboard(Values.TIMEOUT - current));
                 return absSender.execute(update);
             }, current, TimeUnit.SECONDS);
         }

@@ -41,7 +41,7 @@ public class YesCommand extends BaseBotCommand {
         final var event = eventContextService.getEvent(message.getChatId());
         switch (event.getEventState()) {
             case BEGIN_CHECKING:
-                beginChampionship(absSender, event);
+                beginChampionship(absSender, event, message);
                 break;
             case CANCEL_CHECKING:
                 cancelChampionship(absSender, event);
@@ -51,11 +51,11 @@ public class YesCommand extends BaseBotCommand {
     }
 
     @SneakyThrows
-    private void beginChampionship(AbsSender absSender, KickerEvent event) {
-        eventStateService.playingState(event);
+    private void beginChampionship(AbsSender absSender, KickerEvent event, Message message) {
         gameService.buildGame(event);
-
+        eventStateService.playingState(event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));
+        maintenanceService.sweepMessage(absSender, message);
         executeService.execute(absSender, messageService.sendMessage(event, GAME));
 
     }

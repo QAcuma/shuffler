@@ -65,7 +65,7 @@ public class MessageServiceImpl implements MessageService {
             return keyboardService.getEmptyKeyboard();
         }
         return type == CHECKING_TIMED
-                ? keyboardService.getTimedCheckingKeyboard(Values.TIMEOUT)
-                : keyboardService.getKeyboard(event);
+                ? keyboardService.getTimedKeyboard(Values.TIMEOUT)
+                : keyboardService.getKeyboard(event, type);
     }
 }
