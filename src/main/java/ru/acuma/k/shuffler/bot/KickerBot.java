@@ -12,13 +12,15 @@ import ru.acuma.k.shuffler.service.GroupService;
 import ru.acuma.k.shuffler.service.NonCommandService;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.service.commands.BeginCommand;
+import ru.acuma.k.shuffler.service.commands.BlueCommand;
+import ru.acuma.k.shuffler.service.commands.CancelGameCommand;
 import ru.acuma.k.shuffler.service.commands.CancelCommand;
 import ru.acuma.k.shuffler.service.commands.JoinCommand;
 import ru.acuma.k.shuffler.service.commands.KickerCommand;
 import ru.acuma.k.shuffler.service.commands.LeaveCommand;
 import ru.acuma.k.shuffler.service.commands.NoCommand;
+import ru.acuma.k.shuffler.service.commands.RedCommand;
 import ru.acuma.k.shuffler.service.commands.ResetCommand;
-import ru.acuma.k.shuffler.service.commands.ShuffleCommand;
 import ru.acuma.k.shuffler.service.commands.WaitCommand;
 import ru.acuma.k.shuffler.service.commands.YesCommand;
 
@@ -53,13 +55,19 @@ public class KickerBot extends TelegramLongPollingCommandBot {
     private CancelCommand cancelCommand;
 
     @Autowired
-    private ShuffleCommand shuffleCommand;
+    private CancelGameCommand cancelGameCommand;
 
     @Autowired
     private YesCommand yesCommand;
 
     @Autowired
     private NoCommand noCommand;
+
+    @Autowired
+    private RedCommand redCommand;
+
+    @Autowired
+    private BlueCommand blueCommand;
 
     @Autowired
     private WaitCommand waitCommand;
@@ -83,9 +91,11 @@ public class KickerBot extends TelegramLongPollingCommandBot {
         register(joinCommand);
         register(leaveCommand);
         register(cancelCommand);
-        register(shuffleCommand);
+        register(cancelGameCommand);
         register(yesCommand);
         register(noCommand);
+        register(redCommand);
+        register(blueCommand);
         register(waitCommand);
         register(beginCommand);
         register(resetCommand);

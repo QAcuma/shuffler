@@ -5,15 +5,11 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
-import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MessageService;
 import ru.acuma.k.shuffler.service.PlayerService;
-import ru.acuma.k.shuffler.service.ShuffleService;
-
-import java.util.List;
 
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.LOBBY;
 

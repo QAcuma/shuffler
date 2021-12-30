@@ -3,7 +3,6 @@ package ru.acuma.k.shuffler.util;
 import org.apache.commons.lang3.StringUtils;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
-import ru.acuma.k.shuffler.model.entity.KickerPlayer;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
 import ru.acuma.k.shuffler.model.enums.messages.MessageType;
 import ru.acuma.k.shuffler.service.enums.EventConstantApi;
@@ -124,6 +123,10 @@ public final class BuildMessageUtil {
                 return EventConstant.BEGIN_CHECKING_MESSAGE.getText();
             case NEXT_CHECKING:
                 return EventConstant.NEXT_CHECKING_MESSAGE.getText();
+            case RED_CHECKING:
+                return EventConstant.RED_CHECKING_MESSAGE.getText();
+            case BLUE_CHECKING:
+                return EventConstant.BLUE_CHECKING_MESSAGE.getText();
             case MEMBER_CHECKING:
                 return EventConstant.MEMBER_CHECKING_MESSAGE.getText();
             case FINISH_CHECKING:

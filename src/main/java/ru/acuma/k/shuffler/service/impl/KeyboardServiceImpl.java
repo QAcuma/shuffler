@@ -115,6 +115,9 @@ public class KeyboardServiceImpl implements KeyboardService {
                 return List.of(Ready.values());
             case CANCEL_CHECKING:
             case BEGIN_CHECKING:
+            case NEXT_CHECKING:
+            case RED_CHECKING:
+            case BLUE_CHECKING:
             case MEMBER_CHECKING:
             case FINISH_CHECKING:
                 return List.of(Checking.values());
@@ -131,6 +134,8 @@ public class KeyboardServiceImpl implements KeyboardService {
         switch (eventState) {
             case PLAYING:
                 return List.of(Game.values());
+            case RED_CHECKING:
+            case BLUE_CHECKING:
             default:
                 return new ArrayList<>();
         }

@@ -14,13 +14,13 @@ public enum Command {
     WAIT("wait"),
     YES("yes"),
     NO("no"),
-    SHUFFLE("shuffle"),
+    BEGIN("begin"),
+    CANCEL_GAME("cancel_game"),
     RESULT("result"),
     FINISH("finish"),
-    RESET("reset"),
-    BEGIN("begin"),
     RED("red"),
-    BLUE("blue");
+    BLUE("blue"),
+    RESET("reset");
 
     private final String command;
 }

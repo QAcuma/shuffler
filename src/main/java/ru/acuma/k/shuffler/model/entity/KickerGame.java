@@ -18,6 +18,8 @@ public class KickerGame {
 
     private int index;
 
+    private int messageId;
+
     private GameState state;
 
     private KickerTeam redTeam;

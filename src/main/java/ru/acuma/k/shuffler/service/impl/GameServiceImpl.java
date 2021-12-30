@@ -9,7 +9,6 @@ import ru.acuma.k.shuffler.model.entity.KickerGame;
 import ru.acuma.k.shuffler.model.entity.KickerTeam;
 import ru.acuma.k.shuffler.model.enums.GameState;
 import ru.acuma.k.shuffler.service.GameService;
-import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.ShuffleService;
 import ru.acuma.k.shuffler.service.TeamService;
 

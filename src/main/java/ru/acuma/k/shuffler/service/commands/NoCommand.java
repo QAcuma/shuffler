@@ -11,6 +11,8 @@ import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
 
+import static ru.acuma.k.shuffler.model.enums.messages.MessageType.GAME;
+
 @Component
 public class NoCommand extends BaseBotCommand {
 
@@ -38,12 +40,16 @@ public class NoCommand extends BaseBotCommand {
             case CANCEL_CHECKING:
             case BEGIN_CHECKING:
                 eventStateService.lobbyState(event);
+                executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
+            case NEXT_CHECKING:
+            case RED_CHECKING:
+            case BLUE_CHECKING:
             case FINISH_CHECKING:
                 eventStateService.playingState(event);
+                executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), GAME));
                 break;
         }
-        executeService.execute(absSender, messageService.updateLobbyMessage(event));
     }
 }
 

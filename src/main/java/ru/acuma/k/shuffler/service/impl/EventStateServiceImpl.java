@@ -7,11 +7,13 @@ import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.service.EventStateService;
 
 import static ru.acuma.k.shuffler.model.enums.EventState.BEGIN_CHECKING;
+import static ru.acuma.k.shuffler.model.enums.EventState.BLUE_CHECKING;
 import static ru.acuma.k.shuffler.model.enums.EventState.CANCELLED;
 import static ru.acuma.k.shuffler.model.enums.EventState.CANCEL_CHECKING;
 import static ru.acuma.k.shuffler.model.enums.EventState.CREATED;
 import static ru.acuma.k.shuffler.model.enums.EventState.READY;
-import static ru.acuma.k.shuffler.model.enums.Values.READY_SIZE;
+import static ru.acuma.k.shuffler.model.enums.EventState.RED_CHECKING;
+import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class EventStateServiceImpl implements EventStateService {
     public void lobbyState(KickerEvent event) {
         var state = event.getEventState();
         if (state == CREATED || state == READY || state == CANCEL_CHECKING || state == BEGIN_CHECKING) {
-            if (event.getPlayers().size() >= READY_SIZE) {
+            if (event.getPlayers().size() >= GAME_PLAYERS_COUNT) {
                 readyState(event);
             } else {
                 createdState(event);
@@ -57,6 +59,21 @@ public class EventStateServiceImpl implements EventStateService {
     @Override
     public void playingState(KickerEvent event) {
         event.setEventState(EventState.PLAYING);
+    }
+
+    @Override
+    public void nextCheckingState(KickerEvent event) {
+        event.setEventState(EventState.NEXT_CHECKING);
+    }
+
+    @Override
+    public void redCheckingState(KickerEvent event) {
+        event.setEventState(RED_CHECKING);
+    }
+
+    @Override
+    public void blueCheckingState(KickerEvent event) {
+        event.setEventState(BLUE_CHECKING);
     }
 
     @Override

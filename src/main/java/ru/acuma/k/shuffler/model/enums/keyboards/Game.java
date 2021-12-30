@@ -9,9 +9,9 @@ import ru.acuma.k.shuffler.service.enums.EventStatusApi;
 @AllArgsConstructor
 public enum Game implements EventStatusApi {
 
-    BUTTON_JOIN(Command.JOIN.getCommand(), "♦️", 1),
-    BUTTON_LEAVE(Command.LEAVE.getCommand(), "\uD83D\uDD37", 1),
-    BUTTON_FINISH(Command.FINISH.getCommand(), "Отменить игру", 2);
+    BUTTON_JOIN(Command.RED.getCommand(), "♦️", 1),
+    BUTTON_LEAVE(Command.BLUE.getCommand(), "\uD83D\uDD37", 1),
+    BUTTON_FINISH(Command.CANCEL_GAME.getCommand(), "Отменить игру", 2);
 
     public final String action;
     public final String alias;

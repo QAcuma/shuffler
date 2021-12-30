@@ -56,8 +56,8 @@ public class YesCommand extends BaseBotCommand {
         eventStateService.playingState(event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));
         maintenanceService.sweepMessage(absSender, message);
-        executeService.execute(absSender, messageService.sendMessage(event, GAME));
-
+        var gameMessage = executeService.execute(absSender, messageService.sendMessage(event, GAME));
+        event.getLastGame().setMessageId(gameMessage.getMessageId());
     }
 
     @SneakyThrows
