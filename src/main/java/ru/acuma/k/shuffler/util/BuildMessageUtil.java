@@ -2,6 +2,7 @@ package ru.acuma.k.shuffler.util;
 
 import org.apache.commons.lang3.StringUtils;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.entity.KickerPlayer;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
 import ru.acuma.k.shuffler.model.enums.messages.MessageType;
@@ -102,7 +103,7 @@ public final class BuildMessageUtil {
         }
         return header.getText() + event.getPlayers().values()
                 .stream()
-                .map(KickerPlayer::getName)
+                .map(KickerEventPlayer::getMark)
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 

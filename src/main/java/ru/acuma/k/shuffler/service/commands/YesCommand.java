@@ -14,7 +14,6 @@ import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
 
 import static ru.acuma.k.shuffler.model.enums.Values.CANCELLED_MESSAGE_TIMEOUT;
-import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.GAME;
 
 @Component

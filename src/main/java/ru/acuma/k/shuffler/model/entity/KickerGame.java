@@ -1,12 +1,16 @@
 package ru.acuma.k.shuffler.model.entity;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.acuma.k.shuffler.model.enums.GameState;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@Builder
 @Accessors(chain = true)
 public class KickerGame {
 
@@ -25,6 +29,5 @@ public class KickerGame {
     private LocalDateTime startedAt;
 
     private LocalDateTime finishedAt;
-
 
 }

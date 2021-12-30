@@ -2,6 +2,7 @@ package ru.acuma.k.shuffler.model.entity;
 
 import lombok.Builder;
 import lombok.Data;
+import org.apache.commons.lang3.SerializationUtils;
 import ru.acuma.k.shuffler.model.enums.EventState;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 

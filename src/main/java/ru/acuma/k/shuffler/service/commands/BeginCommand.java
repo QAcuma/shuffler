@@ -11,7 +11,6 @@ import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MessageService;
 
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING;
-import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
 
 @Component
 public class BeginCommand extends BaseBotCommand {
