@@ -7,6 +7,7 @@ import ru.acuma.k.shuffler.model.enums.EventState;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,16 +38,16 @@ public class KickerEvent {
         return Collections.min(this.messages);
     }
 
-    public boolean isPresent(Long playerId) {
-        return players.containsKey(playerId);
+    public boolean isPresent(Long telegramId) {
+        return players.containsKey(telegramId);
     }
 
-    public void joinPlayer(KickerPlayer kickerPlayer) {
-        this.players.put(kickerPlayer.getId(), new KickerEventPlayer(kickerPlayer));
+    public void joinPlayer(KickerEventPlayer kickerPlayer) {
+        this.players.put(kickerPlayer.getTelegramId(), kickerPlayer);
     }
 
-    public void leavePlayer(Long playerId) {
-        this.players.remove(playerId);
+    public void leavePlayer(Long telegramId) {
+        this.players.remove(telegramId);
     }
 
     public boolean isPresent(Integer messageId) {
@@ -59,6 +60,12 @@ public class KickerEvent {
 
     public void missMessage(Integer messageId) {
         this.messages.remove(messageId);
+    }
+
+    public KickerGame getLastGame() {
+        return games.stream()
+                .max(Comparator.comparingInt(KickerGame::getIndex))
+                .orElse(null);
     }
 
 }

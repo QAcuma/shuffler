@@ -1,8 +1,12 @@
 package ru.acuma.k.shuffler.model.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Data
+@Getter
+@Setter
+@Accessors(chain = true)
 public class KickerTeam {
 
     public KickerTeam(KickerEventPlayer player1, KickerEventPlayer player2) {
@@ -15,6 +19,12 @@ public class KickerTeam {
 
     private KickerEventPlayer player2;
 
-    private Long rating;
+    private int rating;
 
+    private int ratingChange;
+
+    @Override
+    public String toString() {
+        return player1.getName() + " & " + player2.getName();
+    }
 }

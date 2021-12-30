@@ -1,6 +1,8 @@
 package ru.acuma.k.shuffler.dao.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Repository;
@@ -9,10 +11,10 @@ import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 import ru.acuma.k.shuffler.tables.records.UserInfoRecord;
 
 import java.time.OffsetDateTime;
-import java.util.Objects;
 
 import static ru.acuma.k.shuffler.Tables.USER_INFO;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
@@ -23,29 +25,28 @@ public class UserDaoImpl implements UserDao {
     public boolean isBlocked(Long telegramId) {
         return dsl.fetchExists(
                 dsl.selectFrom(USER_INFO)
-                        .where(USER_INFO.TELEGRAM_ID.eq(telegramId)
-                                .and(USER_INFO.IS_BLOCKED.eq(Boolean.TRUE)
-                                )));
+                        .where(USER_INFO.TELEGRAM_ID.eq(telegramId))
+                        .and(USER_INFO.IS_BLOCKED.eq(Boolean.TRUE))
+        );
     }
 
     @Override
     public boolean isActive(Long telegramId) {
         return dsl.fetchExists(
                 dsl.selectFrom(USER_INFO)
-                        .where(USER_INFO.TELEGRAM_ID.eq(telegramId)
-                                .and(USER_INFO.IS_BLOCKED.eq(Boolean.FALSE)
-                                        .and(USER_INFO.DELETED_AT.isNull()
-                                        ))));
+                        .where(USER_INFO.TELEGRAM_ID.eq(telegramId))
+                        .and(USER_INFO.IS_BLOCKED.eq(Boolean.FALSE))
+                        .and(USER_INFO.DELETED_AT.isNull())
+        );
     }
 
+    @SneakyThrows
     @Override
     public UserInfo get(Long telegramId) {
-        Record record = dsl.select()
+        return dsl.select()
                 .from(USER_INFO)
                 .where(USER_INFO.TELEGRAM_ID.eq(telegramId))
-                .fetchOne();
-        UserInfoRecord userInfoRecord = Objects.requireNonNull(record).into(USER_INFO);
-        return userInfoRecord.into(UserInfo.class);
+                .fetchOneInto(UserInfo.class);
     }
 
     @Override

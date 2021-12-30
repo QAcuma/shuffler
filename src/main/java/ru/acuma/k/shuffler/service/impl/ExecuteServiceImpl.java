@@ -41,7 +41,7 @@ public class ExecuteServiceImpl implements ExecuteService {
     }
 
     @Override
-    public void executeLater(AbsSender absSender, Runnable method, Long delay) {
+    public void executeLater(AbsSender absSender, Runnable method, int delay) {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.schedule(method, delay, TimeUnit.SECONDS);
     }

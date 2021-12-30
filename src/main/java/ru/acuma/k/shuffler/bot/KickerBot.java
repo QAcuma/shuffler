@@ -106,6 +106,9 @@ public class KickerBot extends TelegramLongPollingCommandBot {
 
     private void processCallback(CallbackQuery callbackQuery) {
         callbackQuery.getMessage().setFrom(callbackQuery.getFrom());
+        if (filter(callbackQuery.getMessage())) {
+            return;
+        }
         getRegisteredCommand(callbackQuery.getData()).processMessage(this,
                 callbackQuery.getMessage(),
                 new String[]{}

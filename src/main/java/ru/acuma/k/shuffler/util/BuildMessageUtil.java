@@ -1,5 +1,6 @@
 package ru.acuma.k.shuffler.util;
 
+import org.apache.commons.lang3.StringUtils;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerPlayer;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
@@ -8,7 +9,10 @@ import ru.acuma.k.shuffler.service.enums.EventConstantApi;
 
 import java.util.stream.Collectors;
 
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.CANCELLED_GAME_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.DEFAULT_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.FINISHED_GAME_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.GAME_MESSAGE;
 
 public final class BuildMessageUtil {
 
@@ -33,7 +37,46 @@ public final class BuildMessageUtil {
     }
 
     private static String buildGameText(KickerEvent event) {
-        return EventConstant.PLAYING_MESSAGE.getText();
+        var game = event.getLastGame();
+        if (game == null) {
+            return DEFAULT_MESSAGE.getText();
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder
+                .append(GAME_MESSAGE)
+                .append(game.getIndex())
+                .append(System.lineSeparator())
+                .append(System.lineSeparator())
+                .append("♦️")
+                .append(game.getRedTeam().toString())
+                .append("♦️ ")
+                .append(game.getRedTeam().getRating())
+                .append(System.lineSeparator())
+                .append(StringUtils.repeat(' ', game.getRedTeam().getPlayer1().getName().length() + 1))
+                .append(" ⚡️")
+                .append(System.lineSeparator())
+                .append("\uD83D\uDD37")
+                .append(game.getBlueTeam().toString())
+                .append("\uD83D\uDD37 ")
+                .append(game.getBlueTeam().getRating());
+
+        switch (game.getState()) {
+            case STARTED:
+                break;
+            case CANCELLED:
+                builder.append(System.lineSeparator())
+                        .append(System.lineSeparator())
+                        .append(CANCELLED_GAME_MESSAGE);
+                break;
+            case FINISHED:
+                builder.append(System.lineSeparator())
+                        .append(System.lineSeparator())
+                        .append(FINISHED_GAME_MESSAGE)
+                        .append(game.getWinnerTeam().toString())
+                        .append(game.getWinnerTeam().getRatingChange());
+        }
+        return builder.toString();
     }
 
     private static String buildLobbyText(KickerEvent event) {
@@ -47,11 +90,14 @@ public final class BuildMessageUtil {
                 break;
             case CANCELLED:
                 return EventConstant.LOBBY_CANCELED_MESSAGE.getText();
+            case PLAYING:
+                header = EventConstant.LOBBY_PLAYING_MESSAGE;
+                break;
             case FINISHED:
                 header = EventConstant.LOBBY_FINISHED_MESSAGE;
                 break;
             default:
-                header = EventConstant.LOBBY_PLAYING_MESSAGE;
+                header = DEFAULT_MESSAGE;
                 break;
         }
         return header.getText() + event.getPlayers().values()
@@ -66,6 +112,8 @@ public final class BuildMessageUtil {
                 return EventConstant.CANCEL_CHECKING_MESSAGE.getText();
             case BEGIN_CHECKING:
                 return EventConstant.BEGIN_CHECKING_MESSAGE.getText();
+            case NEXT_CHECKING:
+                return EventConstant.NEXT_CHECKING_MESSAGE.getText();
             case MEMBER_CHECKING:
                 return EventConstant.MEMBER_CHECKING_MESSAGE.getText();
             case FINISH_CHECKING:

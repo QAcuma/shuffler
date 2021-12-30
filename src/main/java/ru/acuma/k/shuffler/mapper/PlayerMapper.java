@@ -4,29 +4,37 @@ import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.User;
+import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.entity.KickerPlayer;
-import ru.acuma.k.shuffler.tables.pojos.PlayerInfo;
+import ru.acuma.k.shuffler.tables.pojos.Player;
+import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 
 @Component
 public class PlayerMapper {
 
     private final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 
-    public PlayerInfo toPlayerInfo(KickerPlayer kickerPlayer) {
-        mapperFactory.classMap(User.class, PlayerInfo.class)
+    public KickerPlayer toKickerPlayer(UserInfo userInfo, Player player) {
+        mapperFactory.classMap(UserInfo.class, KickerPlayer.class)
                 .byDefault()
                 .register();
         MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(kickerPlayer, PlayerInfo.class);
+        KickerPlayer kickerPlayer = mapper.map(userInfo, KickerPlayer.class);
+        return kickerPlayer
+                .setId(player.getId())
+                .setChatId(player.getChatId())
+                .setRating(player.getRating());
     }
 
-    public KickerPlayer toPlayer(PlayerInfo playerInfo) {
-        mapperFactory.classMap(User.class, PlayerInfo.class)
+    public KickerEventPlayer toKickerEventPlayer(KickerPlayer player) {
+        mapperFactory.classMap(KickerPlayer.class, KickerEventPlayer.class)
                 .byDefault()
                 .register();
         MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(playerInfo, KickerPlayer.class);
+        KickerEventPlayer eventPlayer = mapper.map(player, KickerEventPlayer.class);
+        return eventPlayer.setGameCount(0)
+                .setLeft(false);
     }
+
 
 }

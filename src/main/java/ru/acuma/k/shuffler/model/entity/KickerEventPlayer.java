@@ -2,14 +2,15 @@ package ru.acuma.k.shuffler.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 public class KickerEventPlayer extends KickerPlayer {
 
-    public KickerEventPlayer(KickerPlayer kickerPlayer) {
-        this.gameCount = 0;
-    }
-
     private int gameCount;
+
+    private boolean left;
+
 }

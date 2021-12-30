@@ -17,12 +17,15 @@ public enum EventConstant implements EventConstantApi {
             "Участники:\n"),
     CANCEL_CHECKING_MESSAGE("Точно завершить чемпионат? \n"),
     BEGIN_CHECKING_MESSAGE("Перекличка! Все участники в сборе? \uD83D\uDC65\n"),
+    NEXT_CHECKING_MESSAGE("⚽️ Начать следующую игру? ⚽️\n"),
     LOBBY_CANCELED_MESSAGE("Игра была отменена \uD83C\uDF1A"),
-    PLAYING_MESSAGE(""),
     STAT_MESSAGE(""),
     MEMBER_CHECKING_MESSAGE(", ты точно хочешь покинуть игру?"),
     UNEXPECTED_CHECKING_MESSAGE("Завершить игру?"),
     FINISH_CHECKING_MESSAGE("За работу?"),
+    GAME_MESSAGE("Игра №"),
+    CANCELLED_GAME_MESSAGE("Игра была отменена"),
+    FINISHED_GAME_MESSAGE("Победители: "),
     LOBBY_FINISHED_MESSAGE("🍢 Славно поиграли! 🍢\n" +
             "\n" +
             "Участники:\n");

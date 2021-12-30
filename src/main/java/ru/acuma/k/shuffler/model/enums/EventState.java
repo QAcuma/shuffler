@@ -13,6 +13,7 @@ public enum EventState {
     READY(3),
     BEGIN_CHECKING(1),
     PLAYING(2),
+    NEXT_CHECKING(1),
     MEMBER_CHECKING(1),
     FINISH_CHECKING(1),
     FINISHED(2);

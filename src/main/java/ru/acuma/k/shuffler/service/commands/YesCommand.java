@@ -14,6 +14,8 @@ import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
 
 import static ru.acuma.k.shuffler.model.enums.Values.CANCELLED_MESSAGE_TIMEOUT;
+import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
+import static ru.acuma.k.shuffler.model.enums.messages.MessageType.GAME;
 
 @Component
 public class YesCommand extends BaseBotCommand {
@@ -35,7 +37,6 @@ public class YesCommand extends BaseBotCommand {
         this.gameService = gameService;
     }
 
-    @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getEvent(message.getChatId());
@@ -50,10 +51,13 @@ public class YesCommand extends BaseBotCommand {
         }
     }
 
+    @SneakyThrows
     private void beginChampionship(AbsSender absSender, KickerEvent event) {
         eventStateService.playingState(event);
         gameService.buildGame(event);
 
+        executeService.execute(absSender, messageService.updateLobbyMessage(event));
+        executeService.execute(absSender, messageService.sendMessage(event, GAME));
 
     }
 

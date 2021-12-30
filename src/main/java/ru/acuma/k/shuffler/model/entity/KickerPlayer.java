@@ -2,17 +2,21 @@ package ru.acuma.k.shuffler.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.telegram.telegrambots.meta.api.objects.User;
+import lombok.experimental.Accessors;
+import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 
 import java.util.Optional;
 
 @Getter
 @Setter
-public class KickerPlayer extends User {
+@Accessors(chain = true)
+public class KickerPlayer extends UserInfo {
 
-    private Long rating;
+    private Long id;
 
     private Long chatId;
+
+    private int rating;
 
     public String getName() {
         StringBuilder builder = new StringBuilder();
