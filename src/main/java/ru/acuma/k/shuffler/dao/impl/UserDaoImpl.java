@@ -64,6 +64,7 @@ public class UserDaoImpl implements UserDao {
         dsl.update(USER_INFO)
                 .set(USER_INFO.DELETED_AT, OffsetDateTime.now())
                 .set(USER_INFO.IS_BLOCKED, true)
-                .where(USER_INFO.TELEGRAM_ID.eq(telegramId));
+                .where(USER_INFO.TELEGRAM_ID.eq(telegramId))
+                .execute();
     }
 }

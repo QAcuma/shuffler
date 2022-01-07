@@ -41,7 +41,7 @@ public class BlueCommand extends BaseBotCommand {
         final var event = eventContextService.buildEvent(message.getChatId());
 
         eventStateService.blueCheckingState(event);
-        executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), GAME));
+        executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), GAME));
         executeService.execute(absSender, messageService.sendMessage(event, CHECKING));
     }
 }

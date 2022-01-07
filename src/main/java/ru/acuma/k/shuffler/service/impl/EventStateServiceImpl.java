@@ -60,25 +60,25 @@ public class EventStateServiceImpl implements EventStateService {
 
     @Override
     public void playingState(KickerEvent event) {
-        event.getLastGame().setState(STARTED);
+        event.getCurrentGame().setState(STARTED);
         event.setEventState(EventState.PLAYING);
     }
 
     @Override
     public void nextCheckingState(KickerEvent event) {
-        event.getLastGame().setState(CHECKING);
+        event.getCurrentGame().setState(CHECKING);
         event.setEventState(EventState.CANCEL_GAME_CHECKING);
     }
 
     @Override
     public void redCheckingState(KickerEvent event) {
-        event.getLastGame().setState(CHECKING);
+        event.getCurrentGame().setState(CHECKING);
         event.setEventState(RED_CHECKING);
     }
 
     @Override
     public void blueCheckingState(KickerEvent event) {
-        event.getLastGame().setState(CHECKING);
+        event.getCurrentGame().setState(CHECKING);
         event.setEventState(BLUE_CHECKING);
     }
 

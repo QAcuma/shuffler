@@ -47,7 +47,7 @@ public class NoCommand extends BaseBotCommand {
             case BLUE_CHECKING:
             case FINISH_CHECKING:
                 eventStateService.playingState(event);
-                executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), GAME));
+                executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), GAME));
                 break;
         }
     }

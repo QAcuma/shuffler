@@ -32,7 +32,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void updatePlayersRating(KickerEvent event) {
-        event.getLastGame().getPlayers().forEach(this::updateRating);
+        event.getCurrentGame().getPlayers().forEach(this::updateRating);
     }
 
     private void updateRating(KickerEventPlayer player) {

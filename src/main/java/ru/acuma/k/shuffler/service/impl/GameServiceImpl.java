@@ -49,7 +49,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void finishGame(KickerEvent event, WinnerState state) {
-        var game = event.getLastGame();
+        var game = event.getCurrentGame();
         if (game == null) {
             return;
         }

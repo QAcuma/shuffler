@@ -13,6 +13,7 @@ import ru.acuma.k.shuffler.service.GameService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
 
+import static ru.acuma.k.shuffler.model.enums.EventState.CANCEL_GAME_CHECKING;
 import static ru.acuma.k.shuffler.model.enums.Values.CANCELLED_MESSAGE_TIMEOUT;
 import static ru.acuma.k.shuffler.model.enums.WinnerState.BLUE;
 import static ru.acuma.k.shuffler.model.enums.WinnerState.NONE;
@@ -49,24 +50,28 @@ public class YesCommand extends BaseBotCommand {
                 break;
             case BEGIN_CHECKING:
                 newGame(absSender, event, message);
-                break;
-            case CANCEL_GAME_CHECKING:
-                gameService.finishGame(event, NONE);
-                newGame(absSender, event, message);
-//                executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), GAME));
+                executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
             case RED_CHECKING:
                 gameService.finishGame(event, RED);
+                executeService.execute(absSender, messageService.updateLobbyMessage(event));
+                executeService.execute(absSender, messageService.updateMessage(event, message.getMessageId(), GAME));
                 newGame(absSender, event, message);
-//                executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), GAME));
                 break;
             case BLUE_CHECKING:
                 gameService.finishGame(event, BLUE);
+                executeService.execute(absSender, messageService.updateLobbyMessage(event));
+                executeService.execute(absSender, messageService.updateMessage(event, message.getMessageId(), GAME));
                 newGame(absSender, event, message);
-//                executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), GAME));
+                break;
+            case CANCEL_GAME_CHECKING:
+                gameService.finishGame(event, NONE);
+                executeService.execute(absSender, messageService.updateMessage(event, message.getMessageId(), GAME));
+                newGame(absSender, event, message);
                 break;
             case FINISH_CHECKING:
                 gameService.finishGame(event, NONE);
+                executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 cancelChampionship(absSender, event);
                 break;
             default:
@@ -77,10 +82,9 @@ public class YesCommand extends BaseBotCommand {
     private void newGame(AbsSender absSender, KickerEvent event, Message message) {
         gameService.buildGame(event);
         eventStateService.playingState(event);
-        executeService.execute(absSender, messageService.updateLobbyMessage(event));
         maintenanceService.sweepMessage(absSender, message);
         var gameMessage = executeService.execute(absSender, messageService.sendMessage(event, GAME));
-        event.getLastGame().setMessageId(gameMessage.getMessageId());
+        event.getCurrentGame().setMessageId(gameMessage.getMessageId());
     }
 
     @SneakyThrows

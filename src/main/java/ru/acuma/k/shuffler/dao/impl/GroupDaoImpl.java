@@ -25,9 +25,9 @@ public class GroupDaoImpl implements GroupDao {
     public boolean isActive(Long chatId) {
         return dsl.fetchExists(
                 dsl.selectFrom(GROUP_INFO)
-                        .where(GROUP_INFO.CHAT_ID.eq(chatId)
-                                .and(GROUP_INFO.IS_BLOCKED.eq(Boolean.FALSE)
-                                )));
+                        .where(GROUP_INFO.CHAT_ID.eq(chatId))
+                        .and(GROUP_INFO.IS_BLOCKED.eq(Boolean.FALSE))
+        );
     }
 
 }

@@ -44,7 +44,7 @@ public class PlayerDaoImpl implements PlayerDao {
     public void updateRating(Player player) {
         dsl.update(PLAYER)
                 .set(PLAYER.RATING, player.getRating())
-                .where(PLAYER.CHAT_ID.eq(player.getChatId()))
-                .and(PLAYER.USER_ID.eq(player.getUserId()));
+                .where(PLAYER.ID.eq(player.getId()))
+                .execute();
     }
 }

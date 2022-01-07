@@ -40,7 +40,7 @@ public final class BuildMessageUtil {
     }
 
     private static String buildGameText(KickerEvent event) {
-        var game = event.getLastGame();
+        var game = event.getCurrentGame();
         if (game == null) {
             return BLANK_MESSAGE.getText();
         }

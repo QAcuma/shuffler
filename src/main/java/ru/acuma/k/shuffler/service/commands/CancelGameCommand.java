@@ -11,7 +11,6 @@ import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MessageService;
 
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING;
-import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.GAME;
 
 @Component
@@ -35,7 +34,7 @@ public class CancelGameCommand extends BaseBotCommand {
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.buildEvent(message.getChatId());
         eventStateService.nextCheckingState(event);
-        executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), GAME));
+        executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), GAME));
         executeService.execute(absSender, messageService.sendMessage(event, CHECKING));
     }
 }

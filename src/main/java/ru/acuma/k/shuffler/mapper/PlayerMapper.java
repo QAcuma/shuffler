@@ -39,6 +39,7 @@ public class PlayerMapper {
 
     public Player toPlayer(KickerEventPlayer player) {
         mapperFactory.classMap(KickerEventPlayer.class, Player.class)
+                .field("telegramId", "userId")
                 .byDefault()
                 .register();
         MapperFacade mapper = mapperFactory.getMapperFacade();
