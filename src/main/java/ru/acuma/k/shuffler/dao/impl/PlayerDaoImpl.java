@@ -34,8 +34,17 @@ public class PlayerDaoImpl implements PlayerDao {
     }
 
     @Override
-    public long save(Player player) {
+    public Player save(Player player) {
         PlayerRecord record = dsl.newRecord(PLAYER, player);
-        return record.store();
+        record.store();
+        return player;
+    }
+
+    @Override
+    public void updateRating(Player player) {
+        dsl.update(PLAYER)
+                .set(PLAYER.RATING, player.getRating())
+                .where(PLAYER.CHAT_ID.eq(player.getChatId()))
+                .and(PLAYER.USER_ID.eq(player.getUserId()));
     }
 }

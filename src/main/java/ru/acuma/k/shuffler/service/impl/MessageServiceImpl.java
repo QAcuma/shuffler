@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -29,21 +30,34 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public BotApiMethod<Message> sendMessage(KickerEvent event, MessageType type) {
-        return SendMessage.builder()
+        var message = SendMessage.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .text(BuildMessageUtil.buildText(event, type))
                 .replyMarkup(getKeyboard(event, type))
                 .build();
+        message.enableMarkdown(true);
+        return message;
     }
 
     @Override
     public EditMessageText updateMessage(KickerEvent event, Integer messageId, MessageType type) {
-        return EditMessageText.builder()
+        var message = EditMessageText.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .messageId(messageId)
                 .text(BuildMessageUtil.buildText(event, type))
                 .replyMarkup(getKeyboard(event, type))
                 .build();
+        return message;
+    }
+
+    @Override
+    public EditMessageReplyMarkup updateMarkup(KickerEvent event, Integer messageId, MessageType type) {
+        var message = EditMessageReplyMarkup.builder()
+                .chatId(String.valueOf(event.getChatId()))
+                .messageId(messageId)
+                .replyMarkup(getKeyboard(event, type))
+                .build();
+        return message;
     }
 
     @Override
@@ -61,7 +75,7 @@ public class MessageServiceImpl implements MessageService {
 
     private InlineKeyboardMarkup getKeyboard(KickerEvent event, MessageType type) {
         var state = event.getEventState();
-        if (type == LOBBY && (state == EventState.BEGIN_CHECKING || state == EventState.CANCEL_CHECKING)) {
+        if (type == LOBBY && (state == EventState.BEGIN_CHECKING || state == EventState.CANCEL_LOBBY_CHECKING)) {
             return keyboardService.getEmptyKeyboard();
         }
         return type == CHECKING_TIMED

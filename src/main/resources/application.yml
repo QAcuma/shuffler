@@ -1,11 +1,11 @@
 telegram.bot:
   name: "kicker_shuffler_bot"
-  token: ${K_SHUFFLER_TOKEN:5009812908:AAFcQMWnf4q8elnFM2vtFCTadHVUtxb_jL8}
+  token: ${K_SHUFFLER_TOKEN}
 
 spring.datasource:
   driver-class-name: org.postgresql.Driver
-  url: jdbc:postgresql://${K_SHUFFLER_DB_SERVER_HOST:localhost}:${K_SHUFFLER_DB_SERVER_PORT:5432}/${K_SHUFFLER_DB_NAME:trgb}${K_SHUFFLER_DB_URL_PARAMS:}
-  username: ${K_SHUFFLER_DB_USER:k_shuffler}
+  url: jdbc:postgresql://${K_SHUFFLER_DB_SERVER_HOST:localhost}:${K_SHUFFLER_DB_SERVER_PORT:5432}/${K_SHUFFLER_DB_NAME:ksb}${K_SHUFFLER_DB_URL_PARAMS:}
+  username: ${K_SHUFFLER_DB_USER:ksb}
   password: ${K_SHUFFLER_DB_PASSWORD:root}
 
 spring.flyway:

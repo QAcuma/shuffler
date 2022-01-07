@@ -5,11 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum GameState {
+public enum WinnerState {
 
-    STARTED,
-    CHECKING,
-    CANCELLED,
-    FINISHED;
+    RED,
+    BLUE,
+    NONE
 
 }

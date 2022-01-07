@@ -7,11 +7,13 @@ import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.service.ShuffleService;
 
+import javax.management.InstanceNotFoundException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
@@ -20,6 +22,7 @@ import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
 @RequiredArgsConstructor
 public class ShuffleServiceImpl implements ShuffleService {
 
+    @SneakyThrows
     @Override
     public List<KickerEventPlayer> shuffle(KickerEvent event) {
 
@@ -34,11 +37,11 @@ public class ShuffleServiceImpl implements ShuffleService {
 
         int minGames = members.stream()
                 .min(Comparator.comparingInt(KickerEventPlayer::getGameCount))
-                .orElse(new KickerEventPlayer().setGameCount(0))
+                .orElseThrow(() -> new NoSuchElementException("Group member not found"))
                 .getGameCount();
         int maxGames = members.stream()
                 .max(Comparator.comparingInt(KickerEventPlayer::getGameCount))
-                .orElse(new KickerEventPlayer().setGameCount(0))
+                .orElseThrow(() -> new NoSuchElementException("Group member not found"))
                 .getGameCount();
 
         if (minGames == maxGames) {
@@ -47,7 +50,7 @@ public class ShuffleServiceImpl implements ShuffleService {
         List<KickerEventPlayer> players = new ArrayList<>();
         for (int i = minGames; i <= maxGames; i++) {
             int vacancy = GAME_PLAYERS_COUNT - players.size();
-            var shuffled = shufflePriority(members, i);
+            List<KickerEventPlayer> shuffled = shufflePriority(members, i);
 
             if (shuffled.size() >= vacancy) {
                 players.addAll(shuffled.subList(0, vacancy));
@@ -64,6 +67,9 @@ public class ShuffleServiceImpl implements ShuffleService {
     @SneakyThrows
     private List<KickerEventPlayer> shuffleEvenly(List<KickerEventPlayer> members) {
         Collections.shuffle(members, SecureRandom.getInstance("SHA1PRNG", "SUN"));
+        if (members.size() < GAME_PLAYERS_COUNT) {
+            return members;
+        }
         return members.subList(0, GAME_PLAYERS_COUNT);
     }
 
@@ -72,10 +78,6 @@ public class ShuffleServiceImpl implements ShuffleService {
         List<KickerEventPlayer> priority = members.stream()
                 .filter(member -> member.getGameCount() == index)
                 .collect(Collectors.toList());
-        if (priority.size() > GAME_PLAYERS_COUNT) {
-            return shuffleEvenly(priority);
-        }
-        Collections.shuffle(members, SecureRandom.getInstance("SHA1PRNG", "SUN"));
-        return priority;
+        return shuffleEvenly(priority);
     }
 }

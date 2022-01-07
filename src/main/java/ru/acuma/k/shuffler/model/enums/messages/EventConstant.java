@@ -8,7 +8,7 @@ import ru.acuma.k.shuffler.service.enums.EventConstantApi;
 @AllArgsConstructor
 public enum EventConstant implements EventConstantApi {
 
-    DEFAULT_MESSAGE(""),
+    BLANK_MESSAGE(""),
     LOBBY_MESSAGE("🍢 Самое время крутить шашлыки! 🍢\n" +
             "\n" +
             "Участники:\n"),
@@ -18,8 +18,8 @@ public enum EventConstant implements EventConstantApi {
     CANCEL_CHECKING_MESSAGE("Точно завершить чемпионат? \n"),
     BEGIN_CHECKING_MESSAGE("Перекличка! Все участники в сборе? \uD83D\uDC65\n"),
     NEXT_CHECKING_MESSAGE("⚽️Отменить текущую игру и начать новую? ⚽️\n"),
-    RED_CHECKING_MESSAGE("♦️Засчитать побуду красных и начать новую игру?♦️\n"),
-    BLUE_CHECKING_MESSAGE("\uD83D\uDD37Засчитать побуду синих и начать новую игру?\uD83D\uDD37\n"),
+    RED_CHECKING_MESSAGE("🔴 Засчитать победу красных и начать новую игру? 🔴\n"),
+    BLUE_CHECKING_MESSAGE("🔵 Засчитать победу синих и начать новую игру? 🔵\n"),
     LOBBY_CANCELED_MESSAGE("Игра была отменена \uD83C\uDF1A"),
     STAT_MESSAGE(""),
     MEMBER_CHECKING_MESSAGE(", ты точно хочешь покинуть игру?"),

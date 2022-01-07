@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.k.shuffler.dao.PlayerDao;
 import ru.acuma.k.shuffler.mapper.PlayerMapper;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.tables.pojos.Player;
@@ -27,6 +28,15 @@ public class PlayerServiceImpl implements PlayerService {
         var kickerPlayer = playerMapper.toKickerPlayer(appUser, player);
         var kickerEventPlayer = playerMapper.toKickerEventPlayer(kickerPlayer);
         event.joinPlayer(kickerEventPlayer);
+    }
+
+    @Override
+    public void updatePlayersRating(KickerEvent event) {
+        event.getLastGame().getPlayers().forEach(this::updateRating);
+    }
+
+    private void updateRating(KickerEventPlayer player) {
+        playerDao.updateRating(playerMapper.toPlayer(player));
     }
 
     private Player getPlayer(Long chatId, Long userId) {

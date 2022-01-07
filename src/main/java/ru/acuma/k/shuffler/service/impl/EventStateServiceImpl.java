@@ -9,10 +9,12 @@ import ru.acuma.k.shuffler.service.EventStateService;
 import static ru.acuma.k.shuffler.model.enums.EventState.BEGIN_CHECKING;
 import static ru.acuma.k.shuffler.model.enums.EventState.BLUE_CHECKING;
 import static ru.acuma.k.shuffler.model.enums.EventState.CANCELLED;
-import static ru.acuma.k.shuffler.model.enums.EventState.CANCEL_CHECKING;
+import static ru.acuma.k.shuffler.model.enums.EventState.CANCEL_LOBBY_CHECKING;
 import static ru.acuma.k.shuffler.model.enums.EventState.CREATED;
 import static ru.acuma.k.shuffler.model.enums.EventState.READY;
 import static ru.acuma.k.shuffler.model.enums.EventState.RED_CHECKING;
+import static ru.acuma.k.shuffler.model.enums.GameState.CHECKING;
+import static ru.acuma.k.shuffler.model.enums.GameState.STARTED;
 import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
 
 @Service
@@ -22,7 +24,7 @@ public class EventStateServiceImpl implements EventStateService {
     @Override
     public void lobbyState(KickerEvent event) {
         var state = event.getEventState();
-        if (state == CREATED || state == READY || state == CANCEL_CHECKING || state == BEGIN_CHECKING) {
+        if (state == CREATED || state == READY || state == CANCEL_LOBBY_CHECKING || state == BEGIN_CHECKING) {
             if (event.getPlayers().size() >= GAME_PLAYERS_COUNT) {
                 readyState(event);
             } else {
@@ -43,7 +45,7 @@ public class EventStateServiceImpl implements EventStateService {
 
     @Override
     public void cancelCheckState(KickerEvent event) {
-        event.setEventState(CANCEL_CHECKING);
+        event.setEventState(CANCEL_LOBBY_CHECKING);
     }
 
     @Override
@@ -58,21 +60,25 @@ public class EventStateServiceImpl implements EventStateService {
 
     @Override
     public void playingState(KickerEvent event) {
+        event.getLastGame().setState(STARTED);
         event.setEventState(EventState.PLAYING);
     }
 
     @Override
     public void nextCheckingState(KickerEvent event) {
-        event.setEventState(EventState.NEXT_CHECKING);
+        event.getLastGame().setState(CHECKING);
+        event.setEventState(EventState.CANCEL_GAME_CHECKING);
     }
 
     @Override
     public void redCheckingState(KickerEvent event) {
+        event.getLastGame().setState(CHECKING);
         event.setEventState(RED_CHECKING);
     }
 
     @Override
     public void blueCheckingState(KickerEvent event) {
+        event.getLastGame().setState(CHECKING);
         event.setEventState(BLUE_CHECKING);
     }
 

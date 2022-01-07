@@ -37,12 +37,12 @@ public class NoCommand extends BaseBotCommand {
         final var event = eventContextService.getEvent(message.getChatId());
         maintenanceService.sweepMessage(absSender, message);
         switch (event.getEventState()) {
-            case CANCEL_CHECKING:
+            case CANCEL_LOBBY_CHECKING:
             case BEGIN_CHECKING:
                 eventStateService.lobbyState(event);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
-            case NEXT_CHECKING:
+            case CANCEL_GAME_CHECKING:
             case RED_CHECKING:
             case BLUE_CHECKING:
             case FINISH_CHECKING:

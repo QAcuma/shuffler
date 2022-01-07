@@ -33,7 +33,16 @@ public class PlayerMapper {
         MapperFacade mapper = mapperFactory.getMapperFacade();
         KickerEventPlayer eventPlayer = mapper.map(player, KickerEventPlayer.class);
         return eventPlayer.setGameCount(0)
+                .setSessionRating(0)
                 .setLeft(false);
+    }
+
+    public Player toPlayer(KickerEventPlayer player) {
+        mapperFactory.classMap(KickerEventPlayer.class, Player.class)
+                .byDefault()
+                .register();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        return mapper.map(player, Player.class);
     }
 
 

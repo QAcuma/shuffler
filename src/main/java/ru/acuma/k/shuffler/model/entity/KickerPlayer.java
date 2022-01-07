@@ -16,14 +16,23 @@ public class KickerPlayer extends UserInfo {
 
     private Long chatId;
 
-    private int rating;
+    private long rating;
 
     public String getName() {
         StringBuilder builder = new StringBuilder();
         builder.append(super.getFirstName())
                 .append(" ")
-                .append(Optional.ofNullable(super.getLastName()).orElse("Doe"));
+                .append(Optional.ofNullable(super.getLastName()).orElse("Doe"))
+                .append(rating);
         return builder.toString();
+    }
+
+    public void plusRating(long value) {
+        rating += value;
+    }
+
+    public void minusRating(long value) {
+        rating -= value;
     }
 
 }

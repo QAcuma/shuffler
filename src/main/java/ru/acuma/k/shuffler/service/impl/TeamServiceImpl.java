@@ -6,6 +6,7 @@ import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.entity.KickerTeam;
 import ru.acuma.k.shuffler.service.TeamService;
 
+import javax.management.InstanceNotFoundException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,10 +17,14 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public KickerTeam teamBuilding(List<KickerEventPlayer> players) {
 
-        KickerEventPlayer player1 = players.stream().min(Comparator.comparingInt(KickerEventPlayer::getRating)).get();
+        KickerEventPlayer player1 = players.stream()
+                .min(Comparator.comparingLong(KickerEventPlayer::getRating))
+                .orElseThrow(() -> new InstanceNotFoundException("Player not found"));
         players.remove(player1);
 
-        KickerEventPlayer player2 = players.stream().max(Comparator.comparingInt(KickerEventPlayer::getRating)).get();
+        KickerEventPlayer player2 = players.stream()
+                .max(Comparator.comparingLong(KickerEventPlayer::getRating))
+                .orElseThrow(() -> new InstanceNotFoundException("Player not found"));
         players.remove(player2);
 
         return new KickerTeam(player1, player2);

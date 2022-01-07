@@ -34,7 +34,6 @@ public class CancelGameCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.buildEvent(message.getChatId());
-
         eventStateService.nextCheckingState(event);
         executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), GAME));
         executeService.execute(absSender, messageService.sendMessage(event, CHECKING));
