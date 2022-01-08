@@ -8,7 +8,6 @@ import ru.acuma.k.shuffler.dao.PlayerDao;
 import ru.acuma.k.shuffler.mapper.PlayerMapper;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
-import ru.acuma.k.shuffler.model.entity.KickerPlayer;
 import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.tables.pojos.Player;
@@ -39,15 +38,26 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void leaveLobby(KickerEvent event, User user) {
-        event.getPlayers().get(user.getId()).setLeft(true);
+    public boolean leaveLobby(KickerEvent event, User user) {
+        boolean broken = false;
+        switch (event.getEventState()) {
+            case CREATED:
+            case READY:
+                event.leaveLobby(user.getId());
+                break;
+            case PLAYING:
+                event.getPlayers().get(user.getId()).setLeft(true);
+                broken = event.getCurrentGame().getPlayers()
+                        .stream()
+                        .anyMatch(KickerEventPlayer::isLeft);
+                break;
+        }
+        return broken;
+    }
 
-
-        boolean isPlaying = event.getCurrentGame().getPlayers()
-                .stream()
-                .map(KickerPlayer::getTelegramId)
-                .anyMatch(id -> id.equals(user.getId()));
-
+    @Override
+    public void joinLobby(KickerEvent event, User user) {
+        event.getPlayers().get(user.getId()).setLeft(false);
     }
 
     private void updateRating(KickerEventPlayer player) {

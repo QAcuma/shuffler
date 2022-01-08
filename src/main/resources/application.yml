@@ -1,6 +1,6 @@
 telegram.bot:
-  name: "kicker_shuffler_bot"
-  token: ${K_SHUFFLER_TOKEN}
+  name: ${K_SHUFFLER_BOT_NAME:fly_cloud_bot}
+  token: 2039175749:AAEhQL_TUqikssw_VRzDz4PfrhAT27Xv7xo
 
 spring.datasource:
   driver-class-name: org.postgresql.Driver

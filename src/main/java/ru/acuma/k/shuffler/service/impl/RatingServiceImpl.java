@@ -3,7 +3,9 @@ package ru.acuma.k.shuffler.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerGame;
+import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.RatingService;
 
 import javax.management.InstanceNotFoundException;
@@ -15,9 +17,12 @@ import static ru.acuma.k.shuffler.model.enums.Values.RATING_REFERENCE;
 @AllArgsConstructor
 public class RatingServiceImpl implements RatingService {
 
+    private final PlayerService playerService;
+
     @SneakyThrows
     @Override
-    public void update(KickerGame game) {
+    public void update(KickerEvent event) {
+        var game = event.getCurrentGame();
         if (game.getWinnerTeam() == null) {
             throw new InstanceNotFoundException("Отсутствует победившая команда");
         }
@@ -28,6 +33,7 @@ public class RatingServiceImpl implements RatingService {
         } else {
             weakestWon(game, -diff);
         }
+        playerService.updatePlayersRating(event);
     }
 
     private void strongestWon(KickerGame game, double diff) {

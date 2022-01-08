@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Data
 @Builder
@@ -40,14 +41,38 @@ public class KickerEvent {
     }
 
     public boolean isPresent(Long telegramId) {
-        return players.containsKey(telegramId);
+        var player = players.get(telegramId);
+        if (player != null && !player.isLeft()) {
+            return true;
+        }
+        return false;
     }
 
     public void joinPlayer(KickerEventPlayer kickerPlayer) {
-        this.players.put(kickerPlayer.getTelegramId() + 1, SerializationUtils.clone(kickerPlayer).setGameCount(0));
-        this.players.put(kickerPlayer.getTelegramId() + 2, SerializationUtils.clone(kickerPlayer).setGameCount(0));
-        this.players.put(kickerPlayer.getTelegramId() + 3, SerializationUtils.clone(kickerPlayer).setGameCount(0));
-        this.players.put(kickerPlayer.getTelegramId() + 4, SerializationUtils.clone(kickerPlayer).setGameCount(0));
+        var player1 = SerializationUtils.clone(kickerPlayer).setGameCount(0);
+        var player2 = SerializationUtils.clone(kickerPlayer).setGameCount(0);
+        var player3 = SerializationUtils.clone(kickerPlayer).setGameCount(0);
+        var player4 = SerializationUtils.clone(kickerPlayer).setGameCount(0);
+        player1.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
+                .setTelegramId(123L)
+                .setFirstName("Player")
+                .setLastName("First");
+        player2.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
+                .setTelegramId(124L)
+                .setFirstName("Player")
+                .setLastName("Second");
+        player3.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
+                .setTelegramId(125L)
+                .setFirstName("Player")
+                .setLastName("Third");
+        player4.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
+                .setTelegramId(126L)
+                .setFirstName("Player")
+                .setLastName("Fourth");
+        this.players.put(player1.getTelegramId(), player1);
+        this.players.put(player2.getTelegramId(), player2);
+        this.players.put(player3.getTelegramId(), player3);
+        this.players.put(player4.getTelegramId(), player4);
         this.players.put(kickerPlayer.getTelegramId(), kickerPlayer);
     }
 

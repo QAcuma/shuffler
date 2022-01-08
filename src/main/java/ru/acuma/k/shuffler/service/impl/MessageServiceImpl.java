@@ -35,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
                 .chatId(String.valueOf(event.getChatId()))
                 .text(BuildMessageUtil.buildText(event, type))
                 .replyMarkup(getKeyboard(event, type))
-                .parseMode(ParseMode.MARKDOWNV2)
+                .parseMode(ParseMode.HTML)
                 .build();
         message.enableMarkdown(true);
         return message;
@@ -48,7 +48,7 @@ public class MessageServiceImpl implements MessageService {
                 .messageId(messageId)
                 .text(BuildMessageUtil.buildText(event, type))
                 .replyMarkup(getKeyboard(event, type))
-                .parseMode(ParseMode.MARKDOWNV2)
+                .parseMode(ParseMode.HTML)
                 .build();
         return message;
     }

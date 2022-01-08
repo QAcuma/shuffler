@@ -33,6 +33,11 @@ public class FinishCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getEvent(message.getChatId());
+
+        if (!event.getPlayers().containsKey(message.getFrom().getId())) {
+            return;
+        }
+
         eventStateService.finishCheckState(event);
         executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), GAME));
         executeService.executeAsyncTimer(absSender, event, messageService.sendMessage(event, CHECKING_TIMED));

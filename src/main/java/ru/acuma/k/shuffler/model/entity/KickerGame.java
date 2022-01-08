@@ -60,9 +60,9 @@ public class KickerGame {
             return index +
                     ". " +
                     getWinnerTeam().toString() +
-                    " \\(+" +
+                    " (+" +
                     getWinnerTeam().getRatingChange() +
-                    "\\) ";
+                    ") ";
         }
         return "";
     }

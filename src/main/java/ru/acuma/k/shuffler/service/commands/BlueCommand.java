@@ -8,8 +8,6 @@ import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
-import ru.acuma.k.shuffler.service.GameService;
-import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
 
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING;
@@ -20,19 +18,15 @@ public class BlueCommand extends BaseBotCommand {
 
     private final EventContextServiceImpl eventContextService;
     private final EventStateService eventStateService;
-    private final MaintenanceService maintenanceService;
     private final MessageService messageService;
     private final ExecuteService executeService;
-    private final GameService gameService;
 
-    public BlueCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, MaintenanceService maintenanceService, MessageService messageService, ExecuteService executeService, GameService gameService) {
+    public BlueCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, MessageService messageService, ExecuteService executeService) {
         super(Command.BLUE.getCommand(), "Синие");
         this.eventContextService = eventContextService;
         this.eventStateService = eventStateService;
-        this.maintenanceService = maintenanceService;
         this.messageService = messageService;
         this.executeService = executeService;
-        this.gameService = gameService;
     }
 
     @SneakyThrows

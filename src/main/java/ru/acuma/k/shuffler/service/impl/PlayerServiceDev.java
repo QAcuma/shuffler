@@ -42,7 +42,12 @@ public class PlayerServiceDev implements PlayerService {
     }
 
     @Override
-    public void leaveLobby(KickerEvent event, User from) {
+    public boolean leaveLobby(KickerEvent event, User from) {
+        return false;
+    }
+
+    @Override
+    public void joinLobby(KickerEvent event, User from) {
 
     }
 

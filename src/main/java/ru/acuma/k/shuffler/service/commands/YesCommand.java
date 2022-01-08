@@ -13,6 +13,7 @@ import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.GameService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
+import ru.acuma.k.shuffler.service.PlayerService;
 
 import static ru.acuma.k.shuffler.model.enums.WinnerState.BLUE;
 import static ru.acuma.k.shuffler.model.enums.WinnerState.NONE;
@@ -29,8 +30,9 @@ public class YesCommand extends BaseBotCommand {
     private final ExecuteService executeService;
     private final ChampionshipService championshipService;
     private final GameService gameService;
+    private final PlayerService playerService;
 
-    public YesCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, MaintenanceService maintenanceService, MessageService messageService, ExecuteService executeService, ChampionshipService championshipService, GameService gameService) {
+    public YesCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, MaintenanceService maintenanceService, MessageService messageService, ExecuteService executeService, ChampionshipService championshipService, GameService gameService, PlayerService playerService) {
         super(Command.YES.getCommand(), "Да");
         this.eventContextService = eventContextService;
         this.eventStateService = eventStateService;
@@ -39,6 +41,7 @@ public class YesCommand extends BaseBotCommand {
         this.executeService = executeService;
         this.championshipService = championshipService;
         this.gameService = gameService;
+        this.playerService = playerService;
     }
 
     @SneakyThrows

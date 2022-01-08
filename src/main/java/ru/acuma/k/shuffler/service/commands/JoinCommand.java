@@ -38,9 +38,18 @@ public class JoinCommand extends BaseBotCommand {
         if (event.isPresent(message.getFrom().getId())) {
             return;
         }
-        playerService.authenticate(event, message.getFrom());
-        eventStateService.lobbyState(event);
-        executeService.execute(absSender, messageService.updateMessage(event, event.getBaseMessage(), LOBBY));
+        switch (event.getEventState()) {
+            case CREATED:
+            case READY:
+                playerService.authenticate(event, message.getFrom());
+                eventStateService.lobbyState(event);
+                executeService.execute(absSender, messageService.updateMessage(event, event.getBaseMessage(), LOBBY));
+                break;
+            case PLAYING:
+                playerService.joinLobby(event, message.getFrom());
+                executeService.execute(absSender, messageService.updateLobbyMessage(event));
+                break;
+        }
     }
 }
 

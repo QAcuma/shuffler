@@ -9,7 +9,6 @@ import ru.acuma.k.shuffler.model.entity.KickerGame;
 import ru.acuma.k.shuffler.model.entity.KickerTeam;
 import ru.acuma.k.shuffler.model.enums.GameState;
 import ru.acuma.k.shuffler.model.enums.WinnerState;
-import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.GameService;
 import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.RatingService;
@@ -25,7 +24,6 @@ import java.util.List;
 public class GameServiceImpl implements GameService {
 
     private final TeamService teamService;
-    private final EventStateService eventStateService;
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
     private final PlayerService playerService;
@@ -63,12 +61,14 @@ public class GameServiceImpl implements GameService {
             case RED:
                 game.setState(GameState.FINISHED);
                 game.getRedTeam().setWinner(true);
-                ratingService.update(game);
+                ratingService.update(event);
+                playerService.updatePlayersRating(event);
                 break;
             case BLUE:
                 game.setState(GameState.FINISHED);
                 game.getBlueTeam().setWinner(true);
-                ratingService.update(game);
+                ratingService.update(event);
+                playerService.updatePlayersRating(event);
                 break;
             case NONE:
                 game.setState(GameState.CANCELLED);
@@ -77,7 +77,6 @@ public class GameServiceImpl implements GameService {
         }
         game.setFinishedAt(LocalDateTime.now());
         game.getPlayers().forEach(KickerEventPlayer::gg);
-        playerService.updatePlayersRating(event);
     }
 
 }

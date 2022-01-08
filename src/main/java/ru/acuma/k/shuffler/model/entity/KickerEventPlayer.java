@@ -51,29 +51,36 @@ public class KickerEventPlayer extends KickerPlayer {
     public String getLobbyName() {
         StringBuilder builder = new StringBuilder();
         return builder
-                .append(strikethrough())
+                .append(strikethroughBegin())
                 .append(super.getFirstName())
                 .append(" ")
                 .append(Optional.ofNullable(super.getLastName()).orElse("Doe"))
                 .append(" ")
                 .append(super.getRating())
                 .append(getSessionRatingToString())
-                .append(strikethrough())
+                .append(strikethroughEnd())
                 .toString();
     }
 
-    private String strikethrough() {
+    private String strikethroughBegin() {
         if (left) {
-            return "~";
+            return "<s>";
+        }
+        return "";
+    }
+
+    private String strikethroughEnd() {
+        if (left) {
+            return "</s>";
         }
         return "";
     }
 
     String getSessionRatingToString() {
         if (getSessionRating() > 0) {
-            return " \\(+" + this.getSessionRating() + "\\)";
+            return " (+" + this.getSessionRating() + ")";
         }
-        return " \\(" + this.getSessionRating() + "\\)";
+        return " (" + this.getSessionRating() + ")";
     }
 
 }
