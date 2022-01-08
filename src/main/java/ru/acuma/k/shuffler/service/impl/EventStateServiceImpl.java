@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
+import ru.acuma.k.shuffler.model.enums.GameState;
 import ru.acuma.k.shuffler.service.EventStateService;
 
 import static ru.acuma.k.shuffler.model.enums.EventState.BEGIN_CHECKING;
@@ -60,7 +61,6 @@ public class EventStateServiceImpl implements EventStateService {
 
     @Override
     public void playingState(KickerEvent event) {
-        event.getCurrentGame().setState(STARTED);
         event.setEventState(EventState.PLAYING);
     }
 
@@ -84,6 +84,7 @@ public class EventStateServiceImpl implements EventStateService {
 
     @Override
     public void finishCheckState(KickerEvent event) {
+        event.getCurrentGame().setState(CHECKING);
         event.setEventState(EventState.FINISH_CHECKING);
     }
 

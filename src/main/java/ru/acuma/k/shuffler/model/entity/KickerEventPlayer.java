@@ -25,8 +25,14 @@ public class KickerEventPlayer extends KickerPlayer {
 
     @Override
     public void minusRating(long value) {
-        super.minusRating(value);
-        sessionRating -= value;
+        if (this.getRating() > value) {
+            super.minusRating(value);
+            sessionRating -= value;
+        }
+        else {
+            sessionRating -= value - getRating();
+            this.setRating(1);
+        }
     }
 
     private boolean left;

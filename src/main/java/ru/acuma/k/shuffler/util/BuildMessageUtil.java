@@ -6,16 +6,14 @@ import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.entity.KickerGame;
 import ru.acuma.k.shuffler.model.enums.messages.EventConstant;
 import ru.acuma.k.shuffler.model.enums.messages.MessageType;
-import ru.acuma.k.shuffler.service.enums.EventConstantApi;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.BLANK_MESSAGE;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.CANCELLED_GAME_MESSAGE;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.FINISHED_GAME_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.GAME_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.STARTED_GAME_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.WINNERS_MESSAGE;
 
 public final class BuildMessageUtil {
 
@@ -55,27 +53,17 @@ public final class BuildMessageUtil {
 
         switch (game.getState()) {
             case STARTED:
-                buildStartedMessage(game, builder);
-                builder
-                        .append(System.lineSeparator())
-                        .append(STARTED_GAME_MESSAGE.getText());
-                break;
-            case CANCELLED:
-                buildCanceledMessage(game, builder);
-                builder
-                        .append(System.lineSeparator())
-                        .append(CANCELLED_GAME_MESSAGE.getText());
+                buildStartedMessage(event, builder);
                 break;
             case CHECKING:
-                buildStartedMessage(game, builder);
+                buildStartedMessage(event, builder);
                 break;
-            case FINISHED:
-                buildFinishedMessage(game, builder);
         }
         return builder.toString();
     }
 
-    private static void buildStartedMessage(KickerGame game, StringBuilder builder) {
+    private static void buildStartedMessage(KickerEvent event, StringBuilder builder) {
+        var game = event.getCurrentGame();
         String spaces = getSpaces(game);
         String moreSpaces = spaces + "   ";
         builder
@@ -94,21 +82,8 @@ public final class BuildMessageUtil {
                 .append("🔵")
                 .append(System.lineSeparator())
                 .append(moreSpaces)
-                .append(game.getBlueTeam().getRating());
-    }
-
-    private static void buildCanceledMessage(KickerGame game, StringBuilder builder) {
-        builder.append(System.lineSeparator())
-                .append(System.lineSeparator())
-                .append(CANCELLED_GAME_MESSAGE.getText());
-    }
-
-    private static void buildFinishedMessage(KickerGame game, StringBuilder builder) {
-        builder.append(System.lineSeparator())
-                .append(System.lineSeparator())
-                .append(FINISHED_GAME_MESSAGE.getText())
-                .append(game.getWinnerTeam().toString())
-                .append(game.getWinnerTeam().getRatingChange());
+                .append(game.getBlueTeam().getRating())
+                .append(System.lineSeparator());
     }
 
     private static String getSpaces(KickerGame game) {
@@ -117,31 +92,51 @@ public final class BuildMessageUtil {
     }
 
     private static String buildLobbyText(KickerEvent event) {
-        EventConstantApi header;
+        StringBuilder builder = new StringBuilder();
         switch (event.getEventState()) {
             case CREATED:
             case READY:
             case CANCEL_LOBBY_CHECKING:
             case BEGIN_CHECKING:
-                header = EventConstant.LOBBY_MESSAGE;
+                builder.append(EventConstant.LOBBY_MESSAGE.getText());
                 break;
             case CANCELLED:
                 return EventConstant.LOBBY_CANCELED_MESSAGE.getText();
             case PLAYING:
-                header = EventConstant.LOBBY_PLAYING_MESSAGE;
+            case RED_CHECKING:
+            case BLUE_CHECKING:
+            case CANCEL_GAME_CHECKING:
+                builder.append(EventConstant.LOBBY_PLAYING_MESSAGE.getText());
                 break;
             case FINISHED:
-                header = EventConstant.LOBBY_FINISHED_MESSAGE;
+                builder.append(EventConstant.LOBBY_FINISHED_MESSAGE.getText());
                 break;
             default:
-                header = BLANK_MESSAGE;
+                builder.append(BLANK_MESSAGE.getText());
                 break;
         }
-        return header.getText() + event.getPlayers().values()
+        builder.append(
+                event.getPlayers().values()
+                        .stream()
+                        .sorted(Comparator.comparingLong(KickerEventPlayer::getRating).reversed())
+                        .map(KickerEventPlayer::getLobbyName)
+                        .collect(Collectors.joining(System.lineSeparator()))
+        );
+        builder.append(WINNERS_MESSAGE.getText());
+        buildResult(event, builder);
+
+        return builder.toString();
+    }
+
+    private static void buildResult(KickerEvent event, StringBuilder builder) {
+        event.getGames()
                 .stream()
-                .sorted(Comparator.comparingLong(KickerEventPlayer::getRating).reversed())
-                .map(KickerEventPlayer::getLobbyName)
-                .collect(Collectors.joining(System.lineSeparator()));
+                .filter(game -> game.getWinnerTeam() != null)
+                .forEach(game -> {
+                    builder
+                            .append(game.getGameResult())
+                            .append(System.lineSeparator());
+                });
     }
 
     private static String buildCheckingText(KickerEvent event) {

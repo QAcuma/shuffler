@@ -33,6 +33,8 @@ public class RatingServiceImpl implements RatingService {
     private void strongestWon(KickerGame game, double diff) {
         double change = BASE_RATING_CHANGE * (1 - (diff/RATING_REFERENCE));
         long value = correcting(change);
+        game.getWinnerTeam().setRatingChange(value);
+        game.getLoserTeam().setRatingChange(-value);
         game.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(value));
         game.getLoserTeam().getPlayers().forEach(player -> player.minusRating(value));
     }
@@ -40,9 +42,9 @@ public class RatingServiceImpl implements RatingService {
     private void weakestWon(KickerGame game, double diff) {
         double change = BASE_RATING_CHANGE * (1 + (diff/RATING_REFERENCE));
         long value = correcting(change);
-        game.getWinnerTeam().getPlayers().forEach(player -> {
-            player.plusRating(value);
-        });
+        game.getWinnerTeam().setRatingChange(value);
+        game.getLoserTeam().setRatingChange(-value);
+        game.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(value));
         game.getLoserTeam().getPlayers().forEach(player -> player.minusRating(value));
     }
 

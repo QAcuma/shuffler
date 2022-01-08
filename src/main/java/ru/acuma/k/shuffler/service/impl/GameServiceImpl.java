@@ -9,7 +9,11 @@ import ru.acuma.k.shuffler.model.entity.KickerGame;
 import ru.acuma.k.shuffler.model.entity.KickerTeam;
 import ru.acuma.k.shuffler.model.enums.GameState;
 import ru.acuma.k.shuffler.model.enums.WinnerState;
+import ru.acuma.k.shuffler.service.EventStateService;
+import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.GameService;
+import ru.acuma.k.shuffler.service.MaintenanceService;
+import ru.acuma.k.shuffler.service.MessageService;
 import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.RatingService;
 import ru.acuma.k.shuffler.service.ShuffleService;
@@ -24,13 +28,18 @@ import java.util.List;
 public class GameServiceImpl implements GameService {
 
     private final TeamService teamService;
+    private final EventStateService eventStateService;
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
     private final PlayerService playerService;
 
     @SneakyThrows
-    @Override
-    public void buildGame(KickerEvent event) {
+    public void newGame(KickerEvent event) {
+        buildGame(event);
+    }
+
+    @SneakyThrows
+    private void buildGame(KickerEvent event) {
         List<KickerEventPlayer> players = shuffleService.shuffle(event);
         if (players == null) {
             throw new InstanceNotFoundException("Недостаточно игроков для начала матча");

@@ -56,6 +56,6 @@ public class NonCommandServiceImpl implements NonCommandService {
         if (!userService.authenticate(message.getFrom())) {
             return setAnswer(message.getChatId(), ConstantReply.SERVICE_UNAVAILABLE.getValue());
         }
-        return setAnswer(message.getChatId(), ConstantReply.UNSUPPORTED_COMMAND.getValue());
+        return null;
     }
 }

@@ -24,7 +24,7 @@ public class KickerTeam {
 
     private long rating;
 
-    private int ratingChange;
+    private long ratingChange;
 
     private boolean winner;
 

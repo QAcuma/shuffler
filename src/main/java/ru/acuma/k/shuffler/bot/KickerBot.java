@@ -15,6 +15,7 @@ import ru.acuma.k.shuffler.service.commands.BeginCommand;
 import ru.acuma.k.shuffler.service.commands.BlueCommand;
 import ru.acuma.k.shuffler.service.commands.CancelGameCommand;
 import ru.acuma.k.shuffler.service.commands.CancelCommand;
+import ru.acuma.k.shuffler.service.commands.FinishCommand;
 import ru.acuma.k.shuffler.service.commands.JoinCommand;
 import ru.acuma.k.shuffler.service.commands.KickerCommand;
 import ru.acuma.k.shuffler.service.commands.LeaveCommand;
@@ -76,6 +77,9 @@ public class KickerBot extends TelegramLongPollingCommandBot {
     private BeginCommand beginCommand;
 
     @Autowired
+    private FinishCommand finishCommand;
+
+    @Autowired
     private ResetCommand resetCommand;
 
 
@@ -98,6 +102,7 @@ public class KickerBot extends TelegramLongPollingCommandBot {
         register(blueCommand);
         register(waitCommand);
         register(beginCommand);
+        register(finishCommand);
         register(resetCommand);
     }
 

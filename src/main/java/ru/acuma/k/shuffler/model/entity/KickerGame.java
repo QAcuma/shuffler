@@ -55,4 +55,16 @@ public class KickerGame {
         return null;
     }
 
+    public String getGameResult() {
+        if (getWinnerTeam() != null) {
+            return  index +
+                    ". " +
+                    getWinnerTeam().toString() +
+                    " (+" +
+                    getWinnerTeam().getRatingChange() +
+                    ") ";
+        }
+        return "";
+    }
+
 }

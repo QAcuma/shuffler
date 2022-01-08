@@ -124,7 +124,6 @@ public class KeyboardServiceImpl implements KeyboardService {
             case PLAYING:
                 return List.of(Playing.values());
             case FINISHED:
-                return List.of(Finished.values());
             default:
                 return new ArrayList<>();
         }
