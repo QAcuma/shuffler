@@ -58,7 +58,6 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Override
     public void sweepEvent(KickerEvent event, boolean store) {
-        eventStateService.cancelledState(event);
         eventContextService.evictEvent(event.getChatId());
     }
 }

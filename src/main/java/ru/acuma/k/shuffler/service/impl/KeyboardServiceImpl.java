@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.model.enums.keyboards.Created;
-import ru.acuma.k.shuffler.model.enums.keyboards.Finished;
 import ru.acuma.k.shuffler.model.enums.keyboards.Game;
 import ru.acuma.k.shuffler.model.enums.keyboards.Playing;
 import ru.acuma.k.shuffler.model.enums.keyboards.Ready;

@@ -44,7 +44,9 @@ public class ExecuteServiceImpl implements ExecuteService {
             if (msg instanceof Message) {
                 var message = (Message) msg;
                 final var event = eventContextService.getEvent(message.getChatId());
-                event.watchMessage(message.getMessageId());
+                if (event != null && message.getMessageId() != null) {
+                    event.watchMessage(message.getMessageId());
+                }
             }
             return msg;
         } catch (TelegramApiRequestException e) {
@@ -57,7 +59,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 } else {
                     Thread.sleep(5000L);
                 }
-               return execute(absSender, method);
+                return execute(absSender, method);
             }
         }
         return null;
@@ -73,7 +75,7 @@ public class ExecuteServiceImpl implements ExecuteService {
     public void executeAsyncTimer(AbsSender absSender, KickerEvent event, BotApiMethod<Message> message) {
         var msg = execute(absSender, message);
         event.watchMessage(msg.getMessageId());
-        var update = messageService.updateMessage(event, msg.getMessageId(), CHECKING_TIMED);
+        var update = messageService.updateMarkup(event, msg.getMessageId(), CHECKING_TIMED);
 
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -81,7 +83,21 @@ public class ExecuteServiceImpl implements ExecuteService {
             final int current = i;
             executorService.schedule(() -> {
                 update.setReplyMarkup(keyboardService.getTimedKeyboard(Values.TIMEOUT - current));
-                return absSender.execute(update);
+                try {
+                    return absSender.execute(update);
+                } catch (TelegramApiRequestException e) {
+                    log.warn(e.getMessage());
+                    if (e.getErrorCode() == TOO_MANY_REQUESTS_CODE) {
+                        Pattern pattern = Pattern.compile(TIMEOUT_REGEX);
+                        Matcher matcher = pattern.matcher(e.getMessage());
+                        if (matcher.find()) {
+                            Thread.sleep(Long.parseLong(matcher.group(0)) * 1000);
+                        } else {
+                            Thread.sleep(5000L);
+                        }
+                    }
+                    return absSender.execute(update);
+                }
             }, current, TimeUnit.SECONDS);
         }
     }

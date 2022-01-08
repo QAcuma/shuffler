@@ -57,12 +57,12 @@ public class KickerGame {
 
     public String getGameResult() {
         if (getWinnerTeam() != null) {
-            return  index +
+            return index +
                     ". " +
                     getWinnerTeam().toString() +
-                    " (+" +
+                    " \\(+" +
                     getWinnerTeam().getRatingChange() +
-                    ") ";
+                    "\\) ";
         }
         return "";
     }

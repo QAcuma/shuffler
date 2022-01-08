@@ -1,7 +1,6 @@
 package ru.acuma.k.shuffler.service.commands;
 
 import lombok.SneakyThrows;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;

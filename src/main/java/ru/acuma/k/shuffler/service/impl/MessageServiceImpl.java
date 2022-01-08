@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -34,6 +35,7 @@ public class MessageServiceImpl implements MessageService {
                 .chatId(String.valueOf(event.getChatId()))
                 .text(BuildMessageUtil.buildText(event, type))
                 .replyMarkup(getKeyboard(event, type))
+                .parseMode(ParseMode.MARKDOWNV2)
                 .build();
         message.enableMarkdown(true);
         return message;
@@ -46,6 +48,7 @@ public class MessageServiceImpl implements MessageService {
                 .messageId(messageId)
                 .text(BuildMessageUtil.buildText(event, type))
                 .replyMarkup(getKeyboard(event, type))
+                .parseMode(ParseMode.MARKDOWNV2)
                 .build();
         return message;
     }

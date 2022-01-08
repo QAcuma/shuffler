@@ -28,8 +28,7 @@ public class KickerEventPlayer extends KickerPlayer {
         if (this.getRating() > value) {
             super.minusRating(value);
             sessionRating -= value;
-        }
-        else {
+        } else {
             sessionRating -= value - getRating();
             this.setRating(1);
         }
@@ -52,20 +51,29 @@ public class KickerEventPlayer extends KickerPlayer {
     public String getLobbyName() {
         StringBuilder builder = new StringBuilder();
         return builder
+                .append(strikethrough())
                 .append(super.getFirstName())
                 .append(" ")
                 .append(Optional.ofNullable(super.getLastName()).orElse("Doe"))
                 .append(" ")
                 .append(super.getRating())
                 .append(getSessionRatingToString())
+                .append(strikethrough())
                 .toString();
     }
 
-    String getSessionRatingToString() {
-        if (getSessionRating() > 0){
-            return " (+" + this.getSessionRating() + ")";
+    private String strikethrough() {
+        if (left) {
+            return "~";
         }
-        return " (" + this.getSessionRating() + ")";
+        return "";
+    }
+
+    String getSessionRatingToString() {
+        if (getSessionRating() > 0) {
+            return " \\(+" + this.getSessionRating() + "\\)";
+        }
+        return " \\(" + this.getSessionRating() + "\\)";
     }
 
 }

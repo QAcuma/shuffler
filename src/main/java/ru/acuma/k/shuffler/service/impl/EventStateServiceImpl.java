@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
-import ru.acuma.k.shuffler.model.enums.GameState;
 import ru.acuma.k.shuffler.service.EventStateService;
 
 import static ru.acuma.k.shuffler.model.enums.EventState.BEGIN_CHECKING;
@@ -15,7 +14,6 @@ import static ru.acuma.k.shuffler.model.enums.EventState.CREATED;
 import static ru.acuma.k.shuffler.model.enums.EventState.READY;
 import static ru.acuma.k.shuffler.model.enums.EventState.RED_CHECKING;
 import static ru.acuma.k.shuffler.model.enums.GameState.CHECKING;
-import static ru.acuma.k.shuffler.model.enums.GameState.STARTED;
 import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
 
 @Service

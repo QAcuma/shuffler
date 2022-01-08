@@ -7,7 +7,6 @@ import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.service.ShuffleService;
 
-import javax.management.InstanceNotFoundException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;

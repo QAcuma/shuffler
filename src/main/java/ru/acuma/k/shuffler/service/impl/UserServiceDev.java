@@ -9,10 +9,10 @@ import ru.acuma.k.shuffler.mapper.UserMapper;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 
-@Profile("!dev")
+@Profile("dev")
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceDev implements UserService {
 
     private final UserDao userDao;
     private final UserMapper userMapper;
@@ -23,17 +23,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private Boolean hasAccess(Long telegramId) {
-        return (userDao.isActive(telegramId));
+        return true;
     }
 
     @Override
     public boolean authenticate(User user) {
-        if (hasAccess(user.getId())) {
-            return true;
-        } else if (!userDao.isBlocked(user.getId())) {
-            userDao.save(userMapper.toUserInfo(user));
-            return true;
-        }
-        return false;
+        return true;
     }
 }

@@ -44,14 +44,14 @@ public class KickerEvent {
     }
 
     public void joinPlayer(KickerEventPlayer kickerPlayer) {
-//        this.players.put(kickerPlayer.getTelegramId() + 1, SerializationUtils.clone(kickerPlayer).setGameCount(0));
-//        this.players.put(kickerPlayer.getTelegramId() + 2, SerializationUtils.clone(kickerPlayer).setGameCount(0));
-//        this.players.put(kickerPlayer.getTelegramId() + 3, SerializationUtils.clone(kickerPlayer).setGameCount(0));
-//        this.players.put(kickerPlayer.getTelegramId() + 4, SerializationUtils.clone(kickerPlayer).setGameCount(0));
+        this.players.put(kickerPlayer.getTelegramId() + 1, SerializationUtils.clone(kickerPlayer).setGameCount(0));
+        this.players.put(kickerPlayer.getTelegramId() + 2, SerializationUtils.clone(kickerPlayer).setGameCount(0));
+        this.players.put(kickerPlayer.getTelegramId() + 3, SerializationUtils.clone(kickerPlayer).setGameCount(0));
+        this.players.put(kickerPlayer.getTelegramId() + 4, SerializationUtils.clone(kickerPlayer).setGameCount(0));
         this.players.put(kickerPlayer.getTelegramId(), kickerPlayer);
     }
 
-    public void leavePlayer(Long telegramId) {
+    public void leaveLobby(Long telegramId) {
         this.players.remove(telegramId);
     }
 

@@ -10,7 +10,7 @@ import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MessageService;
 
-import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING;
+import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.GAME;
 
 @Component
@@ -35,7 +35,7 @@ public class FinishCommand extends BaseBotCommand {
         final var event = eventContextService.getEvent(message.getChatId());
         eventStateService.finishCheckState(event);
         executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), GAME));
-        executeService.execute(absSender, messageService.sendMessage(event, CHECKING));
+        executeService.executeAsyncTimer(absSender, event, messageService.sendMessage(event, CHECKING_TIMED));
     }
 }
 

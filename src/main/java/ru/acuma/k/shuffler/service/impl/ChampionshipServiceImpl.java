@@ -44,12 +44,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     @Override
     public void finishChampionship(AbsSender absSender, KickerEvent event) {
         eventStateService.finishedState(event);
-
-        var update = messageService.updateLobbyMessage(event);
-        executeService.execute(absSender, update);
-
-
-
+        maintenanceService.sweepEvent(event, true);
     }
 
 }

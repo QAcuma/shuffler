@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.BLANK_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.GAME_MESSAGE;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.STARTED_GAME_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.WINNERS_MESSAGE;
 
 public final class BuildMessageUtil {

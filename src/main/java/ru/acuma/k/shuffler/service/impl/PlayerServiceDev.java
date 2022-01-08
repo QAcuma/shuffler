@@ -8,17 +8,16 @@ import ru.acuma.k.shuffler.dao.PlayerDao;
 import ru.acuma.k.shuffler.mapper.PlayerMapper;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
-import ru.acuma.k.shuffler.model.entity.KickerPlayer;
 import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.tables.pojos.Player;
 
-import static ru.acuma.k.shuffler.model.enums.Values.DEFAULT_RATING;
+import java.util.concurrent.ThreadLocalRandom;
 
-@Profile("!dev")
+@Profile("dev")
 @Service
 @RequiredArgsConstructor
-public class PlayerServiceImpl implements PlayerService {
+public class PlayerServiceDev implements PlayerService {
 
     private final UserService userService;
     private final PlayerMapper playerMapper;
@@ -27,8 +26,12 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void authenticate(KickerEvent event, User user) {
         var appUser = userService.getUser(user.getId());
+        appUser.setTelegramId(ThreadLocalRandom.current().nextLong(100000000));
+        appUser.setFirstName("Player");
+        appUser.setLastName("" + ThreadLocalRandom.current().nextLong(100));
         var player = getPlayer(event.getChatId(), user.getId());
         var kickerPlayer = playerMapper.toKickerPlayer(appUser, player);
+        kickerPlayer.setRating(ThreadLocalRandom.current().nextLong(650, 1350));
         var kickerEventPlayer = playerMapper.toKickerEventPlayer(kickerPlayer);
         event.joinPlayer(kickerEventPlayer);
     }
@@ -39,14 +42,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void leaveLobby(KickerEvent event, User user) {
-        event.getPlayers().get(user.getId()).setLeft(true);
-
-
-        boolean isPlaying = event.getCurrentGame().getPlayers()
-                .stream()
-                .map(KickerPlayer::getTelegramId)
-                .anyMatch(id -> id.equals(user.getId()));
+    public void leaveLobby(KickerEvent event, User from) {
 
     }
 
@@ -64,10 +60,10 @@ public class PlayerServiceImpl implements PlayerService {
 
     private void registerPlayer(Long chatId, Long userId) {
         Player player = new Player();
+        int rating = ThreadLocalRandom.current().nextInt(650, 1350);
         player.setChatId(chatId)
-                .setUserId(userId)
-                .setRating(DEFAULT_RATING);
-        playerDao.save(player);
+                .setUserId(ThreadLocalRandom.current().nextLong(100000))
+                .setRating(rating);
     }
 
 }
