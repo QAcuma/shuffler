@@ -1,6 +1,6 @@
 telegram.bot:
   name: ${K_SHUFFLER_BOT_NAME:fly_cloud_bot}
-  token: 2039175749:AAEhQL_TUqikssw_VRzDz4PfrhAT27Xv7xo
+  token: ${K_SHUFFLER_TOKEN}
 
 spring.datasource:
   driver-class-name: org.postgresql.Driver
@@ -27,3 +27,6 @@ server:
     threads:
       max: 1000
       min-spare: 50
+
+rating:
+  spread-distance: ${K_SHUFFLER_RATING_SPREAD:100}

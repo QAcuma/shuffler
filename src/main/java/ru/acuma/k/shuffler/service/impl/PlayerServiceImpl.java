@@ -12,6 +12,9 @@ import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.tables.pojos.Player;
 
+import java.util.Comparator;
+import java.util.NoSuchElementException;
+
 import static ru.acuma.k.shuffler.model.enums.Values.DEFAULT_RATING;
 
 @Profile("!dev")
@@ -57,7 +60,21 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void joinLobby(KickerEvent event, User user) {
-        event.getPlayers().get(user.getId()).setLeft(false);
+        var members = event.getPlayers();
+        var player = members.get(user.getId());
+        int maxGames = members.values()
+                .stream()
+                .max(Comparator.comparingInt(KickerEventPlayer::getGameCount))
+                .orElseThrow(() -> new NoSuchElementException("Group member not found"))
+                .getGameCount();
+        if (player != null) {
+            event.getPlayers().get(user.getId()).setLeft(false);
+            player.setGameCount(maxGames);
+        } else {
+            authenticate(event, user);
+            player = members.get(user.getId());
+            player.setGameCount(maxGames);
+        }
     }
 
     private void updateRating(KickerEventPlayer player) {

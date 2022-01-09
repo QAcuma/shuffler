@@ -13,7 +13,7 @@ public class KickerEventPlayer extends KickerPlayer {
 
     private int gameCount;
 
-    private String trend;
+    private long spreadRating;
 
     private long sessionRating;
 
@@ -55,10 +55,10 @@ public class KickerEventPlayer extends KickerPlayer {
                 .append(super.getFirstName())
                 .append(" ")
                 .append(Optional.ofNullable(super.getLastName()).orElse("Doe"))
+                .append(strikethroughEnd())
                 .append(" ")
                 .append(super.getRating())
                 .append(getSessionRatingToString())
-                .append(strikethroughEnd())
                 .toString();
     }
 

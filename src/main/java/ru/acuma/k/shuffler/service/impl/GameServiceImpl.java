@@ -63,12 +63,14 @@ public class GameServiceImpl implements GameService {
                 game.getRedTeam().setWinner(true);
                 ratingService.update(event);
                 playerService.updatePlayersRating(event);
+                game.getPlayers().forEach(KickerEventPlayer::gg);
                 break;
             case BLUE:
                 game.setState(GameState.FINISHED);
                 game.getBlueTeam().setWinner(true);
                 ratingService.update(event);
                 playerService.updatePlayersRating(event);
+                game.getPlayers().forEach(KickerEventPlayer::gg);
                 break;
             case NONE:
                 game.setState(GameState.CANCELLED);
@@ -76,7 +78,6 @@ public class GameServiceImpl implements GameService {
                 break;
         }
         game.setFinishedAt(LocalDateTime.now());
-        game.getPlayers().forEach(KickerEventPlayer::gg);
     }
 
 }
