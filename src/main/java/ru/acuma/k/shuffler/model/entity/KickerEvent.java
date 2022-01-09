@@ -2,7 +2,6 @@ package ru.acuma.k.shuffler.model.entity;
 
 import lombok.Builder;
 import lombok.Data;
-import org.apache.commons.lang3.SerializationUtils;
 import ru.acuma.k.shuffler.model.enums.EventState;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -82,6 +81,12 @@ public class KickerEvent {
 
     public boolean isPresent(Integer messageId) {
         return messages.contains(messageId);
+    }
+
+    public List<KickerEventPlayer> getActivePlayers() {
+        return players.values().stream()
+                .filter(player -> !player.isLeft())
+                .collect(Collectors.toList());
     }
 
     public void watchMessage(Integer messageId) {

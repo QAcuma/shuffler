@@ -11,6 +11,7 @@ import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
 
+import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.GAME;
 
 @Component
@@ -46,7 +47,11 @@ public class NoCommand extends BaseBotCommand {
             case RED_CHECKING:
             case BLUE_CHECKING:
             case FINISH_CHECKING:
-                eventStateService.playingState(event);
+                if (event.getActivePlayers().size() < GAME_PLAYERS_COUNT) {
+                    eventStateService.waitingState(event);
+                } else {
+                    eventStateService.playingState(event);
+                }
                 executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), GAME));
                 break;
         }

@@ -18,6 +18,8 @@ public interface EventStateService {
 
     void playingState(KickerEvent event);
 
+    void waitingState(KickerEvent event);
+
     void nextCheckingState(KickerEvent event);
 
     void redCheckingState(KickerEvent event);

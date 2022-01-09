@@ -1,6 +1,7 @@
 package ru.acuma.k.shuffler.service;
 
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -17,6 +18,8 @@ public interface MessageService {
     EditMessageReplyMarkup updateMarkup(KickerEvent event, Integer messageId, MessageType type);
 
     EditMessageText updateLobbyMessage(KickerEvent event);
+
+    PinChatMessage pinedMessage(Message message);
 
     DeleteMessage deleteMessage(Long chatId, Integer messageId);
 

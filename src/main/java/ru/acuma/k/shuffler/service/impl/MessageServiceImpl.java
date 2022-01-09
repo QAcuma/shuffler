@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
+import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -37,7 +38,6 @@ public class MessageServiceImpl implements MessageService {
                 .replyMarkup(getKeyboard(event, type))
                 .parseMode(ParseMode.HTML)
                 .build();
-        message.enableMarkdown(true);
         return message;
     }
 
@@ -66,6 +66,14 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public EditMessageText updateLobbyMessage(KickerEvent event) {
         return updateMessage(event, event.getBaseMessage(), LOBBY);
+    }
+
+    @Override
+    public PinChatMessage pinedMessage(Message message) {
+        return PinChatMessage.builder()
+                .chatId(String.valueOf(message.getChatId()))
+                .messageId(message.getMessageId())
+                .build();
     }
 
     @Override

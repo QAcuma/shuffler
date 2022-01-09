@@ -10,8 +10,12 @@ import ru.acuma.k.shuffler.model.enums.messages.MessageType;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+import static ru.acuma.k.shuffler.model.enums.EventState.WAITING;
+import static ru.acuma.k.shuffler.model.enums.GameState.FINISHED;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.BLANK_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.GAME_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.SPACE_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.WAITING_MESSAGE;
 import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.WINNERS_MESSAGE;
 
 public final class BuildMessageUtil {
@@ -48,12 +52,10 @@ public final class BuildMessageUtil {
                 .append(GAME_MESSAGE.getText())
                 .append(game.getIndex())
                 .append(System.lineSeparator())
-                .append(System.lineSeparator());
+                .append(SPACE_MESSAGE.getText());
 
         switch (game.getState()) {
             case STARTED:
-                buildStartedMessage(event, builder);
-                break;
             case CHECKING:
                 buildStartedMessage(event, builder);
                 break;
@@ -64,21 +66,21 @@ public final class BuildMessageUtil {
     private static void buildStartedMessage(KickerEvent event, StringBuilder builder) {
         var game = event.getCurrentGame();
         String spaces = getSpaces(game);
-        String moreSpaces = spaces + "   ";
+        String moreSpaces = spaces;
         builder
                 .append(moreSpaces)
                 .append(game.getRedTeam().getRating())
                 .append(System.lineSeparator())
-                .append("🔴")
+                .append("🔴 ")
                 .append(game.getRedTeam().toString())
-                .append("🔴")
+                .append(" 🔴")
                 .append(System.lineSeparator())
                 .append(spaces)
                 .append("⚡️⚡️⚡️")
                 .append(System.lineSeparator())
-                .append("🔵")
+                .append("🔵 ")
                 .append(game.getBlueTeam().toString())
-                .append("🔵")
+                .append(" 🔵")
                 .append(System.lineSeparator())
                 .append(moreSpaces)
                 .append(game.getBlueTeam().getRating())
@@ -98,6 +100,9 @@ public final class BuildMessageUtil {
             case CANCEL_LOBBY_CHECKING:
             case BEGIN_CHECKING:
                 builder.append(EventConstant.LOBBY_MESSAGE.getText());
+                break;
+            case WAITING:
+                builder.append(EventConstant.LOBBY_WAITING_MESSAGE.getText());
                 break;
             case CANCELLED:
                 return EventConstant.LOBBY_CANCELED_MESSAGE.getText();
@@ -121,13 +126,23 @@ public final class BuildMessageUtil {
                         .map(KickerEventPlayer::getLobbyName)
                         .collect(Collectors.joining(System.lineSeparator()))
         );
-        builder.append(WINNERS_MESSAGE.getText());
         buildResult(event, builder);
-
+        if (event.getEventState() == WAITING) {
+            builder
+                    .append(System.lineSeparator())
+                    .append(System.lineSeparator())
+                    .append(WAITING_MESSAGE.getText())
+                    .append(System.lineSeparator());
+        }
         return builder.toString();
     }
 
     private static void buildResult(KickerEvent event, StringBuilder builder) {
+        if (event.getGames().stream().anyMatch(game -> game.getState() == FINISHED)) {
+            builder.append(System.lineSeparator())
+                    .append(WINNERS_MESSAGE.getText());
+        }
+
         event.getGames()
                 .stream()
                 .filter(game -> game.getWinnerTeam() != null)
@@ -150,16 +165,14 @@ public final class BuildMessageUtil {
                 return EventConstant.RED_CHECKING_MESSAGE.getText();
             case BLUE_CHECKING:
                 return EventConstant.BLUE_CHECKING_MESSAGE.getText();
-            case MEMBER_CHECKING:
-                return EventConstant.MEMBER_CHECKING_MESSAGE.getText();
             case FINISH_CHECKING:
                 return EventConstant.FINISH_CHECKING_MESSAGE.getText();
             default:
-                return EventConstant.UNEXPECTED_CHECKING_MESSAGE.getText();
+                return BLANK_MESSAGE.getText();
         }
     }
 
     private static String buildStatText(KickerEvent event) {
-        return EventConstant.STAT_MESSAGE.getText();
+        return BLANK_MESSAGE.getText();
     }
 }

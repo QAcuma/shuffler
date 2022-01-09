@@ -38,6 +38,7 @@ public class KickerCommand extends BaseBotCommand {
         }
         final var event = eventContextService.buildEvent(message.getChatId());
         var baseMessage = executeService.execute(absSender, messageService.sendMessage(event, LOBBY));
+        executeService.execute(absSender, messageService.pinedMessage(baseMessage));
         event.watchMessage(baseMessage.getMessageId());
     }
 }

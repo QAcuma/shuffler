@@ -3,8 +3,7 @@ package ru.acuma.k.shuffler.model.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @Setter
@@ -44,17 +43,24 @@ public class KickerEventPlayer extends KickerPlayer {
         StringBuilder builder = new StringBuilder();
         return builder.append(super.getFirstName())
                 .append(" ")
-                .append(Optional.ofNullable(super.getLastName()).orElse("Doe"))
+                .append(getFormatName())
                 .toString();
+    }
+
+    private String getFormatName() {
+        String lastName = "";
+        if (getLastName() != null) {
+            lastName = getLastName().charAt(0) + ".";
+        }
+        StringUtils.capitalize(lastName);
+        return lastName;
     }
 
     public String getLobbyName() {
         StringBuilder builder = new StringBuilder();
         return builder
                 .append(strikethroughBegin())
-                .append(super.getFirstName())
-                .append(" ")
-                .append(Optional.ofNullable(super.getLastName()).orElse("Doe"))
+                .append(getName())
                 .append(strikethroughEnd())
                 .append(" ")
                 .append(super.getRating())

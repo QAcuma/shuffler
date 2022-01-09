@@ -14,6 +14,7 @@ import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
 import ru.acuma.k.shuffler.service.PlayerService;
 
+import static ru.acuma.k.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
 import static ru.acuma.k.shuffler.model.enums.WinnerState.NONE;
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.GAME;
 
@@ -57,7 +58,12 @@ public class LeaveCommand extends BaseBotCommand {
                 boolean broken = playerService.leaveLobby(event, message.getFrom());
                 if (broken) {
                     gameService.finishGame(event, NONE);
-                    gameAnswer(absSender, event, event.getCurrentGame().getMessageId());
+                    if (event.getActivePlayers().size() < GAME_PLAYERS_COUNT) {
+                        eventStateService.waitingState(event);
+                        maintenanceService.sweepMessage(absSender, event.getChatId(), event.getCurrentGame().getMessageId());
+                    } else {
+                        gameAnswer(absSender, event, event.getCurrentGame().getMessageId());
+                    }
                 }
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;

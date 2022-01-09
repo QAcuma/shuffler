@@ -121,6 +121,7 @@ public class KeyboardServiceImpl implements KeyboardService {
             case FINISH_CHECKING:
                 return List.of(Checking.values());
             case PLAYING:
+            case WAITING:
                 return List.of(Playing.values());
             case FINISHED:
             default:

@@ -25,10 +25,7 @@ public class ShuffleServiceImpl implements ShuffleService {
     @Override
     public List<KickerEventPlayer> shuffle(KickerEvent event) {
 
-        List<KickerEventPlayer> members = event.getPlayers().values()
-                .stream()
-                .filter(member -> !member.isLeft())
-                .collect(Collectors.toList());
+        List<KickerEventPlayer> members = event.getActivePlayers();
 
         if (members.size() < GAME_PLAYERS_COUNT) {
             return null;
