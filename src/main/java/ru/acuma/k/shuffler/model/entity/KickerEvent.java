@@ -55,19 +55,19 @@ public class KickerEvent {
 //        player1.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
 //                .setTelegramId(123L)
 //                .setFirstName("Player")
-//                .setLastName("First");
+//                .setLastName("A");
 //        player2.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
 //                .setTelegramId(124L)
 //                .setFirstName("Player")
-//                .setLastName("Second");
+//                .setLastName("B");
 //        player3.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
 //                .setTelegramId(125L)
 //                .setFirstName("Player")
-//                .setLastName("Third");
+//                .setLastName("C");
 //        player4.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
 //                .setTelegramId(126L)
 //                .setFirstName("Player")
-//                .setLastName("Fourth");
+//                .setLastName("D");
 //        this.players.put(player1.getTelegramId(), player1);
 //        this.players.put(player2.getTelegramId(), player2);
 //        this.players.put(player3.getTelegramId(), player3);

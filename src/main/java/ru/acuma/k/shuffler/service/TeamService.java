@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface TeamService {
 
-    KickerTeam teamBuilding(List<KickerEventPlayer> players);
+    KickerTeam teamBuilding(List<KickerEventPlayer> players, long spreadDistance);
+
+    void fillLastGameMate(KickerTeam team);
 
 
 }

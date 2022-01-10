@@ -14,8 +14,6 @@ import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking;
 import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking1;
 import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking2;
 import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking3;
-import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking4;
-import ru.acuma.k.shuffler.model.enums.keyboards.checking.Checking5;
 import ru.acuma.k.shuffler.model.enums.messages.MessageType;
 import ru.acuma.k.shuffler.service.KeyboardService;
 import ru.acuma.k.shuffler.service.enums.EventStatusApi;
@@ -91,10 +89,6 @@ public class KeyboardServiceImpl implements KeyboardService {
 
     public List<EventStatusApi> buildTimedButtons(int time) {
         switch (time) {
-            case 5:
-                return List.of(Checking5.values());
-            case 4:
-                return List.of(Checking4.values());
             case 3:
                 return List.of(Checking3.values());
             case 2:

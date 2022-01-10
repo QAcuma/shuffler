@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.service.EventContextService;
-import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
@@ -22,7 +21,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class MaintenanceServiceImpl implements MaintenanceService {
 
-    private final EventStateService eventStateService;
     private final EventContextService eventContextService;
     private final ExecuteService executeService;
     private final MessageService messageService;

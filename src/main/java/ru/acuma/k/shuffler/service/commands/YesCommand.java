@@ -57,19 +57,19 @@ public class YesCommand extends BaseBotCommand {
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
             case RED_CHECKING:
-                gameService.finishGame(event, RED);
+                gameService.endGame(event, RED);
                 maintenanceService.sweepMessage(absSender, message.getChatId(), event.getCurrentGame().getMessageId());
                 gameAnswer(absSender, event, message);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
             case BLUE_CHECKING:
-                gameService.finishGame(event, BLUE);
+                gameService.endGame(event, BLUE);
                 maintenanceService.sweepMessage(absSender, message.getChatId(), event.getCurrentGame().getMessageId());
                 gameAnswer(absSender, event, message);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
             case CANCEL_GAME_CHECKING:
-                gameService.finishGame(event, NONE);
+                gameService.endGame(event, NONE);
                 maintenanceService.sweepMessage(absSender, message.getChatId(), event.getCurrentGame().getMessageId());
                 gameAnswer(absSender, event, message);
                 break;
@@ -84,7 +84,7 @@ public class YesCommand extends BaseBotCommand {
     private void gameAnswer(AbsSender absSender, KickerEvent event, Message message) {
         maintenanceService.sweepMessage(absSender, message);
         eventStateService.playingState(event);
-        gameService.newGame(event);
+        event.newGame(gameService.buildGame(event));
         var gameMessage = executeService.execute(absSender, messageService.sendMessage(event, GAME));
         event.getCurrentGame().setMessageId(gameMessage.getMessageId());
     }
@@ -93,7 +93,7 @@ public class YesCommand extends BaseBotCommand {
     private void finishAnswer(AbsSender absSender, KickerEvent event, Message message) {
         maintenanceService.sweepMessage(absSender, message);
         maintenanceService.sweepMessage(absSender, message.getChatId(), event.getCurrentGame().getMessageId());
-        gameService.finishGame(event, NONE);
+        gameService.endGame(event, NONE);
         championshipService.finishChampionship(absSender, event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));
     }

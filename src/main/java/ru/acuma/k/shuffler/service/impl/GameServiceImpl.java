@@ -2,6 +2,7 @@ package ru.acuma.k.shuffler.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
@@ -28,49 +29,50 @@ public class GameServiceImpl implements GameService {
     private final RatingService ratingService;
     private final PlayerService playerService;
 
-    @SneakyThrows
-    public void newGame(KickerEvent event) {
-        buildGame(event);
-    }
+    @Value("${rating.spread-distance}")
+    private long spreadDistance;
 
     @SneakyThrows
-    private void buildGame(KickerEvent event) {
-        List<KickerEventPlayer> players = shuffleService.shuffle(event);
-        if (players == null) {
-            throw new InstanceNotFoundException("Недостаточно игроков для начала матча");
+    public KickerGame buildGame(KickerEvent event) {
+        List<KickerEventPlayer> players;
+        KickerTeam redTeam;
+        try {
+            players = shuffleService.shuffle(event);
+            if (players == null) {
+                throw new InstanceNotFoundException("Недостаточно игроков для начала матча");
+            }
+            redTeam = teamService.teamBuilding(players, spreadDistance);
+        } catch (IllegalArgumentException e) {
+            return buildGame(event);
         }
-        KickerTeam redTeam = teamService.teamBuilding(players);
-        KickerTeam blueTeam = teamService.teamBuilding(players);
-        KickerGame game = KickerGame.builder()
+        if (redTeam == null) {
+            throw new IllegalArgumentException("Red team is null");
+        }
+        players.removeAll(redTeam.getPlayers());
+        KickerTeam blueTeam = teamService.teamBuilding(players, spreadDistance);
+        return KickerGame.builder()
                 .redTeam(redTeam)
                 .blueTeam(blueTeam)
                 .index(event.getGames().size() + 1)
                 .startedAt(LocalDateTime.now())
                 .state(GameState.STARTED)
                 .build();
-        event.newGame(game);
     }
 
     @Override
-    public void finishGame(KickerEvent event, WinnerState state) {
+    public void endGame(KickerEvent event, WinnerState state) {
         var game = event.getCurrentGame();
         if (game == null) {
             return;
         }
         switch (state) {
             case RED:
-                game.setState(GameState.FINISHED);
                 game.getRedTeam().setWinner(true);
-                ratingService.update(event);
-                playerService.updatePlayersRating(event);
-                game.getPlayers().forEach(KickerEventPlayer::gg);
+                finishGame(event);
                 break;
             case BLUE:
-                game.setState(GameState.FINISHED);
                 game.getBlueTeam().setWinner(true);
-                ratingService.update(event);
-                playerService.updatePlayersRating(event);
-                game.getPlayers().forEach(KickerEventPlayer::gg);
+                finishGame(event);
                 break;
             case NONE:
                 game.setState(GameState.CANCELLED);
@@ -78,6 +80,16 @@ public class GameServiceImpl implements GameService {
                 break;
         }
         game.setFinishedAt(LocalDateTime.now());
+    }
+
+    private void finishGame(KickerEvent event) {
+        var game = event.getCurrentGame();
+        game.setState(GameState.FINISHED);
+        ratingService.update(event);
+        playerService.updatePlayersRating(event);
+        game.getPlayers().forEach(KickerEventPlayer::gg);
+        teamService.fillLastGameMate(game.getWinnerTeam());
+        teamService.fillLastGameMate(game.getLoserTeam());
     }
 
 }

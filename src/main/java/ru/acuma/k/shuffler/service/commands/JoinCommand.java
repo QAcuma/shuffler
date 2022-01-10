@@ -54,7 +54,7 @@ public class JoinCommand extends BaseBotCommand {
                 playerService.joinLobby(event, message.getFrom());
                 if (event.getActivePlayers().size() >= GAME_PLAYERS_COUNT) {
                     eventStateService.playingState(event);
-                    gameService.newGame(event);
+                    event.newGame(gameService.buildGame(event));
                     var gameMessage = executeService.execute(absSender, messageService.sendMessage(event, GAME));
                     event.getCurrentGame().setMessageId(gameMessage.getMessageId());
                 }
