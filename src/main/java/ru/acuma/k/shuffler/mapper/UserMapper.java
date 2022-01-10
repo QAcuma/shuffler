@@ -15,6 +15,9 @@ public class UserMapper {
     private final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 
     public UserInfo toUserInfo(User user) {
+        if (user.getUserName() == null) {
+            user.setUserName(String.valueOf(user.getId()));
+        }
         mapperFactory.classMap(User.class, UserInfo.class)
                 .field("id", "telegramId")
                 .byDefault()
