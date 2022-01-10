@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.k.shuffler.model.enums.ConstantReply;
-import ru.acuma.k.shuffler.service.MessageService;
 import ru.acuma.k.shuffler.service.MessageWayService;
 import ru.acuma.k.shuffler.service.NonCommandService;
 import ru.acuma.k.shuffler.service.UserService;
@@ -20,7 +19,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class NonCommandServiceImpl implements NonCommandService {
 
-    private final MessageService messageService;
     private final MessageWayService messageWayService;
     private final UserService userService;
 

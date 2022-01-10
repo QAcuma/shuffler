@@ -16,6 +16,8 @@ public class KickerEventPlayer extends KickerPlayer {
 
     private long sessionRating;
 
+    private KickerEventPlayer lastGamePlayer;
+
     @Override
     public void plusRating(long value) {
         super.plusRating(value);

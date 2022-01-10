@@ -57,7 +57,7 @@ public class LeaveCommand extends BaseBotCommand {
             case PLAYING:
                 boolean broken = playerService.leaveLobby(event, message.getFrom());
                 if (broken) {
-                    gameService.finishGame(event, NONE);
+                    gameService.endGame(event, NONE);
                     if (event.getActivePlayers().size() < GAME_PLAYERS_COUNT) {
                         eventStateService.waitingState(event);
                         maintenanceService.sweepMessage(absSender, event.getChatId(), event.getCurrentGame().getMessageId());
@@ -74,7 +74,7 @@ public class LeaveCommand extends BaseBotCommand {
     private void gameAnswer(AbsSender absSender, KickerEvent event, Integer messageId) {
         maintenanceService.sweepMessage(absSender, event.getChatId(), messageId);
         eventStateService.playingState(event);
-        gameService.newGame(event);
+        event.newGame(gameService.buildGame(event));
         var gameMessage = executeService.execute(absSender, messageService.sendMessage(event, GAME));
         event.getCurrentGame().setMessageId(gameMessage.getMessageId());
     }
