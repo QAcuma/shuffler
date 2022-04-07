@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.k.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.k.shuffler.model.enums.Command;
+import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MessageService;
@@ -34,7 +35,7 @@ public class FinishCommand extends BaseBotCommand {
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getEvent(message.getChatId());
 
-        if (!event.getPlayers().containsKey(message.getFrom().getId())) {
+        if (EventState.FINISH_CHECKING == event.getEventState() || !event.getPlayers().containsKey(message.getFrom().getId())) {
             return;
         }
 

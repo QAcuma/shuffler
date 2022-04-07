@@ -28,7 +28,7 @@ public class ShuffleServiceImpl implements ShuffleService {
         List<KickerEventPlayer> members = event.getActivePlayers();
 
         if (members.size() < GAME_PLAYERS_COUNT) {
-            return null;
+            throw new NoSuchElementException("Not enough players to start event");
         }
 
         int minGames = members.stream()

@@ -29,4 +29,5 @@ server:
       min-spare: 50
 
 rating:
+  team-build-strategy: ${K_SHUFFLER_TEAM_BUILD_STRATEGY:random}
   spread-distance: ${K_SHUFFLER_RATING_SPREAD:100}

@@ -9,7 +9,10 @@ public interface TeamService {
 
     KickerTeam teamBuilding(List<KickerEventPlayer> players, long spreadDistance);
 
-    void fillLastGameMate(KickerTeam team);
+    default void fillLastGameMate(KickerTeam team) {
+        team.getPlayer1().setLastGamePlayer(team.getPlayer2());
+        team.getPlayer2().setLastGamePlayer(team.getPlayer1());
+    }
 
 
 }

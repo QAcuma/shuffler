@@ -3,10 +3,12 @@ package ru.acuma.k.shuffler.service.impl;
 import com.google.common.collect.Iterables;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.entity.KickerTeam;
 import ru.acuma.k.shuffler.service.TeamService;
+import ru.acuma.k.shuffler.util.TeamServiceUtil;
 
 import javax.management.InstanceNotFoundException;
 import java.util.ArrayList;
@@ -15,7 +17,12 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class TeamServiceImpl implements TeamService {
+@ConditionalOnProperty(
+        prefix = "rating",
+        name = "team-build-strategy",
+        havingValue = "rating"
+)
+public class TeamServiceRatingImpl implements TeamService {
 
     @Value("${rating.spread-distance}")
     private long spreadDistance;
@@ -27,7 +34,10 @@ public class TeamServiceImpl implements TeamService {
             throw new IllegalArgumentException("Can't shuffle unique team");
         }
         List<KickerEventPlayer> playersCopy = new ArrayList<>(players);
-        playersCopy.forEach(player -> player.setSpreadRating(player.getRating() + ThreadLocalRandom.current().nextLong(-spreadDistance, spreadDistance)));
+        playersCopy.forEach(
+                player -> player.setSpreadRating(player.getRating()
+                        + ThreadLocalRandom.current().nextLong(-spreadDistance, spreadDistance))
+        );
         playersCopy.sort(Comparator.comparingLong(KickerEventPlayer::getSpreadRating).reversed());
 
         if (playersCopy.size() == 2) {
@@ -36,36 +46,11 @@ public class TeamServiceImpl implements TeamService {
 
         var team = calculateTeam(playersCopy);
 
-        if (!checkSecondTeam(players, team)) {
+        if (!TeamServiceUtil.checkSecondTeam(players, team)) {
             return teamBuilding(players, spread + spreadDistance);
         }
 
         return team;
-    }
-
-    @Override
-    public void fillLastGameMate(KickerTeam team) {
-        team.getPlayer1().setLastGamePlayer(team.getPlayer2());
-        team.getPlayer2().setLastGamePlayer(team.getPlayer1());
-    }
-
-    @SneakyThrows
-    private boolean checkSecondTeam(List<KickerEventPlayer> players, KickerTeam team) {
-        List<KickerEventPlayer> playersCopy = new ArrayList<>(players);
-        playersCopy.removeAll(team.getPlayers());
-
-        var player1 = playersCopy.stream()
-                .findFirst()
-                .orElseThrow(() -> new InstanceNotFoundException("Player not found"));
-        var player2 = Iterables.getLast(playersCopy);
-
-        if (player1.getLastGamePlayer() == null || player2.getLastGamePlayer() == null) {
-            return true;
-        }
-        if (player1.getLastGamePlayer().equals(player2) || player2.getLastGamePlayer().equals(player1)) {
-            return false;
-        }
-        return true;
     }
 
     @SneakyThrows
