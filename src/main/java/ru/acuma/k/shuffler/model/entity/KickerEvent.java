@@ -5,14 +5,7 @@ import lombok.Data;
 import ru.acuma.k.shuffler.model.enums.EventState;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -41,10 +34,7 @@ public class KickerEvent {
 
     public boolean isPresent(Long telegramId) {
         var player = players.get(telegramId);
-        if (player != null && !player.isLeft()) {
-            return true;
-        }
-        return false;
+        return player != null && !player.isLeft();
     }
 
     public void joinPlayer(KickerEventPlayer kickerPlayer) {
@@ -52,6 +42,7 @@ public class KickerEvent {
 //        var player2 = SerializationUtils.clone(kickerPlayer).setGameCount(0);
 //        var player3 = SerializationUtils.clone(kickerPlayer).setGameCount(0);
 //        var player4 = SerializationUtils.clone(kickerPlayer).setGameCount(0);
+//        var player5 = SerializationUtils.clone(kickerPlayer).setGameCount(0);
 //        player1.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
 //                .setTelegramId(123L)
 //                .setFirstName("Player")
@@ -68,10 +59,15 @@ public class KickerEvent {
 //                .setTelegramId(126L)
 //                .setFirstName("Player")
 //                .setLastName("D");
+//        player5.setRating(ThreadLocalRandom.current().nextInt(650, 1350))
+//                .setTelegramId(127L)
+//                .setFirstName("Player")
+//                .setLastName("F");
 //        this.players.put(player1.getTelegramId(), player1);
 //        this.players.put(player2.getTelegramId(), player2);
 //        this.players.put(player3.getTelegramId(), player3);
 //        this.players.put(player4.getTelegramId(), player4);
+//        this.players.put(player5.getTelegramId(), player5);
         this.players.put(kickerPlayer.getTelegramId(), kickerPlayer);
     }
 

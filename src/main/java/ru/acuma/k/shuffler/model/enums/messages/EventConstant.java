@@ -25,8 +25,8 @@ public enum EventConstant implements EventConstantApi {
     FINISH_CHECKING_MESSAGE("⚠️ Завершить чемпионат?\n"),
     WAITING_MESSAGE("⚠️ Недостаточно игроков для начала игры!\n"),
     BEGIN_CHECKING_MESSAGE("\uD83D\uDC65 Все участники в сборе?\n"),
-    RED_CHECKING_MESSAGE("🔴   Победа красных?   🔴\n"),
-    BLUE_CHECKING_MESSAGE("🔵   Победа синих?   🔵\n"),
+    RED_CHECKING_MESSAGE("\uD83D\uDD3A   Победа красных?   \uD83D\uDD3A\n"),
+    BLUE_CHECKING_MESSAGE("\uD83D\uDD39   Победа синих?   \uD83D\uDD39\n"),
     LOBBY_CANCELED_MESSAGE("Чемпионат был отменен \uD83C\uDF1A");
 
     private final String text;

@@ -1,12 +1,12 @@
 telegram.bot:
   name: ${K_SHUFFLER_BOT_NAME:fly_cloud_bot}
-  token: ${K_SHUFFLER_TOKEN}
+  token: ${K_SHUFFLER_TOKEN:2039175749:AAEhQL_TUqikssw_VRzDz4PfrhAT27Xv7xo}
 
 spring.datasource:
   driver-class-name: org.postgresql.Driver
-  url: jdbc:postgresql://${K_SHUFFLER_DB_SERVER_HOST:localhost}:${K_SHUFFLER_DB_SERVER_PORT:5432}/${K_SHUFFLER_DB_NAME:ksb}${K_SHUFFLER_DB_URL_PARAMS:}
-  username: ${K_SHUFFLER_DB_USER:ksb}
-  password: ${K_SHUFFLER_DB_PASSWORD:root}
+  url: jdbc:postgresql://${K_SHUFFLER_DB_SERVER_HOST:80.85.139.74}:${K_SHUFFLER_DB_SERVER_PORT:5432}/${K_SHUFFLER_DB_NAME:ks_db}${K_SHUFFLER_DB_URL_PARAMS:}
+  username: ${K_SHUFFLER_DB_USER:ks_bot}
+  password: ${K_SHUFFLER_DB_PASSWORD:kicker}
 
 spring.flyway:
   out-of-order: false

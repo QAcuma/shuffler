@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TeamService {
 
-    KickerTeam teamBuilding(List<KickerEventPlayer> players, long spreadDistance);
+    KickerTeam teamBuilding(List<KickerEventPlayer> player);
 
     default void fillLastGameMate(KickerTeam team) {
         team.getPlayer1().setLastGamePlayer(team.getPlayer2());

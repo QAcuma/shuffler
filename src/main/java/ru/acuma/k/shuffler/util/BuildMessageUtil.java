@@ -12,11 +12,7 @@ import java.util.stream.Collectors;
 
 import static ru.acuma.k.shuffler.model.enums.EventState.WAITING;
 import static ru.acuma.k.shuffler.model.enums.GameState.FINISHED;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.BLANK_MESSAGE;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.GAME_MESSAGE;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.SPACE_MESSAGE;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.WAITING_MESSAGE;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.WINNERS_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.*;
 
 public final class BuildMessageUtil {
 
@@ -66,23 +62,22 @@ public final class BuildMessageUtil {
     private static void buildStartedMessage(KickerEvent event, StringBuilder builder) {
         var game = event.getCurrentGame();
         String spaces = getSpaces(game);
-        String moreSpaces = spaces;
         builder
-                .append(moreSpaces)
+                .append(spaces)
                 .append(game.getRedTeam().getRating())
                 .append(System.lineSeparator())
-                .append("🔴 ")
-                .append(game.getRedTeam().toString())
-                .append(" 🔴")
+                .append("⚔️ ")
+                .append(String.format(game.getRedTeam().toString(), "\uD83D\uDD3A"))
+                .append(" \uD83D\uDEE1")
                 .append(System.lineSeparator())
                 .append(spaces)
-                .append("⚡️⚡️⚡️")
+                .append("\uD83D\uDDEF\uD83D\uDDEF\uD83D\uDDEF")
                 .append(System.lineSeparator())
-                .append("🔵 ")
-                .append(game.getBlueTeam().toString())
-                .append(" 🔵")
+                .append("⚔️ ")
+                .append(String.format(game.getBlueTeam().toString(), "\uD83D\uDD39"))
+                .append(" \uD83D\uDEE1")
                 .append(System.lineSeparator())
-                .append(moreSpaces)
+                .append(spaces)
                 .append(game.getBlueTeam().getRating())
                 .append(System.lineSeparator());
     }

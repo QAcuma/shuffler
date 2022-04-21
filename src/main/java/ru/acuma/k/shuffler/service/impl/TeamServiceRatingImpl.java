@@ -29,10 +29,7 @@ public class TeamServiceRatingImpl implements TeamService {
 
     @SneakyThrows
     @Override
-    public KickerTeam teamBuilding(List<KickerEventPlayer> players, long spread) {
-        if (spread > spreadDistance * 4) {
-            throw new IllegalArgumentException("Can't shuffle unique team");
-        }
+    public KickerTeam teamBuilding(List<KickerEventPlayer> players) {
         List<KickerEventPlayer> playersCopy = new ArrayList<>(players);
         playersCopy.forEach(
                 player -> player.setSpreadRating(player.getRating()
@@ -46,8 +43,8 @@ public class TeamServiceRatingImpl implements TeamService {
 
         var team = calculateTeam(playersCopy);
 
-        if (!TeamServiceUtil.checkSecondTeam(players, team)) {
-            return teamBuilding(players, spread + spreadDistance);
+        if (TeamServiceUtil.checkTeamMatches(team)) {
+            return teamBuilding(players);
         }
 
         return team;

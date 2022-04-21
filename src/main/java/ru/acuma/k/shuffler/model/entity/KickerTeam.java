@@ -30,7 +30,7 @@ public class KickerTeam {
 
     @Override
     public String toString() {
-        return player1.getName() + " & " + player2.getName();
+        return player1.getName() + " %s " + player2.getName();
     }
 
     public List<KickerEventPlayer> getPlayers() {
