@@ -46,7 +46,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @SneakyThrows
     public void sweepMessage(AbsSender absSender, Long chatId, Integer messageId) {
-        final var event = eventContextService.getEvent(chatId);
+        final var event = eventContextService.getCurrentEvent(chatId);
         var deleteMessage = messageService.deleteMessage(chatId, messageId);
         executeService.execute(absSender, deleteMessage);
         if (eventContextService.isActive(chatId)) {

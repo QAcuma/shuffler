@@ -3,6 +3,7 @@ package ru.acuma.k.shuffler.model.entity;
 import lombok.Builder;
 import lombok.Data;
 import ru.acuma.k.shuffler.model.enums.EventState;
+import ru.acuma.shufflerlib.model.Discipline;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -27,6 +28,8 @@ public class KickerEvent {
     private LocalDateTime finishedAt;
 
     private final List<KickerGame> games = new ArrayList<>();
+
+    private Discipline discipline;
 
     public Integer getBaseMessage() {
         return Collections.min(this.messages);

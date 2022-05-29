@@ -47,7 +47,7 @@ public class YesCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.getEvent(message.getChatId());
+        final var event = eventContextService.getCurrentEvent(message.getChatId());
         switch (event.getEventState()) {
             case CANCEL_LOBBY_CHECKING:
                 championshipService.cancelChampionship(absSender, event);

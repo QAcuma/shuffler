@@ -14,7 +14,7 @@ public class KickerEventPlayer extends KickerPlayer {
 
     private long spreadRating;
 
-    private long sessionRating;
+    private int sessionRating;
 
     private KickerEventPlayer lastGamePlayer;
 

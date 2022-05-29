@@ -10,6 +10,7 @@ import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
+import ru.acuma.shufflerlib.model.Discipline;
 
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.LOBBY;
 
@@ -36,7 +37,7 @@ public class KickerCommand extends BaseBotCommand {
         if (eventContextService.isActive(message.getChatId())) {
             return;
         }
-        final var event = eventContextService.buildEvent(message.getChatId());
+        final var event = eventContextService.buildEvent(message.getChatId(), Discipline.KICKER_2VS2);
         var baseMessage = executeService.execute(absSender, messageService.sendMessage(event, LOBBY));
         executeService.execute(absSender, messageService.pinedMessage(baseMessage));
         event.watchMessage(baseMessage.getMessageId());

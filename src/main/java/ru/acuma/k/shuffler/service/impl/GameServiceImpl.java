@@ -10,6 +10,8 @@ import ru.acuma.k.shuffler.model.entity.KickerTeam;
 import ru.acuma.k.shuffler.model.enums.GameState;
 import ru.acuma.k.shuffler.model.enums.WinnerState;
 import ru.acuma.k.shuffler.service.*;
+import ru.acuma.k.shuffler.tables.pojos.Game;
+import ru.acuma.shufflerlib.dao.GameDao;
 
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ public class GameServiceImpl implements GameService {
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
     private final PlayerService playerService;
+    private final GameDao gameDao;
 
     @SneakyThrows
     public KickerGame buildGame(KickerEvent event) {

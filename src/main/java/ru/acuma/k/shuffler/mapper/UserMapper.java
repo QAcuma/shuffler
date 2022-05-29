@@ -10,7 +10,7 @@ import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 import java.time.OffsetDateTime;
 
 @Component
-public class UserMapper {
+public class UserMapper extends BaseMapper {
 
     private final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 

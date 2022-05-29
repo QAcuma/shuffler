@@ -43,7 +43,7 @@ public class ExecuteServiceImpl implements ExecuteService {
             var msg = absSender.execute(method);
             if (msg instanceof Message) {
                 var message = (Message) msg;
-                final var event = eventContextService.getEvent(message.getChatId());
+                final var event = eventContextService.getCurrentEvent(message.getChatId());
                 if (event != null && message.getMessageId() != null) {
                     event.watchMessage(message.getMessageId());
                 }

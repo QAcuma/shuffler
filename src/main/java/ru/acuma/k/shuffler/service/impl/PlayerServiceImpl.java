@@ -1,23 +1,22 @@
 package ru.acuma.k.shuffler.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.acuma.k.shuffler.dao.PlayerDao;
 import ru.acuma.k.shuffler.mapper.PlayerMapper;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.tables.pojos.Player;
+import ru.acuma.k.shuffler.tables.pojos.Rating;
+import ru.acuma.shufflerlib.dao.PlayerDao;
+import ru.acuma.shufflerlib.dao.RatingDao;
+import ru.acuma.shufflerlib.model.Discipline;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
-import static ru.acuma.k.shuffler.model.enums.Values.DEFAULT_RATING;
-
-@Profile("!dev")
 @Service
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
@@ -25,12 +24,14 @@ public class PlayerServiceImpl implements PlayerService {
     private final UserService userService;
     private final PlayerMapper playerMapper;
     private final PlayerDao playerDao;
+    private final RatingDao ratingDao;
 
     @Override
     public void authenticate(KickerEvent event, User user) {
         var appUser = userService.getUser(user.getId());
         var player = getPlayer(event.getChatId(), user.getId());
-        var kickerPlayer = playerMapper.toKickerPlayer(appUser, player);
+        var rating = ratingDao.getRating(user.getId(), event.getDiscipline());
+        var kickerPlayer = playerMapper.toKickerPlayer(appUser, player, rating);
         var kickerEventPlayer = playerMapper.toKickerEventPlayer(kickerPlayer);
         event.joinPlayer(kickerEventPlayer);
     }
@@ -41,21 +42,15 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public boolean leaveLobby(KickerEvent event, User user) {
-        boolean broken = false;
+    public void leaveLobby(KickerEvent event, User user) {
         switch (event.getEventState()) {
             case CREATED:
             case READY:
                 event.leaveLobby(user.getId());
                 break;
-            case PLAYING:
+            default:
                 event.getPlayers().get(user.getId()).setLeft(true);
-                broken = event.getCurrentGame().getPlayers()
-                        .stream()
-                        .anyMatch(KickerEventPlayer::isLeft);
-                break;
         }
-        return broken;
     }
 
     @Override
@@ -78,7 +73,9 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private void updateRating(KickerEventPlayer player) {
-        playerDao.updateRating(playerMapper.toPlayer(player));
+        Rating rating =  ratingDao.getRating(player.getId(), Discipline.KICKER_2VS2);
+        rating.setRating(player.getRating());
+        ratingDao.save(rating);
     }
 
     private Player getPlayer(Long chatId, Long userId) {
@@ -90,10 +87,9 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private void registerPlayer(Long chatId, Long userId) {
-        Player player = new Player();
-        player.setChatId(chatId)
-                .setUserId(userId)
-                .setRating(DEFAULT_RATING);
+        Player player = new Player()
+                .setChatId(chatId)
+                .setUserId(userId);
         playerDao.save(player);
     }
 

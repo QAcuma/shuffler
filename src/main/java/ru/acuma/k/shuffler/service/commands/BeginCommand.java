@@ -31,7 +31,7 @@ public class BeginCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.buildEvent(message.getChatId());
+        final var event = eventContextService.getCurrentEvent(message.getChatId());
 
         eventStateService.beginCheckState(event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));

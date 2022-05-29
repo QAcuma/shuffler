@@ -33,7 +33,7 @@ public class FinishCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.getEvent(message.getChatId());
+        final var event = eventContextService.getCurrentEvent(message.getChatId());
 
         if (EventState.FINISH_CHECKING == event.getEventState() || !event.getPlayers().containsKey(message.getFrom().getId())) {
             return;

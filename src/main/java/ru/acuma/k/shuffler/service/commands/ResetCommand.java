@@ -33,7 +33,7 @@ public class ResetCommand extends BaseBotCommand {
         maintenanceService.sweepMessage(absSender, message);
         if (message.getFrom().getId().equals(ID)) {
             log.info("User {} initialized reset process in chat {}", message.getFrom().getFirstName(), message.getChat().getTitle());
-            final var event = eventContextService.getEvent(message.getChatId());
+            final var event = eventContextService.getCurrentEvent(message.getChatId());
             try {
                 eventStateService.cancelledState(event);
                 maintenanceService.sweepChat(absSender, event);

@@ -29,7 +29,7 @@ public abstract class BaseBotCommand extends BotCommand {
     @Override
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
         if (message.getChat() != null && eventContextService.isActive(message.getChatId())) {
-            var event = eventContextService.getEvent(message.getChatId());
+            var event = eventContextService.getCurrentEvent(message.getChatId());
             event.watchMessage(message.getMessageId());
         }
         execute(absSender, message);

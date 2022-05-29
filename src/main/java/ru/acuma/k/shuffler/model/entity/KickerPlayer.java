@@ -16,7 +16,7 @@ public class KickerPlayer extends UserInfo {
 
     private Long chatId;
 
-    private long rating;
+    private int rating;
 
     public String getName() {
         StringBuilder builder = new StringBuilder();

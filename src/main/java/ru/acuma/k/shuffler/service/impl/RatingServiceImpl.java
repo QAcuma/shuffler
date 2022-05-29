@@ -7,17 +7,25 @@ import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerGame;
 import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.RatingService;
+import ru.acuma.k.shuffler.tables.pojos.Player;
+import ru.acuma.k.shuffler.tables.pojos.Rating;
+import ru.acuma.shufflerlib.dao.RatingDao;
+import ru.acuma.shufflerlib.dao.SeasonDao;
 
 import javax.management.InstanceNotFoundException;
 
 import static ru.acuma.k.shuffler.model.enums.Values.BASE_RATING_CHANGE;
+import static ru.acuma.k.shuffler.model.enums.Values.DEFAULT_RATING;
 import static ru.acuma.k.shuffler.model.enums.Values.RATING_REFERENCE;
+import static ru.acuma.shufflerlib.model.Discipline.KICKER_2VS2;
 
 @Service
 @AllArgsConstructor
 public class RatingServiceImpl implements RatingService {
 
     private final PlayerService playerService;
+    private final SeasonDao seasonDao;
+    private final RatingDao ratingDao;
 
     @SneakyThrows
     @Override
@@ -36,17 +44,27 @@ public class RatingServiceImpl implements RatingService {
         playerService.updatePlayersRating(event);
     }
 
-    private void strongestWon(KickerGame game, double diff) {
-        double change = BASE_RATING_CHANGE * (1 - (diff / RATING_REFERENCE));
-        long value = correcting(change);
-        game.getWinnerTeam().setRatingChange(value);
-        game.getLoserTeam().setRatingChange(-value);
-        game.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(value));
-        game.getLoserTeam().getPlayers().forEach(player -> player.minusRating(value));
+    @Override
+    public void defaultRating(Player player) {
+        Rating rating = new Rating()
+                .setDiscipline(KICKER_2VS2.name())
+                .setSeasonId(seasonDao.getCurrentSeason().getId())
+                .setPlayerId(player.getId())
+                .setRating(DEFAULT_RATING);
+        ratingDao.save(rating);
     }
 
     private void weakestWon(KickerGame game, double diff) {
         double change = BASE_RATING_CHANGE * (1 + (diff / RATING_REFERENCE));
+        processChanges(game, change);
+    }
+
+    private void strongestWon(KickerGame game, double diff) {
+        double change = BASE_RATING_CHANGE * (1 - (diff / RATING_REFERENCE));
+        processChanges(game, change);
+    }
+
+    private void processChanges(KickerGame game, double change) {
         long value = correcting(change);
         game.getWinnerTeam().setRatingChange(value);
         game.getLoserTeam().setRatingChange(-value);

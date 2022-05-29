@@ -35,7 +35,7 @@ public class NoCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.getEvent(message.getChatId());
+        final var event = eventContextService.getCurrentEvent(message.getChatId());
         maintenanceService.sweepMessage(absSender, message);
         switch (event.getEventState()) {
             case CANCEL_LOBBY_CHECKING:

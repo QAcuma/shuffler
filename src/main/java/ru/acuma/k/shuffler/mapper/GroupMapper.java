@@ -8,9 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Chat;
 import ru.acuma.k.shuffler.tables.pojos.GroupInfo;
 
 @Component
-public class GroupMapper {
-
-    private final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+public class GroupMapper extends BaseMapper {
 
     public GroupInfo toGroupInfo(Chat chat) {
         mapperFactory.classMap(Chat.class, GroupInfo.class)

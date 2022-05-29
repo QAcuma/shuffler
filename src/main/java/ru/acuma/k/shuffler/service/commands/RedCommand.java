@@ -11,6 +11,7 @@ import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.GameService;
 import ru.acuma.k.shuffler.service.MaintenanceService;
 import ru.acuma.k.shuffler.service.MessageService;
+import ru.acuma.shufflerlib.model.Discipline;
 
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING;
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.GAME;
@@ -38,7 +39,7 @@ public class RedCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.buildEvent(message.getChatId());
+        final var event = eventContextService.getCurrentEvent(message.getChatId());
 
         eventStateService.redCheckingState(event);
         executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), GAME));

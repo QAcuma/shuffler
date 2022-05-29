@@ -9,6 +9,7 @@ import ru.acuma.k.shuffler.model.enums.Command;
 import ru.acuma.k.shuffler.service.EventStateService;
 import ru.acuma.k.shuffler.service.ExecuteService;
 import ru.acuma.k.shuffler.service.MessageService;
+import ru.acuma.shufflerlib.model.Discipline;
 
 import static ru.acuma.k.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
 
@@ -31,7 +32,7 @@ public class CancelCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.buildEvent(message.getChatId());
+        final var event = eventContextService.getCurrentEvent(message.getChatId());
 
         eventStateService.cancelCheckState(event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));

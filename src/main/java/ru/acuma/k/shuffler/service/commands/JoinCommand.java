@@ -39,7 +39,7 @@ public class JoinCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.getEvent(message.getChatId());
+        final var event = eventContextService.getCurrentEvent(message.getChatId());
         if (event.isPresent(message.getFrom().getId())) {
             return;
         }

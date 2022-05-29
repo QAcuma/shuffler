@@ -9,7 +9,7 @@ public interface PlayerService {
 
     void updatePlayersRating(KickerEvent event);
 
-    boolean leaveLobby(KickerEvent event, User from);
+    void leaveLobby(KickerEvent event, User from);
 
     void joinLobby(KickerEvent event, User from);
 }

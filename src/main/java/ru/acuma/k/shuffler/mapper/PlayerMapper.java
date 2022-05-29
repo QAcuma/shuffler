@@ -7,14 +7,15 @@ import org.springframework.stereotype.Component;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.entity.KickerPlayer;
 import ru.acuma.k.shuffler.tables.pojos.Player;
+import ru.acuma.k.shuffler.tables.pojos.Rating;
 import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 
 @Component
-public class PlayerMapper {
+public class PlayerMapper extends BaseMapper {
 
     private final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 
-    public KickerPlayer toKickerPlayer(UserInfo userInfo, Player player) {
+    public KickerPlayer toKickerPlayer(UserInfo userInfo, Player player, Rating rating) {
         mapperFactory.classMap(UserInfo.class, KickerPlayer.class)
                 .byDefault()
                 .register();
@@ -23,7 +24,7 @@ public class PlayerMapper {
         return kickerPlayer
                 .setId(player.getId())
                 .setChatId(player.getChatId())
-                .setRating(player.getRating());
+                .setRating(rating.getRating());
     }
 
     public KickerEventPlayer toKickerEventPlayer(KickerPlayer player) {
@@ -35,15 +36,6 @@ public class PlayerMapper {
         return eventPlayer.setGameCount(0)
                 .setSessionRating(0)
                 .setLeft(false);
-    }
-
-    public Player toPlayer(KickerEventPlayer player) {
-        mapperFactory.classMap(KickerEventPlayer.class, Player.class)
-                .field("telegramId", "userId")
-                .byDefault()
-                .register();
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(player, Player.class);
     }
 
 

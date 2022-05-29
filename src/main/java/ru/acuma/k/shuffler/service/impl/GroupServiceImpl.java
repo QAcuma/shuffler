@@ -3,9 +3,9 @@ package ru.acuma.k.shuffler.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Chat;
-import ru.acuma.k.shuffler.dao.GroupDao;
 import ru.acuma.k.shuffler.mapper.GroupMapper;
 import ru.acuma.k.shuffler.service.GroupService;
+import ru.acuma.shufflerlib.dao.GroupDao;
 
 @Service
 @RequiredArgsConstructor
