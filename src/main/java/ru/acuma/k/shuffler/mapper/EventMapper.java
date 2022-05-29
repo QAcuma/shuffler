@@ -8,9 +8,9 @@ import ru.acuma.k.shuffler.tables.pojos.Event;
 @Component
 public class EventMapper extends BaseMapper {
 
-    public Event toGroupInfo(KickerEvent kickerEvent) {
+    public Event toEvent(KickerEvent kickerEvent) {
         mapperFactory.classMap(KickerEvent.class, Event.class)
-                .field("eventState", "status")
+                .field("eventState", "state")
                 .byDefault()
                 .register();
         MapperFacade mapper = mapperFactory.getMapperFacade();

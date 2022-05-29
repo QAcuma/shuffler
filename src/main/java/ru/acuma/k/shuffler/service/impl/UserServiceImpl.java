@@ -9,7 +9,6 @@ import ru.acuma.k.shuffler.service.UserService;
 import ru.acuma.k.shuffler.tables.pojos.UserInfo;
 import ru.acuma.shufflerlib.dao.UserDao;
 
-@Profile("!dev")
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {

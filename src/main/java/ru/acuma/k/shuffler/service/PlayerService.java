@@ -7,9 +7,7 @@ public interface PlayerService {
 
     void authenticate(KickerEvent event, User user);
 
-    void updatePlayersRating(KickerEvent event);
+    void leaveLobby(KickerEvent event, User user);
 
-    void leaveLobby(KickerEvent event, User from);
-
-    void joinLobby(KickerEvent event, User from);
+    void joinLobby(KickerEvent event, User user);
 }

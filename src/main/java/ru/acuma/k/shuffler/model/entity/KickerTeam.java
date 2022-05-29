@@ -11,12 +11,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class KickerTeam {
 
-    public KickerTeam(KickerEventPlayer player1, KickerEventPlayer player2) {
-        this.player1 = player1;
-        this.player2 = player2;
-        this.winner = false;
-        this.rating = (player1.getRating() + player2.getRating()) / 2;
-    }
+    private Long id;
 
     private KickerEventPlayer player1;
 
@@ -26,7 +21,14 @@ public class KickerTeam {
 
     private long ratingChange;
 
-    private boolean winner;
+    private boolean isWinner;
+
+    public KickerTeam(KickerEventPlayer player1, KickerEventPlayer player2) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.isWinner = false;
+        this.rating = (player1.getRating() + player2.getRating()) / 2;
+    }
 
     @Override
     public String toString() {

@@ -3,6 +3,8 @@ package ru.acuma.k.shuffler.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import ru.acuma.k.shuffler.mapper.GameMapper;
+import ru.acuma.k.shuffler.mapper.TeamMapper;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.entity.KickerGame;
@@ -10,8 +12,10 @@ import ru.acuma.k.shuffler.model.entity.KickerTeam;
 import ru.acuma.k.shuffler.model.enums.GameState;
 import ru.acuma.k.shuffler.model.enums.WinnerState;
 import ru.acuma.k.shuffler.service.*;
-import ru.acuma.k.shuffler.tables.pojos.Game;
+import ru.acuma.k.shuffler.tables.pojos.Team;
 import ru.acuma.shufflerlib.dao.GameDao;
+import ru.acuma.shufflerlib.dao.TeamDao;
+import ru.acuma.shufflerlib.dao.TeamPlayerDao;
 
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
@@ -25,8 +29,10 @@ public class GameServiceImpl implements GameService {
     private final TeamService teamService;
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
-    private final PlayerService playerService;
+    private final GameMapper gameMapper;
+    private final TeamMapper teamMapper;
     private final GameDao gameDao;
+    private final TeamDao teamDao;
 
     @SneakyThrows
     public KickerGame buildGame(KickerEvent event) {
@@ -49,13 +55,24 @@ public class GameServiceImpl implements GameService {
         } catch (IllegalArgumentException e) {
             return buildGame(event);
         }
-        return KickerGame.builder()
+        var game = KickerGame.builder()
                 .redTeam(redTeam)
                 .blueTeam(blueTeam)
                 .index(event.getGames().size() + 1)
                 .startedAt(LocalDateTime.now())
                 .state(GameState.STARTED)
                 .build();
+
+        return save(game, event.getId());
+    }
+
+    private KickerGame save(KickerGame game, Long eventId) {
+        var mappedGame = gameMapper.toGame(game).setEventId(eventId);
+        game.setId(gameDao.save(mappedGame));
+        teamService.save(game.getBlueTeam(), game.getId());
+        teamService.save(game.getRedTeam(), game.getId());
+
+        return game;
     }
 
     @Override
@@ -85,7 +102,7 @@ public class GameServiceImpl implements GameService {
         var game = event.getCurrentGame();
         game.setState(GameState.FINISHED);
         ratingService.update(event);
-        playerService.updatePlayersRating(event);
+        ratingService.updatePlayersRating(event);
         game.getPlayers().forEach(KickerEventPlayer::gg);
         teamService.fillLastGameMate(game.getWinnerTeam());
         teamService.fillLastGameMate(game.getLoserTeam());

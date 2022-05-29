@@ -26,12 +26,12 @@ class EventMapperTest extends AbstractUnitTest {
                 .startedAt(LocalDateTime.now())
                 .build();
 
-        var event = eventMapper.toGroupInfo(kickerEvent);
+        var event = eventMapper.toEvent(kickerEvent);
         assertAll(
                 () -> assertEquals(event.getChatId(), kickerEvent.getChatId()),
                 () -> assertEquals(event.getDiscipline(), kickerEvent.getDiscipline().name()),
                 () -> assertEquals(event.getStartedAt().toLocalDateTime(), kickerEvent.getStartedAt()),
-                () -> assertEquals(event.getStatus(), kickerEvent.getEventState().name())
+                () -> assertEquals(event.getState(), kickerEvent.getEventState().name())
         );
     }
 }

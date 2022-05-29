@@ -1,4 +1,4 @@
-package ru.acuma.k.shuffler.mapper;
+package ru.acuma.k.shuffler.mapper.converters;
 
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.MappingContext;

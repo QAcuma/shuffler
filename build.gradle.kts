@@ -40,6 +40,7 @@ dependencies {
     implementation("com.google.code.gson:gson:$codeGsonVersion")
     implementation("org.apache.commons:commons-lang3:$lang3Version")
 
+
     compileOnly("org.projectlombok:lombok:$lombokBootVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokBootVersion")
 

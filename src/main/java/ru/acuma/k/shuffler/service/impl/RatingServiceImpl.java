@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.k.shuffler.model.entity.KickerEvent;
+import ru.acuma.k.shuffler.model.entity.KickerEventPlayer;
 import ru.acuma.k.shuffler.model.entity.KickerGame;
 import ru.acuma.k.shuffler.service.PlayerService;
 import ru.acuma.k.shuffler.service.RatingService;
@@ -11,6 +12,7 @@ import ru.acuma.k.shuffler.tables.pojos.Player;
 import ru.acuma.k.shuffler.tables.pojos.Rating;
 import ru.acuma.shufflerlib.dao.RatingDao;
 import ru.acuma.shufflerlib.dao.SeasonDao;
+import ru.acuma.shufflerlib.model.Discipline;
 
 import javax.management.InstanceNotFoundException;
 
@@ -23,7 +25,6 @@ import static ru.acuma.shufflerlib.model.Discipline.KICKER_2VS2;
 @AllArgsConstructor
 public class RatingServiceImpl implements RatingService {
 
-    private final PlayerService playerService;
     private final SeasonDao seasonDao;
     private final RatingDao ratingDao;
 
@@ -41,17 +42,34 @@ public class RatingServiceImpl implements RatingService {
         } else {
             weakestWon(game, -diff);
         }
-        playerService.updatePlayersRating(event);
+        updatePlayersRating(event);
     }
 
     @Override
-    public void defaultRating(Player player) {
+    public void defaultRating(Player player, Discipline discipline) {
         Rating rating = new Rating()
                 .setDiscipline(KICKER_2VS2.name())
                 .setSeasonId(seasonDao.getCurrentSeason().getId())
                 .setPlayerId(player.getId())
                 .setRating(DEFAULT_RATING);
         ratingDao.save(rating);
+    }
+
+    @Override
+    public Rating getRating(Long id, Discipline discipline) {
+        return ratingDao.getRating(id, discipline);
+    }
+
+    @Override
+    public void updatePlayersRating(KickerEvent event) {
+        event.getCurrentGame().getPlayers().forEach(player -> updateRating(player, event.getDiscipline()));
+    }
+
+    @Override
+    public void updateRating(KickerEventPlayer player, Discipline discipline) {
+        Rating rating = getRating(player.getId(), discipline);
+        rating.setRating(player.getRating());
+        ratingDao.update(rating);
     }
 
     private void weakestWon(KickerGame game, double diff) {

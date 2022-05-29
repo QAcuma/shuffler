@@ -18,7 +18,7 @@ public class SeasonServiceScheduler {
 
     private final SeasonDao seasonDao;
 
-    private final static String hourly = "15 */1 * * *";
+    private final static String hourly = "15 */1 * * * *";
 
     @Scheduled(cron = hourly)
     public void watchSeason() {

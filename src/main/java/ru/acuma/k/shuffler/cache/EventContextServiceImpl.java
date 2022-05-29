@@ -7,6 +7,7 @@ import ru.acuma.k.shuffler.model.entity.KickerEvent;
 import ru.acuma.k.shuffler.model.enums.EventState;
 import ru.acuma.k.shuffler.service.EventContextService;
 import ru.acuma.shufflerlib.dao.EventDao;
+import ru.acuma.shufflerlib.dao.SeasonDao;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ public class EventContextServiceImpl implements EventContextService {
 
     private final EventContext eventContext;
     private final EventMapper eventMapper;
+    private final SeasonDao seasonDao;
     private final EventDao eventDao;
 
     public KickerEvent buildEvent(Long chatId, Discipline discipline) {
@@ -29,6 +31,7 @@ public class EventContextServiceImpl implements EventContextService {
                 .startedAt(LocalDateTime.now())
                 .discipline(discipline)
                 .build();
+
         return cacheEvent(event);
     }
 
@@ -49,9 +52,12 @@ public class EventContextServiceImpl implements EventContextService {
         eventContext.getEvents().remove(chatId);
     }
 
-    private KickerEvent cacheEvent(KickerEvent event) {
-        eventContext.getEvents().put(event.getChatId(), event);
-        eventDao.save(eventMapper.toGroupInfo(event));
-        return event;
+    private KickerEvent cacheEvent(KickerEvent kickerEvent) {
+        eventContext.getEvents().put(kickerEvent.getChatId(), kickerEvent);
+        var mapped = eventMapper.toEvent(kickerEvent);
+        mapped.setSeasonId(seasonDao.getCurrentSeason().getId());
+        kickerEvent.setId(eventDao.save(mapped));
+
+        return kickerEvent;
     }
 }
