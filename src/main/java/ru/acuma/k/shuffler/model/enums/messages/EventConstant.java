@@ -10,11 +10,11 @@ public enum EventConstant implements EventConstantApi {
 
     BLANK_MESSAGE(""),
     SPACE_MESSAGE("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n"),
-    LOBBY_MESSAGE("🍢 Время шашлыков! 🍢\n" + SPACE_MESSAGE.getText() +
+    LOBBY_MESSAGE("🍢 Время шашлычного межсезонья! 🍢\n" + SPACE_MESSAGE.getText() +
             "\uD83D\uDC68\u200D\uD83D\uDC66\u200D\uD83D\uDC66 Участники:\n"),
-    LOBBY_PLAYING_MESSAGE("🍢 Чемпионат в разгаре! 🍢\n" + SPACE_MESSAGE.getText() +
+    LOBBY_PLAYING_MESSAGE("🍢 Межсезонье! Игры не повлияют на рейтинг! 🍢\n" + SPACE_MESSAGE.getText() +
             "\uD83D\uDC68\u200D\uD83D\uDC66\u200D\uD83D\uDC66 Участники:\n"),
-    LOBBY_FINISHED_MESSAGE("🍢 Чемпионат завершен! 🍢\n" + SPACE_MESSAGE.getText() +
+    LOBBY_FINISHED_MESSAGE("🍢 Серия игр завершена! 🍢\n" + SPACE_MESSAGE.getText() +
             "\uD83D\uDC68\u200D\uD83D\uDC66\u200D\uD83D\uDC66 Участники:\n"),
     LOBBY_WAITING_MESSAGE("⏳ Ждём игроков! ⏳\n" + SPACE_MESSAGE.getText() +
             "\uD83D\uDC68\u200D\uD83D\uDC66\u200D\uD83D\uDC66 Участники:\n"),

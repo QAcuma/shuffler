@@ -12,7 +12,11 @@ import java.util.stream.Collectors;
 
 import static ru.acuma.k.shuffler.model.enums.EventState.WAITING;
 import static ru.acuma.k.shuffler.model.enums.GameState.FINISHED;
-import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.*;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.BLANK_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.GAME_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.SPACE_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.WAITING_MESSAGE;
+import static ru.acuma.k.shuffler.model.enums.messages.EventConstant.WINNERS_MESSAGE;
 
 public final class BuildMessageUtil {
 
@@ -66,16 +70,12 @@ public final class BuildMessageUtil {
                 .append(spaces)
                 .append(game.getRedTeam().getRating())
                 .append(System.lineSeparator())
-                .append("⚔️ ")
                 .append(String.format(game.getRedTeam().toString(), "\uD83D\uDD3A"))
-                .append(" \uD83D\uDEE1")
                 .append(System.lineSeparator())
                 .append(spaces)
                 .append("\uD83D\uDDEF\uD83D\uDDEF\uD83D\uDDEF")
                 .append(System.lineSeparator())
-                .append("⚔️ ")
                 .append(String.format(game.getBlueTeam().toString(), "\uD83D\uDD39"))
-                .append(" \uD83D\uDEE1")
                 .append(System.lineSeparator())
                 .append(spaces)
                 .append(game.getBlueTeam().getRating())

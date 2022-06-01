@@ -1,7 +1,6 @@
 package ru.acuma.k.shuffler.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.k.shuffler.dao.PlayerDao;
@@ -15,9 +14,6 @@ import ru.acuma.k.shuffler.tables.pojos.Player;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
-import static ru.acuma.k.shuffler.model.enums.Values.DEFAULT_RATING;
-
-@Profile("!dev")
 @Service
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
@@ -93,7 +89,7 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = new Player();
         player.setChatId(chatId)
                 .setUserId(userId)
-                .setRating(DEFAULT_RATING);
+                .setRating(0);
         playerDao.save(player);
     }
 

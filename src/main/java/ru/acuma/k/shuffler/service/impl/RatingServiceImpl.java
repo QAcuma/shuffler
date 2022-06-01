@@ -33,7 +33,7 @@ public class RatingServiceImpl implements RatingService {
         } else {
             weakestWon(game, -diff);
         }
-        playerService.updatePlayersRating(event);
+//        playerService.updatePlayersRating(event);
     }
 
     private void strongestWon(KickerGame game, double diff) {
@@ -55,14 +55,15 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private long correcting(double change) {
-        long value = Math.round(change);
-        if (value > 49) {
-            return 49;
-        }
-        if (value < 1) {
-            return 1;
-        }
-        return value;
+//        long value = Math.round(change); TODO: Межсезонье
+//        if (value > 49) {
+//            return 49;
+//        }
+//        if (value < 1) {
+//            return 1;
+//        }
+//        return value;
+        return 0;
     }
 
 }

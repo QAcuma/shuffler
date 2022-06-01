@@ -11,8 +11,8 @@ public enum Ready implements EventStatusApi {
 
     BUTTON_JOIN(Command.JOIN.getCommand(), "⚽️ Играю!", 1),
     BUTTON_LEAVE(Command.LEAVE.getCommand(), "\uD83E\uDDD1\uD83C\uDFFF\u200D\uD83E\uDDBC Не могу", 1),
-    BUTTON_CANCEL(Command.CANCEL.getCommand(), "❌ Отменить турнир ❌", 2),
-    BUTTON_SHUFFLE(Command.BEGIN.getCommand(), "✅ Начать турнир ✅", 3);
+    BUTTON_CANCEL(Command.CANCEL.getCommand(), "❌ Отменить чемпионат ❌", 2),
+    BUTTON_SHUFFLE(Command.BEGIN.getCommand(), "✅ Начать чемпионат ✅", 3);
 
     public final String action;
     public final String alias;
