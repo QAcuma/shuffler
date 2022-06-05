@@ -10,8 +10,10 @@ import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.service.RatingService;
 import ru.acuma.shuffler.service.SeasonService;
 import ru.acuma.shuffler.tables.pojos.Rating;
+import ru.acuma.shuffler.tables.pojos.RatingHistory;
 import ru.acuma.shufflerlib.model.Discipline;
 import ru.acuma.shufflerlib.model.Filter;
+import ru.acuma.shufflerlib.repository.RatingHistoryRepository;
 import ru.acuma.shufflerlib.repository.RatingRepository;
 
 import javax.management.InstanceNotFoundException;
@@ -23,6 +25,7 @@ public class RatingServiceImpl implements RatingService {
 
     private final SeasonService seasonService;
     private final RatingRepository ratingRepository;
+    private final RatingHistoryRepository ratingHistoryRepository;
 
     @SneakyThrows
     @Override
@@ -64,7 +67,30 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void updatePlayersRating(TgEvent event) {
-        event.getCurrentGame().getPlayers().forEach(player -> updateRating(player, event.getDiscipline()));
+        TgGame game = event.getCurrentGame();
+        event.getCurrentGame().getPlayers()
+                .stream()
+                .peek(player -> updateRating(player, event.getDiscipline()))
+                .forEach(player -> logHistory(
+                        player.getId(),
+                        game.getId(),
+                        getRatingChange(player, game)
+                ));
+    }
+
+    private Integer getRatingChange(TgEventPlayer player, TgGame game) {
+        var winnerTeam = game.getWinnerTeam();
+        return winnerTeam.getPlayers().contains(player)
+                ? winnerTeam.getRatingChange()
+                : winnerTeam.getRatingChange() * -1;
+    }
+
+    private void logHistory(Long playerId, Long gameId, Integer ratingChange) {
+        RatingHistory ratingHistory = new RatingHistory()
+                .setPlayerId(playerId)
+                .setGameId(gameId)
+                .setChange(ratingChange);
+        ratingHistoryRepository.save(ratingHistory);
     }
 
     @Override
@@ -94,22 +120,19 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private void processChanges(TgGame tgGame, double change) {
-        long value = correcting(change);
+        int value = correcting(change);
         tgGame.getWinnerTeam().setRatingChange(value);
         tgGame.getLoserTeam().setRatingChange(-value);
         tgGame.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(value));
         tgGame.getLoserTeam().getPlayers().forEach(player -> player.minusRating(value));
     }
 
-    private long correcting(double change) {
-        long value = Math.round(change);
+    private int correcting(double change) {
+        int value = Math.toIntExact(Math.round(change));
         if (value > 49) {
             return 49;
         }
-        if (value < 1) {
-            return 1;
-        }
-        return value;
+        return Math.max(value, 1);
     }
 
 }

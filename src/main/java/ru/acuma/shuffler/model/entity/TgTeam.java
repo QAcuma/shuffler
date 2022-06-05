@@ -19,7 +19,7 @@ public class TgTeam {
 
     private long rating;
 
-    private long ratingChange;
+    private int ratingChange;
 
     private boolean isWinner;
 
