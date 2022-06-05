@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.acuma.shufflerlib.dao.SeasonDao;
+import ru.acuma.shuffler.service.SeasonService;
+import ru.acuma.shufflerlib.repository.SeasonRepository;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -16,21 +17,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeasonServiceScheduler {
 
-    private final SeasonDao seasonDao;
+    private final SeasonRepository seasonRepository;
+    private final SeasonService seasonService;
 
     private final static String hourly = "15 */1 * * * *";
 
     @Scheduled(cron = hourly)
     public void watchSeason() {
         YearSeason liveYearSeason = YearSeason.getByMonthNumber(OffsetDateTime.now().getMonthValue());
-        var appSeason = seasonDao.getCurrentSeason();
+        var appSeason = seasonRepository.getCurrentSeason();
         if (appSeason != null) {
             YearSeason appYearSeason = YearSeason.getByMonthNumber(appSeason.getStartedAt().getMonthValue());
             if (appYearSeason == liveYearSeason) {
                 return;
             }
         }
-        seasonDao.startNewSeason(liveYearSeason.name() + OffsetDateTime.now().getYear());
+        seasonRepository.startNewSeason(liveYearSeason.name() + OffsetDateTime.now().getYear());
+    }
+
+    @Scheduled(cron = hourly)
+    public void invalidateSeasonCache() {
+        seasonService.invalidateSeason();
     }
 
     @Getter

@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class GameEventPlayer extends GamePlayer {
+public class TgEventPlayer extends TgPlayer {
 
     private int gameCount;
 
@@ -16,7 +16,9 @@ public class GameEventPlayer extends GamePlayer {
 
     private int sessionRating;
 
-    private GameEventPlayer lastGamePlayer;
+    private TgEventPlayer lastGamePlayer;
+
+    private boolean left;
 
     @Override
     public void plusRating(long value) {
@@ -35,18 +37,14 @@ public class GameEventPlayer extends GamePlayer {
         }
     }
 
-    private boolean left;
-
-    public void gg() {
+    public void increaseGameCount() {
         gameCount++;
     }
 
     public String getName() {
-        StringBuilder builder = new StringBuilder();
-        return builder.append(super.getFirstName())
-                .append(" ")
-                .append(getFormatName())
-                .toString();
+        return super.getFirstName() +
+                " " +
+                getFormatName();
     }
 
     private String getFormatName() {
@@ -59,15 +57,12 @@ public class GameEventPlayer extends GamePlayer {
     }
 
     public String getLobbyName() {
-        StringBuilder builder = new StringBuilder();
-        return builder
-                .append(strikethroughBegin())
-                .append(getName())
-                .append(strikethroughEnd())
-                .append(" ")
-                .append(super.getRating())
-                .append(getSessionRatingToString())
-                .toString();
+        return strikethroughBegin() +
+                getName() +
+                strikethroughEnd() +
+                " " +
+                super.getRating() +
+                getSessionRatingToString();
     }
 
     private String strikethroughBegin() {

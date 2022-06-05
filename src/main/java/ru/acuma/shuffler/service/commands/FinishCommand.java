@@ -7,10 +7,10 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.EventStateService;
 import ru.acuma.shuffler.service.ExecuteService;
 import ru.acuma.shuffler.service.MessageService;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
 
 @Component
 public class FinishCommand extends BaseBotCommand {

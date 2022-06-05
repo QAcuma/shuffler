@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageRe
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
@@ -28,40 +28,37 @@ public class MessageServiceImpl implements MessageService {
     private final KeyboardService keyboardService;
 
     @Override
-    public BotApiMethod<Message> sendMessage(GameEvent event, MessageType type) {
-        var message = SendMessage.builder()
+    public BotApiMethod<Message> sendMessage(TgEvent event, MessageType type) {
+        return SendMessage.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .text(BuildMessageUtil.buildText(event, type))
                 .replyMarkup(getKeyboard(event, type))
                 .parseMode(ParseMode.HTML)
                 .build();
-        return message;
     }
 
     @Override
-    public EditMessageText updateMessage(GameEvent event, Integer messageId, MessageType type) {
-        var message = EditMessageText.builder()
+    public EditMessageText updateMessage(TgEvent event, Integer messageId, MessageType type) {
+        return EditMessageText.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .messageId(messageId)
                 .text(BuildMessageUtil.buildText(event, type))
                 .replyMarkup(getKeyboard(event, type))
                 .parseMode(ParseMode.HTML)
                 .build();
-        return message;
     }
 
     @Override
-    public EditMessageReplyMarkup updateMarkup(GameEvent event, Integer messageId, MessageType type) {
-        var message = EditMessageReplyMarkup.builder()
+    public EditMessageReplyMarkup updateMarkup(TgEvent event, Integer messageId, MessageType type) {
+        return EditMessageReplyMarkup.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .messageId(messageId)
                 .replyMarkup(getKeyboard(event, type))
                 .build();
-        return message;
     }
 
     @Override
-    public EditMessageText updateLobbyMessage(GameEvent event) {
+    public EditMessageText updateLobbyMessage(TgEvent event) {
         return updateMessage(event, event.getBaseMessage(), MessageType.LOBBY);
     }
 
@@ -81,7 +78,7 @@ public class MessageServiceImpl implements MessageService {
                 .build();
     }
 
-    private InlineKeyboardMarkup getKeyboard(GameEvent event, MessageType type) {
+    private InlineKeyboardMarkup getKeyboard(TgEvent event, MessageType type) {
         var state = event.getEventState();
         if (type == MessageType.LOBBY && (state == EventState.BEGIN_CHECKING || state == EventState.CANCEL_LOBBY_CHECKING)) {
             return keyboardService.getEmptyKeyboard();

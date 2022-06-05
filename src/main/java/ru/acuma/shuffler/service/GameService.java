@@ -1,12 +1,12 @@
 package ru.acuma.shuffler.service;
 
-import ru.acuma.shuffler.model.entity.GameEvent;
-import ru.acuma.shuffler.model.entity.Game;
+import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.entity.TgGame;
 import ru.acuma.shuffler.model.enums.WinnerState;
 
 public interface GameService {
 
-    Game buildGame(GameEvent event);
+    TgGame buildGame(TgEvent event);
 
-    void endGame(GameEvent event, WinnerState state);
+    void endGame(TgEvent event, WinnerState state);
 }

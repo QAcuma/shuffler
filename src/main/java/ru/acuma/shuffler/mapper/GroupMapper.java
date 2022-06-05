@@ -3,7 +3,7 @@ package ru.acuma.shuffler.mapper;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Chat;
-import ru.acuma.k.shuffler.tables.pojos.GroupInfo;
+import ru.acuma.shuffler.tables.pojos.GroupInfo;
 
 @Component
 public class GroupMapper extends BaseMapper {

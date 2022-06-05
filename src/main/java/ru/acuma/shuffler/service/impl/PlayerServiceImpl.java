@@ -5,42 +5,44 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandi
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.mapper.PlayerMapper;
-import ru.acuma.shuffler.model.entity.GameEvent;
-import ru.acuma.shuffler.model.entity.GameEventPlayer;
+import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.service.EventContextService;
 import ru.acuma.shuffler.service.PlayerService;
 import ru.acuma.shuffler.service.RatingService;
+import ru.acuma.shuffler.service.SeasonService;
 import ru.acuma.shuffler.service.UserService;
-import ru.acuma.k.shuffler.tables.pojos.Player;
-import ru.acuma.shufflerlib.dao.PlayerDao;
-import ru.acuma.shufflerlib.dao.SeasonDao;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.tables.pojos.Player;
+import ru.acuma.shufflerlib.repository.PlayerRepository;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("Duplicates")
 @ConditionalOnSingleCandidate(PlayerService.class)
 public class PlayerServiceImpl implements PlayerService {
 
+    private final EventContextService eventContextService;
     private final UserService userService;
     private final PlayerMapper playerMapper;
-    private final SeasonDao seasonDao;
-    private final PlayerDao playerDao;
+    private final SeasonService seasonService;
+    private final PlayerRepository playerRepository;
     private final RatingService ratingService;
 
     @Override
-    public void authenticate(GameEvent event, User user) {
+    public void authenticate(TgEvent event, User user) {
         var appUser = userService.getUser(user.getId());
         var player = getPlayer(event.getChatId(), user.getId());
         var rating = ratingService.getRating(user.getId(), event.getDiscipline());
-        var kickerPlayer = playerMapper.toKickerPlayer(appUser, player, rating);
-        var kickerEventPlayer = playerMapper.toKickerEventPlayer(kickerPlayer);
+        var tgPlayer = playerMapper.toTgPlayer(appUser, player, rating);
+        var kickerEventPlayer = playerMapper.toTgEventPlayer(tgPlayer);
         event.joinPlayer(kickerEventPlayer);
     }
 
     @Override
-    public void leaveLobby(GameEvent event, User user) {
+    public void leaveLobby(TgEvent event, User user) {
         switch (event.getEventState()) {
             case CREATED:
             case READY:
@@ -52,12 +54,12 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void joinLobby(GameEvent event, User user) {
+    public void joinLobby(TgEvent event, User user) {
         var members = event.getPlayers();
         var player = members.get(user.getId());
         int maxGames = members.values()
                 .stream()
-                .max(Comparator.comparingInt(GameEventPlayer::getGameCount))
+                .max(Comparator.comparingInt(TgEventPlayer::getGameCount))
                 .orElseThrow(() -> new NoSuchElementException("Group member not found"))
                 .getGameCount();
         if (player != null) {
@@ -70,13 +72,9 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 
-    private void updateRating(GameEventPlayer player) {
-        ratingService.updateRating(player, Discipline.KICKER_2VS2);
-    }
-
     private Player getPlayer(Long chatId, Long userId) {
-        if (playerDao.isPresent(chatId, userId)) {
-            return playerDao.get(chatId, userId);
+        if (playerRepository.isPresent(chatId, userId)) {
+            return playerRepository.get(chatId, userId);
         }
         registerPlayer(chatId, userId);
         return getPlayer(chatId, userId);
@@ -85,10 +83,10 @@ public class PlayerServiceImpl implements PlayerService {
     private void registerPlayer(Long chatId, Long userId) {
         Player player = new Player()
                 .setChatId(chatId)
-                .setSeasonId(seasonDao.getCurrentSeason().getId())
+                .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setUserId(userId);
-        player.setId(playerDao.save(player));
-        ratingService.defaultRating(player, Discipline.KICKER_2VS2);
+        player.setId(playerRepository.save(player));
+        ratingService.defaultRating(player.getId());
     }
 
 }

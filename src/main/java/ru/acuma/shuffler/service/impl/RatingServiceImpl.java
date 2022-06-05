@@ -3,31 +3,33 @@ package ru.acuma.shuffler.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.model.entity.GameEvent;
-import ru.acuma.shuffler.model.entity.GameEventPlayer;
-import ru.acuma.shuffler.model.entity.Game;
-import ru.acuma.shuffler.service.RatingService;
-import ru.acuma.k.shuffler.tables.pojos.Player;
-import ru.acuma.k.shuffler.tables.pojos.Rating;
+import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.model.entity.TgGame;
 import ru.acuma.shuffler.model.enums.Values;
-import ru.acuma.shufflerlib.dao.RatingDao;
-import ru.acuma.shufflerlib.dao.SeasonDao;
+import ru.acuma.shuffler.service.RatingService;
+import ru.acuma.shuffler.service.SeasonService;
+import ru.acuma.shuffler.tables.pojos.Rating;
+import ru.acuma.shuffler.tables.pojos.RatingHistory;
 import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shufflerlib.model.Filter;
+import ru.acuma.shufflerlib.repository.RatingHistoryRepository;
+import ru.acuma.shufflerlib.repository.RatingRepository;
 
 import javax.management.InstanceNotFoundException;
-
-import static ru.acuma.shufflerlib.model.Discipline.KICKER_2VS2;
+import java.util.Arrays;
 
 @Service
 @AllArgsConstructor
 public class RatingServiceImpl implements RatingService {
 
-    private final SeasonDao seasonDao;
-    private final RatingDao ratingDao;
+    private final SeasonService seasonService;
+    private final RatingRepository ratingRepository;
+    private final RatingHistoryRepository ratingHistoryRepository;
 
     @SneakyThrows
     @Override
-    public void update(GameEvent event) {
+    public void update(TgEvent event) {
         var game = event.getCurrentGame();
         if (game.getWinnerTeam() == null) {
             throw new InstanceNotFoundException("Отсутствует победившая команда");
@@ -43,59 +45,94 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public void defaultRating(Player player, Discipline discipline) {
-        Rating rating = new Rating()
-                .setDiscipline(KICKER_2VS2.name())
-                .setSeasonId(seasonDao.getCurrentSeason().getId())
-                .setPlayerId(player.getId())
-                .setRating(Values.DEFAULT_RATING);
-        ratingDao.save(rating);
+    public void defaultRating(Long playerId) {
+        Arrays.stream(Discipline.values()).forEach(discipline -> defaultRating(playerId, discipline));
     }
 
     @Override
-    public Rating getRating(Long id, Discipline discipline) {
-        return ratingDao.getRating(id, discipline);
+    public Rating defaultRating(Long playerId, Discipline discipline) {
+        return newDefaultRating(playerId, discipline);
     }
 
     @Override
-    public void updatePlayersRating(GameEvent event) {
-        event.getCurrentGame().getPlayers().forEach(player -> updateRating(player, event.getDiscipline()));
+    public Rating getRating(Long playerId, Discipline discipline) {
+        Filter filter = new Filter()
+                .setPlayerId(playerId)
+                .setDiscipline(discipline)
+                .setSeasonId(seasonService.getCurrentSeason().getId());
+        Rating rating = ratingRepository.getRatingByPlayerIdAndDisciplineAndSeasonId(filter);
+
+        return rating == null ? defaultRating(playerId, discipline) : rating;
     }
 
     @Override
-    public void updateRating(GameEventPlayer player, Discipline discipline) {
+    public void updatePlayersRating(TgEvent event) {
+        TgGame game = event.getCurrentGame();
+        event.getCurrentGame().getPlayers()
+                .stream()
+                .peek(player -> updateRating(player, event.getDiscipline()))
+                .forEach(player -> logHistory(
+                        player.getId(),
+                        game.getId(),
+                        getRatingChange(player, game)
+                ));
+    }
+
+    private Integer getRatingChange(TgEventPlayer player, TgGame game) {
+        var winnerTeam = game.getWinnerTeam();
+        return winnerTeam.getPlayers().contains(player)
+                ? winnerTeam.getRatingChange()
+                : winnerTeam.getRatingChange() * -1;
+    }
+
+    private void logHistory(Long playerId, Long gameId, Integer ratingChange) {
+        RatingHistory ratingHistory = new RatingHistory()
+                .setPlayerId(playerId)
+                .setGameId(gameId)
+                .setChange(ratingChange);
+        ratingHistoryRepository.save(ratingHistory);
+    }
+
+    @Override
+    public void updateRating(TgEventPlayer player, Discipline discipline) {
         Rating rating = getRating(player.getId(), discipline);
         rating.setRating(player.getRating());
-        ratingDao.update(rating);
+        ratingRepository.update(rating);
     }
 
-    private void weakestWon(Game game, double diff) {
+    private Rating newDefaultRating(Long playerId, Discipline discipline) {
+        Rating rating = new Rating()
+                .setDiscipline(discipline.name())
+                .setSeasonId(seasonService.getCurrentSeason().getId())
+                .setPlayerId(playerId)
+                .setRating(Values.DEFAULT_RATING);
+        return rating.setId(ratingRepository.save(rating));
+    }
+
+    private void weakestWon(TgGame tgGame, double diff) {
         double change = Values.BASE_RATING_CHANGE * (1 + (diff / Values.RATING_REFERENCE));
-        processChanges(game, change);
+        processChanges(tgGame, change);
     }
 
-    private void strongestWon(Game game, double diff) {
+    private void strongestWon(TgGame tgGame, double diff) {
         double change = Values.BASE_RATING_CHANGE * (1 - (diff / Values.RATING_REFERENCE));
-        processChanges(game, change);
+        processChanges(tgGame, change);
     }
 
-    private void processChanges(Game game, double change) {
-        long value = correcting(change);
-        game.getWinnerTeam().setRatingChange(value);
-        game.getLoserTeam().setRatingChange(-value);
-        game.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(value));
-        game.getLoserTeam().getPlayers().forEach(player -> player.minusRating(value));
+    private void processChanges(TgGame tgGame, double change) {
+        int value = correcting(change);
+        tgGame.getWinnerTeam().setRatingChange(value);
+        tgGame.getLoserTeam().setRatingChange(-value);
+        tgGame.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(value));
+        tgGame.getLoserTeam().getPlayers().forEach(player -> player.minusRating(value));
     }
 
-    private long correcting(double change) {
-        long value = Math.round(change);
+    private int correcting(double change) {
+        int value = Math.toIntExact(Math.round(change));
         if (value > 49) {
             return 49;
         }
-        if (value < 1) {
-            return 1;
-        }
-        return value;
+        return Math.max(value, 1);
     }
 
 }

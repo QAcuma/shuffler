@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum Command {
 
     KICKER("kicker"),
+    PING_PONG("ping_pong"),
     JOIN("join"),
     LEAVE("leave"),
     CANCEL("cancel"),

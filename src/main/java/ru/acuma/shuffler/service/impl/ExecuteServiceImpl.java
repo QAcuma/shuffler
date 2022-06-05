@@ -9,12 +9,12 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.ExecuteService;
 import ru.acuma.shuffler.service.KeyboardService;
 import ru.acuma.shuffler.service.MessageService;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
 
 import java.io.Serializable;
 import java.util.concurrent.Executors;
@@ -71,7 +71,7 @@ public class ExecuteServiceImpl implements ExecuteService {
     }
 
     @Override
-    public void executeAsyncTimer(AbsSender absSender, GameEvent event, BotApiMethod<Message> message) {
+    public void executeAsyncTimer(AbsSender absSender, TgEvent event, BotApiMethod<Message> message) {
         var msg = execute(absSender, message);
         event.watchMessage(msg.getMessageId());
         var update = messageService.updateMarkup(event, msg.getMessageId(), MessageType.CHECKING_TIMED);

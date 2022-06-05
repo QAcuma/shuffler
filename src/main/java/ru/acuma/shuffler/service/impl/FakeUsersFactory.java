@@ -3,7 +3,7 @@ package ru.acuma.shuffler.service.impl;
 import lombok.Getter;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import ru.acuma.k.shuffler.tables.pojos.UserInfo;
+import ru.acuma.shuffler.tables.pojos.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FakeUsersFactory {
 
     private Map<Long, UserInfo> fakePlayers = new ConcurrentHashMap<>();
-    private List<Long> playerIds = new ArrayList<>(List.of(1L, 2L, 3L, 4L, 5L));
+    private List<Long> playerIds = new ArrayList<>(List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L));
 
     public UserInfo getRandomUser() {
         Long id = playerIds.stream()

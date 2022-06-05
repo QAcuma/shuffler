@@ -3,14 +3,14 @@ package ru.acuma.shuffler.model.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.acuma.k.shuffler.tables.pojos.UserInfo;
+import ru.acuma.shuffler.tables.pojos.UserInfo;
 
 import java.util.Optional;
 
 @Getter
 @Setter
 @Accessors(chain = true)
-public class GamePlayer extends UserInfo {
+public class TgPlayer extends UserInfo {
 
     private Long id;
 
@@ -19,12 +19,10 @@ public class GamePlayer extends UserInfo {
     private int rating;
 
     public String getName() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(super.getFirstName())
-                .append(" ")
-                .append(Optional.ofNullable(super.getLastName()).orElse("Doe"))
-                .append(rating);
-        return builder.toString();
+        return super.getFirstName() +
+                " " +
+                Optional.ofNullable(super.getLastName()).orElse("Doe") +
+                rating;
     }
 
     public void plusRating(long value) {

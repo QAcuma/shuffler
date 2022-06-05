@@ -1,20 +1,21 @@
 package ru.acuma.shuffler.service;
 
-import ru.acuma.shuffler.model.entity.GameEvent;
-import ru.acuma.shuffler.model.entity.GameEventPlayer;
-import ru.acuma.k.shuffler.tables.pojos.Player;
-import ru.acuma.k.shuffler.tables.pojos.Rating;
+import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.tables.pojos.Rating;
 import ru.acuma.shufflerlib.model.Discipline;
 
 public interface RatingService {
 
-    void update(GameEvent event);
+    void update(TgEvent event);
 
-    void defaultRating(Player player, Discipline discipline);
+    void defaultRating(Long playerId);
 
-    Rating getRating(Long id, Discipline discipline);
+    Rating defaultRating(Long playerId, Discipline discipline);
 
-    void updateRating(GameEventPlayer player, Discipline discipline);
+    Rating getRating(Long playerId, Discipline discipline);
 
-    void updatePlayersRating(GameEvent event);
+    void updateRating(TgEventPlayer player, Discipline discipline);
+
+    void updatePlayersRating(TgEvent event);
 }

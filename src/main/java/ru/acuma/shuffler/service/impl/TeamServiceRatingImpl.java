@@ -8,12 +8,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.mapper.TeamPlayerMapper;
-import ru.acuma.shuffler.model.entity.GameEventPlayer;
-import ru.acuma.shuffler.model.entity.GameTeam;
+import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.model.entity.TgTeam;
 import ru.acuma.shuffler.service.TeamService;
 import ru.acuma.shuffler.util.TeamServiceUtil;
-import ru.acuma.shufflerlib.dao.TeamDao;
-import ru.acuma.shufflerlib.dao.TeamPlayerDao;
+import ru.acuma.shufflerlib.repository.TeamPlayerRepository;
+import ru.acuma.shufflerlib.repository.TeamRepository;
 
 import javax.management.InstanceNotFoundException;
 import java.util.ArrayList;
@@ -32,21 +32,21 @@ public class TeamServiceRatingImpl implements TeamService {
 
     private final TeamMapper teamMapper;
     private final TeamPlayerMapper teamPlayerMapper;
-    private final TeamDao teamDao;
-    private final TeamPlayerDao teamPlayerDao;
+    private final TeamRepository teamRepository;
+    private final TeamPlayerRepository teamPlayerRepository;
 
     @Value("${rating.spread-distance}")
     private long spreadDistance;
 
     @SneakyThrows
     @Override
-    public GameTeam teamBuilding(List<GameEventPlayer> players) {
-        List<GameEventPlayer> playersCopy = new ArrayList<>(players);
+    public TgTeam teamBuilding(List<TgEventPlayer> players) {
+        List<TgEventPlayer> playersCopy = new ArrayList<>(players);
         playersCopy.forEach(
                 player -> player.setSpreadRating(player.getRating()
                         + ThreadLocalRandom.current().nextLong(-spreadDistance, spreadDistance))
         );
-        playersCopy.sort(Comparator.comparingLong(GameEventPlayer::getSpreadRating).reversed());
+        playersCopy.sort(Comparator.comparingLong(TgEventPlayer::getSpreadRating).reversed());
 
         if (playersCopy.size() == 2) {
             return calculateTeam(playersCopy);
@@ -62,29 +62,37 @@ public class TeamServiceRatingImpl implements TeamService {
     }
 
     @Override
-    public GameTeam save(GameTeam team, Long gameId) {
+    public TgTeam save(TgTeam team, Long gameId) {
         var mappedTeam = teamMapper.toTeam(team, gameId);
-        team.setId(teamDao.save(mappedTeam));
+        team.setId(teamRepository.save(mappedTeam));
         team.getPlayers().forEach(player -> saveTeamPlayer(player, team.getId()));
 
         return team;
     }
 
     @Override
-    public void saveTeamPlayer(GameEventPlayer player, Long teamId) {
+    public TgTeam update(TgTeam team) {
+        var mappedTeam = teamMapper.toTeam(team);
+        team.setId(teamRepository.save(mappedTeam));
+
+        return team;
+    }
+
+    @Override
+    public void saveTeamPlayer(TgEventPlayer player, Long teamId) {
         var mappedTeamPlayer = teamPlayerMapper.toTeamPlayer(player, teamId);
-        teamPlayerDao.save(mappedTeamPlayer);
+        teamPlayerRepository.save(mappedTeamPlayer);
     }
 
     @SneakyThrows
-    private GameTeam calculateTeam(List<GameEventPlayer> players) {
+    private TgTeam calculateTeam(List<TgEventPlayer> players) {
         var player1 = players.stream()
                 .findFirst()
                 .orElseThrow(() -> new InstanceNotFoundException("Player not found"));
         var player2 = Iterables.getLast(players);
 
         if (player1.getLastGamePlayer() == null || player2.getLastGamePlayer() == null) {
-            return new GameTeam(player1, player2);
+            return new TgTeam(player1, player2);
         }
         if ((player1.getLastGamePlayer().equals(player2) || player2.getLastGamePlayer().equals(player1)) && players.size() >= 2) {
             players.remove(player2);
@@ -92,7 +100,7 @@ public class TeamServiceRatingImpl implements TeamService {
         } else if (players.size() < 2) {
             throw new IllegalArgumentException("Can't shuffle unique team");
         }
-        return new GameTeam(player1, player2);
+        return new TgTeam(player1, player2);
     }
 
 }
