@@ -35,7 +35,7 @@ public class PlayerServiceImpl implements PlayerService {
     public void authenticate(TgEvent event, User user) {
         var appUser = userService.getUser(user.getId());
         var player = getPlayer(event.getChatId(), user.getId());
-        var rating = ratingService.getRating(user.getId(), event.getDiscipline());
+        var rating = ratingService.getRating(player.getId(), event.getDiscipline());
         var tgPlayer = playerMapper.toTgPlayer(appUser, player, rating);
         var kickerEventPlayer = playerMapper.toTgEventPlayer(tgPlayer);
         event.joinPlayer(kickerEventPlayer);

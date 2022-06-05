@@ -9,6 +9,7 @@ import ru.acuma.shuffler.model.entity.TgPlayer;
 import ru.acuma.shuffler.tables.pojos.Player;
 import ru.acuma.shuffler.tables.pojos.Rating;
 import ru.acuma.shuffler.tables.pojos.UserInfo;
+import ru.acuma.shufflerlib.mapper.BaseMapper;
 
 @Component
 public class PlayerMapper extends BaseMapper {

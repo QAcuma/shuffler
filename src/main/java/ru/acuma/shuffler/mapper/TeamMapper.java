@@ -4,6 +4,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Component;
 import ru.acuma.shuffler.model.entity.TgTeam;
 import ru.acuma.shuffler.tables.pojos.Team;
+import ru.acuma.shufflerlib.mapper.BaseMapper;
 
 @Component
 public class TeamMapper extends BaseMapper {

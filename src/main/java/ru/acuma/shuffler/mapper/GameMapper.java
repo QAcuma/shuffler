@@ -4,6 +4,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Component;
 import ru.acuma.shuffler.model.entity.TgGame;
 import ru.acuma.shuffler.tables.pojos.Game;
+import ru.acuma.shufflerlib.mapper.BaseMapper;
 
 @Component
 public class GameMapper extends BaseMapper {
