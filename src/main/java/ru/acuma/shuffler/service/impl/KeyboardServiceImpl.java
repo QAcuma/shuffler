@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.keyboards.Created;
 import ru.acuma.shuffler.model.enums.keyboards.Game;
@@ -16,7 +16,7 @@ import ru.acuma.shuffler.model.enums.keyboards.checking.Checking2;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking3;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.KeyboardService;
-import ru.acuma.shuffler.service.enums.EventStatusApi;
+import ru.acuma.shuffler.service.buttons.EventStatusButton;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class KeyboardServiceImpl implements KeyboardService {
 
     @Override
-    public InlineKeyboardMarkup getKeyboard(GameEvent event, MessageType type) {
+    public InlineKeyboardMarkup getKeyboard(TgEvent event, MessageType type) {
         EventState state = event.getEventState();
         switch (type) {
             case GAME:
@@ -51,7 +51,7 @@ public class KeyboardServiceImpl implements KeyboardService {
         return buildKeyboard(names);
     }
 
-    private InlineKeyboardMarkup buildKeyboard(List<EventStatusApi> names) {
+    private InlineKeyboardMarkup buildKeyboard(List<EventStatusButton> names) {
         List<List<InlineKeyboardButton>> buttons = new LinkedList<>();
 
         List<InlineKeyboardButton> row1 = names.stream()
@@ -87,7 +87,7 @@ public class KeyboardServiceImpl implements KeyboardService {
                 .build();
     }
 
-    public List<EventStatusApi> buildTimedButtons(int time) {
+    public List<EventStatusButton> buildTimedButtons(int time) {
         switch (time) {
             case 3:
                 return List.of(Checking3.values());
@@ -100,7 +100,7 @@ public class KeyboardServiceImpl implements KeyboardService {
         }
     }
 
-    private List<EventStatusApi> buildButtons(EventState eventState) {
+    private List<EventStatusButton> buildButtons(EventState eventState) {
         switch (eventState) {
             case CREATED:
                 return List.of(Created.values());
@@ -123,7 +123,7 @@ public class KeyboardServiceImpl implements KeyboardService {
         }
     }
 
-    private List<EventStatusApi> buildGameButtons(EventState eventState) {
+    private List<EventStatusButton> buildGameButtons(EventState eventState) {
         switch (eventState) {
             case PLAYING:
                 return List.of(Game.values());

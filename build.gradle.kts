@@ -2,7 +2,6 @@ plugins {
     id("java")
     id("application")
     id("idea")
-    id("org.springframework.boot") version "2.6.1"
 }
 
 group = "ru.acuma"
@@ -18,17 +17,19 @@ repositories {
     mavenCentral()
 }
 
+var shufflerLibVersion = "1.0.1"
 var springBootVersion = "2.6.7"
 var lombokBootVersion = "1.18.24"
 var lang3Version = "3.12.0"
 var log4jVersion = "1.2.17"
-var junitVersion = "5.8.1"
 var telegramBotVersion = "6.0.1"
 val codeGsonVersion = "2.9.0"
 val orikaVersion = "2.2.7"
+var junitVersion = "5.8.2"
+var mockitoVersion = "4.5.1"
 
 dependencies {
-    implementation("ru.acuma:shuffler-lib:1.0.0")
+    implementation("ru.acuma:shuffler-lib:$shufflerLibVersion")
 
     implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
@@ -40,15 +41,14 @@ dependencies {
     implementation("com.google.code.gson:gson:$codeGsonVersion")
     implementation("org.apache.commons:commons-lang3:$lang3Version")
 
-
     compileOnly("org.projectlombok:lombok:$lombokBootVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokBootVersion")
 
     testCompileOnly("org.projectlombok:lombok:$lombokBootVersion")
     testAnnotationProcessor("org.projectlombok:lombok:$lombokBootVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    testImplementation("org.mockito:mockito-core:4.5.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation("org.mockito:mockito-core:$mockitoVersion")
 }
 
 tasks.withType<Test> {

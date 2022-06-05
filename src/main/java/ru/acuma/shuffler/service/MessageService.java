@@ -6,18 +6,18 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 
 public interface MessageService {
 
-    BotApiMethod<Message> sendMessage(GameEvent event, MessageType type);
+    BotApiMethod<Message> sendMessage(TgEvent event, MessageType type);
 
-    EditMessageText updateMessage(GameEvent event, Integer messageId, MessageType type);
+    EditMessageText updateMessage(TgEvent event, Integer messageId, MessageType type);
 
-    EditMessageReplyMarkup updateMarkup(GameEvent event, Integer messageId, MessageType type);
+    EditMessageReplyMarkup updateMarkup(TgEvent event, Integer messageId, MessageType type);
 
-    EditMessageText updateLobbyMessage(GameEvent event);
+    EditMessageText updateLobbyMessage(TgEvent event);
 
     PinChatMessage pinedMessage(Message message);
 

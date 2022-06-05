@@ -3,7 +3,7 @@ package ru.acuma.shuffler.mapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import ru.acuma.shuffler.base.AbstractUnitTest;
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shufflerlib.model.Discipline;
 
@@ -18,20 +18,20 @@ class EventMapperTest extends AbstractUnitTest {
     private EventMapper eventMapper;
 
     @Test
-    void toGroupInfo() {
-        GameEvent gameEvent = GameEvent.builder()
-                .discipline(Discipline.KICKER_2VS2)
+    void toEvent() {
+        TgEvent tgEvent = TgEvent.builder()
+                .discipline(Discipline.KICKER)
                 .eventState(EventState.CREATED)
                 .chatId(12345L)
                 .startedAt(LocalDateTime.now())
                 .build();
 
-        var event = eventMapper.toEvent(gameEvent);
+        var event = eventMapper.toEvent(tgEvent);
         assertAll(
-                () -> assertEquals(event.getChatId(), gameEvent.getChatId()),
-                () -> assertEquals(event.getDiscipline(), gameEvent.getDiscipline().name()),
-                () -> assertEquals(event.getStartedAt().toLocalDateTime(), gameEvent.getStartedAt()),
-                () -> assertEquals(event.getState(), gameEvent.getEventState().name())
+                () -> assertEquals(event.getChatId(), tgEvent.getChatId()),
+                () -> assertEquals(event.getDiscipline(), tgEvent.getDiscipline().name()),
+                () -> assertEquals(event.getStartedAt().toLocalDateTime(), tgEvent.getStartedAt()),
+                () -> assertEquals(event.getState(), tgEvent.getEventState().name())
         );
     }
 }

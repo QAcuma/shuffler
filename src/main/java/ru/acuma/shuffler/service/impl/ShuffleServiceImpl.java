@@ -3,10 +3,10 @@ package ru.acuma.shuffler.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.model.entity.GameEvent;
-import ru.acuma.shuffler.model.entity.GameEventPlayer;
-import ru.acuma.shuffler.service.ShuffleService;
+import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.service.ShuffleService;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -22,30 +22,30 @@ public class ShuffleServiceImpl implements ShuffleService {
 
     @SneakyThrows
     @Override
-    public List<GameEventPlayer> shuffle(GameEvent event) {
+    public List<TgEventPlayer> shuffle(TgEvent event) {
 
-        List<GameEventPlayer> members = event.getActivePlayers();
+        List<TgEventPlayer> members = event.getActivePlayers();
 
         if (members.size() < Values.GAME_PLAYERS_COUNT) {
             throw new NoSuchElementException("Not enough players to start event");
         }
 
         int minGames = members.stream()
-                .min(Comparator.comparingInt(GameEventPlayer::getGameCount))
+                .min(Comparator.comparingInt(TgEventPlayer::getGameCount))
                 .orElseThrow(() -> new NoSuchElementException("Group member not found"))
                 .getGameCount();
         int maxGames = members.stream()
-                .max(Comparator.comparingInt(GameEventPlayer::getGameCount))
+                .max(Comparator.comparingInt(TgEventPlayer::getGameCount))
                 .orElseThrow(() -> new NoSuchElementException("Group member not found"))
                 .getGameCount();
 
         if (minGames == maxGames) {
             return shuffleEvenly(members);
         }
-        List<GameEventPlayer> players = new ArrayList<>();
+        List<TgEventPlayer> players = new ArrayList<>();
         for (int i = minGames; i <= maxGames; i++) {
             int vacancy = Values.GAME_PLAYERS_COUNT - players.size();
-            List<GameEventPlayer> shuffled = shufflePriority(members, i);
+            List<TgEventPlayer> shuffled = shufflePriority(members, i);
 
             if (shuffled.size() >= vacancy) {
                 players.addAll(shuffled.subList(0, vacancy));
@@ -60,7 +60,7 @@ public class ShuffleServiceImpl implements ShuffleService {
     }
 
     @SneakyThrows
-    private List<GameEventPlayer> shuffleEvenly(List<GameEventPlayer> members) {
+    private List<TgEventPlayer> shuffleEvenly(List<TgEventPlayer> members) {
         Collections.shuffle(members, SecureRandom.getInstance("SHA1PRNG", "SUN"));
         if (members.size() < Values.GAME_PLAYERS_COUNT) {
             return members;
@@ -69,8 +69,8 @@ public class ShuffleServiceImpl implements ShuffleService {
     }
 
     @SneakyThrows
-    private List<GameEventPlayer> shufflePriority(List<GameEventPlayer> members, int index) {
-        List<GameEventPlayer> priority = members.stream()
+    private List<TgEventPlayer> shufflePriority(List<TgEventPlayer> members, int index) {
+        List<TgEventPlayer> priority = members.stream()
                 .filter(member -> member.getGameCount() == index)
                 .collect(Collectors.toList());
         return shuffleEvenly(priority);

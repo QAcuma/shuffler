@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.WinnerState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
@@ -75,7 +75,7 @@ public class YesCommand extends BaseBotCommand {
     }
 
     @SneakyThrows
-    private void gameAnswer(AbsSender absSender, GameEvent event, Message message) {
+    private void gameAnswer(AbsSender absSender, TgEvent event, Message message) {
         maintenanceService.sweepMessage(absSender, message);
         eventStateService.playingState(event);
         event.newGame(gameService.buildGame(event));
@@ -84,7 +84,7 @@ public class YesCommand extends BaseBotCommand {
     }
 
     @SneakyThrows
-    private void finishAnswer(AbsSender absSender, GameEvent event, Message message) {
+    private void finishAnswer(AbsSender absSender, TgEvent event, Message message) {
         maintenanceService.sweepMessage(absSender, message);
         maintenanceService.sweepMessage(absSender, message.getChatId(), event.getCurrentGame().getMessageId());
         gameService.endGame(event, WinnerState.NONE);

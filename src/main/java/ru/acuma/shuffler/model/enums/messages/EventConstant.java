@@ -2,15 +2,17 @@ package ru.acuma.shuffler.model.enums.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.acuma.shuffler.service.enums.EventConstantApi;
+import ru.acuma.shuffler.service.buttons.EventConstantButton;
 
 @Getter
 @AllArgsConstructor
-public enum EventConstant implements EventConstantApi {
+public enum EventConstant implements EventConstantButton {
 
     BLANK_MESSAGE(""),
     SPACE_MESSAGE("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n"),
-    LOBBY_MESSAGE("🍢 Время шашлыков! 🍢\n" + SPACE_MESSAGE.getText() +
+    LOBBY_MESSAGE_KICKER("🍢 Время шашлыков! 🍢\n" + SPACE_MESSAGE.getText() +
+            "\uD83D\uDC68\u200D\uD83D\uDC66\u200D\uD83D\uDC66 Участники:\n"),
+    LOBBY_MESSAGE_PING_PONG("\uD83C\uDFD3 Время бить мяч! \uD83C\uDFD3\n" + SPACE_MESSAGE.getText() +
             "\uD83D\uDC68\u200D\uD83D\uDC66\u200D\uD83D\uDC66 Участники:\n"),
     LOBBY_PLAYING_MESSAGE("🍢 Чемпионат в разгаре! 🍢\n" + SPACE_MESSAGE.getText() +
             "\uD83D\uDC68\u200D\uD83D\uDC66\u200D\uD83D\uDC66 Участники:\n"),

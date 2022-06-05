@@ -5,19 +5,19 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.GameMapper;
 import ru.acuma.shuffler.mapper.TeamMapper;
-import ru.acuma.shuffler.model.entity.GameEvent;
-import ru.acuma.shuffler.model.entity.GameEventPlayer;
-import ru.acuma.shuffler.model.entity.Game;
-import ru.acuma.shuffler.model.entity.GameTeam;
+import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.model.entity.TgGame;
+import ru.acuma.shuffler.model.entity.TgTeam;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.WinnerState;
-
 import ru.acuma.shuffler.service.GameService;
 import ru.acuma.shuffler.service.RatingService;
 import ru.acuma.shuffler.service.ShuffleService;
 import ru.acuma.shuffler.service.TeamService;
-import ru.acuma.shufflerlib.dao.GameDao;
-import ru.acuma.shufflerlib.dao.TeamDao;
+import ru.acuma.shufflerlib.repository.GameRepository;
+import ru.acuma.shufflerlib.repository.TeamRepository;
+
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,14 +32,14 @@ public class GameServiceImpl implements GameService {
     private final RatingService ratingService;
     private final GameMapper gameMapper;
     private final TeamMapper teamMapper;
-    private final GameDao gameDao;
-    private final TeamDao teamDao;
+    private final GameRepository gameRepository;
+    private final TeamRepository teamRepository;
 
     @SneakyThrows
-    public Game buildGame(GameEvent event) {
-        List<GameEventPlayer> players;
-        GameTeam redTeam;
-        GameTeam blueTeam;
+    public TgGame buildGame(TgEvent event) {
+        List<TgEventPlayer> players;
+        TgTeam redTeam;
+        TgTeam blueTeam;
         try {
             players = shuffleService.shuffle(event);
             if (players == null) {
@@ -49,17 +49,17 @@ public class GameServiceImpl implements GameService {
             if (redTeam == null) {
                 throw new IllegalArgumentException("Red team is null");
             }
-            List<GameEventPlayer> secondTeamPlayers = players.stream()
+            List<TgEventPlayer> secondTeamPlayers = players.stream()
                     .filter(player -> !redTeam.getPlayers().contains(player))
                     .collect(Collectors.toList());
             blueTeam = teamService.teamBuilding(secondTeamPlayers);
         } catch (IllegalArgumentException e) {
             return buildGame(event);
         }
-        var game = Game.builder()
+        var game = TgGame.builder()
                 .redTeam(redTeam)
                 .blueTeam(blueTeam)
-                .index(event.getGames().size() + 1)
+                .index(event.getTgGames().size() + 1)
                 .startedAt(LocalDateTime.now())
                 .state(GameState.STARTED)
                 .build();
@@ -67,17 +67,17 @@ public class GameServiceImpl implements GameService {
         return save(game, event.getId());
     }
 
-    private Game save(Game game, Long eventId) {
-        var mappedGame = gameMapper.toGame(game).setEventId(eventId);
-        game.setId(gameDao.save(mappedGame));
-        teamService.save(game.getBlueTeam(), game.getId());
-        teamService.save(game.getRedTeam(), game.getId());
+    private TgGame save(TgGame tgGame, Long eventId) {
+        var mappedGame = gameMapper.toGame(tgGame).setEventId(eventId);
+        tgGame.setId(gameRepository.save(mappedGame));
+        teamService.save(tgGame.getBlueTeam(), tgGame.getId());
+        teamService.save(tgGame.getRedTeam(), tgGame.getId());
 
-        return game;
+        return tgGame;
     }
 
     @Override
-    public void endGame(GameEvent event, WinnerState state) {
+    public void endGame(TgEvent event, WinnerState state) {
         var game = event.getCurrentGame();
         if (game == null) {
             return;
@@ -85,28 +85,41 @@ public class GameServiceImpl implements GameService {
         switch (state) {
             case RED:
                 game.getRedTeam().setWinner(true);
-                finishGame(event);
+                finishGameWithWinner(game);
                 break;
             case BLUE:
                 game.getBlueTeam().setWinner(true);
-                finishGame(event);
+                finishGameWithWinner(game);
                 break;
             case NONE:
-                game.setState(GameState.CANCELLED);
-                game.setFinishedAt(LocalDateTime.now());
+                finishCancelledGame(game);
                 break;
         }
         game.setFinishedAt(LocalDateTime.now());
+        saveGameData(event);
     }
 
-    private void finishGame(GameEvent event) {
-        var game = event.getCurrentGame();
+    private void finishGameWithWinner(TgGame game) {
         game.setState(GameState.FINISHED);
-        ratingService.update(event);
-        ratingService.updatePlayersRating(event);
-        game.getPlayers().forEach(GameEventPlayer::gg);
         teamService.fillLastGameMate(game.getWinnerTeam());
         teamService.fillLastGameMate(game.getLoserTeam());
+    }
+
+    private void finishCancelledGame(TgGame game) {
+        game.setState(GameState.CANCELLED);
+    }
+
+    private void saveGameData(TgEvent event) {
+        var game = event.getCurrentGame();
+        switch (game.getState()) {
+            case CANCELLED:
+                break;
+            case FINISHED:
+                ratingService.update(event);
+                game.getPlayers().forEach(TgEventPlayer::increaseGameCount);
+                teamService.update(game.getWinnerTeam());
+        }
+        gameRepository.update(gameMapper.toGame(game));
     }
 
 }

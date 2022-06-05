@@ -16,7 +16,7 @@ import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
 @Setter
 @Builder
 @Accessors(chain = true)
-public class Game {
+public class TgGame {
 
     private Long id;
 
@@ -26,29 +26,29 @@ public class Game {
 
     private GameState state;
 
-    private GameTeam redTeam;
+    private TgTeam redTeam;
 
-    private GameTeam blueTeam;
+    private TgTeam blueTeam;
 
     private LocalDateTime startedAt;
 
     private LocalDateTime finishedAt;
 
-    public List<GameEventPlayer> getPlayers() {
-        List<GameEventPlayer> players = new ArrayList<>();
+    public List<TgEventPlayer> getPlayers() {
+        List<TgEventPlayer> players = new ArrayList<>();
         players.addAll(blueTeam.getPlayers());
         players.addAll(redTeam.getPlayers());
         return players;
     }
 
-    public GameTeam getWinnerTeam() {
+    public TgTeam getWinnerTeam() {
         if (state == FINISHED) {
             return redTeam.isWinner() ? redTeam : blueTeam;
         }
         return null;
     }
 
-    public GameTeam getLoserTeam() {
+    public TgTeam getLoserTeam() {
         if (state == FINISHED) {
             return redTeam.isWinner() ? blueTeam : redTeam;
         }

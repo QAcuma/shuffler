@@ -3,11 +3,11 @@ package ru.acuma.shuffler.model.enums.keyboards;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.enums.EventStatusApi;
+import ru.acuma.shuffler.service.buttons.EventStatusButton;
 
 @Getter
 @AllArgsConstructor
-public enum Game implements EventStatusApi {
+public enum Game implements EventStatusButton {
 
     BUTTON_JOIN(Command.RED.getCommand(), "\uD83D\uDD3A", 1),
     BUTTON_LEAVE(Command.BLUE.getCommand(), "\uD83D\uDD39", 1),

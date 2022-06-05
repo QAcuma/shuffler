@@ -9,13 +9,13 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class GameTeam {
+public class TgTeam {
 
     private Long id;
 
-    private GameEventPlayer player1;
+    private TgEventPlayer player1;
 
-    private GameEventPlayer player2;
+    private TgEventPlayer player2;
 
     private long rating;
 
@@ -23,7 +23,7 @@ public class GameTeam {
 
     private boolean isWinner;
 
-    public GameTeam(GameEventPlayer player1, GameEventPlayer player2) {
+    public TgTeam(TgEventPlayer player1, TgEventPlayer player2) {
         this.player1 = player1;
         this.player2 = player2;
         this.isWinner = false;
@@ -35,7 +35,7 @@ public class GameTeam {
         return player1.getName() + " %s " + player2.getName();
     }
 
-    public List<GameEventPlayer> getPlayers() {
+    public List<TgEventPlayer> getPlayers() {
         return List.of(player1, player2);
     }
 }

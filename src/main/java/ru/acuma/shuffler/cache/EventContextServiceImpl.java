@@ -3,12 +3,12 @@ package ru.acuma.shuffler.cache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.EventMapper;
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.service.EventContextService;
-import ru.acuma.shufflerlib.dao.EventDao;
-import ru.acuma.shufflerlib.dao.SeasonDao;
+import ru.acuma.shuffler.service.SeasonService;
 import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shufflerlib.repository.EventRepository;
 
 import java.time.LocalDateTime;
 
@@ -18,14 +18,14 @@ public class EventContextServiceImpl implements EventContextService {
 
     private final EventContext eventContext;
     private final EventMapper eventMapper;
-    private final SeasonDao seasonDao;
-    private final EventDao eventDao;
+    private final SeasonService seasonService;
+    private final EventRepository eventRepository;
 
-    public GameEvent buildEvent(Long chatId, Discipline discipline) {
+    public TgEvent buildEvent(Long chatId, Discipline discipline) {
         if (isActive(chatId)) {
             return getCurrentEvent(chatId);
         }
-        GameEvent event = GameEvent.builder()
+        TgEvent event = TgEvent.builder()
                 .eventState(EventState.CREATED)
                 .chatId(chatId)
                 .startedAt(LocalDateTime.now())
@@ -43,8 +43,13 @@ public class EventContextServiceImpl implements EventContextService {
         return false;
     }
 
-    public GameEvent getCurrentEvent(Long chatId) {
+    public TgEvent getCurrentEvent(Long chatId) {
         return eventContext.getEvents().get(chatId);
+    }
+
+    @Override
+    public Discipline getCurrentDiscipline(Long chatId) {
+        return getCurrentEvent(chatId).getDiscipline();
     }
 
     @Override
@@ -52,12 +57,20 @@ public class EventContextServiceImpl implements EventContextService {
         eventContext.getEvents().remove(chatId);
     }
 
-    private GameEvent cacheEvent(GameEvent gameEvent) {
-        eventContext.getEvents().put(gameEvent.getChatId(), gameEvent);
-        var mapped = eventMapper.toEvent(gameEvent);
-        mapped.setSeasonId(seasonDao.getCurrentSeason().getId());
-        gameEvent.setId(eventDao.save(mapped));
+    @Override
+    public TgEvent update(TgEvent tgEvent) {
+        var mapped = eventMapper.toEvent(tgEvent);
+        eventRepository.update(mapped);
 
-        return gameEvent;
+        return tgEvent;
+    }
+
+    private TgEvent cacheEvent(TgEvent tgEvent) {
+        eventContext.getEvents().put(tgEvent.getChatId(), tgEvent);
+        var mapped = eventMapper.toEvent(tgEvent);
+        mapped.setSeasonId(seasonService.getCurrentSeason().getId());
+        tgEvent.setId(eventRepository.save(mapped));
+
+        return tgEvent;
     }
 }

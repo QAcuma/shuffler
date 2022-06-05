@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.service.EventContextService;
 import ru.acuma.shuffler.service.ExecuteService;
 import ru.acuma.shuffler.service.MaintenanceService;
@@ -26,7 +26,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     private final MessageService messageService;
 
     @Override
-    public void sweepChat(AbsSender absSender, GameEvent event) {
+    public void sweepChat(AbsSender absSender, TgEvent event) {
         Set<Integer> copyIds = new HashSet<>(event.getMessages());
         copyIds.forEach(id -> {
             var deleteMessage = messageService.deleteMessage(event.getChatId(), id);
@@ -55,7 +55,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     }
 
     @Override
-    public void sweepEvent(GameEvent event, boolean store) {
+    public void sweepEvent(TgEvent event, boolean store) {
         eventContextService.evictEvent(event.getChatId());
     }
 }

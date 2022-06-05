@@ -20,6 +20,7 @@ import ru.acuma.shuffler.service.commands.JoinCommand;
 import ru.acuma.shuffler.service.commands.KickerCommand;
 import ru.acuma.shuffler.service.commands.LeaveCommand;
 import ru.acuma.shuffler.service.commands.NoCommand;
+import ru.acuma.shuffler.service.commands.PingPongCommand;
 import ru.acuma.shuffler.service.commands.RedCommand;
 import ru.acuma.shuffler.service.commands.ResetCommand;
 import ru.acuma.shuffler.service.commands.WaitCommand;
@@ -45,6 +46,9 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
 
     @Autowired
     private KickerCommand kickerCommand;
+
+    @Autowired
+    private PingPongCommand pingPongCommand;
 
     @Autowired
     private JoinCommand joinCommand;
@@ -92,6 +96,7 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
     @PostConstruct
     private void init() {
         register(kickerCommand);
+        register(pingPongCommand);
         register(joinCommand);
         register(leaveCommand);
         register(cancelCommand);

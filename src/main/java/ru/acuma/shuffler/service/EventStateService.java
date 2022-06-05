@@ -1,33 +1,33 @@
 package ru.acuma.shuffler.service;
 
-import ru.acuma.shuffler.model.entity.GameEvent;
+import ru.acuma.shuffler.model.entity.TgEvent;
 
 public interface EventStateService {
 
-    void lobbyState(GameEvent event);
+    void lobbyState(TgEvent event);
 
-    void createdState(GameEvent event);
+    void createdState(TgEvent event);
 
-    void readyState(GameEvent event);
+    void readyState(TgEvent event);
 
-    void cancelCheckState(GameEvent event);
+    void cancelCheckState(TgEvent event);
 
-    void cancelledState(GameEvent event);
+    void cancelledState(TgEvent event);
 
-    void beginCheckState(GameEvent event);
+    void beginCheckState(TgEvent event);
 
-    void playingState(GameEvent event);
+    void playingState(TgEvent event);
 
-    void waitingState(GameEvent event);
+    void waitingState(TgEvent event);
 
-    void nextCheckingState(GameEvent event);
+    void nextCheckingState(TgEvent event);
 
-    void redCheckingState(GameEvent event);
+    void redCheckingState(TgEvent event);
 
-    void blueCheckingState(GameEvent event);
+    void blueCheckingState(TgEvent event);
 
-    void finishCheckState(GameEvent event);
+    void finishCheckState(TgEvent event);
 
-    void finishedState(GameEvent event);
+    void finishedState(TgEvent event);
 
 }

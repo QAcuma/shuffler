@@ -3,11 +3,11 @@ package ru.acuma.shuffler.model.enums.keyboards;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.enums.EventStatusApi;
+import ru.acuma.shuffler.service.buttons.EventStatusButton;
 
 @Getter
 @AllArgsConstructor
-public enum Ready implements EventStatusApi {
+public enum Ready implements EventStatusButton {
 
     BUTTON_JOIN(Command.JOIN.getCommand(), "⚽️ Играю!", 1),
     BUTTON_LEAVE(Command.LEAVE.getCommand(), "\uD83E\uDDD1\uD83C\uDFFF\u200D\uD83E\uDDBC Не могу", 1),

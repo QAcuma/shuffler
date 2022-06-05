@@ -1,9 +1,9 @@
 package ru.acuma.shuffler.util;
 
 import org.apache.commons.lang3.StringUtils;
-import ru.acuma.shuffler.model.entity.GameEvent;
-import ru.acuma.shuffler.model.entity.GameEventPlayer;
-import ru.acuma.shuffler.model.entity.Game;
+import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.model.entity.TgGame;
 import ru.acuma.shuffler.model.enums.messages.EventConstant;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 
@@ -18,7 +18,7 @@ public final class BuildMessageUtil {
     private BuildMessageUtil() {
     }
 
-    public static String buildText(GameEvent event, MessageType type) {
+    public static String buildText(TgEvent event, MessageType type) {
         switch (type) {
             case LOBBY:
             case CANCELLED:
@@ -35,7 +35,7 @@ public final class BuildMessageUtil {
         }
     }
 
-    private static String buildGameText(GameEvent event) {
+    private static String buildGameText(TgEvent event) {
         var game = event.getCurrentGame();
         if (game == null) {
             return EventConstant.BLANK_MESSAGE.getText();
@@ -58,42 +58,38 @@ public final class BuildMessageUtil {
         return builder.toString();
     }
 
-    private static void buildStartedMessage(GameEvent event, StringBuilder builder) {
+    private static void buildStartedMessage(TgEvent event, StringBuilder builder) {
         var game = event.getCurrentGame();
         String spaces = getSpaces(game);
         builder
                 .append(spaces)
                 .append(game.getRedTeam().getRating())
                 .append(System.lineSeparator())
-                .append("⚔️ ")
                 .append(String.format(game.getRedTeam().toString(), "\uD83D\uDD3A"))
-                .append(" \uD83D\uDEE1")
                 .append(System.lineSeparator())
                 .append(spaces)
                 .append("\uD83D\uDDEF\uD83D\uDDEF\uD83D\uDDEF")
                 .append(System.lineSeparator())
-                .append("⚔️ ")
                 .append(String.format(game.getBlueTeam().toString(), "\uD83D\uDD39"))
-                .append(" \uD83D\uDEE1")
                 .append(System.lineSeparator())
                 .append(spaces)
                 .append(game.getBlueTeam().getRating())
                 .append(System.lineSeparator());
     }
 
-    private static String getSpaces(Game game) {
-        String spaces = game.getRedTeam().getPlayer1().getName();
+    private static String getSpaces(TgGame tgGame) {
+        String spaces = tgGame.getRedTeam().getPlayer1().getName();
         return StringUtils.repeat(" ", spaces.length() * 2);
     }
 
-    private static String buildLobbyText(GameEvent event) {
+    private static String buildLobbyText(TgEvent event) {
         StringBuilder builder = new StringBuilder();
         switch (event.getEventState()) {
             case CREATED:
             case READY:
             case CANCEL_LOBBY_CHECKING:
             case BEGIN_CHECKING:
-                builder.append(EventConstant.LOBBY_MESSAGE.getText());
+                getMainEventMessage(event, builder);
                 break;
             case WAITING:
                 builder.append(EventConstant.LOBBY_WAITING_MESSAGE.getText());
@@ -116,8 +112,8 @@ public final class BuildMessageUtil {
         builder.append(
                 event.getPlayers().values()
                         .stream()
-                        .sorted(Comparator.comparingLong(GameEventPlayer::getRating).reversed())
-                        .map(GameEventPlayer::getLobbyName)
+                        .sorted(Comparator.comparingLong(TgEventPlayer::getRating).reversed())
+                        .map(TgEventPlayer::getLobbyName)
                         .collect(Collectors.joining(System.lineSeparator()))
         );
         buildResult(event, builder);
@@ -131,13 +127,24 @@ public final class BuildMessageUtil {
         return builder.toString();
     }
 
-    private static void buildResult(GameEvent event, StringBuilder builder) {
-        if (event.getGames().stream().anyMatch(game -> game.getState() == FINISHED)) {
+    private static void getMainEventMessage(TgEvent event, StringBuilder builder) {
+        switch (event.getDiscipline()) {
+            case KICKER:
+                builder.append(EventConstant.LOBBY_MESSAGE_KICKER.getText());
+                break;
+            case PING_PONG:
+                builder.append(EventConstant.LOBBY_MESSAGE_PING_PONG.getText());
+                break;
+        }
+    }
+
+    private static void buildResult(TgEvent event, StringBuilder builder) {
+        if (event.getTgGames().stream().anyMatch(game -> game.getState() == FINISHED)) {
             builder.append(System.lineSeparator())
                     .append(EventConstant.WINNERS_MESSAGE.getText());
         }
 
-        event.getGames()
+        event.getTgGames()
                 .stream()
                 .filter(game -> game.getWinnerTeam() != null)
                 .forEach(game -> {
@@ -147,7 +154,7 @@ public final class BuildMessageUtil {
                 });
     }
 
-    private static String buildCheckingText(GameEvent event) {
+    private static String buildCheckingText(TgEvent event) {
         switch (event.getEventState()) {
             case CANCEL_LOBBY_CHECKING:
                 return EventConstant.CANCEL_CHECKING_MESSAGE.getText();
@@ -166,7 +173,7 @@ public final class BuildMessageUtil {
         }
     }
 
-    private static String buildStatText(GameEvent event) {
+    private static String buildStatText(TgEvent event) {
         return EventConstant.BLANK_MESSAGE.getText();
     }
 }

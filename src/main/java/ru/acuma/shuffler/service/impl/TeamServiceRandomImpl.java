@@ -6,12 +6,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.mapper.TeamPlayerMapper;
-import ru.acuma.shuffler.model.entity.GameEventPlayer;
-import ru.acuma.shuffler.model.entity.GameTeam;
+import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.model.entity.TgTeam;
 import ru.acuma.shuffler.service.TeamService;
 import ru.acuma.shuffler.util.TeamServiceUtil;
-import ru.acuma.shufflerlib.dao.TeamDao;
-import ru.acuma.shufflerlib.dao.TeamPlayerDao;
+import ru.acuma.shufflerlib.repository.TeamPlayerRepository;
+import ru.acuma.shufflerlib.repository.TeamRepository;
 
 import java.security.SecureRandom;
 import java.util.Collections;
@@ -30,11 +30,11 @@ public class TeamServiceRandomImpl implements TeamService {
 
     private final TeamMapper teamMapper;
     private final TeamPlayerMapper teamPlayerMapper;
-    private final TeamDao teamDao;
-    private final TeamPlayerDao teamPlayerDao;
+    private final TeamRepository teamRepository;
+    private final TeamPlayerRepository teamPlayerRepository;
 
     @Override
-    public GameTeam teamBuilding(List<GameEventPlayer> players) {
+    public TgTeam teamBuilding(List<TgEventPlayer> players) {
         if (players.size() < GAME_PLAYERS_COUNT / 2) {
             throw new IllegalArgumentException("Not enough players");
         }
@@ -43,26 +43,34 @@ public class TeamServiceRandomImpl implements TeamService {
     }
 
     @Override
-    public GameTeam save(GameTeam team, Long gameId) {
+    public TgTeam save(TgTeam team, Long gameId) {
         var mappedTeam = teamMapper.toTeam(team, gameId);
-        team.setId(teamDao.save(mappedTeam));
+        team.setId(teamRepository.save(mappedTeam));
         team.getPlayers().forEach(player -> saveTeamPlayer(player, team.getId()));
 
         return team;
     }
 
     @Override
-    public void saveTeamPlayer(GameEventPlayer player, Long teamId) {
+    public TgTeam update(TgTeam team) {
+        var mappedTeam = teamMapper.toTeam(team);
+        team.setId(teamRepository.update(mappedTeam));
+
+        return team;
+    }
+
+    @Override
+    public void saveTeamPlayer(TgEventPlayer player, Long teamId) {
         var mappedTeamPlayer = teamPlayerMapper.toTeamPlayer(player, teamId);
-        teamPlayerDao.save(mappedTeamPlayer);
+        teamPlayerRepository.save(mappedTeamPlayer);
     }
 
     @SneakyThrows
-    private GameTeam build(List<GameEventPlayer> players, int retries) {
+    private TgTeam build(List<TgEventPlayer> players, int retries) {
         if (retries == 0) {
             throw new IllegalArgumentException("Can't shuffle unique team");
         }
-        var team = new GameTeam(players.get(0), players.get(1));
+        var team = new TgTeam(players.get(0), players.get(1));
 
         if (TeamServiceUtil.checkTeamMatches(team)) {
             Collections.shuffle(players, SecureRandom.getInstance("SHA1PRNG", "SUN"));
