@@ -43,10 +43,10 @@ public class TeamServiceRatingImpl implements TeamService {
     public TgTeam teamBuilding(List<TgEventPlayer> players) {
         List<TgEventPlayer> playersCopy = new ArrayList<>(players);
         playersCopy.forEach(
-                player -> player.setSpreadRating(player.getRating()
+                player -> player.setSpreadScore(player.getScore()
                         + ThreadLocalRandom.current().nextLong(-spreadDistance, spreadDistance))
         );
-        playersCopy.sort(Comparator.comparingLong(TgEventPlayer::getSpreadRating).reversed());
+        playersCopy.sort(Comparator.comparingLong(TgEventPlayer::getSpreadScore).reversed());
 
         if (playersCopy.size() == 2) {
             return calculateTeam(playersCopy);

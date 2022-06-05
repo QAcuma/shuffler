@@ -34,7 +34,7 @@ public class RatingServiceImpl implements RatingService {
         if (game.getWinnerTeam() == null) {
             throw new InstanceNotFoundException("Отсутствует победившая команда");
         }
-        double diff = game.getWinnerTeam().getRating() - game.getLoserTeam().getRating();
+        double diff = game.getWinnerTeam().getScore() - game.getLoserTeam().getScore();
 
         if (diff >= 0) {
             strongestWon(game, diff);
@@ -72,10 +72,19 @@ public class RatingServiceImpl implements RatingService {
                 .stream()
                 .peek(player -> updateRating(player, event.getDiscipline()))
                 .forEach(player -> logHistory(
-                        player.getId(),
+                        player,
                         game.getId(),
                         getRatingChange(player, game)
                 ));
+    }
+
+    private void logHistory(TgEventPlayer player, Long gameId, Integer ratingChange) {
+        RatingHistory ratingHistory = new RatingHistory()
+                .setGameId(gameId)
+                .setPlayerId(player.getId())
+                .setChange(ratingChange)
+                .setScore(player.getScore());
+        ratingHistoryRepository.save(ratingHistory);
     }
 
     private Integer getRatingChange(TgEventPlayer player, TgGame game) {
@@ -85,18 +94,10 @@ public class RatingServiceImpl implements RatingService {
                 : winnerTeam.getRatingChange() * -1;
     }
 
-    private void logHistory(Long playerId, Long gameId, Integer ratingChange) {
-        RatingHistory ratingHistory = new RatingHistory()
-                .setPlayerId(playerId)
-                .setGameId(gameId)
-                .setChange(ratingChange);
-        ratingHistoryRepository.save(ratingHistory);
-    }
-
     @Override
     public void updateRating(TgEventPlayer player, Discipline discipline) {
         Rating rating = getRating(player.getId(), discipline);
-        rating.setRating(player.getRating());
+        rating.setScore(player.getScore());
         ratingRepository.update(rating);
     }
 
@@ -105,7 +106,7 @@ public class RatingServiceImpl implements RatingService {
                 .setDiscipline(discipline.name())
                 .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setPlayerId(playerId)
-                .setRating(Values.DEFAULT_RATING);
+                .setScore(Values.DEFAULT_RATING);
         return rating.setId(ratingRepository.save(rating));
     }
 

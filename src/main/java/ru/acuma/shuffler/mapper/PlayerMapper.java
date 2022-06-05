@@ -25,7 +25,7 @@ public class PlayerMapper extends BaseMapper {
         return tgPlayer
                 .setId(player.getId())
                 .setChatId(player.getChatId())
-                .setRating(rating.getRating());
+                .setScore(rating.getScore());
     }
 
     public TgEventPlayer toTgEventPlayer(TgPlayer tgPlayer) {
@@ -35,7 +35,7 @@ public class PlayerMapper extends BaseMapper {
         MapperFacade mapper = mapperFactory.getMapperFacade();
         TgEventPlayer eventPlayer = mapper.map(tgPlayer, TgEventPlayer.class);
         return eventPlayer.setGameCount(0)
-                .setSessionRating(0)
+                .setSessionScore(0)
                 .setLeft(false);
     }
 

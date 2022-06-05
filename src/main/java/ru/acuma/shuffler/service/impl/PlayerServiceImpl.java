@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.mapper.PlayerMapper;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
-import ru.acuma.shuffler.service.EventContextService;
 import ru.acuma.shuffler.service.PlayerService;
 import ru.acuma.shuffler.service.RatingService;
 import ru.acuma.shuffler.service.SeasonService;
@@ -24,7 +23,6 @@ import java.util.NoSuchElementException;
 @ConditionalOnSingleCandidate(PlayerService.class)
 public class PlayerServiceImpl implements PlayerService {
 
-    private final EventContextService eventContextService;
     private final UserService userService;
     private final PlayerMapper playerMapper;
     private final SeasonService seasonService;

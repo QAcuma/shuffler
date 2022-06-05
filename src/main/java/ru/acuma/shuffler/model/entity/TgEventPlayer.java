@@ -12,9 +12,9 @@ public class TgEventPlayer extends TgPlayer {
 
     private int gameCount;
 
-    private long spreadRating;
+    private long spreadScore;
 
-    private int sessionRating;
+    private int sessionScore;
 
     private TgEventPlayer lastGamePlayer;
 
@@ -23,17 +23,17 @@ public class TgEventPlayer extends TgPlayer {
     @Override
     public void plusRating(long value) {
         super.plusRating(value);
-        sessionRating += value;
+        sessionScore += value;
     }
 
     @Override
     public void minusRating(long value) {
-        if (this.getRating() > value) {
+        if (this.getScore() > value) {
             super.minusRating(value);
-            sessionRating -= value;
+            sessionScore -= value;
         } else {
-            sessionRating -= value - getRating();
-            this.setRating(1);
+            sessionScore -= value - this.getScore();
+            this.setScore(1);
         }
     }
 
@@ -61,7 +61,7 @@ public class TgEventPlayer extends TgPlayer {
                 getName() +
                 strikethroughEnd() +
                 " " +
-                super.getRating() +
+                super.getScore() +
                 getSessionRatingToString();
     }
 
@@ -80,10 +80,10 @@ public class TgEventPlayer extends TgPlayer {
     }
 
     String getSessionRatingToString() {
-        if (getSessionRating() > 0) {
-            return " (+" + this.getSessionRating() + ")";
+        if (this.getSessionScore() > 0) {
+            return " (+" + this.getSessionScore() + ")";
         }
-        return " (" + this.getSessionRating() + ")";
+        return " (" + this.getSessionScore() + ")";
     }
 
 }

@@ -17,7 +17,7 @@ public class TgTeam {
 
     private TgEventPlayer player2;
 
-    private long rating;
+    private long score;
 
     private int ratingChange;
 
@@ -27,7 +27,7 @@ public class TgTeam {
         this.player1 = player1;
         this.player2 = player2;
         this.isWinner = false;
-        this.rating = (player1.getRating() + player2.getRating()) / 2;
+        this.score = (player1.getScore() + player2.getScore()) / 2;
     }
 
     @Override

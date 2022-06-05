@@ -16,21 +16,21 @@ public class TgPlayer extends UserInfo {
 
     private Long chatId;
 
-    private int rating;
+    private int score;
 
     public String getName() {
         return super.getFirstName() +
                 " " +
                 Optional.ofNullable(super.getLastName()).orElse("Doe") +
-                rating;
+                score;
     }
 
     public void plusRating(long value) {
-        rating += value;
+        score += value;
     }
 
     public void minusRating(long value) {
-        rating -= value;
+        score -= value;
     }
 
 }

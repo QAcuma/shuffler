@@ -63,7 +63,7 @@ public final class BuildMessageUtil {
         String spaces = getSpaces(game);
         builder
                 .append(spaces)
-                .append(game.getRedTeam().getRating())
+                .append(game.getRedTeam().getScore())
                 .append(System.lineSeparator())
                 .append(String.format(game.getRedTeam().toString(), "\uD83D\uDD3A"))
                 .append(System.lineSeparator())
@@ -73,13 +73,13 @@ public final class BuildMessageUtil {
                 .append(String.format(game.getBlueTeam().toString(), "\uD83D\uDD39"))
                 .append(System.lineSeparator())
                 .append(spaces)
-                .append(game.getBlueTeam().getRating())
+                .append(game.getBlueTeam().getScore())
                 .append(System.lineSeparator());
     }
 
     private static String getSpaces(TgGame tgGame) {
         String spaces = tgGame.getRedTeam().getPlayer1().getName();
-        return StringUtils.repeat(" ", spaces.length() * 2);
+        return StringUtils.repeat(" ", spaces.length());
     }
 
     private static String buildLobbyText(TgEvent event) {
@@ -112,7 +112,7 @@ public final class BuildMessageUtil {
         builder.append(
                 event.getPlayers().values()
                         .stream()
-                        .sorted(Comparator.comparingLong(TgEventPlayer::getRating).reversed())
+                        .sorted(Comparator.comparingLong(TgEventPlayer::getScore).reversed())
                         .map(TgEventPlayer::getLobbyName)
                         .collect(Collectors.joining(System.lineSeparator()))
         );
