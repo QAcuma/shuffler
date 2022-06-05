@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM adoptopenjdk/openjdk13:alpine-jre
 MAINTAINER https://github.com/QAcuma
 ARG JAR_FILE=build/libs/*.jar
 WORKDIR /opt/app

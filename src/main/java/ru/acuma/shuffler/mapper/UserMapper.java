@@ -6,6 +6,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.tables.pojos.UserInfo;
+import ru.acuma.shufflerlib.mapper.BaseMapper;
 
 import java.time.OffsetDateTime;
 

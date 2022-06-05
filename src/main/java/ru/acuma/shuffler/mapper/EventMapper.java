@@ -4,6 +4,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Component;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.tables.pojos.Event;
+import ru.acuma.shufflerlib.mapper.BaseMapper;
 
 @Component
 public class EventMapper extends BaseMapper {

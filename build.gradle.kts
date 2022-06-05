@@ -2,10 +2,11 @@ plugins {
     id("java")
     id("application")
     id("idea")
+    id("org.springframework.boot") version "2.6.7"
 }
 
 group = "ru.acuma"
-version = "1.0.7"
+version = "1.1.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_13
@@ -20,11 +21,7 @@ repositories {
 var shufflerLibVersion = "1.0.1"
 var springBootVersion = "2.6.7"
 var lombokBootVersion = "1.18.24"
-var lang3Version = "3.12.0"
-var log4jVersion = "1.2.17"
 var telegramBotVersion = "6.0.1"
-val codeGsonVersion = "2.9.0"
-val orikaVersion = "2.2.7"
 var junitVersion = "5.8.2"
 var mockitoVersion = "4.5.1"
 
@@ -33,13 +30,9 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    implementation("dev.akkinoc.spring.boot:orika-spring-boot-starter:$orikaVersion")
 
     implementation("org.telegram:telegrambots:$telegramBotVersion")
     implementation("org.telegram:telegrambotsextensions:$telegramBotVersion")
-
-    implementation("com.google.code.gson:gson:$codeGsonVersion")
-    implementation("org.apache.commons:commons-lang3:$lang3Version")
 
     compileOnly("org.projectlombok:lombok:$lombokBootVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokBootVersion")
