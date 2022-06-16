@@ -12,9 +12,11 @@ import java.util.stream.Collectors;
 
 import static ru.acuma.shuffler.model.enums.EventState.WAITING;
 import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
-import static ru.acuma.shuffler.util.SymbolUtil.BLUE_CIRCLE;
-import static ru.acuma.shuffler.util.SymbolUtil.PRIDE;
-import static ru.acuma.shuffler.util.SymbolUtil.RED_CIRCLE;
+import static ru.acuma.shuffler.model.enums.messages.EventConstant.LET_JOIN_TEXT;
+import static ru.acuma.shuffler.model.enums.messages.EventConstant.MEMBERS_TEXT;
+import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
+import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
+import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
 
 public final class BuildMessageUtil {
 
@@ -68,12 +70,12 @@ public final class BuildMessageUtil {
                 .append(spaces)
                 .append(game.getRedTeam().getScore())
                 .append(System.lineSeparator())
-                .append(String.format(game.getRedTeam().toString(), RED_CIRCLE))
+                .append(String.format(game.getRedTeam().toString(), RED_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
                 .append(spaces)
-                .append(StringUtils.repeat(PRIDE, 2))
+                .append(VS_EMOJI)
                 .append(System.lineSeparator())
-                .append(String.format(game.getBlueTeam().toString(), BLUE_CIRCLE))
+                .append(String.format(game.getBlueTeam().toString(), BLUE_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
                 .append(spaces)
                 .append(game.getBlueTeam().getScore())
@@ -112,6 +114,7 @@ public final class BuildMessageUtil {
                 builder.append(EventConstant.BLANK_MESSAGE.getText());
                 break;
         }
+        builder.append(event.getPlayers().isEmpty() ? LET_JOIN_TEXT.getText() : MEMBERS_TEXT.getText());
         builder.append(
                 event.getPlayers().values()
                         .stream()
@@ -119,6 +122,7 @@ public final class BuildMessageUtil {
                         .map(TgEventPlayer::getLobbyName)
                         .collect(Collectors.joining(System.lineSeparator()))
         );
+        builder.append(System.lineSeparator());
         buildResult(event, builder);
         if (event.getEventState() == WAITING) {
             builder
@@ -127,6 +131,8 @@ public final class BuildMessageUtil {
                     .append(EventConstant.WAITING_MESSAGE.getText())
                     .append(System.lineSeparator());
         }
+        builder.append(EventConstant.SHUFFLER_LINK.getText());
+
         return builder.toString();
     }
 
@@ -150,11 +156,10 @@ public final class BuildMessageUtil {
         event.getTgGames()
                 .stream()
                 .filter(game -> game.getWinnerTeam() != null)
-                .forEach(game -> {
-                    builder
-                            .append(game.getGameResult())
-                            .append(System.lineSeparator());
-                });
+                .forEach(game -> builder
+                        .append(game.getGameResult())
+                        .append(System.lineSeparator())
+                );
     }
 
     private static String buildCheckingText(TgEvent event) {
