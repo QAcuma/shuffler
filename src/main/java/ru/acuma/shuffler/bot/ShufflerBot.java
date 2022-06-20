@@ -1,10 +1,14 @@
 package ru.acuma.shuffler.bot;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.methods.GetUserProfilePhotos;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -112,8 +116,29 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
     }
 
     @Override
+    @SneakyThrows
     protected boolean filter(Message message) {
+        var method = new GetUserProfilePhotos();
+        method.setUserId(message.getFrom().getId());
+        var photos = this.sendApiMethod(method);
+        var fileMethod = new GetFile();
+
+        photos.getPhotos().stream()
+                .findFirst()
+                .flatMap(photo -> photo.stream().findFirst())
+                .ifPresent(smallPhoto -> {
+                    fileMethod.setFileId(smallPhoto.getFileId());
+                    loadUserProfilePicture(message.getFrom().getId(), fileMethod);
+                });
+
         return groupService.authenticate(message.getChat()) && !userService.authenticate(message.getFrom());
+    }
+
+    @SneakyThrows
+    private void loadUserProfilePicture(Long telegramId, GetFile fileMethod) {
+        File photo = this.sendApiMethod(fileMethod);
+
+        userService.saveProfilePhotos(telegramId, photo);
     }
 
     @Override

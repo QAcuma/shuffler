@@ -16,7 +16,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public boolean authenticate(Chat chat) {
-        if (!chat.isGroupChat()) {
+        if (!(chat.isGroupChat() || chat.isSuperGroupChat())) {
             return false;
         }
         if (!groupRepository.isActive(chat.getId())) {

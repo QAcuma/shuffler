@@ -1,6 +1,7 @@
-telegram.bot:
-  name: ${K_SHUFFLER_BOT_NAME}
-  token: ${K_SHUFFLER_TOKEN}
+telegram:
+  bot:
+    name: ${K_SHUFFLER_BOT_NAME}
+    token: ${K_SHUFFLER_TOKEN}
 
 spring:
   main:

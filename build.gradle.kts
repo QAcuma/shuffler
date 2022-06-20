@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("application")
     id("idea")
-    id("org.springframework.boot") version "2.6.7"
+    id("org.springframework.boot") version "2.7.0"
 }
 
 group = "ru.acuma"
@@ -18,8 +18,8 @@ repositories {
     mavenCentral()
 }
 
-var shufflerLibVersion = "1.0.1"
-var springBootVersion = "2.6.7"
+var shufflerLibVersion = "1.0.3"
+var springBootVersion = "2.7.0"
 var lombokBootVersion = "1.18.24"
 var telegramBotVersion = "6.0.1"
 var junitVersion = "5.8.2"

@@ -35,6 +35,4 @@ public class BasicBotConfig {
             log.error("Cannot initialize bot ", e);
         }
     }
-
-
 }
