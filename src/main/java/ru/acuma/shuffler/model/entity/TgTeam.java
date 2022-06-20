@@ -32,7 +32,7 @@ public class TgTeam {
 
     @Override
     public String toString() {
-        return player1.getName() + "%s" + player2.getName();
+        return player1.getName() + " %s " + player2.getName();
     }
 
     public List<TgEventPlayer> getPlayers() {
