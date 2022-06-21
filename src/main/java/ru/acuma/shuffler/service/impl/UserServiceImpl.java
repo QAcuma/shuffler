@@ -12,6 +12,9 @@ import ru.acuma.shuffler.service.UserService;
 import ru.acuma.shuffler.tables.pojos.UserInfo;
 import ru.acuma.shufflerlib.repository.UserRepository;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 
 @Slf4j
@@ -34,8 +37,12 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     public void saveProfilePhotos(Long telegramId, File photo) {
         URL url = new URL(photo.getFileUrl(botToken));
-        var blob = url.openStream().readAllBytes();
-        userRepository.saveProfilePhoto(telegramId, blob);
+        ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
+        BufferedImage image = ImageIO.read(bis);
+        java.io.File outputFile = new java.io.File("/media/avatar/" + photo.getFileUniqueId() + ".png");
+
+        ImageIO.write(image, "png", outputFile);
+        userRepository.saveProfilePhotoId(telegramId, outputFile.getName());
     }
 
     private Boolean hasAccess(Long telegramId) {
