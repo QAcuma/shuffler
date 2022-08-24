@@ -81,7 +81,6 @@ public class PlayerServiceImpl implements PlayerService {
     private void registerPlayer(Long chatId, Long userId) {
         Player player = new Player()
                 .setChatId(chatId)
-                .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setUserId(userId);
         player.setId(playerRepository.save(player));
         ratingService.defaultRating(player.getId());

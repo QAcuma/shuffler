@@ -18,7 +18,7 @@ repositories {
     mavenCentral()
 }
 
-var shufflerLibVersion = "1.0.3"
+var shufflerLibVersion = "1.0.4"
 var springBootVersion = "2.7.0"
 var lombokBootVersion = "1.18.24"
 var telegramBotVersion = "6.0.1"
