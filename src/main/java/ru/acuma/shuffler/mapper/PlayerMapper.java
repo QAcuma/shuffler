@@ -22,8 +22,10 @@ public class PlayerMapper extends BaseMapper {
                 .register();
         MapperFacade mapper = mapperFactory.getMapperFacade();
         TgPlayer tgPlayer = mapper.map(userInfo, TgPlayer.class);
+
         return tgPlayer
                 .setId(player.getId())
+                .setCalibrated(rating.getIsCalibrated())
                 .setChatId(player.getChatId())
                 .setScore(rating.getScore());
     }
@@ -34,6 +36,20 @@ public class PlayerMapper extends BaseMapper {
                 .register();
         MapperFacade mapper = mapperFactory.getMapperFacade();
         TgEventPlayer eventPlayer = mapper.map(tgPlayer, TgEventPlayer.class);
+
+        return eventPlayer.setGameCount(0)
+                .setSessionScore(0)
+                .setLeft(false);
+    }
+
+    public TgEventPlayer toTgEventPlayer(UserInfo userInfo, Player player, Rating rating) {
+        mapperFactory.classMap(TgPlayer.class, TgEventPlayer.class)
+                .byDefault()
+                .register();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        var tgPlayer = toTgPlayer(userInfo, player, rating);
+        TgEventPlayer eventPlayer = mapper.map(tgPlayer, TgEventPlayer.class);
+
         return eventPlayer.setGameCount(0)
                 .setSessionScore(0)
                 .setLeft(false);

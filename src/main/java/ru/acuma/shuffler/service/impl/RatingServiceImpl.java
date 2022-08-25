@@ -2,11 +2,13 @@ package ru.acuma.shuffler.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TgGame;
 import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.service.CalibrationService;
 import ru.acuma.shuffler.service.RatingService;
 import ru.acuma.shuffler.service.SeasonService;
 import ru.acuma.shuffler.tables.pojos.Rating;
@@ -18,22 +20,26 @@ import ru.acuma.shufflerlib.repository.RatingRepository;
 
 import javax.management.InstanceNotFoundException;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class RatingServiceImpl implements RatingService {
 
     private final SeasonService seasonService;
-    private final RatingRepository ratingRepository;
     private final RatingHistoryRepository ratingHistoryRepository;
+    private final RatingRepository ratingRepository;
+    private final CalibrationService calibrationService;
+
+    @Value("${rating.calibration.multiplier}")
+    private int multiplier;
 
     @SneakyThrows
     @Override
     public void update(TgEvent event) {
         var game = event.getCurrentGame();
-        if (game.getWinnerTeam() == null) {
-            throw new InstanceNotFoundException("Отсутствует победившая команда");
-        }
+        Optional.ofNullable(game.getWinnerTeam())
+                .orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
         double diff = game.getWinnerTeam().getScore() - game.getLoserTeam().getScore();
 
         if (diff >= 0) {
@@ -62,7 +68,9 @@ public class RatingServiceImpl implements RatingService {
                 .setSeasonId(seasonService.getCurrentSeason().getId());
         Rating rating = ratingRepository.getRatingByPlayerIdAndDisciplineAndSeasonId(filter);
 
-        return rating == null ? defaultRating(playerId, discipline) : rating;
+        return rating == null
+                ? defaultRating(playerId, discipline)
+                : rating;
     }
 
     @Override
@@ -83,6 +91,7 @@ public class RatingServiceImpl implements RatingService {
                 .setGameId(gameId)
                 .setPlayerId(player.getId())
                 .setChange(ratingChange)
+                .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setScore(player.getScore());
         ratingHistoryRepository.save(ratingHistory);
     }
@@ -97,7 +106,8 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public void updateRating(TgEventPlayer player, Discipline discipline) {
         Rating rating = getRating(player.getId(), discipline);
-        rating.setScore(player.getScore());
+        rating.setScore(player.getScore())
+                .setIsCalibrated(calibrationService.isCalibrated(player.getId()));
         ratingRepository.update(rating);
     }
 
@@ -106,7 +116,8 @@ public class RatingServiceImpl implements RatingService {
                 .setDiscipline(discipline.name())
                 .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setPlayerId(playerId)
-                .setScore(Values.DEFAULT_RATING);
+                .setScore(Values.DEFAULT_RATING)
+                .setIsCalibrated(false);
         return rating.setId(ratingRepository.save(rating));
     }
 
@@ -122,8 +133,8 @@ public class RatingServiceImpl implements RatingService {
 
     private void processChanges(TgGame tgGame, double change) {
         int value = correcting(change);
-        tgGame.getWinnerTeam().setRatingChange(value);
-        tgGame.getLoserTeam().setRatingChange(-value);
+        tgGame.getWinnerTeam().setRatingChange(value * multiplier);
+        tgGame.getLoserTeam().setRatingChange(-value * multiplier);
         tgGame.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(value));
         tgGame.getLoserTeam().getPlayers().forEach(player -> player.minusRating(value));
     }

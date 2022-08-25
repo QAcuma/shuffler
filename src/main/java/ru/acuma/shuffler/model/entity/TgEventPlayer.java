@@ -21,20 +21,15 @@ public class TgEventPlayer extends TgPlayer {
     private boolean left;
 
     @Override
-    public void plusRating(long value) {
+    public void plusRating(int value) {
         super.plusRating(value);
-        sessionScore += value;
+        sessionScore = isCalibrated() ? sessionScore + value : 0;
     }
 
     @Override
-    public void minusRating(long value) {
-        if (this.getScore() > value) {
-            super.minusRating(value);
-            sessionScore -= value;
-        } else {
-            sessionScore -= value - this.getScore();
-            this.setScore(1);
-        }
+    public void minusRating(int value) {
+        super.minusRating(value);
+        sessionScore = isCalibrated() ? sessionScore - value : 0;
     }
 
     public void increaseGameCount() {

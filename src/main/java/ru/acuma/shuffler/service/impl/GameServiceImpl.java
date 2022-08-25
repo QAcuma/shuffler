@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.GameMapper;
-import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TgGame;
@@ -16,7 +15,6 @@ import ru.acuma.shuffler.service.RatingService;
 import ru.acuma.shuffler.service.ShuffleService;
 import ru.acuma.shuffler.service.TeamService;
 import ru.acuma.shufflerlib.repository.GameRepository;
-import ru.acuma.shufflerlib.repository.TeamRepository;
 
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
@@ -31,9 +29,7 @@ public class GameServiceImpl implements GameService {
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
     private final GameMapper gameMapper;
-    private final TeamMapper teamMapper;
     private final GameRepository gameRepository;
-    private final TeamRepository teamRepository;
 
     @SneakyThrows
     public TgGame buildGame(TgEvent event) {

@@ -28,6 +28,9 @@ public class UserServiceImpl implements UserService {
     @Value("${telegram.bot.token}")
     private String botToken;
 
+    @Value("${application.media.location}")
+    private String mediaLocation;
+
     @Override
     public UserInfo getUser(Long telegramId) {
         return userRepository.get(telegramId);
@@ -39,7 +42,7 @@ public class UserServiceImpl implements UserService {
         URL url = new URL(photo.getFileUrl(botToken));
         ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
         BufferedImage image = ImageIO.read(bis);
-        java.io.File outputFile = new java.io.File("/media/avatar/" + photo.getFileUniqueId() + ".png");
+        var outputFile = new java.io.File(mediaLocation + photo.getFileUniqueId() + ".png");
 
         ImageIO.write(image, "png", outputFile);
         userRepository.saveProfilePhotoId(telegramId, outputFile.getName());

@@ -18,6 +18,8 @@ public class TgPlayer extends UserInfo {
 
     private int score;
 
+    private boolean isCalibrated;
+
     public String getName() {
         return super.getFirstName() +
                 " " +
@@ -25,12 +27,16 @@ public class TgPlayer extends UserInfo {
                 score;
     }
 
-    public void plusRating(long value) {
-        score += value;
+    public void plusRating(int value) {
+        score += (value * getCalibrationModifier());
     }
 
-    public void minusRating(long value) {
-        score -= value;
+    public void minusRating(int value) {
+        score -= (value * getCalibrationModifier());
+    }
+
+    private int getCalibrationModifier() {
+        return isCalibrated ? 1 : 3;
     }
 
 }

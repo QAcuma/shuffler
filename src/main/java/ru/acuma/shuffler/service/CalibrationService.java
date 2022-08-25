@@ -2,7 +2,8 @@ package ru.acuma.shuffler.service;
 
 public interface CalibrationService {
 
-    Long getPlayerEnemiesCount(Long playerId);
+    int getDistinctEnemiesCount(Long playerId);
 
+    boolean isCalibrated(Long playerId);
 
 }
