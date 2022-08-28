@@ -63,7 +63,7 @@ public class EventStateServiceImpl implements EventStateService {
     }
 
     @Override
-    public void nextCheckingState(TgEvent event) {
+    public void cancelGameCheckingState(TgEvent event) {
         event.getCurrentGame().setState(GameState.CHECKING);
         event.setEventState(EventState.CANCEL_GAME_CHECKING);
     }

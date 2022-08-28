@@ -23,8 +23,8 @@ application:
 
 rating:
   team-build-strategy: ${SHUFFLER_TEAM_BUILD_STRATEGY:random}
-  spread-distance: ${SHUFFLER_RATING_SPREAD:100}
   calibration:
-    games: ${SHUFFLER_CALIBRATION_GAMES:10}
-    enemies: ${SHUFFLER_CALIBRATION_ENEMIES:6}
-    multiplier: ${SHUFFLER_CALIBRATION_MULTIPLIER:3}
+    games: ${SHUFFLER_CALIBRATION_GAMES:8}
+    enemies: ${SHUFFLER_CALIBRATION_ENEMIES:3}
+    multiplier: ${SHUFFLER_CALIBRATION_MULTIPLIER:6}
+    game-penalty: ${SHUFFLER_CALIBRATION_PENALTY_MULTIPLIER:0.5}

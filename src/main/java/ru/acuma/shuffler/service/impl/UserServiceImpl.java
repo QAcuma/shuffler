@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 @Slf4j
 @Service
@@ -39,13 +40,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @SneakyThrows
     public void saveProfilePhotos(Long telegramId, File photo) {
-        URL url = new URL(photo.getFileUrl(botToken));
-        ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
-        BufferedImage image = ImageIO.read(bis);
-        var outputFile = new java.io.File(mediaLocation + photo.getFileUniqueId() + ".png");
+        try {
+            URL url = new URL(photo.getFileUrl(botToken));
+            ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
+            BufferedImage image = ImageIO.read(bis);
+            var outputFile = new java.io.File(mediaLocation + photo.getFileUniqueId() + ".png");
 
-        ImageIO.write(image, "png", outputFile);
-        userRepository.saveProfilePhotoId(telegramId, outputFile.getName());
+            ImageIO.write(image, "png", outputFile);
+            userRepository.saveProfilePhotoId(telegramId, outputFile.getName());
+        } catch (UnknownHostException e) {
+            log.info("Failed to save picture for user {}", telegramId);
+        }
     }
 
     private Boolean hasAccess(Long telegramId) {

@@ -20,7 +20,7 @@ public interface EventStateService {
 
     void waitingState(TgEvent event);
 
-    void nextCheckingState(TgEvent event);
+    void cancelGameCheckingState(TgEvent event);
 
     void redCheckingState(TgEvent event);
 

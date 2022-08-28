@@ -1,6 +1,6 @@
 package ru.acuma.shuffler.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RatingServiceImpl implements RatingService {
 
     private final SeasonService seasonService;
@@ -31,8 +31,8 @@ public class RatingServiceImpl implements RatingService {
     private final RatingRepository ratingRepository;
     private final CalibrationService calibrationService;
 
-    @Value("${rating.calibration.multiplier}")
-    private int multiplier;
+    @Value("${rating.calibration.game-penalty}")
+    private double calibrationPenaltyMultiplier;
 
     @SneakyThrows
     @Override
@@ -98,6 +98,7 @@ public class RatingServiceImpl implements RatingService {
 
     private Integer getRatingChange(TgEventPlayer player, TgGame game) {
         var winnerTeam = game.getWinnerTeam();
+
         return winnerTeam.getPlayers().contains(player)
                 ? winnerTeam.getRatingChange()
                 : winnerTeam.getRatingChange() * -1;
@@ -121,28 +122,36 @@ public class RatingServiceImpl implements RatingService {
         return rating.setId(ratingRepository.save(rating));
     }
 
-    private void weakestWon(TgGame tgGame, double diff) {
+    private void weakestWon(TgGame game, double diff) {
         double change = Values.BASE_RATING_CHANGE * (1 + (diff / Values.RATING_REFERENCE));
-        processChanges(tgGame, change);
+        boolean calibratingGame = game.getWinnerTeam().containsCalibrating() || game.getLoserTeam().containsCalibrating();
+
+        processChanges(game, calibratingGame ? change * calibrationPenaltyMultiplier : change);
     }
 
-    private void strongestWon(TgGame tgGame, double diff) {
+    private void strongestWon(TgGame game, double diff) {
         double change = Values.BASE_RATING_CHANGE * (1 - (diff / Values.RATING_REFERENCE));
-        processChanges(tgGame, change);
+        boolean calibratingGame = game.getWinnerTeam().containsCalibrating() || game.getLoserTeam().containsCalibrating();
+
+        processChanges(game, calibratingGame ? change * calibrationPenaltyMultiplier : change);
     }
 
     private void processChanges(TgGame tgGame, double change) {
-        int value = correcting(change);
-        tgGame.getWinnerTeam().setRatingChange(value * multiplier);
-        tgGame.getLoserTeam().setRatingChange(-value * multiplier);
-        tgGame.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(value));
-        tgGame.getLoserTeam().getPlayers().forEach(player -> player.minusRating(value));
+        int value = limitAndRoundChange(change);
+        tgGame.getWinnerTeam().setRatingChange(value);
+        tgGame.getLoserTeam().setRatingChange(-value);
+        tgGame.getWinnerTeam()
+                .getPlayers()
+                .forEach(player -> player.plusRating(value));
+        tgGame.getLoserTeam()
+                .getPlayers()
+                .forEach(player -> player.minusRating(value));
     }
 
-    private int correcting(double change) {
+    private int limitAndRoundChange(double change) {
         int value = Math.toIntExact(Math.round(change));
-        if (value > 49) {
-            return 49;
+        if (value >= Values.BASE_RATING_CHANGE * 2) {
+            return (Values.BASE_RATING_CHANGE * 2) - 1;
         }
         return Math.max(value, 1);
     }

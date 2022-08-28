@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 @Getter
 @Setter
@@ -28,6 +29,10 @@ public class TgTeam {
         this.player2 = player2;
         this.isWinner = false;
         this.score = (player1.getScore() + player2.getScore()) / 2;
+    }
+
+    public boolean containsCalibrating() {
+        return getPlayers().stream().anyMatch(Predicate.not(TgEventPlayer::isCalibrated));
     }
 
     @Override

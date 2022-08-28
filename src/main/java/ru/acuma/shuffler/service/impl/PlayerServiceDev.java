@@ -1,6 +1,9 @@
 package ru.acuma.shuffler.service.impl;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -24,7 +27,6 @@ public class PlayerServiceDev implements PlayerService {
 
     private final FakeUsersFactory fakeUsersFactory;
     private final PlayerMapper playerMapper;
-    private final SeasonService seasonService;
     private final PlayerRepository playerRepository;
     private final RatingService ratingService;
 

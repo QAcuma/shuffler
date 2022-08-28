@@ -7,7 +7,6 @@ import ru.acuma.shuffler.service.CalibrationService;
 import ru.acuma.shuffler.service.SeasonService;
 import ru.acuma.shuffler.tables.pojos.RatingHistory;
 import ru.acuma.shufflerlib.repository.RatingHistoryRepository;
-import ru.acuma.shufflerlib.repository.RatingRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +49,7 @@ public class CalibrationServiceImpl implements CalibrationService {
         );
         int distinctEnemies = getDistinctEnemiesCount(playerId);
 
-        return gamesCount > requiredGames && distinctEnemies > requiredEnemies;
+        return gamesCount > requiredGames && distinctEnemies >= requiredEnemies;
     }
 
     private List<RatingHistory> matesFilter(RatingHistory history, List<RatingHistory> changes) {

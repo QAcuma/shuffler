@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,6 +15,7 @@ public class TgEventPlayer extends TgPlayer {
 
     private long spreadScore;
 
+    @Getter(AccessLevel.NONE)
     private int sessionScore;
 
     private TgEventPlayer lastGamePlayer;
@@ -32,6 +34,10 @@ public class TgEventPlayer extends TgPlayer {
         sessionScore = isCalibrated() ? sessionScore - value : 0;
     }
 
+    public int getSessionScore() {
+        return isCalibrated() ? sessionScore : 0;
+    }
+
     public void increaseGameCount() {
         gameCount++;
     }
@@ -48,6 +54,7 @@ public class TgEventPlayer extends TgPlayer {
             lastName = getLastName().charAt(0) + ".";
         }
         StringUtils.capitalize(lastName);
+
         return lastName;
     }
 
@@ -56,8 +63,8 @@ public class TgEventPlayer extends TgPlayer {
                 getName() +
                 strikethroughEnd() +
                 " " +
-                super.getScore() +
-                getSessionRatingToString();
+                getScoreString() +
+                (isCalibrated() ? getSessionRatingToString() : "");
     }
 
     private String strikethroughBegin() {

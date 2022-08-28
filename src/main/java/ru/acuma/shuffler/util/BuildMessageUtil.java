@@ -118,7 +118,7 @@ public final class BuildMessageUtil {
         builder.append(
                 event.getPlayers().values()
                         .stream()
-                        .sorted(Comparator.comparingLong(TgEventPlayer::getScore).reversed())
+                        .sorted(Comparator.comparingLong(TgEventPlayer::getScoreSorting).reversed())
                         .map(TgEventPlayer::getLobbyName)
                         .collect(Collectors.joining(System.lineSeparator()))
         );

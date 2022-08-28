@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
+import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.EventStateService;
 import ru.acuma.shuffler.service.ExecuteService;
@@ -31,7 +32,11 @@ public class CancelGameCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
-        eventStateService.nextCheckingState(event);
+        if (event.getEventState() == EventState.BLUE_CHECKING || event.getEventState() == EventState.RED_CHECKING || event.getEventState() == EventState.CANCEL_GAME_CHECKING) {
+            return;
+        }
+
+        eventStateService.cancelGameCheckingState(event);
         executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), MessageType.GAME));
         executeService.execute(absSender, messageService.sendMessage(event, MessageType.CHECKING));
     }
