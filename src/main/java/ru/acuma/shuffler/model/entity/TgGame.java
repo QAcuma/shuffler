@@ -2,6 +2,7 @@ package ru.acuma.shuffler.model.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.enums.GameState;
@@ -14,7 +15,7 @@ import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
 
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
 @Accessors(chain = true)
 public class TgGame {
 
@@ -38,6 +39,7 @@ public class TgGame {
         List<TgEventPlayer> players = new ArrayList<>();
         players.addAll(blueTeam.getPlayers());
         players.addAll(redTeam.getPlayers());
+
         return players;
     }
 
@@ -45,6 +47,7 @@ public class TgGame {
         if (state == FINISHED) {
             return redTeam.isWinner() ? redTeam : blueTeam;
         }
+
         return null;
     }
 
@@ -52,7 +55,22 @@ public class TgGame {
         if (state == FINISHED) {
             return redTeam.isWinner() ? blueTeam : redTeam;
         }
+
         return null;
+    }
+
+    public boolean isCalibrating() {
+       return getWinnerTeam().containsCalibrating() || getLoserTeam().containsCalibrating();
+    }
+
+    public TgGame applyBet(int redBet, int blueBet){
+        redTeam.setBet(redBet);
+        blueTeam.setBet(blueBet);
+
+        redTeam.setBet(blueTeam.getScore());
+        blueTeam.setBet(redTeam.getScore());
+
+        return this;
     }
 
     public String getGameResult() {

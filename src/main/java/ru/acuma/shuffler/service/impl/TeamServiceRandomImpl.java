@@ -34,7 +34,7 @@ public class TeamServiceRandomImpl implements TeamService {
     private final TeamPlayerRepository teamPlayerRepository;
 
     @Override
-    public TgTeam teamBuilding(List<TgEventPlayer> players) {
+    public TgTeam buildTeam(List<TgEventPlayer> players) {
         if (players.size() < GAME_PLAYERS_COUNT / 2) {
             throw new IllegalArgumentException("Not enough players");
         }

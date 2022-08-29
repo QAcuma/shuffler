@@ -41,24 +41,25 @@ public class GameServiceImpl implements GameService {
             if (players == null) {
                 throw new InstanceNotFoundException("Not enough players to start");
             }
-            redTeam = teamService.teamBuilding(players);
+            redTeam = teamService.buildTeam(players);
             if (redTeam == null) {
                 throw new IllegalArgumentException("Red team is null");
             }
             List<TgEventPlayer> secondTeamPlayers = players.stream()
                     .filter(player -> !redTeam.getPlayers().contains(player))
                     .collect(Collectors.toList());
-            blueTeam = teamService.teamBuilding(secondTeamPlayers);
+            blueTeam = teamService.buildTeam(secondTeamPlayers);
         } catch (IllegalArgumentException e) {
             return buildGame(event);
         }
-        var game = TgGame.builder()
-                .redTeam(redTeam)
-                .blueTeam(blueTeam)
-                .index(event.getTgGames().size() + 1)
-                .startedAt(LocalDateTime.now())
-                .state(GameState.STARTED)
-                .build();
+        var game = new TgGame()
+                .setRedTeam(redTeam)
+                .setBlueTeam(blueTeam)
+                .setIndex(event.getTgGames().size() + 1)
+                .setStartedAt(LocalDateTime.now())
+                .setState(GameState.STARTED)
+                //TODO
+                .applyBet(1, 1);
 
         return save(game, event.getId());
     }

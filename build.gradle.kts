@@ -1,7 +1,7 @@
 plugins {
-    id("java")
-    id("application")
-    id("idea")
+    java
+    application
+    idea
     id("org.springframework.boot") version "2.7.0"
 }
 
@@ -18,30 +18,18 @@ repositories {
     mavenCentral()
 }
 
-var shufflerLibVersion = "1.0.4"
-var springBootVersion = "2.7.0"
-var lombokBootVersion = "1.18.24"
-var telegramBotVersion = "6.0.1"
-var junitVersion = "5.8.2"
-var mockitoVersion = "4.5.1"
-
 dependencies {
-    implementation("ru.acuma:shuffler-lib:$shufflerLibVersion")
+    implementation(libs.shuffler.lib)
+    implementation(libs.spring.starter)
+    implementation(libs.spring.web)
+    implementation(libs.bundles.telegram)
 
-    implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
 
-    implementation("org.telegram:telegrambots:$telegramBotVersion")
-    implementation("org.telegram:telegrambotsextensions:$telegramBotVersion")
-
-    compileOnly("org.projectlombok:lombok:$lombokBootVersion")
-    annotationProcessor("org.projectlombok:lombok:$lombokBootVersion")
-
-    testCompileOnly("org.projectlombok:lombok:$lombokBootVersion")
-    testAnnotationProcessor("org.projectlombok:lombok:$lombokBootVersion")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    testImplementation("org.mockito:mockito-core:$mockitoVersion")
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
+    testImplementation(libs.bundles.test)
 }
 
 tasks.withType<Test> {

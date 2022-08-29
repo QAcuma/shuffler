@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import static ru.acuma.shuffler.model.enums.EventState.WAITING;
 import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
+import static ru.acuma.shuffler.model.enums.messages.EventConstant.GAME_BET;
 import static ru.acuma.shuffler.model.enums.messages.EventConstant.LET_JOIN_TEXT;
 import static ru.acuma.shuffler.model.enums.messages.EventConstant.MEMBERS_TEXT;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
@@ -67,8 +68,9 @@ public final class BuildMessageUtil {
         var game = event.getCurrentGame();
         String spaces = getSpaces(game);
         builder
-                .append(spaces)
-                .append(game.getRedTeam().getScore())
+                .append(System.lineSeparator())
+                .append(GAME_BET.getText())
+                .append(game.getRedTeam().getBet())
                 .append(System.lineSeparator())
                 .append(String.format(game.getRedTeam().toString(), RED_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
@@ -77,9 +79,9 @@ public final class BuildMessageUtil {
                 .append(System.lineSeparator())
                 .append(String.format(game.getBlueTeam().toString(), BLUE_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
-                .append(spaces)
-                .append(game.getBlueTeam().getScore())
-                .append(System.lineSeparator());
+                .append(System.lineSeparator())
+                .append(GAME_BET.getText())
+                .append(game.getBlueTeam().getBet());
     }
 
     private static String getSpaces(TgGame tgGame) {

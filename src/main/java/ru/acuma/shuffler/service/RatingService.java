@@ -17,5 +17,5 @@ public interface RatingService {
 
     void updateRating(TgEventPlayer player, Discipline discipline);
 
-    void updatePlayersRating(TgEvent event);
+    void saveChanges(TgEvent event);
 }

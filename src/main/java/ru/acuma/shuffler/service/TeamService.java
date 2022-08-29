@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TeamService {
 
-    TgTeam teamBuilding(List<TgEventPlayer> player);
+    TgTeam buildTeam(List<TgEventPlayer> player);
 
     TgTeam save(TgTeam team, Long gameId);
 
