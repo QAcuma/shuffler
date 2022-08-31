@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import static ru.acuma.shuffler.model.enums.EventState.WAITING;
 import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
-import static ru.acuma.shuffler.model.enums.messages.EventConstant.GAME_BET;
 import static ru.acuma.shuffler.model.enums.messages.EventConstant.LET_JOIN_TEXT;
 import static ru.acuma.shuffler.model.enums.messages.EventConstant.MEMBERS_TEXT;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
@@ -52,8 +51,8 @@ public final class BuildMessageUtil {
         builder
                 .append(EventConstant.GAME_MESSAGE.getText())
                 .append(game.getIndex())
-                .append(System.lineSeparator())
-                .append(EventConstant.SPACE_MESSAGE.getText());
+                .append(EventConstant.SPACE_MESSAGE.getText())
+                .append(System.lineSeparator());
 
         switch (game.getState()) {
             case STARTED:
@@ -68,9 +67,8 @@ public final class BuildMessageUtil {
         var game = event.getCurrentGame();
         String spaces = getSpaces(game);
         builder
-                .append(System.lineSeparator())
-                .append(GAME_BET.getText())
-                .append(game.getRedTeam().getBet())
+                .append(spaces)
+                .append(game.getRedTeam().getBetText())
                 .append(System.lineSeparator())
                 .append(String.format(game.getRedTeam().toString(), RED_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
@@ -79,14 +77,13 @@ public final class BuildMessageUtil {
                 .append(System.lineSeparator())
                 .append(String.format(game.getBlueTeam().toString(), BLUE_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
-                .append(System.lineSeparator())
-                .append(GAME_BET.getText())
-                .append(game.getBlueTeam().getBet());
+                .append(spaces)
+                .append(game.getBlueTeam().getBetText());
     }
 
     private static String getSpaces(TgGame tgGame) {
         String spaces = tgGame.getRedTeam().getPlayer1().getName();
-        return StringUtils.repeat(" ", spaces.length() * 3 / 2);
+        return StringUtils.repeat(" ", spaces.length() * 2);
     }
 
     private static String buildLobbyText(TgEvent event) {

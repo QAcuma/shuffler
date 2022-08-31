@@ -23,15 +23,9 @@ public class TgEventPlayer extends TgPlayer {
     private boolean left;
 
     @Override
-    public void plusRating(int value) {
-        super.plusRating(value);
-        sessionScore = isCalibrated() ? sessionScore + value : 0;
-    }
-
-    @Override
-    public void minusRating(int value) {
-        super.minusRating(value);
-        sessionScore = isCalibrated() ? sessionScore - value : 0;
+    public void applyRating(int change) {
+        super.applyRating(change);
+        sessionScore = isCalibrated() ? sessionScore + change : 0;
     }
 
     public int getSessionScore() {
@@ -87,5 +81,4 @@ public class TgEventPlayer extends TgPlayer {
         }
         return " (" + this.getSessionScore() + ")";
     }
-
 }

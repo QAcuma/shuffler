@@ -2,6 +2,7 @@ package ru.acuma.shuffler.service;
 
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.model.entity.TgTeam;
 import ru.acuma.shuffler.tables.pojos.Rating;
 import ru.acuma.shufflerlib.model.Discipline;
 
@@ -18,4 +19,6 @@ public interface RatingService {
     void updateRating(TgEventPlayer player, Discipline discipline);
 
     void saveChanges(TgEvent event);
+
+    void applyBet(TgTeam redTeam, TgTeam blueTeam);
 }

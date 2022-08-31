@@ -14,6 +14,8 @@ import ru.acuma.shuffler.service.GameService;
 import ru.acuma.shuffler.service.MessageService;
 import ru.acuma.shuffler.service.PlayerService;
 
+import static ru.acuma.shuffler.model.enums.GameState.STARTED;
+
 @Component
 public class JoinCommand extends BaseBotCommand {
 
@@ -52,7 +54,10 @@ public class JoinCommand extends BaseBotCommand {
                 playerService.joinLobby(event, message.getFrom());
                 if (event.getActivePlayers().size() >= Values.GAME_PLAYERS_COUNT) {
                     eventStateService.playingState(event);
-                    event.newGame(gameService.buildGame(event));
+                    if (event.getCurrentGame().getState() != STARTED) {
+                        event.newGame(gameService.buildGame(event));
+                        return;
+                    }
                     var gameMessage = executeService.execute(absSender, messageService.sendMessage(event, MessageType.GAME));
                     event.getCurrentGame().setMessageId(gameMessage.getMessageId());
                 }

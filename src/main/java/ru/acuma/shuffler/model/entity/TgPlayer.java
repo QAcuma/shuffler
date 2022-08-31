@@ -43,12 +43,8 @@ public class TgPlayer extends UserInfo {
                 this.getScoreString();
     }
 
-    public void plusRating(int value) {
-        score += (value * getCalibrationMultiplier());
-    }
-
-    public void minusRating(int value) {
-        score -= (value * getCalibrationMultiplier());
+    public void applyRating(int changes) {
+        score += (changes * getCalibrationMultiplier());
     }
 
     private int getCalibrationMultiplier() {

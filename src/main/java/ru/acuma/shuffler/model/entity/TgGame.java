@@ -63,23 +63,13 @@ public class TgGame {
        return getWinnerTeam().containsCalibrating() || getLoserTeam().containsCalibrating();
     }
 
-    public TgGame applyBet(int redBet, int blueBet){
-        redTeam.setBet(redBet);
-        blueTeam.setBet(blueBet);
-
-        redTeam.setBet(blueTeam.getScore());
-        blueTeam.setBet(redTeam.getScore());
-
-        return this;
-    }
-
     public String getGameResult() {
         if (getWinnerTeam() != null) {
             return index +
                     ". " +
                     String.format(getWinnerTeam().toString(), "&") +
                     " (+" +
-                    getWinnerTeam().getRatingChange() +
+                    getWinnerTeam().getBet().getCaseWin() +
                     ") ";
         }
         return "";

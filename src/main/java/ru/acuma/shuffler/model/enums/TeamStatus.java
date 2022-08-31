@@ -7,10 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TeamStatus {
 
-    STRONG(1),
-    WEAK(-1);
+    STRONG(-1),
+    WEAK(1);
 
     private final int factor;
-
 
 }

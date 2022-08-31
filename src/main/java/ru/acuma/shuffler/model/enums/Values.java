@@ -11,5 +11,5 @@ public final class Values {
      * Повышение -> снижение штрафа за разницу в рейтинге
      * ПОнижение -> увеличение штрафа за разницу в рейтинге
      */
-    public static final int RATING_REFERENCE = 500;
+    public static final int RATING_REFERENCE = 750;
 }

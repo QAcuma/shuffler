@@ -5,9 +5,11 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.acuma.shuffler.model.entity.GameBet;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TgGame;
+import ru.acuma.shuffler.model.entity.TgTeam;
 import ru.acuma.shuffler.model.enums.TeamStatus;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.service.CalibrationService;
@@ -49,14 +51,10 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private int calcChanges(TgGame game) {
-        var winnerBet = game.getWinnerTeam().getBet();
-        var loserBet = game.getLoserTeam().getBet();
-        var diff = game.getWinnerTeam().getScore() - game.getLoserTeam().getScore();
-        var factor = diff > 0 ? TeamStatus.STRONG : TeamStatus.WEAK;
-        var change = Values.BASE_RATING_CHANGE * (factor.getFactor() + ((double) diff / Values.RATING_REFERENCE));
+        var change = game.getWinnerTeam().getBet().getCaseWin();
         var modChange = game.isCalibrating() ? change * calibrationPenaltyMultiplier : change;
 
-        return limitAndRoundChange(modChange);
+        return (int) modChange;
     }
 
     @Override
@@ -95,6 +93,36 @@ public class RatingServiceImpl implements RatingService {
                 ));
     }
 
+    @Override
+    public void applyBet(TgTeam redTeam, TgTeam blueTeam) {
+        var redBet = new GameBet(winCase(redTeam, blueTeam));
+        var blueCaseWin = Math.abs(redBet.getCaseLose());
+        var blueBet = new GameBet(blueCaseWin);
+
+        redTeam.setBet(redBet);
+        blueTeam.setBet(blueBet);
+    }
+
+    private int winCase(TgTeam team1, TgTeam team2) {
+        var diff = team1.getScore() - team2.getScore();
+        var change = diff > 0
+                ? Values.BASE_RATING_CHANGE * (1 + ((double) diff / Values.RATING_REFERENCE))
+                : Values.BASE_RATING_CHANGE * (1 - ((double) diff / Values.RATING_REFERENCE));
+
+        return limitAndRoundChange(change);
+    }
+
+    @Override
+    public void updateRating(TgEventPlayer player, Discipline discipline) {
+        Rating rating = getRating(player.getId(), discipline);
+
+        rating.setScore(player.getScore());
+        rating.setIsCalibrated(calibrationService.isCalibrated(player.getId()));
+        player.setCalibrated(rating.getIsCalibrated());
+
+        ratingRepository.update(rating);
+    }
+
     private void logHistory(TgEventPlayer player, Long gameId, Integer ratingChange) {
         RatingHistory ratingHistory = new RatingHistory()
                 .setGameId(gameId)
@@ -110,19 +138,8 @@ public class RatingServiceImpl implements RatingService {
         var winnerTeam = game.getWinnerTeam();
 
         return winnerTeam.getPlayers().contains(player)
-                ? winnerTeam.getRatingChange()
-                : - winnerTeam.getRatingChange();
-    }
-
-    @Override
-    public void updateRating(TgEventPlayer player, Discipline discipline) {
-        Rating rating = getRating(player.getId(), discipline);
-
-        rating.setScore(player.getScore());
-        rating.setIsCalibrated(calibrationService.isCalibrated(player.getId()));
-        player.setCalibrated(rating.getIsCalibrated());
-
-        ratingRepository.update(rating);
+                ? winnerTeam.getBet().getCaseWin()
+                : winnerTeam.getBet().getCaseLose();
     }
 
     private Rating newDefaultRating(Long playerId, Discipline discipline) {
@@ -136,19 +153,17 @@ public class RatingServiceImpl implements RatingService {
         return rating.setId(ratingRepository.save(rating));
     }
 
-    private void applyChanges(TgGame game, int changes) {
-        game.getWinnerTeam().setRatingChange(changes);
-        game.getLoserTeam().setRatingChange(-changes);
-        game.getWinnerTeam().getPlayers().forEach(player -> player.plusRating(changes));
-        game.getLoserTeam().getPlayers().forEach(player -> player.minusRating(changes));
+    private void applyChanges(TgGame game, int change) {
+        game.getWinnerTeam().applyRating(change);
+        game.getLoserTeam().applyRating(-change);
     }
 
     private int limitAndRoundChange(double change) {
         int value = Math.toIntExact(Math.round(change));
-        if (value >= Values.BASE_RATING_CHANGE * 2) {
+        if (Math.abs(value) >= Values.BASE_RATING_CHANGE * 2) {
             return (Values.BASE_RATING_CHANGE * 2) - 1;
         }
-        return Math.max(value, 1);
+        return Math.max(Math.abs(value), 1);
     }
 
 }

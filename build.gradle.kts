@@ -2,7 +2,7 @@ plugins {
     java
     application
     idea
-    id("org.springframework.boot") version "2.7.0"
+    id("org.springframework.boot") version "2.7.3"
 }
 
 group = "ru.acuma"
@@ -23,6 +23,9 @@ dependencies {
     implementation(libs.spring.starter)
     implementation(libs.spring.web)
     implementation(libs.bundles.telegram)
+    implementation(libs.bundles.data)
+    implementation(libs.jooq)
+    implementation(libs.bundles.util)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
