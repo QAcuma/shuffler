@@ -5,16 +5,15 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.acuma.shuffler.model.entity.GameBet;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TgGame;
+import ru.acuma.shuffler.model.entity.TgGameBet;
 import ru.acuma.shuffler.model.entity.TgTeam;
-import ru.acuma.shuffler.model.enums.TeamStatus;
 import ru.acuma.shuffler.model.enums.Values;
-import ru.acuma.shuffler.service.CalibrationService;
-import ru.acuma.shuffler.service.RatingService;
-import ru.acuma.shuffler.service.SeasonService;
+import ru.acuma.shuffler.service.api.CalibrationService;
+import ru.acuma.shuffler.service.api.RatingService;
+import ru.acuma.shuffler.service.api.SeasonService;
 import ru.acuma.shuffler.tables.pojos.Rating;
 import ru.acuma.shuffler.tables.pojos.RatingHistory;
 import ru.acuma.shufflerlib.model.Discipline;
@@ -69,10 +68,11 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public Rating getRating(Long playerId, Discipline discipline) {
-        Filter filter = new Filter()
-                .setPlayerId(playerId)
-                .setDiscipline(discipline)
-                .setSeasonId(seasonService.getCurrentSeason().getId());
+        Filter filter = Filter.builder()
+                .playerId(playerId)
+                .discipline(discipline)
+                .seasonId(seasonService.getCurrentSeason().getId())
+                .build();
         Rating rating = ratingRepository.getRatingByPlayerIdAndDisciplineAndSeasonId(filter);
 
         return rating == null
@@ -95,9 +95,9 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void applyBet(TgTeam redTeam, TgTeam blueTeam) {
-        var redBet = new GameBet(winCase(redTeam, blueTeam));
+        var redBet = new TgGameBet(winCase(redTeam, blueTeam));
         var blueCaseWin = Math.abs(redBet.getCaseLose());
-        var blueBet = new GameBet(blueCaseWin);
+        var blueBet = new TgGameBet(blueCaseWin);
 
         redTeam.setBet(redBet);
         blueTeam.setBet(blueBet);

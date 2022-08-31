@@ -20,11 +20,12 @@ spring:
 application:
   media:
     location: ${SHUFFLER_MEDIA_LOCATION:/media/avatar/}
+    link: ${SHUFFLER_AVATAR_PATH:https://shuffler.fun/avatar/}
 
 rating:
   team-build-strategy: ${SHUFFLER_TEAM_BUILD_STRATEGY:random}
   calibration:
-    games: ${SHUFFLER_CALIBRATION_GAMES:8}
+    games: ${SHUFFLER_CALIBRATION_GAMES:10}
     enemies: ${SHUFFLER_CALIBRATION_ENEMIES:3}
     multiplier: ${SHUFFLER_CALIBRATION_MULTIPLIER:6}
     game-penalty: ${SHUFFLER_CALIBRATION_PENALTY_MULTIPLIER:0.5}

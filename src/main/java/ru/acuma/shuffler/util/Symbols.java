@@ -17,6 +17,7 @@ public final class Symbols {
     public static final String VS_EMOJI = "\uD83C\uDD85\uD83C\uDD82";
     public static final String MEDAL_EMOJI = "\uD83C\uDF96";
     public static final String AUTUMN_EMOJI = "\uD83C\uDF41";
+    public static final String MOUSE_EMOJI = "\uD83D\uDC2D";
 
     private Symbols() {
     }

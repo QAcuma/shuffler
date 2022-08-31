@@ -18,6 +18,10 @@ import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
 
+/**
+ * Реализовать в качестве сервиса
+ */
+@Deprecated
 public final class BuildMessageUtil {
 
     private BuildMessageUtil() {

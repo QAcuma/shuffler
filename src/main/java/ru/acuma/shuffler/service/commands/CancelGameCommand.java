@@ -8,9 +8,9 @@ import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.EventStateService;
-import ru.acuma.shuffler.service.ExecuteService;
-import ru.acuma.shuffler.service.MessageService;
+import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.MessageService;
 
 @Component
 public class CancelGameCommand extends BaseBotCommand {

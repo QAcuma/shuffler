@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service;
+package ru.acuma.shuffler.service.api;
 
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;

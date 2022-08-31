@@ -8,10 +8,10 @@ import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.EventStateService;
-import ru.acuma.shuffler.service.ExecuteService;
-import ru.acuma.shuffler.service.MaintenanceService;
-import ru.acuma.shuffler.service.MessageService;
+import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.MaintenanceService;
+import ru.acuma.shuffler.service.api.MessageService;
 
 @Component
 public class NoCommand extends BaseBotCommand {
@@ -34,8 +34,13 @@ public class NoCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.getCurrentEvent(message.getChatId());
         maintenanceService.sweepMessage(absSender, message);
+        var event = eventContextService.getCurrentEvent(message.getChatId());
+
+        if (event == null) {
+            return;
+        }
+
         switch (event.getEventState()) {
             case CANCEL_LOBBY_CHECKING:
             case BEGIN_CHECKING:

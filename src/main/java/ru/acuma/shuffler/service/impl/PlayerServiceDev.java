@@ -1,18 +1,14 @@
 package ru.acuma.shuffler.service.impl;
 
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.mapper.PlayerMapper;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
-import ru.acuma.shuffler.service.PlayerService;
-import ru.acuma.shuffler.service.RatingService;
-import ru.acuma.shuffler.service.SeasonService;
+import ru.acuma.shuffler.service.api.PlayerService;
+import ru.acuma.shuffler.service.api.RatingService;
 import ru.acuma.shuffler.tables.pojos.Player;
 import ru.acuma.shufflerlib.repository.PlayerRepository;
 

@@ -15,7 +15,7 @@ import ru.acuma.shuffler.model.enums.keyboards.checking.Checking1;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking2;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking3;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.KeyboardService;
+import ru.acuma.shuffler.service.api.KeyboardService;
 import ru.acuma.shuffler.service.buttons.EventStatusButton;
 
 import java.util.ArrayList;

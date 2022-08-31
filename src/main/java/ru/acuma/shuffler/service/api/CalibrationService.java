@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service;
+package ru.acuma.shuffler.service.api;
 
 public interface CalibrationService {
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.enums.Values;
-import ru.acuma.shuffler.service.ShuffleService;
+import ru.acuma.shuffler.service.api.ShuffleService;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package ru.acuma.shuffler.service.impl;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.acuma.shuffler.service.MessageWayService;
+import ru.acuma.shuffler.service.api.MessageWayService;
 
 @Service
 public class MessageWayServiceImpl implements MessageWayService {

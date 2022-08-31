@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
-import ru.acuma.shuffler.service.EventContextService;
-import ru.acuma.shuffler.service.SeasonService;
+import ru.acuma.shuffler.service.api.EventContextService;
+import ru.acuma.shuffler.service.api.SeasonService;
 import ru.acuma.shufflerlib.model.Discipline;
 import ru.acuma.shufflerlib.repository.EventRepository;
 

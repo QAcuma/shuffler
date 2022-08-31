@@ -3,7 +3,6 @@ package ru.acuma.shuffler.model.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.acuma.shuffler.model.enums.Values;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -25,7 +24,7 @@ public class TgTeam {
 
     private boolean isWinner;
 
-    private GameBet bet;
+    private TgGameBet bet;
 
     public TgTeam(TgEventPlayer player1, TgEventPlayer player2) {
         this.player1 = player1;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.mapper.UserMapper;
-import ru.acuma.shuffler.service.UserService;
+import ru.acuma.shuffler.service.api.UserService;
 import ru.acuma.shuffler.tables.pojos.UserInfo;
 import ru.acuma.shufflerlib.repository.UserRepository;
 

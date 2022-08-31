@@ -9,12 +9,12 @@ import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.WinnerState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.ChampionshipService;
-import ru.acuma.shuffler.service.EventStateService;
-import ru.acuma.shuffler.service.ExecuteService;
-import ru.acuma.shuffler.service.GameService;
-import ru.acuma.shuffler.service.MaintenanceService;
-import ru.acuma.shuffler.service.MessageService;
+import ru.acuma.shuffler.service.api.ChampionshipService;
+import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.GameService;
+import ru.acuma.shuffler.service.api.MaintenanceService;
+import ru.acuma.shuffler.service.api.MessageService;
 
 @Component
 public class YesCommand extends BaseBotCommand {
@@ -42,6 +42,11 @@ public class YesCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
+
+        if (event == null) {
+            return;
+        }
+
         switch (event.getEventState()) {
             case CANCEL_LOBBY_CHECKING:
                 championshipService.cancelChampionship(absSender, event);

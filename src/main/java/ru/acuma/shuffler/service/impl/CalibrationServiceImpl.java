@@ -3,8 +3,8 @@ package ru.acuma.shuffler.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.service.CalibrationService;
-import ru.acuma.shuffler.service.SeasonService;
+import ru.acuma.shuffler.service.api.CalibrationService;
+import ru.acuma.shuffler.service.api.SeasonService;
 import ru.acuma.shuffler.tables.pojos.RatingHistory;
 import ru.acuma.shufflerlib.repository.RatingHistoryRepository;
 

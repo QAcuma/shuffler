@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import ru.acuma.shuffler.mapper.GroupMapper;
-import ru.acuma.shuffler.service.GroupService;
+import ru.acuma.shuffler.service.api.GroupService;
 import ru.acuma.shufflerlib.repository.GroupRepository;
 
 @Service

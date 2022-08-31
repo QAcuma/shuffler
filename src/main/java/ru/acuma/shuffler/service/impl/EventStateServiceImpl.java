@@ -6,7 +6,7 @@ import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.Values;
-import ru.acuma.shuffler.service.EventStateService;
+import ru.acuma.shuffler.service.api.EventStateService;
 
 import java.time.LocalDateTime;
 
