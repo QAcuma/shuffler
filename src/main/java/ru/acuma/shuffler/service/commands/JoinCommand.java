@@ -8,11 +8,13 @@ import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.EventStateService;
-import ru.acuma.shuffler.service.ExecuteService;
-import ru.acuma.shuffler.service.GameService;
-import ru.acuma.shuffler.service.MessageService;
-import ru.acuma.shuffler.service.PlayerService;
+import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.GameService;
+import ru.acuma.shuffler.service.api.MessageService;
+import ru.acuma.shuffler.service.api.PlayerService;
+
+import static ru.acuma.shuffler.model.enums.GameState.STARTED;
 
 @Component
 public class JoinCommand extends BaseBotCommand {
@@ -52,7 +54,10 @@ public class JoinCommand extends BaseBotCommand {
                 playerService.joinLobby(event, message.getFrom());
                 if (event.getActivePlayers().size() >= Values.GAME_PLAYERS_COUNT) {
                     eventStateService.playingState(event);
-                    event.newGame(gameService.buildGame(event));
+                    if (event.getCurrentGame().getState() != STARTED) {
+                        event.newGame(gameService.buildGame(event));
+                        return;
+                    }
                     var gameMessage = executeService.execute(absSender, messageService.sendMessage(event, MessageType.GAME));
                     event.getCurrentGame().setMessageId(gameMessage.getMessageId());
                 }

@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Values;
-import ru.acuma.shuffler.service.ChampionshipService;
-import ru.acuma.shuffler.service.EventContextService;
-import ru.acuma.shuffler.service.EventStateService;
-import ru.acuma.shuffler.service.ExecuteService;
-import ru.acuma.shuffler.service.MaintenanceService;
-import ru.acuma.shuffler.service.MessageService;
+import ru.acuma.shuffler.service.api.ChampionshipService;
+import ru.acuma.shuffler.service.api.EventContextService;
+import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.MaintenanceService;
+import ru.acuma.shuffler.service.api.MessageService;
 
 @Service
 @RequiredArgsConstructor

@@ -7,9 +7,8 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.mapper.PlayerMapper;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
-import ru.acuma.shuffler.service.PlayerService;
-import ru.acuma.shuffler.service.RatingService;
-import ru.acuma.shuffler.service.SeasonService;
+import ru.acuma.shuffler.service.api.PlayerService;
+import ru.acuma.shuffler.service.api.RatingService;
 import ru.acuma.shuffler.tables.pojos.Player;
 import ru.acuma.shufflerlib.repository.PlayerRepository;
 
@@ -24,7 +23,6 @@ public class PlayerServiceDev implements PlayerService {
 
     private final FakeUsersFactory fakeUsersFactory;
     private final PlayerMapper playerMapper;
-    private final SeasonService seasonService;
     private final PlayerRepository playerRepository;
     private final RatingService ratingService;
 
@@ -73,7 +71,6 @@ public class PlayerServiceDev implements PlayerService {
     private Player registerPlayer(Long chatId, Long userId) {
         Player player = new Player()
                 .setChatId(chatId)
-                .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setUserId(userId);
         player.setId(playerRepository.save(player));
         ratingService.defaultRating(player.getId());

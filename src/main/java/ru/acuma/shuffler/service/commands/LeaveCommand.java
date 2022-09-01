@@ -7,10 +7,10 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.Values;
-import ru.acuma.shuffler.service.EventStateService;
-import ru.acuma.shuffler.service.ExecuteService;
-import ru.acuma.shuffler.service.MessageService;
-import ru.acuma.shuffler.service.PlayerService;
+import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.MessageService;
+import ru.acuma.shuffler.service.api.PlayerService;
 
 @Component
 public class LeaveCommand extends BaseBotCommand {

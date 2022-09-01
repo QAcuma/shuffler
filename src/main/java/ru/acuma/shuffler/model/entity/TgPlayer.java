@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,21 +17,38 @@ public class TgPlayer extends UserInfo {
 
     private Long chatId;
 
+    @Getter(AccessLevel.NONE)
     private int score;
+
+    private boolean isCalibrated;
+
+    private int calibrationMultiplier;
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getScoreSorting() {
+        return isCalibrated ? score : -1;
+    }
+
+    public String getScoreString() {
+        return isCalibrated ? String.valueOf(score) : "calibrating";
+    }
 
     public String getName() {
         return super.getFirstName() +
                 " " +
                 Optional.ofNullable(super.getLastName()).orElse("Doe") +
-                score;
+                this.getScoreString();
     }
 
-    public void plusRating(long value) {
-        score += value;
+    public void applyRating(int changes) {
+        score += (changes * getCalibrationMultiplier());
     }
 
-    public void minusRating(long value) {
-        score -= value;
+    private int getCalibrationMultiplier() {
+        return isCalibrated ? 1 : calibrationMultiplier;
     }
 
 }

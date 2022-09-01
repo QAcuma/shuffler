@@ -8,7 +8,7 @@ import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.mapper.TeamPlayerMapper;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TgTeam;
-import ru.acuma.shuffler.service.TeamService;
+import ru.acuma.shuffler.service.api.TeamService;
 import ru.acuma.shuffler.util.TeamServiceUtil;
 import ru.acuma.shufflerlib.repository.TeamPlayerRepository;
 import ru.acuma.shufflerlib.repository.TeamRepository;
@@ -34,7 +34,7 @@ public class TeamServiceRandomImpl implements TeamService {
     private final TeamPlayerRepository teamPlayerRepository;
 
     @Override
-    public TgTeam teamBuilding(List<TgEventPlayer> players) {
+    public TgTeam buildTeam(List<TgEventPlayer> players) {
         if (players.size() < GAME_PLAYERS_COUNT / 2) {
             throw new IllegalArgumentException("Not enough players");
         }
@@ -67,10 +67,10 @@ public class TeamServiceRandomImpl implements TeamService {
 
     @SneakyThrows
     private TgTeam build(List<TgEventPlayer> players, int retries) {
-        if (retries == 0) {
-            throw new IllegalArgumentException("Can't shuffle unique team");
-        }
         var team = new TgTeam(players.get(0), players.get(1));
+        if (retries == 0) {
+            return team;
+        }
 
         if (TeamServiceUtil.checkTeamMatches(team)) {
             Collections.shuffle(players, SecureRandom.getInstance("SHA1PRNG", "SUN"));

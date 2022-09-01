@@ -2,10 +2,10 @@ package ru.acuma.shuffler.service.scheduled;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.service.SeasonService;
+import ru.acuma.shuffler.service.api.BroadcastService;
+import ru.acuma.shuffler.service.api.SeasonService;
 import ru.acuma.shufflerlib.repository.SeasonRepository;
 
 import java.time.OffsetDateTime;
@@ -13,14 +13,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-@EnableScheduling
 @RequiredArgsConstructor
 public class SeasonServiceScheduler {
 
     private final SeasonRepository seasonRepository;
     private final SeasonService seasonService;
+    private final BroadcastService broadcastService;
 
-    private final static String hourly = "15 */1 * * * *";
+    private final static String hourly = "0 0 * ? * *";
 
     @Scheduled(cron = hourly)
     public void watchSeason() {
@@ -32,7 +32,13 @@ public class SeasonServiceScheduler {
                 return;
             }
         }
+        startNewSeason(liveYearSeason);
+    }
+
+    private void startNewSeason(YearSeason liveYearSeason) {
+        broadcastService.seasonResultBroadcast(seasonService.getCurrentSeason().getId());
         seasonRepository.startNewSeason(liveYearSeason.name() + OffsetDateTime.now().getYear());
+        seasonService.evictSeason();
     }
 
     @Scheduled(cron = hourly)

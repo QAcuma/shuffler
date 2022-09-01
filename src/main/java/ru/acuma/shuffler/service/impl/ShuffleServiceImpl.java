@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.enums.Values;
-import ru.acuma.shuffler.service.ShuffleService;
+import ru.acuma.shuffler.service.api.ShuffleService;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class ShuffleServiceImpl implements ShuffleService {
             } else {
                 players.addAll(shuffled);
             }
-            if (players.size() == 4) {
+            if (players.size() == Values.GAME_PLAYERS_COUNT) {
                 break;
             }
         }
@@ -65,6 +65,7 @@ public class ShuffleServiceImpl implements ShuffleService {
         if (members.size() < Values.GAME_PLAYERS_COUNT) {
             return members;
         }
+
         return members.subList(0, Values.GAME_PLAYERS_COUNT);
     }
 
@@ -73,6 +74,7 @@ public class ShuffleServiceImpl implements ShuffleService {
         List<TgEventPlayer> priority = members.stream()
                 .filter(member -> member.getGameCount() == index)
                 .collect(Collectors.toList());
+
         return shuffleEvenly(priority);
     }
 }

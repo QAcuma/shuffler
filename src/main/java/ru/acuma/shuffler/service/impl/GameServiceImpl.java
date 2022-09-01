@@ -4,23 +4,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.GameMapper;
-import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TgGame;
-import ru.acuma.shuffler.model.entity.TgTeam;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.WinnerState;
-import ru.acuma.shuffler.service.GameService;
-import ru.acuma.shuffler.service.RatingService;
-import ru.acuma.shuffler.service.ShuffleService;
-import ru.acuma.shuffler.service.TeamService;
+import ru.acuma.shuffler.service.api.GameService;
+import ru.acuma.shuffler.service.api.RatingService;
+import ru.acuma.shuffler.service.api.ShuffleService;
+import ru.acuma.shuffler.service.api.TeamService;
 import ru.acuma.shufflerlib.repository.GameRepository;
-import ru.acuma.shufflerlib.repository.TeamRepository;
 
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,38 +29,30 @@ public class GameServiceImpl implements GameService {
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
     private final GameMapper gameMapper;
-    private final TeamMapper teamMapper;
     private final GameRepository gameRepository;
-    private final TeamRepository teamRepository;
 
     @SneakyThrows
     public TgGame buildGame(TgEvent event) {
-        List<TgEventPlayer> players;
-        TgTeam redTeam;
-        TgTeam blueTeam;
-        try {
-            players = shuffleService.shuffle(event);
-            if (players == null) {
-                throw new InstanceNotFoundException("Not enough players to start");
-            }
-            redTeam = teamService.teamBuilding(players);
-            if (redTeam == null) {
-                throw new IllegalArgumentException("Red team is null");
-            }
-            List<TgEventPlayer> secondTeamPlayers = players.stream()
-                    .filter(player -> !redTeam.getPlayers().contains(player))
-                    .collect(Collectors.toList());
-            blueTeam = teamService.teamBuilding(secondTeamPlayers);
-        } catch (IllegalArgumentException e) {
-            return buildGame(event);
-        }
-        var game = TgGame.builder()
-                .redTeam(redTeam)
-                .blueTeam(blueTeam)
-                .index(event.getTgGames().size() + 1)
-                .startedAt(LocalDateTime.now())
-                .state(GameState.STARTED)
-                .build();
+        var players = Optional
+                .ofNullable(shuffleService.shuffle(event))
+                .orElseThrow(() -> new InstanceNotFoundException("Not enough players to start"));
+        var redTeam = Optional
+                .ofNullable(teamService.buildTeam(players))
+                .orElseThrow(() -> new IllegalArgumentException("Red team is null"));
+
+        var secondTeamPlayers = players.stream()
+                .filter(Predicate.not(redTeam.getPlayers()::contains))
+                .collect(Collectors.toList());
+        var blueTeam = teamService.buildTeam(secondTeamPlayers);
+
+        ratingService.applyBet(redTeam, blueTeam);
+
+        var game = new TgGame()
+                .setRedTeam(redTeam)
+                .setBlueTeam(blueTeam)
+                .setIndex(event.getTgGames().size() + 1)
+                .setStartedAt(LocalDateTime.now())
+                .setState(GameState.STARTED);
 
         return save(game, event.getId());
     }

@@ -6,7 +6,7 @@ import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.Values;
-import ru.acuma.shuffler.service.EventStateService;
+import ru.acuma.shuffler.service.api.EventStateService;
 
 import java.time.LocalDateTime;
 
@@ -63,7 +63,7 @@ public class EventStateServiceImpl implements EventStateService {
     }
 
     @Override
-    public void nextCheckingState(TgEvent event) {
+    public void cancelGameCheckingState(TgEvent event) {
         event.getCurrentGame().setState(GameState.CHECKING);
         event.setEventState(EventState.CANCEL_GAME_CHECKING);
     }

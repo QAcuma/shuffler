@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,6 +15,7 @@ public class TgEventPlayer extends TgPlayer {
 
     private long spreadScore;
 
+    @Getter(AccessLevel.NONE)
     private int sessionScore;
 
     private TgEventPlayer lastGamePlayer;
@@ -21,20 +23,13 @@ public class TgEventPlayer extends TgPlayer {
     private boolean left;
 
     @Override
-    public void plusRating(long value) {
-        super.plusRating(value);
-        sessionScore += value;
+    public void applyRating(int change) {
+        super.applyRating(change);
+        sessionScore = isCalibrated() ? sessionScore + change : 0;
     }
 
-    @Override
-    public void minusRating(long value) {
-        if (this.getScore() > value) {
-            super.minusRating(value);
-            sessionScore -= value;
-        } else {
-            sessionScore -= value - this.getScore();
-            this.setScore(1);
-        }
+    public int getSessionScore() {
+        return isCalibrated() ? sessionScore : 0;
     }
 
     public void increaseGameCount() {
@@ -53,6 +48,7 @@ public class TgEventPlayer extends TgPlayer {
             lastName = getLastName().charAt(0) + ".";
         }
         StringUtils.capitalize(lastName);
+
         return lastName;
     }
 
@@ -61,8 +57,8 @@ public class TgEventPlayer extends TgPlayer {
                 getName() +
                 strikethroughEnd() +
                 " " +
-                super.getScore() +
-                getSessionRatingToString();
+                getScoreString() +
+                (isCalibrated() ? getSessionRatingToString() : "");
     }
 
     private String strikethroughBegin() {
@@ -85,5 +81,4 @@ public class TgEventPlayer extends TgPlayer {
         }
         return " (" + this.getSessionScore() + ")";
     }
-
 }

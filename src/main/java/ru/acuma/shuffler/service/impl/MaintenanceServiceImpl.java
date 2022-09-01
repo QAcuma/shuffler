@@ -8,10 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.service.EventContextService;
-import ru.acuma.shuffler.service.ExecuteService;
-import ru.acuma.shuffler.service.MaintenanceService;
-import ru.acuma.shuffler.service.MessageService;
+import ru.acuma.shuffler.service.api.EventContextService;
+import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.MaintenanceService;
+import ru.acuma.shuffler.service.api.MessageService;
 
 import java.util.HashSet;
 import java.util.Set;

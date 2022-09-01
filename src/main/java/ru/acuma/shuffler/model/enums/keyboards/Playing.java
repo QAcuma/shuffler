@@ -5,8 +5,6 @@ import lombok.Getter;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.service.buttons.EventStatusButton;
 
-import static ru.acuma.shuffler.util.Symbols.PRIDE_EMOJI;
-
 @Getter
 @AllArgsConstructor
 public enum Playing implements EventStatusButton {

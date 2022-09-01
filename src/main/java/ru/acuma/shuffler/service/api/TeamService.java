@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service;
+package ru.acuma.shuffler.service.api;
 
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TgTeam;
@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TeamService {
 
-    TgTeam teamBuilding(List<TgEventPlayer> player);
+    TgTeam buildTeam(List<TgEventPlayer> player);
 
     TgTeam save(TgTeam team, Long gameId);
 

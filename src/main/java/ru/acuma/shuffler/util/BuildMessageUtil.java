@@ -18,6 +18,10 @@ import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
 
+/**
+ * Реализовать в качестве сервиса
+ */
+@Deprecated
 public final class BuildMessageUtil {
 
     private BuildMessageUtil() {
@@ -51,8 +55,8 @@ public final class BuildMessageUtil {
         builder
                 .append(EventConstant.GAME_MESSAGE.getText())
                 .append(game.getIndex())
-                .append(System.lineSeparator())
-                .append(EventConstant.SPACE_MESSAGE.getText());
+                .append(EventConstant.SPACE_MESSAGE.getText())
+                .append(System.lineSeparator());
 
         switch (game.getState()) {
             case STARTED:
@@ -68,7 +72,7 @@ public final class BuildMessageUtil {
         String spaces = getSpaces(game);
         builder
                 .append(spaces)
-                .append(game.getRedTeam().getScore())
+//                .append(game.getRedTeam().getBetText())
                 .append(System.lineSeparator())
                 .append(String.format(game.getRedTeam().toString(), RED_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
@@ -77,14 +81,13 @@ public final class BuildMessageUtil {
                 .append(System.lineSeparator())
                 .append(String.format(game.getBlueTeam().toString(), BLUE_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
-                .append(spaces)
-                .append(game.getBlueTeam().getScore())
-                .append(System.lineSeparator());
+                .append(spaces);
+//                .append(game.getBlueTeam().getBetText());
     }
 
     private static String getSpaces(TgGame tgGame) {
         String spaces = tgGame.getRedTeam().getPlayer1().getName();
-        return StringUtils.repeat(" ", spaces.length() * 3 / 2);
+        return StringUtils.repeat(" ", spaces.length() * 2);
     }
 
     private static String buildLobbyText(TgEvent event) {
@@ -118,7 +121,7 @@ public final class BuildMessageUtil {
         builder.append(
                 event.getPlayers().values()
                         .stream()
-                        .sorted(Comparator.comparingLong(TgEventPlayer::getScore).reversed())
+                        .sorted(Comparator.comparingLong(TgEventPlayer::getScoreSorting).reversed())
                         .map(TgEventPlayer::getLobbyName)
                         .collect(Collectors.joining(System.lineSeparator()))
         );

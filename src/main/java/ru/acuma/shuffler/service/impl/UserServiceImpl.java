@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.mapper.UserMapper;
-import ru.acuma.shuffler.service.UserService;
+import ru.acuma.shuffler.service.api.UserService;
 import ru.acuma.shuffler.tables.pojos.UserInfo;
 import ru.acuma.shufflerlib.repository.UserRepository;
 
@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 @Slf4j
 @Service
@@ -28,6 +29,9 @@ public class UserServiceImpl implements UserService {
     @Value("${telegram.bot.token}")
     private String botToken;
 
+    @Value("${application.media.location}")
+    private String mediaLocation;
+
     @Override
     public UserInfo getUser(Long telegramId) {
         return userRepository.get(telegramId);
@@ -36,13 +40,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @SneakyThrows
     public void saveProfilePhotos(Long telegramId, File photo) {
-        URL url = new URL(photo.getFileUrl(botToken));
-        ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
-        BufferedImage image = ImageIO.read(bis);
-        java.io.File outputFile = new java.io.File("/media/avatar/" + photo.getFileUniqueId() + ".png");
+        try {
+            URL url = new URL(photo.getFileUrl(botToken));
+            ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
+            BufferedImage image = ImageIO.read(bis);
+            var outputFile = new java.io.File(mediaLocation + photo.getFileUniqueId() + ".png");
 
-        ImageIO.write(image, "png", outputFile);
-        userRepository.saveProfilePhotoId(telegramId, outputFile.getName());
+            ImageIO.write(image, "png", outputFile);
+            userRepository.saveProfilePhotoId(telegramId, outputFile.getName());
+        } catch (UnknownHostException e) {
+            log.info("Failed to save picture for user {}", telegramId);
+        }
     }
 
     private Boolean hasAccess(Long telegramId) {

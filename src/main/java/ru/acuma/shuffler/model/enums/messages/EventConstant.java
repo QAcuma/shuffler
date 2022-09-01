@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.acuma.shuffler.service.buttons.EventConstantButton;
 
+import static ru.acuma.shuffler.util.Symbols.AUTUMN_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.DRUM_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.GOBLET_EMOJI;
@@ -11,7 +12,6 @@ import static ru.acuma.shuffler.util.Symbols.KEBABS_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.MEMBERS_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.NICE_MOON_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.PONG_EMOJI;
-import static ru.acuma.shuffler.util.Symbols.PRIDE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.SAND_CLOCK_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.WARNING_EMOJI;
@@ -24,8 +24,8 @@ public enum EventConstant implements EventConstantButton {
     SPACE_MESSAGE("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"),
     LOBBY_MESSAGE_KICKER(KEBABS_EMOJI + " Время шашлыков! " + KEBABS_EMOJI + "\n"),
     LOBBY_MESSAGE_PING_PONG(PONG_EMOJI + " Время бить мяч! " + PONG_EMOJI + "\n"),
-    LOBBY_PLAYING_MESSAGE(PRIDE_EMOJI + " Чемпионат в разгаре! " + PRIDE_EMOJI + "\n"),
-    LOBBY_FINISHED_MESSAGE(PRIDE_EMOJI + " Чемпионат завершен! " + PRIDE_EMOJI + "\n"),
+    LOBBY_PLAYING_MESSAGE(AUTUMN_EMOJI + " Чемпионат в разгаре! " + AUTUMN_EMOJI + "\n"),
+    LOBBY_FINISHED_MESSAGE(AUTUMN_EMOJI + " Чемпионат завершен! " + AUTUMN_EMOJI + "\n"),
     LOBBY_WAITING_MESSAGE(SAND_CLOCK_EMOJI + " Ждём игроков! " + SAND_CLOCK_EMOJI + "\n"),
     WINNERS_MESSAGE("\n" + GOBLET_EMOJI + " Победители: \n"),
     GAME_MESSAGE("<b>Игра №</b>"),

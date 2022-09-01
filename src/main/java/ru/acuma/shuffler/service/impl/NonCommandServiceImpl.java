@@ -8,9 +8,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.model.enums.ConstantReply;
-import ru.acuma.shuffler.service.MessageWayService;
-import ru.acuma.shuffler.service.NonCommandService;
-import ru.acuma.shuffler.service.UserService;
+import ru.acuma.shuffler.service.api.MessageWayService;
+import ru.acuma.shuffler.service.api.NonCommandService;
+import ru.acuma.shuffler.service.api.UserService;
 
 import java.util.Objects;
 

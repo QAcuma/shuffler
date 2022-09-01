@@ -7,10 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.mapper.PlayerMapper;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
-import ru.acuma.shuffler.service.PlayerService;
-import ru.acuma.shuffler.service.RatingService;
-import ru.acuma.shuffler.service.SeasonService;
-import ru.acuma.shuffler.service.UserService;
+import ru.acuma.shuffler.service.api.PlayerService;
+import ru.acuma.shuffler.service.api.RatingService;
+import ru.acuma.shuffler.service.api.UserService;
 import ru.acuma.shuffler.tables.pojos.Player;
 import ru.acuma.shufflerlib.repository.PlayerRepository;
 
@@ -25,7 +24,6 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final UserService userService;
     private final PlayerMapper playerMapper;
-    private final SeasonService seasonService;
     private final PlayerRepository playerRepository;
     private final RatingService ratingService;
 
@@ -34,9 +32,9 @@ public class PlayerServiceImpl implements PlayerService {
         var appUser = userService.getUser(user.getId());
         var player = getPlayer(event.getChatId(), user.getId());
         var rating = ratingService.getRating(player.getId(), event.getDiscipline());
-        var tgPlayer = playerMapper.toTgPlayer(appUser, player, rating);
-        var kickerEventPlayer = playerMapper.toTgEventPlayer(tgPlayer);
-        event.joinPlayer(kickerEventPlayer);
+        var tgEventPlayer = playerMapper.toTgEventPlayer(appUser, player, rating);
+
+        event.joinPlayer(tgEventPlayer);
     }
 
     @Override
@@ -81,7 +79,6 @@ public class PlayerServiceImpl implements PlayerService {
     private void registerPlayer(Long chatId, Long userId) {
         Player player = new Player()
                 .setChatId(chatId)
-                .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setUserId(userId);
         player.setId(playerRepository.save(player));
         ratingService.defaultRating(player.getId());

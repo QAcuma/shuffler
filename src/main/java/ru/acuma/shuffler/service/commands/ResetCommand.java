@@ -7,8 +7,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.EventStateService;
-import ru.acuma.shuffler.service.MaintenanceService;
+import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.api.MaintenanceService;
 
 @Slf4j
 @Component

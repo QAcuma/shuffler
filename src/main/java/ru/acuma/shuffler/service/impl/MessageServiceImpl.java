@@ -2,6 +2,8 @@ package ru.acuma.shuffler.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
@@ -12,12 +14,13 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageRe
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import ru.acuma.shuffler.bot.ShufflerBot;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.KeyboardService;
-import ru.acuma.shuffler.service.MessageService;
+import ru.acuma.shuffler.service.api.KeyboardService;
+import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.util.BuildMessageUtil;
 
 @Slf4j
@@ -27,6 +30,13 @@ public class MessageServiceImpl implements MessageService {
 
     private final KeyboardService keyboardService;
 
+    private ShufflerBot shufflerBot;
+
+    @Autowired
+    public void setShufflerBot(@Lazy ShufflerBot shufflerBot) {
+        this.shufflerBot = shufflerBot;
+    }
+
     @Override
     public BotApiMethod<Message> sendMessage(TgEvent event, MessageType type) {
         return SendMessage.builder()
@@ -35,6 +45,11 @@ public class MessageServiceImpl implements MessageService {
                 .replyMarkup(getKeyboard(event, type))
                 .parseMode(ParseMode.HTML)
                 .build();
+    }
+
+    @Override
+    public void sendMessage(SendMessage message) {
+        shufflerBot.reply(message);
     }
 
     @Override

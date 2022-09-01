@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service;
+package ru.acuma.shuffler.service.api;
 
 import ru.acuma.shuffler.model.entity.TgEvent;
 
@@ -20,7 +20,7 @@ public interface EventStateService {
 
     void waitingState(TgEvent event);
 
-    void nextCheckingState(TgEvent event);
+    void cancelGameCheckingState(TgEvent event);
 
     void redCheckingState(TgEvent event);
 

@@ -12,9 +12,9 @@ import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.acuma.shuffler.service.GroupService;
-import ru.acuma.shuffler.service.NonCommandService;
-import ru.acuma.shuffler.service.UserService;
+import ru.acuma.shuffler.service.api.GroupService;
+import ru.acuma.shuffler.service.api.NonCommandService;
+import ru.acuma.shuffler.service.api.UserService;
 import ru.acuma.shuffler.service.commands.BeginCommand;
 import ru.acuma.shuffler.service.commands.BlueCommand;
 import ru.acuma.shuffler.service.commands.CancelCommand;
@@ -41,55 +41,38 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
 
     @Autowired
     private UserService userService;
-
     @Autowired
     private GroupService groupService;
-
     @Autowired
     private NonCommandService nonCommandService;
-
     @Autowired
     private KickerCommand kickerCommand;
-
     @Autowired
     private PingPongCommand pingPongCommand;
-
     @Autowired
     private JoinCommand joinCommand;
-
     @Autowired
     private LeaveCommand leaveCommand;
-
     @Autowired
     private CancelCommand cancelCommand;
-
     @Autowired
     private CancelGameCommand cancelGameCommand;
-
     @Autowired
     private YesCommand yesCommand;
-
     @Autowired
     private NoCommand noCommand;
-
     @Autowired
     private RedCommand redCommand;
-
     @Autowired
     private BlueCommand blueCommand;
-
     @Autowired
     private WaitCommand waitCommand;
-
     @Autowired
     private BeginCommand beginCommand;
-
     @Autowired
     private FinishCommand finishCommand;
-
     @Autowired
     private ResetCommand resetCommand;
-
 
     public ShufflerBot(String botName, String botToken) {
         super();
