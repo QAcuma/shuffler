@@ -35,7 +35,7 @@ public class RatingServiceImpl implements RatingService {
     private final CalibrationService calibrationService;
 
     @Value("${rating.calibration.game-penalty}")
-    private double calibrationPenaltyMultiplier;
+    private float calibrationPenaltyMultiplier;
 
     @Override
     @SneakyThrows
@@ -43,17 +43,10 @@ public class RatingServiceImpl implements RatingService {
     public void update(TgEvent event) {
         var game = event.getCurrentGame();
         Optional.ofNullable(game.getWinnerTeam()).orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
-        var changes = calcChanges(game);
-
-        applyChanges(game, changes);
-        saveChanges(event);
-    }
-
-    private int calcChanges(TgGame game) {
         var change = game.getWinnerTeam().getBet().getCaseWin();
-        var modChange = game.isCalibrating() ? change * calibrationPenaltyMultiplier : change;
 
-        return (int) modChange;
+        applyChanges(game, change);
+        saveChanges(event);
     }
 
     @Override
@@ -95,9 +88,17 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void applyBet(TgTeam redTeam, TgTeam blueTeam) {
-        var redBet = new TgGameBet(winCase(redTeam, blueTeam));
-        var blueCaseWin = Math.abs(redBet.getCaseLose());
-        var blueBet = new TgGameBet(blueCaseWin);
+        boolean isCalibrating = redTeam.containsCalibrating() || blueTeam.containsCalibrating();
+
+        var redWinCase = winCase(redTeam, blueTeam);
+        var limitedRedWinCase = limitAndRoundChange(redWinCase, isCalibrating);
+        var redLoseCase = (-1) * (getBasePool(isCalibrating) - limitedRedWinCase);
+
+        var blueWinCase = Math.abs(redLoseCase);
+        var blueLoseCase = (-1) * limitedRedWinCase;
+
+        var redBet = new TgGameBet(limitedRedWinCase, redLoseCase);
+        var blueBet = new TgGameBet(blueWinCase, blueLoseCase);
 
         redTeam.setBet(redBet);
         blueTeam.setBet(blueBet);
@@ -105,11 +106,31 @@ public class RatingServiceImpl implements RatingService {
 
     private int winCase(TgTeam team1, TgTeam team2) {
         var diff = team1.getScore() - team2.getScore();
-        var change = diff > 0
-                ? Values.BASE_RATING_CHANGE * (1 + ((double) diff / Values.RATING_REFERENCE))
-                : Values.BASE_RATING_CHANGE * (1 - ((double) diff / Values.RATING_REFERENCE));
+        var limitedDiff = Math.min(diff, Values.RATING_REFERENCE);
+        var change = diff >= 0
+                ? Values.BASE_RATING_CHANGE * (1 - ((float) limitedDiff / Values.RATING_REFERENCE))
+                : Values.BASE_RATING_CHANGE * (1 + ((float) -limitedDiff / Values.RATING_REFERENCE));
 
-        return limitAndRoundChange(change);
+        return Math.round(change);
+    }
+
+    private int limitAndRoundChange(float change, boolean isCalibrating) {
+        var value = isCalibrating
+                ? change * calibrationPenaltyMultiplier
+                : change;
+
+        if (Math.abs(value) >= getBasePool(isCalibrating)) {
+            return getBasePool(isCalibrating) - 1;
+        }
+
+        return Math.max(
+                Math.abs(Math.round(value)),
+                1
+        );
+    }
+
+    private int getBasePool(boolean isCalibrating) {
+        return isCalibrating ? Values.BASE_RATING_CHANGE : Values.BASE_RATING_CHANGE * 2;
     }
 
     @Override
@@ -156,14 +177,6 @@ public class RatingServiceImpl implements RatingService {
     private void applyChanges(TgGame game, int change) {
         game.getWinnerTeam().applyRating(change);
         game.getLoserTeam().applyRating(-change);
-    }
-
-    private int limitAndRoundChange(double change) {
-        int value = Math.toIntExact(Math.round(change));
-        if (Math.abs(value) >= Values.BASE_RATING_CHANGE * 2) {
-            return (Values.BASE_RATING_CHANGE * 2) - 1;
-        }
-        return Math.max(Math.abs(value), 1);
     }
 
 }

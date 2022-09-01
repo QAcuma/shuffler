@@ -43,7 +43,7 @@ public class TgTeam {
     }
 
     public String getBetText() {
-        return MEDAL_EMOJI + "+" + bet.getCaseWin();
+        return MEDAL_EMOJI + "+" + bet.getCaseWin() + "  " + score;
     }
 
     public String getScoreString() {

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.acuma.shuffler.service.buttons.EventConstantButton;
 
+import static ru.acuma.shuffler.util.Symbols.AUTUMN_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.DRUM_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.GOBLET_EMOJI;
@@ -11,7 +12,6 @@ import static ru.acuma.shuffler.util.Symbols.KEBABS_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.MEMBERS_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.NICE_MOON_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.PONG_EMOJI;
-import static ru.acuma.shuffler.util.Symbols.AUTUMN_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.SAND_CLOCK_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.WARNING_EMOJI;

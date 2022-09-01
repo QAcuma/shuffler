@@ -20,7 +20,7 @@ public class SeasonServiceScheduler {
     private final SeasonService seasonService;
     private final BroadcastService broadcastService;
 
-    private final static String hourly = "0 */1 * ? * *";
+    private final static String hourly = "0 0 * ? * *";
 
     @Scheduled(cron = hourly)
     public void watchSeason() {

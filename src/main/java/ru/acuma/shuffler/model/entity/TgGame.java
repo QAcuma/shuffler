@@ -1,6 +1,5 @@
 package ru.acuma.shuffler.model.entity;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -60,7 +59,7 @@ public class TgGame {
     }
 
     public boolean isCalibrating() {
-       return getWinnerTeam().containsCalibrating() || getLoserTeam().containsCalibrating();
+        return getWinnerTeam().containsCalibrating() || getLoserTeam().containsCalibrating();
     }
 
     public String getGameResult() {

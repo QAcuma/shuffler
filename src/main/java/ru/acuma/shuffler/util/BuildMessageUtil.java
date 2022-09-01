@@ -72,7 +72,7 @@ public final class BuildMessageUtil {
         String spaces = getSpaces(game);
         builder
                 .append(spaces)
-                .append(game.getRedTeam().getBetText())
+//                .append(game.getRedTeam().getBetText())
                 .append(System.lineSeparator())
                 .append(String.format(game.getRedTeam().toString(), RED_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
@@ -81,8 +81,8 @@ public final class BuildMessageUtil {
                 .append(System.lineSeparator())
                 .append(String.format(game.getBlueTeam().toString(), BLUE_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
-                .append(spaces)
-                .append(game.getBlueTeam().getBetText());
+                .append(spaces);
+//                .append(game.getBlueTeam().getBetText());
     }
 
     private static String getSpaces(TgGame tgGame) {

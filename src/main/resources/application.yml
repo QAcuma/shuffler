@@ -26,6 +26,6 @@ rating:
   team-build-strategy: ${SHUFFLER_TEAM_BUILD_STRATEGY:random}
   calibration:
     games: ${SHUFFLER_CALIBRATION_GAMES:10}
-    enemies: ${SHUFFLER_CALIBRATION_ENEMIES:3}
+    enemies: ${SHUFFLER_CALIBRATION_ENEMIES:5}
     multiplier: ${SHUFFLER_CALIBRATION_MULTIPLIER:6}
     game-penalty: ${SHUFFLER_CALIBRATION_PENALTY_MULTIPLIER:0.5}
