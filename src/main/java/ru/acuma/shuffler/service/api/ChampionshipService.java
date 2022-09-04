@@ -6,7 +6,7 @@ import ru.acuma.shuffler.model.entity.TgEvent;
 public interface ChampionshipService {
 
 
-    void cancelChampionship(AbsSender absSender, TgEvent event);
+    void finishEvent(AbsSender absSender, TgEvent event);
 
     void finishChampionship(AbsSender absSender, TgEvent event);
 }

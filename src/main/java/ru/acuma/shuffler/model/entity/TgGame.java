@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.enums.GameState;
+import ru.acuma.shuffler.util.Symbols;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class TgGame {
     }
 
     public boolean isCalibrating() {
-        return getWinnerTeam().containsCalibrating() || getLoserTeam().containsCalibrating();
+        return getRedTeam().containsCalibrating() || getBlueTeam().containsCalibrating();
     }
 
     public String getGameResult() {
@@ -69,7 +70,8 @@ public class TgGame {
                     String.format(getWinnerTeam().toString(), "&") +
                     " (+" +
                     getWinnerTeam().getBet().getCaseWin() +
-                    ") ";
+                    ") " +
+                    (isCalibrating() ? Symbols.FOOTNOTE_SYMBOL : "");
         }
         return "";
     }

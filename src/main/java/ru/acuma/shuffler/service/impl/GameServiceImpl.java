@@ -8,7 +8,6 @@ import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TgGame;
 import ru.acuma.shuffler.model.enums.GameState;
-import ru.acuma.shuffler.model.enums.WinnerState;
 import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.RatingService;
 import ru.acuma.shuffler.service.api.ShuffleService;
@@ -32,7 +31,7 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
 
     @SneakyThrows
-    public TgGame buildGame(TgEvent event) {
+    private TgGame buildGame(TgEvent event) {
         var players = Optional
                 .ofNullable(shuffleService.shuffle(event))
                 .orElseThrow(() -> new InstanceNotFoundException("Not enough players to start"));
@@ -52,9 +51,9 @@ public class GameServiceImpl implements GameService {
                 .setBlueTeam(blueTeam)
                 .setIndex(event.getTgGames().size() + 1)
                 .setStartedAt(LocalDateTime.now())
-                .setState(GameState.STARTED);
+                .setState(GameState.ACTIVE);
 
-        return save(game, event.getId());
+        return game;
     }
 
     private TgGame save(TgGame tgGame, Long eventId) {
@@ -67,21 +66,28 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void endGame(TgEvent event, WinnerState state) {
-        var game = event.getCurrentGame();
+    public void nextGame(TgEvent event) {
+        var game = buildGame(event);
+        save(game, event.getId());
+        event.applyGame(game);
+    }
+
+    @Override
+    public void applyGameChecking(TgEvent event) {
+        var game = event.getLatestGame();
         if (game == null) {
             return;
         }
-        switch (state) {
-            case RED:
+        switch (game.getState()) {
+            case RED_CHECKING:
                 game.getRedTeam().setWinner(true);
                 finishGameWithWinner(game);
                 break;
-            case BLUE:
+            case BLUE_CHECKING:
                 game.getBlueTeam().setWinner(true);
                 finishGameWithWinner(game);
                 break;
-            case NONE:
+            case CANCEL_CHECKING:
                 finishCancelledGame(game);
                 break;
         }
@@ -100,7 +106,7 @@ public class GameServiceImpl implements GameService {
     }
 
     private void saveGameData(TgEvent event) {
-        var game = event.getCurrentGame();
+        var game = event.getLatestGame();
         switch (game.getState()) {
             case CANCELLED:
                 break;

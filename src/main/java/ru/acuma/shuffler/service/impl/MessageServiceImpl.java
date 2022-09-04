@@ -95,7 +95,7 @@ public class MessageServiceImpl implements MessageService {
 
     private InlineKeyboardMarkup getKeyboard(TgEvent event, MessageType type) {
         var state = event.getEventState();
-        if (type == MessageType.LOBBY && (state == EventState.BEGIN_CHECKING || state == EventState.CANCEL_LOBBY_CHECKING)) {
+        if (type == MessageType.LOBBY && (state == EventState.BEGIN_CHECKING || state == EventState.CANCEL_CHECKING)) {
             return keyboardService.getEmptyKeyboard();
         }
         return type == MessageType.CHECKING_TIMED

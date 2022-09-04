@@ -11,7 +11,6 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import static ru.acuma.shuffler.model.enums.EventState.WAITING;
-import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
 import static ru.acuma.shuffler.model.enums.messages.EventConstant.LET_JOIN_TEXT;
 import static ru.acuma.shuffler.model.enums.messages.EventConstant.MEMBERS_TEXT;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
@@ -45,34 +44,35 @@ public final class BuildMessageUtil {
     }
 
     private static String buildGameText(TgEvent event) {
-        var game = event.getCurrentGame();
+        var game = event.getLatestGame();
         if (game == null) {
             return EventConstant.BLANK_MESSAGE.getText();
         }
 
         StringBuilder builder = new StringBuilder();
 
-        builder
-                .append(EventConstant.GAME_MESSAGE.getText())
+        builder.append(EventConstant.GAME_MESSAGE.getText())
                 .append(game.getIndex())
                 .append(EventConstant.SPACE_MESSAGE.getText())
                 .append(System.lineSeparator());
 
         switch (game.getState()) {
-            case STARTED:
-            case CHECKING:
-                buildStartedMessage(event, builder);
+            case ACTIVE:
+            case BLUE_CHECKING:
+            case RED_CHECKING:
+            case CANCEL_CHECKING:
+                buildActiveMessage(event, builder);
                 break;
         }
+
         return builder.toString();
     }
 
-    private static void buildStartedMessage(TgEvent event, StringBuilder builder) {
-        var game = event.getCurrentGame();
+    private static void buildActiveMessage(TgEvent event, StringBuilder builder) {
+        var game = event.getLatestGame();
         String spaces = getSpaces(game);
         builder
                 .append(spaces)
-//                .append(game.getRedTeam().getBetText())
                 .append(System.lineSeparator())
                 .append(String.format(game.getRedTeam().toString(), RED_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
@@ -82,7 +82,6 @@ public final class BuildMessageUtil {
                 .append(String.format(game.getBlueTeam().toString(), BLUE_CIRCLE_EMOJI))
                 .append(System.lineSeparator())
                 .append(spaces);
-//                .append(game.getBlueTeam().getBetText());
     }
 
     private static String getSpaces(TgGame tgGame) {
@@ -95,7 +94,7 @@ public final class BuildMessageUtil {
         switch (event.getEventState()) {
             case CREATED:
             case READY:
-            case CANCEL_LOBBY_CHECKING:
+            case CANCEL_CHECKING:
             case BEGIN_CHECKING:
                 getMainEventMessage(event, builder);
                 break;
@@ -105,9 +104,6 @@ public final class BuildMessageUtil {
             case CANCELLED:
                 return EventConstant.LOBBY_CANCELED_MESSAGE.getText();
             case PLAYING:
-            case RED_CHECKING:
-            case BLUE_CHECKING:
-            case CANCEL_GAME_CHECKING:
                 builder.append(EventConstant.LOBBY_PLAYING_MESSAGE.getText());
                 break;
             case FINISHED:
@@ -117,26 +113,24 @@ public final class BuildMessageUtil {
                 builder.append(EventConstant.BLANK_MESSAGE.getText());
                 break;
         }
-        builder.append(event.getPlayers().isEmpty() ? LET_JOIN_TEXT.getText() : MEMBERS_TEXT.getText());
-        builder.append(
-                event.getPlayers().values()
-                        .stream()
-                        .sorted(Comparator.comparingLong(TgEventPlayer::getScoreSorting).reversed())
-                        .map(TgEventPlayer::getLobbyName)
-                        .collect(Collectors.joining(System.lineSeparator()))
-        );
-        builder.append(System.lineSeparator());
-        buildResult(event, builder);
-        if (event.getEventState() == WAITING) {
-            builder
-                    .append(System.lineSeparator())
-                    .append(System.lineSeparator())
-                    .append(EventConstant.WAITING_MESSAGE.getText())
-                    .append(System.lineSeparator());
-        }
-        builder.append(EventConstant.SHUFFLER_LINK.getText());
 
-        return builder.toString();
+        return builder.append(event.getPlayers().isEmpty() ? LET_JOIN_TEXT.getText() : MEMBERS_TEXT.getText())
+                .append(!event.getPlayers().isEmpty() ? getMembersText(event) : "")
+                .append(event.hasAnyGameFinished() ? EventConstant.WINNERS_MESSAGE.getText() : "")
+                .append(event.hasAnyGameFinished() ? buildWinnersText(event) : "")
+                .append(event.getEventState() == WAITING ? EventConstant.WAITING_MESSAGE.getText() : "")
+                .append(event.isCalibrating() ? EventConstant.CALIBRATING_MESSAGE.getText() : "")
+                .append(EventConstant.SHUFFLER_LINK.getText())
+                .toString();
+    }
+
+    private static String getMembersText(TgEvent event) {
+        return event.getPlayers().values()
+                .stream()
+                .sorted(Comparator.comparingLong(TgEventPlayer::getScoreSorting).reversed())
+                .map(TgEventPlayer::getLobbyName)
+                .collect(Collectors.joining(System.lineSeparator())) +
+                System.lineSeparator();
     }
 
     private static void getMainEventMessage(TgEvent event, StringBuilder builder) {
@@ -150,35 +144,40 @@ public final class BuildMessageUtil {
         }
     }
 
-    private static void buildResult(TgEvent event, StringBuilder builder) {
-        if (event.getTgGames().stream().anyMatch(game -> game.getState() == FINISHED)) {
-            builder.append(System.lineSeparator())
-                    .append(EventConstant.WINNERS_MESSAGE.getText());
-        }
-
-        event.getTgGames()
+    private static String buildWinnersText(TgEvent event) {
+        return event.getTgGames()
                 .stream()
                 .filter(game -> game.getWinnerTeam() != null)
-                .forEach(game -> builder
-                        .append(game.getGameResult())
-                        .append(System.lineSeparator())
-                );
+                .map(TgGame::getGameResult)
+                .collect(Collectors.joining(System.lineSeparator())) +
+                System.lineSeparator();
+
     }
 
     private static String buildCheckingText(TgEvent event) {
         switch (event.getEventState()) {
-            case CANCEL_LOBBY_CHECKING:
+            case CANCEL_CHECKING:
                 return EventConstant.CANCEL_CHECKING_MESSAGE.getText();
             case BEGIN_CHECKING:
                 return EventConstant.BEGIN_CHECKING_MESSAGE.getText();
-            case CANCEL_GAME_CHECKING:
-                return EventConstant.NEXT_CHECKING_MESSAGE.getText();
+            case FINISH_CHECKING:
+                return EventConstant.FINISH_CHECKING_MESSAGE.getText();
+            case PLAYING:
+            case WAITING_WITH_GAME:
+                return buildGameCheckingText(event.getLatestGame());
+            default:
+                return EventConstant.BLANK_MESSAGE.getText();
+        }
+    }
+
+    private static String buildGameCheckingText(TgGame currentGame) {
+        switch (currentGame.getState()) {
             case RED_CHECKING:
                 return EventConstant.RED_CHECKING_MESSAGE.getText();
             case BLUE_CHECKING:
                 return EventConstant.BLUE_CHECKING_MESSAGE.getText();
-            case FINISH_CHECKING:
-                return EventConstant.FINISH_CHECKING_MESSAGE.getText();
+            case CANCEL_CHECKING:
+                return EventConstant.NEXT_CHECKING_MESSAGE.getText();
             default:
                 return EventConstant.BLANK_MESSAGE.getText();
         }

@@ -7,23 +7,24 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 
 @Component
 public class BlueCommand extends BaseBotCommand {
 
     private final EventContextServiceImpl eventContextService;
-    private final EventStateService eventStateService;
+    private final GameStateService gameStateService;
     private final MessageService messageService;
     private final ExecuteService executeService;
 
-    public BlueCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, MessageService messageService, ExecuteService executeService) {
+    public BlueCommand(EventContextServiceImpl eventContextService, GameStateService gameStateService, MessageService messageService, ExecuteService executeService) {
         super(Command.BLUE.getCommand(), "Синие");
         this.eventContextService = eventContextService;
-        this.eventStateService = eventStateService;
+        this.gameStateService = gameStateService;
         this.messageService = messageService;
         this.executeService = executeService;
     }
@@ -31,13 +32,15 @@ public class BlueCommand extends BaseBotCommand {
     @SneakyThrows
     @Override
     public void execute(AbsSender absSender, Message message) {
-        final var event = eventContextService.getCurrentEvent(message.getChatId());
-        if (event.getEventState() == EventState.BLUE_CHECKING || event.getEventState() == EventState.RED_CHECKING || event.getEventState() == EventState.CANCEL_GAME_CHECKING) {
+        var event = eventContextService.getCurrentEvent(message.getChatId());
+        var gameState = event.getLatestGame().getState();
+        if (gameState.in(GameState.BLUE_CHECKING, GameState.RED_CHECKING, GameState.CANCEL_CHECKING) || event.getEventState().in(EventState.FINISH_CHECKING)) {
             return;
         }
 
-        eventStateService.blueCheckingState(event);
-        executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), MessageType.GAME));
+        gameStateService.blueCheckingState(event.getLatestGame());
+        executeService.execute(absSender, messageService.updateLobbyMessage(event));
+        executeService.execute(absSender, messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
         executeService.execute(absSender, messageService.sendMessage(event, MessageType.CHECKING));
     }
 }

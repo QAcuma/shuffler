@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
@@ -33,12 +34,14 @@ public class FinishCommand extends BaseBotCommand {
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
 
-        if (EventState.FINISH_CHECKING == event.getEventState() || !event.getPlayers().containsKey(message.getFrom().getId())) {
+        if (event.getEventState().in(EventState.FINISH_CHECKING)
+                || !event.isCallbackUnauthorized(message.getFrom().getId())
+                || event.getLatestGame().getState().in(GameState.RED_CHECKING, GameState.BLUE_CHECKING, GameState.CANCEL_CHECKING)) {
             return;
         }
 
         eventStateService.finishCheckState(event);
-        executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), MessageType.GAME));
+        executeService.execute(absSender, messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
         executeService.executeAsyncTimer(absSender, event, messageService.sendMessage(event, MessageType.CHECKING_TIMED));
     }
 }

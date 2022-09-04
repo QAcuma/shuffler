@@ -13,6 +13,8 @@ import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
 import ru.acuma.shuffler.service.api.MessageService;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class ChampionshipServiceImpl implements ChampionshipService {
@@ -25,8 +27,9 @@ public class ChampionshipServiceImpl implements ChampionshipService {
 
     @SneakyThrows
     @Override
-    public void cancelChampionship(AbsSender absSender, TgEvent event) {
+    public void finishEvent(AbsSender absSender, TgEvent event) {
         eventStateService.cancelledState(event);
+        event.setFinishedAt(LocalDateTime.now());
         eventContextService.update(event);
 
         var update = messageService.updateLobbyMessage(event);

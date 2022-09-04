@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "ru.acuma"
-version = "1.1.0"
+version = "2.0.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_13

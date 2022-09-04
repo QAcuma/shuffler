@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
@@ -34,21 +33,21 @@ public class LeaveCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
-        if (!event.isPresent(message.getFrom().getId())) {
+        if (!event.isCallbackUnauthorized(message.getFrom().getId())) {
             return;
         }
         switch (event.getEventState()) {
             case CREATED:
             case READY:
                 playerService.leaveLobby(event, message.getFrom());
-                eventStateService.lobbyState(event);
+                eventStateService.definePreparingState(event);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
             case PLAYING:
+            case WAITING:
+            case WAITING_WITH_GAME:
                 playerService.leaveLobby(event, message.getFrom());
-                if (event.getActivePlayers().size() < Values.GAME_PLAYERS_COUNT) {
-                    eventStateService.waitingState(event);
-                }
+                eventStateService.defineActiveState(event);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
         }

@@ -6,8 +6,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.keyboards.Created;
 import ru.acuma.shuffler.model.enums.keyboards.Game;
+import ru.acuma.shuffler.model.enums.keyboards.GameChecking;
 import ru.acuma.shuffler.model.enums.keyboards.Playing;
 import ru.acuma.shuffler.model.enums.keyboards.Ready;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking;
@@ -29,13 +31,13 @@ public class KeyboardServiceImpl implements KeyboardService {
 
     @Override
     public InlineKeyboardMarkup getKeyboard(TgEvent event, MessageType type) {
-        EventState state = event.getEventState();
         switch (type) {
             case GAME:
-                return buildKeyboard(buildGameButtons(state));
+                return buildKeyboard(buildGameButtons(event));
             case CHECKING:
+                return buildKeyboard(List.of(Checking.values()));
             default:
-                return buildKeyboard(buildButtons(state));
+                return buildKeyboard(buildButtons(event));
         }
     }
 
@@ -100,22 +102,25 @@ public class KeyboardServiceImpl implements KeyboardService {
         }
     }
 
-    private List<EventStatusButton> buildButtons(EventState eventState) {
+    private List<EventStatusButton> buildButtons(TgEvent event) {
+        var eventState = event.getEventState();
+        var gameState = event.getLatestGameState();
+
         switch (eventState) {
             case CREATED:
                 return List.of(Created.values());
             case READY:
                 return List.of(Ready.values());
-            case CANCEL_LOBBY_CHECKING:
+            case CANCEL_CHECKING:
             case BEGIN_CHECKING:
-            case CANCEL_GAME_CHECKING:
-            case RED_CHECKING:
-            case BLUE_CHECKING:
-            case MEMBER_CHECKING:
             case FINISH_CHECKING:
                 return List.of(Checking.values());
             case PLAYING:
+                return gameState.in(GameState.RED_CHECKING, GameState.BLUE_CHECKING, GameState.CANCEL_CHECKING)
+                        ? List.of(GameChecking.values())
+                        : List.of(Playing.values());
             case WAITING:
+            case WAITING_WITH_GAME:
                 return List.of(Playing.values());
             case FINISHED:
             default:
@@ -123,16 +128,9 @@ public class KeyboardServiceImpl implements KeyboardService {
         }
     }
 
-    private List<EventStatusButton> buildGameButtons(EventState eventState) {
-        switch (eventState) {
-            case PLAYING:
-                return List.of(Game.values());
-            case RED_CHECKING:
-            case BLUE_CHECKING:
-            case FINISH_CHECKING:
-            case CANCEL_GAME_CHECKING:
-            default:
-                return new ArrayList<>();
-        }
+    private List<EventStatusButton> buildGameButtons(TgEvent event) {
+        return event.getLatestGameState() == GameState.ACTIVE && event.getEventState() != EventState.FINISH_CHECKING
+                ? List.of(Game.values())
+                : new ArrayList<>();
     }
 }
