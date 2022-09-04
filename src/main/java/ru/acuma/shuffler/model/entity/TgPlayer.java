@@ -29,7 +29,7 @@ public class TgPlayer extends UserInfo {
     }
 
     public int getScoreSorting() {
-        return isCalibrated ? score : -1;
+        return isCalibrated ? score : 0;
     }
 
     public String getScoreString() {
@@ -47,7 +47,7 @@ public class TgPlayer extends UserInfo {
         score += (changes * getCalibrationMultiplier());
     }
 
-    private int getCalibrationMultiplier() {
+    public int getCalibrationMultiplier() {
         return isCalibrated ? 1 : calibrationMultiplier;
     }
 

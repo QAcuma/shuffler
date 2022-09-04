@@ -6,24 +6,24 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 
 @Component
 public class RedCommand extends BaseBotCommand {
 
     private final EventContextServiceImpl eventContextService;
-    private final EventStateService eventStateService;
+    private final GameStateService gameStateService;
     private final MessageService messageService;
     private final ExecuteService executeService;
 
-    public RedCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, MessageService messageService, ExecuteService executeService) {
+    public RedCommand(EventContextServiceImpl eventContextService, GameStateService gameStateService, MessageService messageService, ExecuteService executeService) {
         super(Command.RED.getCommand(), "Красные");
         this.eventContextService = eventContextService;
-        this.eventStateService = eventStateService;
+        this.gameStateService = gameStateService;
         this.messageService = messageService;
         this.executeService = executeService;
     }
@@ -32,12 +32,13 @@ public class RedCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
-        if (event.getEventState() == EventState.BLUE_CHECKING || event.getEventState() == EventState.RED_CHECKING || event.getEventState() == EventState.CANCEL_GAME_CHECKING) {
+        var gameState = event.getLastGame().getState();
+        if (gameState == GameState.BLUE_CHECKING || gameState == GameState.RED_CHECKING || gameState == GameState.CANCEL_CHECKING) {
             return;
         }
 
-        eventStateService.redCheckingState(event);
-        executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), MessageType.GAME));
+        gameStateService.redCheckingState(event.getLastGame());
+        executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), MessageType.GAME));
         executeService.execute(absSender, messageService.sendMessage(event, MessageType.CHECKING));
     }
 }

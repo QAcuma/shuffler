@@ -41,7 +41,7 @@ public class RatingServiceImpl implements RatingService {
     @SneakyThrows
     @Transactional
     public void update(TgEvent event) {
-        var game = event.getCurrentGame();
+        var game = event.getLastGame();
         Optional.ofNullable(game.getWinnerTeam()).orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
         var change = game.getWinnerTeam().getBet().getCaseWin();
 
@@ -75,8 +75,8 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void saveChanges(TgEvent event) {
-        TgGame game = event.getCurrentGame();
-        event.getCurrentGame().getPlayers()
+        TgGame game = event.getLastGame();
+        event.getLastGame().getPlayers()
                 .stream()
                 .peek(player -> updateRating(player, event.getDiscipline()))
                 .forEach(player -> logHistory(
@@ -148,7 +148,7 @@ public class RatingServiceImpl implements RatingService {
         RatingHistory ratingHistory = new RatingHistory()
                 .setGameId(gameId)
                 .setPlayerId(player.getId())
-                .setChange(ratingChange)
+                .setChange(ratingChange * player.getCalibrationMultiplier())
                 .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setScore(player.getScore());
 

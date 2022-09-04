@@ -25,7 +25,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
 
     @SneakyThrows
     @Override
-    public void cancelChampionship(AbsSender absSender, TgEvent event) {
+    public void finishEvent(AbsSender absSender, TgEvent event) {
         eventStateService.cancelledState(event);
         eventContextService.update(event);
 

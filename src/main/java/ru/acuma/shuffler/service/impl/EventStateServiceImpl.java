@@ -15,15 +15,35 @@ import java.time.LocalDateTime;
 public class EventStateServiceImpl implements EventStateService {
 
     @Override
-    public void lobbyState(TgEvent event) {
+    public void definePreparingState(TgEvent event) {
         var state = event.getEventState();
-        if (state == EventState.CREATED || state == EventState.READY || state == EventState.CANCEL_LOBBY_CHECKING || state == EventState.BEGIN_CHECKING) {
+        if (isPreparingState(state)) {
             if (event.getPlayers().size() >= Values.GAME_PLAYERS_COUNT) {
                 readyState(event);
-            } else {
-                createdState(event);
+
+                return;
             }
+            createdState(event);
         }
+    }
+
+    @Override
+    public void defineActiveState(TgEvent event) {
+        if (event.getActivePlayers().size() >= Values.GAME_PLAYERS_COUNT) {
+            playingState(event);
+
+            return;
+        }
+        if (event.getLastGame().getState() == GameState.ACTIVE) {
+            waitingWithGameState(event);
+
+            return;
+        }
+        waitingState(event);
+    }
+
+    private boolean isPreparingState(EventState state) {
+        return state == EventState.CREATED || state == EventState.READY || state == EventState.CANCEL_CHECKING || state == EventState.BEGIN_CHECKING;
     }
 
     @Override
@@ -38,7 +58,7 @@ public class EventStateServiceImpl implements EventStateService {
 
     @Override
     public void cancelCheckState(TgEvent event) {
-        event.setEventState(EventState.CANCEL_LOBBY_CHECKING);
+        event.setEventState(EventState.CANCEL_CHECKING);
     }
 
     @Override
@@ -63,26 +83,12 @@ public class EventStateServiceImpl implements EventStateService {
     }
 
     @Override
-    public void cancelGameCheckingState(TgEvent event) {
-        event.getCurrentGame().setState(GameState.CHECKING);
-        event.setEventState(EventState.CANCEL_GAME_CHECKING);
-    }
-
-    @Override
-    public void redCheckingState(TgEvent event) {
-        event.getCurrentGame().setState(GameState.CHECKING);
-        event.setEventState(EventState.RED_CHECKING);
-    }
-
-    @Override
-    public void blueCheckingState(TgEvent event) {
-        event.getCurrentGame().setState(GameState.CHECKING);
-        event.setEventState(EventState.BLUE_CHECKING);
+    public void waitingWithGameState(TgEvent event) {
+        event.setEventState(EventState.WAITING_WITH_GAME);
     }
 
     @Override
     public void finishCheckState(TgEvent event) {
-        event.getCurrentGame().setState(GameState.CHECKING);
         event.setEventState(EventState.FINISH_CHECKING);
     }
 

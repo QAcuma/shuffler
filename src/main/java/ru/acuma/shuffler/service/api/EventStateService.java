@@ -4,15 +4,17 @@ import ru.acuma.shuffler.model.entity.TgEvent;
 
 public interface EventStateService {
 
-    void lobbyState(TgEvent event);
+    void definePreparingState(TgEvent event);
+
+    void defineActiveState(TgEvent event);
 
     void createdState(TgEvent event);
-
-    void readyState(TgEvent event);
 
     void cancelCheckState(TgEvent event);
 
     void cancelledState(TgEvent event);
+
+    void readyState(TgEvent event);
 
     void beginCheckState(TgEvent event);
 
@@ -20,11 +22,7 @@ public interface EventStateService {
 
     void waitingState(TgEvent event);
 
-    void cancelGameCheckingState(TgEvent event);
-
-    void redCheckingState(TgEvent event);
-
-    void blueCheckingState(TgEvent event);
+    void waitingWithGameState(TgEvent event);
 
     void finishCheckState(TgEvent event);
 

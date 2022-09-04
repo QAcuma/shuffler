@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
@@ -42,21 +41,16 @@ public class NoCommand extends BaseBotCommand {
         }
 
         switch (event.getEventState()) {
-            case CANCEL_LOBBY_CHECKING:
+            case CANCEL_CHECKING:
             case BEGIN_CHECKING:
-                eventStateService.lobbyState(event);
+                eventStateService.defineActiveState(event);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
-            case CANCEL_GAME_CHECKING:
-            case RED_CHECKING:
-            case BLUE_CHECKING:
+            case PLAYING:
             case FINISH_CHECKING:
-                if (event.getActivePlayers().size() < Values.GAME_PLAYERS_COUNT) {
-                    eventStateService.waitingState(event);
-                } else {
-                    eventStateService.playingState(event);
-                }
-                executeService.execute(absSender, messageService.updateMessage(event, event.getCurrentGame().getMessageId(), MessageType.GAME));
+                eventStateService.defineActiveState(event);
+                var updatedMessage = messageService.updateMessage(event, event.getLastGame().getMessageId(), MessageType.GAME);
+                executeService.execute(absSender, updatedMessage);
                 break;
         }
     }

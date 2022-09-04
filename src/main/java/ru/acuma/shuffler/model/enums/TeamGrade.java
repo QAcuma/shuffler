@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum TeamStatus {
+public enum TeamGrade {
 
     STRONG(-1),
     WEAK(1);

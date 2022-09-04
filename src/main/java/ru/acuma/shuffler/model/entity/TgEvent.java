@@ -16,6 +16,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
+
 @Data
 @Builder
 public class TgEvent {
@@ -42,7 +44,7 @@ public class TgEvent {
         return Collections.min(this.messages);
     }
 
-    public boolean isPresent(Long telegramId) {
+    public boolean isCallbackUnauthorized(Long telegramId) {
         var player = players.get(telegramId);
         return player != null && !player.isLeft();
     }
@@ -69,14 +71,22 @@ public class TgEvent {
         this.messages.remove(messageId);
     }
 
-    public TgGame getCurrentGame() {
+    public TgGame getLastGame() {
         return tgGames.stream()
                 .max(Comparator.comparingInt(TgGame::getIndex))
                 .orElse(null);
     }
 
-    public void newGame(TgGame tgGame) {
+    public void applyGame(TgGame tgGame) {
         tgGames.add(tgGame);
+    }
+
+    public boolean isCalibrating() {
+        return getTgGames().stream().anyMatch(TgGame::isCalibrating);
+    }
+
+    public boolean hasAnyGameFinished() {
+        return getTgGames().stream().anyMatch(game -> game.getState() == FINISHED);
     }
 
 }

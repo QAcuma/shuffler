@@ -7,9 +7,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum GameState {
 
-    STARTED,
-    CHECKING,
-    CANCELLED,
-    FINISHED;
+    ACTIVE(1),
+    CANCEL_CHECKING(1),
+    RED_CHECKING(1),
+    BLUE_CHECKING(1),
+    FINISH_CHECKING(1),
+    CANCELLED(1),
+    FINISHED(1);
+
+    private final int rows;
 
 }

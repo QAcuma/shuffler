@@ -30,15 +30,16 @@ public enum EventConstant implements EventConstantButton {
     WINNERS_MESSAGE("\n" + GOBLET_EMOJI + " Победители: \n"),
     GAME_MESSAGE("<b>Игра №</b>"),
     MEMBERS_TEXT("\n" + MEMBERS_EMOJI + "Участники:\n"),
-    LET_JOIN_TEXT("\n" + DRUM_EMOJI + "Присоединяйся к чемпионату!\n"),
+    LET_JOIN_TEXT("\n" + "Присоединяйся к чемпионату!\n"),
     CANCEL_CHECKING_MESSAGE(WARNING_EMOJI + "️ Отменить чемпионат?\n"),
     NEXT_CHECKING_MESSAGE(WARNING_EMOJI + "️ Отменить текущую игру и начать новую?\n"),
     FINISH_CHECKING_MESSAGE(WARNING_EMOJI + "️ Завершить чемпионат?\n"),
-    WAITING_MESSAGE(WARNING_EMOJI + "️ Недостаточно игроков для начала игры!\n"),
-    BEGIN_CHECKING_MESSAGE(MEMBERS_EMOJI + " Все участники в сборе?\n"),
+    WAITING_MESSAGE("\n" + WARNING_EMOJI + "<i>Недостаточно игроков для начала игры!</i>\n"),
+    BEGIN_CHECKING_MESSAGE(" Все участники в сборе?\n"),
     RED_CHECKING_MESSAGE(RED_CIRCLE_EMOJI + "   Победа красных?   " + RED_CIRCLE_EMOJI),
     BLUE_CHECKING_MESSAGE(BLUE_CIRCLE_EMOJI + "   Победа синих?   " + BLUE_CIRCLE_EMOJI),
-    SHUFFLER_LINK("\n" + "Статистика игр: shuffler.fun"),
+    CALIBRATING_MESSAGE("\n" + "<i>* - Ставка некоторых игр была понижена из-за участия неоткалиброванных игроков </i>\n"),
+    SHUFFLER_LINK("\n" + "<i>Статистика игр: shuffler.fun</i>"),
     LOBBY_CANCELED_MESSAGE("Чемпионат был отменен " + NICE_MOON_EMOJI);
 
     private final String text;

@@ -39,28 +39,28 @@ public class ExecuteServiceImpl implements ExecuteService {
     @Override
     public <T extends Serializable, Method extends BotApiMethod<T>> T execute(AbsSender absSender, Method method) {
         try {
-            var msg = absSender.execute(method);
+            T msg = absSender.execute(method);
             if (msg instanceof Message) {
                 var message = (Message) msg;
-                final var event = eventContextService.getCurrentEvent(message.getChatId());
+                var event = eventContextService.getCurrentEvent(message.getChatId());
                 if (event != null && message.getMessageId() != null) {
                     event.watchMessage(message.getMessageId());
                 }
             }
+
             return msg;
         } catch (TelegramApiRequestException e) {
             log.warn(e.getMessage());
             if (e.getErrorCode() == TOO_MANY_REQUESTS_CODE) {
                 Pattern pattern = Pattern.compile(TIMEOUT_REGEX);
                 Matcher matcher = pattern.matcher(e.getMessage());
-                if (matcher.find()) {
-                    Thread.sleep(Long.parseLong(matcher.group(0)) * 1000);
-                } else {
-                    Thread.sleep(5000L);
-                }
+                String delay = matcher.group(0) != null ? matcher.group(0) : "15";
+                Thread.sleep(Long.parseLong(delay) * 1000);
+
                 return execute(absSender, method);
             }
         }
+
         return null;
     }
 
