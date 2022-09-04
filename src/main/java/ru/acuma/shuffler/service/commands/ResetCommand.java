@@ -10,6 +10,8 @@ import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Component
 public class ResetCommand extends BaseBotCommand {
@@ -36,6 +38,7 @@ public class ResetCommand extends BaseBotCommand {
             final var event = eventContextService.getCurrentEvent(message.getChatId());
             try {
                 eventStateService.cancelledState(event);
+                event.setFinishedAt(LocalDateTime.now());
                 eventContextService.update(event);
                 maintenanceService.sweepChat(absSender, event);
                 maintenanceService.sweepEvent(event, false);

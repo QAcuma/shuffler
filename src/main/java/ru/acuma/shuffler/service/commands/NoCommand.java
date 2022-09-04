@@ -9,6 +9,7 @@ import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
 import ru.acuma.shuffler.service.api.MessageService;
 
@@ -18,12 +19,14 @@ public class NoCommand extends BaseBotCommand {
     private final EventContextServiceImpl eventContextService;
     private final MaintenanceService maintenanceService;
     private final EventStateService eventStateService;
+    private final GameStateService gameStateService;
     private final MessageService messageService;
     private final ExecuteService executeService;
 
-    public NoCommand(EventContextServiceImpl eventContextService, MaintenanceService maintenanceService, EventStateService eventStateService, MessageService messageService, ExecuteService executeService) {
+    public NoCommand(EventContextServiceImpl eventContextService, MaintenanceService maintenanceService, GameStateService gameStateService, EventStateService eventStateService, MessageService messageService, ExecuteService executeService) {
         super(Command.NO.getCommand(), "Нет");
         this.eventContextService = eventContextService;
+        this.gameStateService = gameStateService;
         this.maintenanceService = maintenanceService;
         this.eventStateService = eventStateService;
         this.messageService = messageService;
@@ -43,14 +46,24 @@ public class NoCommand extends BaseBotCommand {
         switch (event.getEventState()) {
             case CANCEL_CHECKING:
             case BEGIN_CHECKING:
-                eventStateService.defineActiveState(event);
+                eventStateService.definePreparingState(event);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
             case PLAYING:
+            case WAITING_WITH_GAME:
+                gameStateService.activeState(event.getLatestGame());
+                eventStateService.defineActiveState(event);
+                executeService.execute(absSender, messageService.updateLobbyMessage(event));
+                executeService.execute(
+                        absSender,
+                        messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
+                break;
+            case WAITING:
             case FINISH_CHECKING:
                 eventStateService.defineActiveState(event);
-                var updatedMessage = messageService.updateMessage(event, event.getLastGame().getMessageId(), MessageType.GAME);
-                executeService.execute(absSender, updatedMessage);
+                executeService.execute(
+                        absSender,
+                        messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
                 break;
         }
     }

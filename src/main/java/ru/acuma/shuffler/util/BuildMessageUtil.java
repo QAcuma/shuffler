@@ -44,7 +44,7 @@ public final class BuildMessageUtil {
     }
 
     private static String buildGameText(TgEvent event) {
-        var game = event.getLastGame();
+        var game = event.getLatestGame();
         if (game == null) {
             return EventConstant.BLANK_MESSAGE.getText();
         }
@@ -69,7 +69,7 @@ public final class BuildMessageUtil {
     }
 
     private static void buildActiveMessage(TgEvent event, StringBuilder builder) {
-        var game = event.getLastGame();
+        var game = event.getLatestGame();
         String spaces = getSpaces(game);
         builder
                 .append(spaces)
@@ -164,7 +164,7 @@ public final class BuildMessageUtil {
                 return EventConstant.FINISH_CHECKING_MESSAGE.getText();
             case PLAYING:
             case WAITING_WITH_GAME:
-                return buildGameCheckingText(event.getLastGame());
+                return buildGameCheckingText(event.getLatestGame());
             default:
                 return EventConstant.BLANK_MESSAGE.getText();
         }

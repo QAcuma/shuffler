@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
+import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.ExecuteService;
@@ -32,13 +33,14 @@ public class RedCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
-        var gameState = event.getLastGame().getState();
-        if (gameState == GameState.BLUE_CHECKING || gameState == GameState.RED_CHECKING || gameState == GameState.CANCEL_CHECKING) {
+        var gameState = event.getLatestGame().getState();
+        if (gameState.in(GameState.BLUE_CHECKING, GameState.RED_CHECKING, GameState.CANCEL_CHECKING) || event.getEventState().in(EventState.FINISH_CHECKING)) {
             return;
         }
 
-        gameStateService.redCheckingState(event.getLastGame());
-        executeService.execute(absSender, messageService.updateMessage(event, event.getLastGame().getMessageId(), MessageType.GAME));
+        gameStateService.redCheckingState(event.getLatestGame());
+        executeService.execute(absSender, messageService.updateLobbyMessage(event));
+        executeService.execute(absSender, messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
         executeService.execute(absSender, messageService.sendMessage(event, MessageType.CHECKING));
     }
 }

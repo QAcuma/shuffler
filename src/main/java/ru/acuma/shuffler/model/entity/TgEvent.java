@@ -3,6 +3,7 @@ package ru.acuma.shuffler.model.entity;
 import lombok.Builder;
 import lombok.Data;
 import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.time.LocalDateTime;
@@ -71,7 +72,7 @@ public class TgEvent {
         this.messages.remove(messageId);
     }
 
-    public TgGame getLastGame() {
+    public TgGame getLatestGame() {
         return tgGames.stream()
                 .max(Comparator.comparingInt(TgGame::getIndex))
                 .orElse(null);
@@ -87,6 +88,13 @@ public class TgEvent {
 
     public boolean hasAnyGameFinished() {
         return getTgGames().stream().anyMatch(game -> game.getState() == FINISHED);
+    }
+
+    public GameState getLatestGameState() {
+        var latestGame = getLatestGame();
+        return latestGame != null
+                ? latestGame.getState()
+                : GameState.NOT_EXIST;
     }
 
 }

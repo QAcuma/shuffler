@@ -3,6 +3,8 @@ package ru.acuma.shuffler.model.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor
 public enum EventState {
@@ -19,5 +21,9 @@ public enum EventState {
     FINISHED(2);
 
     private final int rows;
+
+    public boolean in(EventState... states) {
+        return Arrays.asList(states).contains(this);
+    }
 
 }

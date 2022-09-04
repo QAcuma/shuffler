@@ -28,7 +28,7 @@ public class GameFacade {
     @SneakyThrows
     @Transactional
     public void finishGameActions(AbsSender absSender, TgEvent event, Message message) {
-        maintenanceService.sweepMessage(absSender, message.getChatId(), event.getLastGame().getMessageId());
+        maintenanceService.sweepMessage(absSender, message.getChatId(), event.getLatestGame().getMessageId());
         eventStateService.defineActiveState(event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));
     }
@@ -44,6 +44,6 @@ public class GameFacade {
 
         var method = messageService.sendMessage(event, MessageType.GAME);
         var gameMessage = executeService.execute(absSender, method);
-        event.getLastGame().setMessageId(gameMessage.getMessageId());
+        event.getLatestGame().setMessageId(gameMessage.getMessageId());
     }
 }

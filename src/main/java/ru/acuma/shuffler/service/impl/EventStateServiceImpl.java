@@ -34,7 +34,7 @@ public class EventStateServiceImpl implements EventStateService {
 
             return;
         }
-        if (event.getLastGame().getState() == GameState.ACTIVE) {
+        if (event.getLatestGame().getState().in(GameState.ACTIVE, GameState.CANCEL_CHECKING, GameState.RED_CHECKING, GameState.BLUE_CHECKING)) {
             waitingWithGameState(event);
 
             return;
@@ -43,7 +43,7 @@ public class EventStateServiceImpl implements EventStateService {
     }
 
     private boolean isPreparingState(EventState state) {
-        return state == EventState.CREATED || state == EventState.READY || state == EventState.CANCEL_CHECKING || state == EventState.BEGIN_CHECKING;
+        return state.in(EventState.CREATED, EventState.READY, EventState.CANCEL_CHECKING, EventState.BEGIN_CHECKING);
     }
 
     @Override
@@ -64,7 +64,6 @@ public class EventStateServiceImpl implements EventStateService {
     @Override
     public void cancelledState(TgEvent event) {
         event.setEventState(EventState.CANCELLED);
-        event.setFinishedAt(LocalDateTime.now());
     }
 
     @Override

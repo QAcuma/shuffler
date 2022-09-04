@@ -74,7 +74,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void applyGameChecking(TgEvent event) {
-        var game = event.getLastGame();
+        var game = event.getLatestGame();
         if (game == null) {
             return;
         }
@@ -106,7 +106,7 @@ public class GameServiceImpl implements GameService {
     }
 
     private void saveGameData(TgEvent event) {
-        var game = event.getLastGame();
+        var game = event.getLatestGame();
         switch (game.getState()) {
             case CANCELLED:
                 break;

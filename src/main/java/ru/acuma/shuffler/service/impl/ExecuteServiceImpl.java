@@ -54,7 +54,7 @@ public class ExecuteServiceImpl implements ExecuteService {
             if (e.getErrorCode() == TOO_MANY_REQUESTS_CODE) {
                 Pattern pattern = Pattern.compile(TIMEOUT_REGEX);
                 Matcher matcher = pattern.matcher(e.getMessage());
-                String delay = matcher.group(0) != null ? matcher.group(0) : "15";
+                String delay = matcher.find() ? matcher.group(0) : "30";
                 Thread.sleep(Long.parseLong(delay) * 1000);
 
                 return execute(absSender, method);

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.model.enums.WinnerState;
 import ru.acuma.shuffler.service.api.ChampionshipService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameService;
@@ -26,7 +25,7 @@ public class EventFacade {
     @SneakyThrows
     public void finishEventActions(AbsSender absSender, TgEvent event, Message message) {
         maintenanceService.sweepMessage(absSender, message);
-        maintenanceService.sweepMessage(absSender, message.getChatId(), event.getLastGame().getMessageId());
+        maintenanceService.sweepMessage(absSender, message.getChatId(), event.getLatestGame().getMessageId());
         gameService.applyGameChecking(event);
         championshipService.finishChampionship(absSender, event);
         executeService.execute(absSender, messageService.updateLobbyMessage(event));
