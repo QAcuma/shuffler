@@ -38,7 +38,7 @@ public class JoinCommand extends BaseBotCommand {
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
 
-        if (event == null || event.isCallbackUnauthorized(message.getFrom().getId())) {
+        if (event == null || !event.playerNotParticipate(message.getFrom().getId())) {
             return;
         }
         switch (event.getEventState()) {

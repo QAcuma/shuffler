@@ -35,7 +35,6 @@ public class FinishCommand extends BaseBotCommand {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
 
         if (event.getEventState().in(EventState.FINISH_CHECKING)
-                || event.isCallbackUnauthorized(message.getFrom().getId())
                 || event.getLatestGame().getState().in(GameState.RED_CHECKING, GameState.BLUE_CHECKING, GameState.CANCEL_CHECKING)) {
             return;
         }
