@@ -38,7 +38,8 @@ public class TgTeam {
         return player1.getName() + " %s " + player2.getName();
     }
 
-    public void applyRating(int change) {
+    public void applyRating() {
+        var change = isWinner() ? bet.getCaseWin() : bet.getCaseLose();
         getPlayers().forEach(player -> player.applyRating(change));
     }
 

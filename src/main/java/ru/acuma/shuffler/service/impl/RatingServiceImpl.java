@@ -23,6 +23,7 @@ import ru.acuma.shufflerlib.repository.RatingRepository;
 
 import javax.management.InstanceNotFoundException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,15 +39,31 @@ public class RatingServiceImpl implements RatingService {
     private float calibrationPenaltyMultiplier;
 
     @Override
+    public void applyBet(TgTeam redTeam, TgTeam blueTeam) {
+        boolean isCalibrating = redTeam.containsCalibrating() || blueTeam.containsCalibrating();
+
+        var redWinCase = winCase(redTeam, blueTeam);
+        var limitedRedWinCase = limitAndRoundChange(redWinCase, isCalibrating);
+        var blueWinCase = getBasePool(isCalibrating) - limitedRedWinCase;
+
+        var redLoseCase = -1 * blueWinCase;
+        var blueLoseCase = -1 * limitedRedWinCase;
+
+        var redBet = new TgGameBet(limitedRedWinCase, redLoseCase);
+        var blueBet = new TgGameBet(blueWinCase, blueLoseCase);
+
+        redTeam.setBet(redBet);
+        blueTeam.setBet(blueBet);
+    }
+
+    @Override
     @SneakyThrows
     @Transactional
     public void update(TgEvent event) {
         var game = event.getLatestGame();
         Optional.ofNullable(game.getWinnerTeam()).orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
-        var change = game.getWinnerTeam().getBet().getCaseWin();
-
-        applyChanges(game, change);
-        saveChanges(event);
+        applyChanges(event);
+        saveResults(event);
     }
 
     @Override
@@ -74,37 +91,12 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public void saveChanges(TgEvent event) {
+    public void saveResults(TgEvent event) {
         TgGame game = event.getLatestGame();
         event.getLatestGame().getPlayers()
                 .stream()
-                .peek(player -> updateRating(player, event.getDiscipline()))
-                .peek(player -> logHistory(player, game.getId(), getRatingChange(player, game)))
-                .forEach(player -> applyCalibratingStatus(player, event.getDiscipline()));
-    }
-
-    private void applyCalibratingStatus(TgEventPlayer player, Discipline discipline) {
-        Rating rating = getRating(player.getId(), discipline);
-        rating.setIsCalibrated(calibrationService.isCalibrated(player.getId()));
-        player.setCalibrated(rating.getIsCalibrated());
-    }
-
-    @Override
-    public void applyBet(TgTeam redTeam, TgTeam blueTeam) {
-        boolean isCalibrating = redTeam.containsCalibrating() || blueTeam.containsCalibrating();
-
-        var redWinCase = winCase(redTeam, blueTeam);
-        var limitedRedWinCase = limitAndRoundChange(redWinCase, isCalibrating);
-        var redLoseCase = (-1) * (getBasePool(isCalibrating) - limitedRedWinCase);
-
-        var blueWinCase = Math.abs(redLoseCase);
-        var blueLoseCase = (-1) * limitedRedWinCase;
-
-        var redBet = new TgGameBet(limitedRedWinCase, redLoseCase);
-        var blueBet = new TgGameBet(blueWinCase, blueLoseCase);
-
-        redTeam.setBet(redBet);
-        blueTeam.setBet(blueBet);
+                .peek(player -> saveRating(player, event.getDiscipline()))
+                .forEach(player -> saveHistory(player, game));
     }
 
     private int winCase(TgTeam team1, TgTeam team2) {
@@ -136,33 +128,6 @@ public class RatingServiceImpl implements RatingService {
         return isCalibrating ? Values.BASE_RATING_CHANGE : Values.BASE_RATING_CHANGE * 2;
     }
 
-    @Override
-    public void updateRating(TgEventPlayer player, Discipline discipline) {
-        Rating rating = getRating(player.getId(), discipline);
-        rating.setScore(player.getScore());
-
-        ratingRepository.update(rating);
-    }
-
-    private void logHistory(TgEventPlayer player, Long gameId, Integer ratingChange) {
-        RatingHistory ratingHistory = new RatingHistory()
-                .setGameId(gameId)
-                .setPlayerId(player.getId())
-                .setChange(ratingChange * player.getCalibrationMultiplier())
-                .setSeasonId(seasonService.getCurrentSeason().getId())
-                .setScore(player.getScore());
-
-        ratingHistoryRepository.save(ratingHistory);
-    }
-
-    private Integer getRatingChange(TgEventPlayer player, TgGame game) {
-        var winnerTeam = game.getWinnerTeam();
-
-        return winnerTeam.getPlayers().contains(player)
-                ? winnerTeam.getBet().getCaseWin()
-                : winnerTeam.getBet().getCaseLose();
-    }
-
     private Rating newDefaultRating(Long playerId, Discipline discipline) {
         Rating rating = new Rating()
                 .setDiscipline(discipline.name())
@@ -174,9 +139,35 @@ public class RatingServiceImpl implements RatingService {
         return rating.setId(ratingRepository.save(rating));
     }
 
-    private void applyChanges(TgGame game, int change) {
-        game.getWinnerTeam().applyRating(change);
-        game.getLoserTeam().applyRating(-change);
+    private void applyCalibratingStatus(TgEventPlayer player, Discipline discipline) {
+        Rating rating = getRating(player.getId(), discipline);
+        rating.setIsCalibrated(calibrationService.isCalibrated(player.getId()));
+        player.setCalibrated(rating.getIsCalibrated());
+    }
+
+    private void applyChanges(TgEvent event) {
+        var game = event.getLatestGame();
+        game.getPlayers().forEach(player -> applyCalibratingStatus(player, event.getDiscipline()));
+        List.of(game.getWinnerTeam(), game.getLoserTeam()).forEach(TgTeam::applyRating);
+    }
+
+    private void saveRating(TgEventPlayer player, Discipline discipline) {
+        Rating rating = getRating(player.getId(), discipline);
+        rating.setScore(player.getScore());
+
+        ratingRepository.update(rating);
+    }
+
+    private void saveHistory(TgEventPlayer player, TgGame game) {
+        RatingHistory ratingHistory = new RatingHistory()
+                .setGameId(game.getId())
+                .setPlayerId(player.getId())
+                .setIscalibrated(player.isCalibrated())
+                .setChange(player.getLastChange())
+                .setSeasonId(seasonService.getCurrentSeason().getId())
+                .setScore(player.getScore());
+
+        ratingHistoryRepository.save(ratingHistory);
     }
 
 }

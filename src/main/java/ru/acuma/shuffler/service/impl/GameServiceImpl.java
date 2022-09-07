@@ -46,14 +46,12 @@ public class GameServiceImpl implements GameService {
 
         ratingService.applyBet(redTeam, blueTeam);
 
-        var game = new TgGame()
+        return new TgGame()
                 .setRedTeam(redTeam)
                 .setBlueTeam(blueTeam)
                 .setIndex(event.getTgGames().size() + 1)
                 .setStartedAt(LocalDateTime.now())
                 .setState(GameState.ACTIVE);
-
-        return game;
     }
 
     private TgGame save(TgGame tgGame, Long eventId) {
