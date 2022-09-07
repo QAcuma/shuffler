@@ -45,9 +45,9 @@ public class TgEvent {
         return Collections.min(this.messages);
     }
 
-    public boolean isCallbackUnauthorized(Long telegramId) {
+    public boolean playerNotParticipate(Long telegramId) {
         var player = players.get(telegramId);
-        return player == null;
+        return null == player || player.isLeft();
     }
 
     public void joinPlayer(TgEventPlayer tgEventPlayer) {

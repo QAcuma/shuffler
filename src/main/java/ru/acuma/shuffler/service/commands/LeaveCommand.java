@@ -33,7 +33,7 @@ public class LeaveCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
-        if (event.isCallbackUnauthorized(message.getFrom().getId())) {
+        if (event == null || event.playerNotParticipate(message.getFrom().getId())) {
             return;
         }
         switch (event.getEventState()) {
