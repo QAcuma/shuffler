@@ -33,20 +33,20 @@ public class LeaveCommand extends BaseBotCommand {
     @Override
     public void execute(AbsSender absSender, Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
-        if (!event.isCallbackUnauthorized(message.getFrom().getId())) {
+        if (event.isCallbackUnauthorized(message.getFrom().getId())) {
             return;
         }
         switch (event.getEventState()) {
             case CREATED:
             case READY:
-                playerService.leaveLobby(event, message.getFrom());
+                playerService.leaveLobby(event, message.getFrom().getId());
                 eventStateService.definePreparingState(event);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;
             case PLAYING:
             case WAITING:
             case WAITING_WITH_GAME:
-                playerService.leaveLobby(event, message.getFrom());
+                playerService.leaveLobby(event, message.getFrom().getId());
                 eventStateService.defineActiveState(event);
                 executeService.execute(absSender, messageService.updateLobbyMessage(event));
                 break;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.keyboards.Created;
@@ -21,8 +22,10 @@ import ru.acuma.shuffler.service.api.KeyboardService;
 import ru.acuma.shuffler.service.buttons.EventStatusButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,6 +54,41 @@ public class KeyboardServiceImpl implements KeyboardService {
     public InlineKeyboardMarkup getTimedKeyboard(int time) {
         var names = buildTimedButtons(time);
         return buildKeyboard(names);
+    }
+
+    @Override
+    public InlineKeyboardMarkup getDynamicListKeyboard(Command command, Map<Long, String> map, InlineKeyboardButton... buttons) {
+        var rows = map.entrySet().stream()
+                .map(entry -> buildButtonWithParam(command, entry.getKey(), entry.getValue()))
+                .map(this::wrapToRow)
+                .collect(Collectors.toList());
+        var extraButtons = Arrays.stream(buttons)
+                .map(this::wrapToRow)
+                .collect(Collectors.toList());
+        rows.addAll(extraButtons);
+
+        return InlineKeyboardMarkup.builder()
+                .keyboard(rows)
+                .build();
+    }
+
+    @Override
+    public InlineKeyboardButton getSingleButton(Command command, String text) {
+        return InlineKeyboardButton.builder()
+                .callbackData(command.getCommand())
+                .text(text)
+                .build();
+    }
+
+    private List<InlineKeyboardButton> wrapToRow(InlineKeyboardButton button) {
+        return List.of(button);
+    }
+
+    private InlineKeyboardButton buildButtonWithParam(Command command, Long identifier, String text) {
+        return InlineKeyboardButton.builder()
+                .text(text)
+                .callbackData(command.getCommand() + "?" + identifier)
+                .build();
     }
 
     private InlineKeyboardMarkup buildKeyboard(List<EventStatusButton> names) {
@@ -89,7 +127,7 @@ public class KeyboardServiceImpl implements KeyboardService {
                 .build();
     }
 
-    public List<EventStatusButton> buildTimedButtons(int time) {
+    private List<EventStatusButton> buildTimedButtons(int time) {
         switch (time) {
             case 3:
                 return List.of(Checking3.values());
@@ -133,4 +171,5 @@ public class KeyboardServiceImpl implements KeyboardService {
                 ? List.of(Game.values())
                 : new ArrayList<>();
     }
+
 }

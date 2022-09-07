@@ -77,6 +77,11 @@ public class EventStateServiceImpl implements EventStateService {
     }
 
     @Override
+    public void evictingState(TgEvent event) {
+        event.setEventState(EventState.EVICTING);
+    }
+
+    @Override
     public void waitingState(TgEvent event) {
         event.setEventState(EventState.WAITING);
     }

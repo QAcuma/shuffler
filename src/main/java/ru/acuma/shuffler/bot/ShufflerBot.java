@@ -2,6 +2,7 @@ package ru.acuma.shuffler.bot;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
@@ -18,9 +19,12 @@ import ru.acuma.shuffler.service.api.UserService;
 import ru.acuma.shuffler.service.commands.BeginCommand;
 import ru.acuma.shuffler.service.commands.BlueCommand;
 import ru.acuma.shuffler.service.commands.CancelCommand;
+import ru.acuma.shuffler.service.commands.CancelEvictCommand;
 import ru.acuma.shuffler.service.commands.CancelGameCommand;
+import ru.acuma.shuffler.service.commands.EvictCommand;
 import ru.acuma.shuffler.service.commands.FinishCommand;
 import ru.acuma.shuffler.service.commands.JoinCommand;
+import ru.acuma.shuffler.service.commands.KickCommand;
 import ru.acuma.shuffler.service.commands.KickerCommand;
 import ru.acuma.shuffler.service.commands.LeaveCommand;
 import ru.acuma.shuffler.service.commands.NoCommand;
@@ -38,7 +42,6 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
 
     private final String BOT_NAME;
     private final String BOT_TOKEN;
-
     @Autowired
     private UserService userService;
     @Autowired
@@ -54,7 +57,13 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
     @Autowired
     private LeaveCommand leaveCommand;
     @Autowired
+    private KickCommand kickCommand;
+    @Autowired
+    private EvictCommand evictCommand;
+    @Autowired
     private CancelCommand cancelCommand;
+    @Autowired
+    private CancelEvictCommand cancelEvictCommand;
     @Autowired
     private CancelGameCommand cancelGameCommand;
     @Autowired
@@ -86,8 +95,11 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
         register(pingPongCommand);
         register(joinCommand);
         register(leaveCommand);
+        register(kickCommand);
+        register(evictCommand);
         register(cancelCommand);
         register(cancelGameCommand);
+        register(cancelEvictCommand);
         register(yesCommand);
         register(noCommand);
         register(redCommand);
@@ -137,7 +149,10 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
         if (filter(callbackQuery.getMessage())) {
             return;
         }
-        getRegisteredCommand(callbackQuery.getData()).processMessage(this,
+        String command = StringUtils.substringBefore(callbackQuery.getData(), "?");
+        callbackQuery.getMessage().setText(StringUtils.substringAfter(callbackQuery.getData(), "?"));
+        getRegisteredCommand(command).processMessage(
+                this,
                 callbackQuery.getMessage(),
                 new String[]{}
         );

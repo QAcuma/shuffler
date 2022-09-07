@@ -37,4 +37,9 @@ public class GameStateServiceImpl implements GameStateService {
     public void finishedState(TgGame game) {
         game.setState(GameState.FINISHED);
     }
+
+    @Override
+    public void notExistState(TgGame game) {
+        game.setState(GameState.NOT_EXIST);
+    }
 }
