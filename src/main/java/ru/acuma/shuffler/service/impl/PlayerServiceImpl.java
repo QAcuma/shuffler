@@ -38,14 +38,14 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void leaveLobby(TgEvent event, User user) {
+    public void leaveLobby(TgEvent event, Long userId) {
         switch (event.getEventState()) {
             case CREATED:
             case READY:
-                event.leaveLobby(user.getId());
+                event.leaveLobby(userId);
                 break;
             default:
-                event.getPlayers().get(user.getId()).setLeft(true);
+                event.getPlayers().get(userId).setLeft(true);
         }
     }
 

@@ -7,7 +7,7 @@ public interface PlayerService {
 
     void authenticate(TgEvent event, User user);
 
-    void leaveLobby(TgEvent event, User user);
+    void leaveLobby(TgEvent event, Long userId);
 
     void joinLobby(TgEvent event, User user);
 }

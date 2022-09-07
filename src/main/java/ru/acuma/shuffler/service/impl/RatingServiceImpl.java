@@ -79,11 +79,14 @@ public class RatingServiceImpl implements RatingService {
         event.getLatestGame().getPlayers()
                 .stream()
                 .peek(player -> updateRating(player, event.getDiscipline()))
-                .forEach(player -> logHistory(
-                        player,
-                        game.getId(),
-                        getRatingChange(player, game)
-                ));
+                .peek(player -> logHistory(player, game.getId(), getRatingChange(player, game)))
+                .forEach(player -> applyCalibratingStatus(player, event.getDiscipline()));
+    }
+
+    private void applyCalibratingStatus(TgEventPlayer player, Discipline discipline) {
+        Rating rating = getRating(player.getId(), discipline);
+        rating.setIsCalibrated(calibrationService.isCalibrated(player.getId()));
+        player.setCalibrated(rating.getIsCalibrated());
     }
 
     @Override
@@ -136,10 +139,7 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public void updateRating(TgEventPlayer player, Discipline discipline) {
         Rating rating = getRating(player.getId(), discipline);
-
         rating.setScore(player.getScore());
-        rating.setIsCalibrated(calibrationService.isCalibrated(player.getId()));
-        player.setCalibrated(rating.getIsCalibrated());
 
         ratingRepository.update(rating);
     }

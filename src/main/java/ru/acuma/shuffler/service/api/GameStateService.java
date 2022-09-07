@@ -4,16 +4,18 @@ import ru.acuma.shuffler.model.entity.TgGame;
 
 public interface GameStateService {
 
-    void activeState(TgGame event);
+    void activeState(TgGame game);
 
-    void cancelState(TgGame event);
+    void cancelState(TgGame game);
 
     void cancelCheckingState(TgGame game);
 
-    void redCheckingState(TgGame event);
+    void redCheckingState(TgGame game);
 
-    void blueCheckingState(TgGame event);
+    void blueCheckingState(TgGame game);
 
-    void finishedState(TgGame event);
+    void finishedState(TgGame game);
+
+    void notExistState(TgGame game);
 
 }

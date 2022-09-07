@@ -20,6 +20,8 @@ public interface EventStateService {
 
     void playingState(TgEvent event);
 
+    void evictingState(TgEvent event);
+
     void waitingState(TgEvent event);
 
     void waitingWithGameState(TgEvent event);
