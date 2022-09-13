@@ -96,7 +96,7 @@ public class RatingServiceImpl implements RatingService {
         event.getLatestGame().getPlayers()
                 .stream()
                 .peek(player -> saveRating(player, event.getDiscipline()))
-                .forEach(player -> saveHistory(player, game));
+                .forEach(player -> saveHistory(player, game, event.getDiscipline()));
     }
 
     private int winCase(TgTeam team1, TgTeam team2) {
@@ -140,9 +140,8 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private void applyCalibratingStatus(TgEventPlayer player, Discipline discipline) {
-        Rating rating = getRating(player.getId(), discipline);
-        rating.setIsCalibrated(calibrationService.isCalibrated(player.getId()));
-        player.setCalibrated(rating.getIsCalibrated());
+        var isCalibrated =  calibrationService.isCalibrated(player.getId(), discipline);
+        player.setCalibrated(isCalibrated);
     }
 
     private void applyChanges(TgEvent event) {
@@ -154,16 +153,18 @@ public class RatingServiceImpl implements RatingService {
     private void saveRating(TgEventPlayer player, Discipline discipline) {
         Rating rating = getRating(player.getId(), discipline);
         rating.setScore(player.getScore());
+        rating.setIsCalibrated(player.isCalibrated());
 
         ratingRepository.update(rating);
     }
 
-    private void saveHistory(TgEventPlayer player, TgGame game) {
+    private void saveHistory(TgEventPlayer player, TgGame game, Discipline discipline) {
         RatingHistory ratingHistory = new RatingHistory()
                 .setGameId(game.getId())
                 .setPlayerId(player.getId())
-                .setIscalibrated(player.isCalibrated())
+                .setIsCalibrated(player.isCalibrated())
                 .setChange(player.getLastChange())
+                .setDiscipline(discipline.name())
                 .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setScore(player.getScore());
 
