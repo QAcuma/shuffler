@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.service.api.CalibrationService;
 import ru.acuma.shuffler.service.api.SeasonService;
 import ru.acuma.shuffler.tables.pojos.RatingHistory;
+import ru.acuma.shufflerlib.model.Discipline;
 import ru.acuma.shufflerlib.repository.RatingHistoryRepository;
 
 import java.util.List;
@@ -42,10 +43,11 @@ public class CalibrationServiceImpl implements CalibrationService {
     }
 
     @Override
-    public boolean isCalibrated(Long playerId) {
+    public boolean isCalibrated(Long playerId, Discipline discipline) {
         int gamesCount = ratingHistoryRepository.findGamesCountBySeasonIdAndPlayerId(
                 seasonService.getCurrentSeason().getId(),
-                playerId
+                playerId,
+                discipline
         );
         int distinctEnemies = getDistinctEnemiesCount(playerId);
 
