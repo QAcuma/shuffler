@@ -140,9 +140,8 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private void applyCalibratingStatus(TgEventPlayer player, Discipline discipline) {
-        Rating rating = getRating(player.getId(), discipline);
-        rating.setIsCalibrated(calibrationService.isCalibrated(player.getId()));
-        player.setCalibrated(rating.getIsCalibrated());
+        var isCalibrated = calibrationService.isCalibrated(player.getId());
+        player.setCalibrated(isCalibrated);
     }
 
     private void applyChanges(TgEvent event) {
@@ -154,6 +153,7 @@ public class RatingServiceImpl implements RatingService {
     private void saveRating(TgEventPlayer player, Discipline discipline) {
         Rating rating = getRating(player.getId(), discipline);
         rating.setScore(player.getScore());
+        rating.setIsCalibrated(player.isCalibrated());
 
         ratingRepository.update(rating);
     }
