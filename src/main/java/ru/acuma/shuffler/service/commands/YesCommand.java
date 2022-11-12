@@ -10,11 +10,14 @@ import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
 import ru.acuma.shuffler.service.api.MessageService;
+import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.executor.ExecutorFactory;
 import ru.acuma.shuffler.service.facade.EventFacade;
 import ru.acuma.shuffler.service.facade.GameFacade;
 
 import javax.annotation.PostConstruct;
+
+import java.util.Optional;
 
 import static ru.acuma.shuffler.model.enums.EventState.BEGIN_CHECKING;
 import static ru.acuma.shuffler.model.enums.EventState.CANCEL_CHECKING;
@@ -88,20 +91,17 @@ public class YesCommand extends BaseBotCommand {
                 this.getClass(),
                 (message, event) -> eventFacade.finishEventActions(event, message)
         );
-
     }
 
     @Override
     @SneakyThrows
+    @SweepMessage
     public void execute(Message message) {
-        var event = eventContextService.getCurrentEvent(message.getChatId());
-        maintenanceService.sweepMessage(message);
-
-        if (event == null) {
-            return;
-        }
-
-        executorFactory.getExecutor(event.getEventState(), this.getClass()).accept(message, event);
+        Optional.of(eventContextService.getCurrentEvent(message.getChatId()))
+                .ifPresent(event -> {
+                    executorFactory.getExecutor(event.getEventState(), this.getClass())
+                            .accept(message, event);
+                });
     }
 }
 

@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @Component
@@ -32,7 +33,9 @@ public class ExecutorFactory implements MessageExecutor<EventState>, CommandRegi
 
     @Override
     public BiConsumer<Message, TgEvent> getExecutor(EventState type, Class<? extends BaseBotCommand> command) {
-        return executors.get(type).get(command);
+        return Optional.of(executors.get(type))
+                .orElse(executors.get(EventState.ANY))
+                .get(command);
     }
 
     @Override

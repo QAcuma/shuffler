@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.shuffler.lib)
     implementation(libs.spring.starter)
     implementation(libs.spring.web)
+    implementation(libs.spring.aop)
     implementation(libs.bundles.telegram)
     implementation(libs.bundles.data)
     implementation(libs.jooq)

@@ -19,7 +19,8 @@ public enum EventState {
     EVICTING(0),
     WAITING_WITH_GAME(0),
     FINISH_CHECKING(1),
-    FINISHED(2);
+    FINISHED(2),
+    ANY(0);
 
     private final int rows;
 
