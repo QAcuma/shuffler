@@ -2,7 +2,7 @@ package ru.acuma.shuffler.model.enums.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.acuma.shuffler.service.buttons.EventConstantButton;
+import ru.acuma.shuffler.service.keyboard.EventConstantButton;
 
 import static ru.acuma.shuffler.util.Symbols.AUTUMN_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;

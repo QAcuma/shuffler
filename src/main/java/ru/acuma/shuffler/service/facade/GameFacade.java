@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
@@ -27,15 +26,15 @@ public class GameFacade {
 
     @SneakyThrows
     @Transactional
-    public void finishGameActions(AbsSender absSender, TgEvent event, Message message) {
-        maintenanceService.sweepMessage(absSender, message.getChatId(), event.getLatestGame().getMessageId());
+    public void finishGameActions(TgEvent event, Message message) {
+        maintenanceService.sweepMessage(message.getChatId(), event.getLatestGame().getMessageId());
         eventStateService.defineActiveState(event);
-        executeService.execute(absSender, messageService.updateLobbyMessage(event));
+        executeService.execute(messageService.updateLobbyMessage(event));
     }
 
     @SneakyThrows
     @Transactional
-    public void nextGameActions(AbsSender absSender, TgEvent event, Message message) {
+    public void nextGameActions(TgEvent event, Message message) {
         if (event.getEventState() == EventState.WAITING) {
             return;
         }
@@ -43,7 +42,7 @@ public class GameFacade {
         gameService.nextGame(event);
 
         var method = messageService.sendMessage(event, MessageType.GAME);
-        var gameMessage = executeService.execute(absSender, method);
+        var gameMessage = executeService.execute(method);
         event.getLatestGame().setMessageId(gameMessage.getMessageId());
     }
 }

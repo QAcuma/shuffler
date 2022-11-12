@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.commands;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
@@ -31,7 +30,7 @@ public class FinishCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
+    public void execute(Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
 
         if (event.getEventState().in(EventState.FINISH_CHECKING)
@@ -40,8 +39,8 @@ public class FinishCommand extends BaseBotCommand {
         }
 
         eventStateService.finishCheckState(event);
-        executeService.execute(absSender, messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
-        executeService.executeAsyncTimer(absSender, event, messageService.sendMessage(event, MessageType.CHECKING_TIMED));
+        executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
+        executeService.executeAsyncTimer(event, messageService.sendMessage(event, MessageType.CHECKING_TIMED));
     }
 }
 

@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.service.api.EventStateService;
@@ -31,8 +30,8 @@ public class ResetCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
-        maintenanceService.sweepMessage(absSender, message);
+    public void execute(Message message) {
+        maintenanceService.sweepMessage(message);
         if (message.getFrom().getId().equals(ID)) {
             log.info("User {} initialized reset process in chat {}", message.getFrom().getFirstName(), message.getChat().getTitle());
             final var event = eventContextService.getCurrentEvent(message.getChatId());
@@ -40,7 +39,7 @@ public class ResetCommand extends BaseBotCommand {
                 eventStateService.cancelledState(event);
                 event.setFinishedAt(LocalDateTime.now());
                 eventContextService.update(event);
-                maintenanceService.sweepChat(absSender, event);
+                maintenanceService.sweepChat(event);
                 maintenanceService.sweepEvent(event, false);
             } catch (Exception e) {
                 log.error(e.getMessage());

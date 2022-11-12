@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.commands;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
@@ -30,14 +29,14 @@ public class KickerCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
-        maintenanceService.sweepMessage(absSender, message);
+    public void execute(Message message) {
+        maintenanceService.sweepMessage(message);
         if (eventContextService.isActive(message.getChatId())) {
             return;
         }
         final var event = eventContextService.buildEvent(message.getChatId(), Discipline.KICKER);
-        var baseMessage = executeService.execute(absSender, messageService.sendMessage(event, MessageType.LOBBY));
-        executeService.execute(absSender, messageService.pinedMessage(baseMessage));
+        var baseMessage = executeService.execute(messageService.sendMessage(event, MessageType.LOBBY));
+        executeService.execute(messageService.pinedMessage(baseMessage));
         event.watchMessage(baseMessage.getMessageId());
     }
 }

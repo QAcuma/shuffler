@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.commands;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
@@ -31,7 +30,7 @@ public class BlueCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
+    public void execute(Message message) {
         var event = eventContextService.getCurrentEvent(message.getChatId());
         var gameState = event.getLatestGame().getState();
         if (gameState.in(GameState.BLUE_CHECKING, GameState.RED_CHECKING, GameState.CANCEL_CHECKING) || event.getEventState().in(EventState.FINISH_CHECKING)) {
@@ -39,9 +38,9 @@ public class BlueCommand extends BaseBotCommand {
         }
 
         gameStateService.blueCheckingState(event.getLatestGame());
-        executeService.execute(absSender, messageService.updateLobbyMessage(event));
-        executeService.execute(absSender, messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
-        executeService.execute(absSender, messageService.sendMessage(event, MessageType.CHECKING));
+        executeService.execute(messageService.updateLobbyMessage(event));
+        executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
+        executeService.execute(messageService.sendMessage(event, MessageType.CHECKING));
     }
 }
 

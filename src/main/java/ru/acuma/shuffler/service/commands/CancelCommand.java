@@ -3,11 +3,8 @@ package ru.acuma.shuffler.service.commands;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.EventState;
-import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
@@ -31,12 +28,12 @@ public class CancelCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
+    public void execute(Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
 
         eventStateService.cancelCheckState(event);
-        executeService.execute(absSender, messageService.updateLobbyMessage(event));
-        executeService.executeAsyncTimer(absSender, event, messageService.sendMessage(event, MessageType.CHECKING_TIMED));
+        executeService.execute(messageService.updateLobbyMessage(event));
+        executeService.executeAsyncTimer(event, messageService.sendMessage(event, MessageType.CHECKING_TIMED));
     }
 }
 

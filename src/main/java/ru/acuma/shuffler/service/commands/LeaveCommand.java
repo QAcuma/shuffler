@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.commands;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.service.api.EventStateService;
@@ -31,7 +30,7 @@ public class LeaveCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
+    public void execute(Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
         if (event == null || event.playerNotParticipate(message.getFrom().getId())) {
             return;
@@ -41,14 +40,14 @@ public class LeaveCommand extends BaseBotCommand {
             case READY:
                 playerService.leaveLobby(event, message.getFrom().getId());
                 eventStateService.definePreparingState(event);
-                executeService.execute(absSender, messageService.updateLobbyMessage(event));
+                executeService.execute(messageService.updateLobbyMessage(event));
                 break;
             case PLAYING:
             case WAITING:
             case WAITING_WITH_GAME:
                 playerService.leaveLobby(event, message.getFrom().getId());
                 eventStateService.defineActiveState(event);
-                executeService.execute(absSender, messageService.updateLobbyMessage(event));
+                executeService.execute(messageService.updateLobbyMessage(event));
                 break;
         }
     }

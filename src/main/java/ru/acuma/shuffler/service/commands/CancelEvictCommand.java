@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.commands;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
@@ -35,8 +34,8 @@ public class CancelEvictCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
-        maintenanceService.sweepMessage(absSender, message);
+    public void execute(Message message) {
+        maintenanceService.sweepMessage(message);
         final var event = eventContextService.getCurrentEvent(message.getChatId());
         if (event == null || event.playerNotParticipate(message.getFrom().getId())) {
             return;
@@ -46,8 +45,8 @@ public class CancelEvictCommand extends BaseBotCommand {
                 eventStateService.defineActiveState(event);
                 gameStateService.activeState(event.getLatestGame());
 
-                executeService.execute(absSender, messageService.updateLobbyMessage(event));
-                executeService.execute(absSender, messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
+                executeService.execute(messageService.updateLobbyMessage(event));
+                executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
         }
     }
 }

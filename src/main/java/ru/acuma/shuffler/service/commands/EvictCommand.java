@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.commands;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
@@ -44,8 +43,8 @@ public class EvictCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
-        maintenanceService.sweepMessage(absSender, message);
+    public void execute(Message message) {
+        maintenanceService.sweepMessage(message);
         final var event = eventContextService.getCurrentEvent(message.getChatId());
         if (event == null || event.playerNotParticipate(message.getFrom().getId())) {
             return;
@@ -54,11 +53,11 @@ public class EvictCommand extends BaseBotCommand {
             case EVICTING:
                 playerService.leaveLobby(event, Long.valueOf(message.getText()));
                 eventStateService.defineActiveState(event);
-                executeService.execute(absSender, messageService.updateMessage(event, event.getBaseMessage(), MessageType.LOBBY));
+                executeService.execute(messageService.updateMessage(event, event.getBaseMessage(), MessageType.LOBBY));
                 gameService.applyGameChecking(event);
-                gameFacade.finishGameActions(absSender, event, message);
+                gameFacade.finishGameActions(event, message);
                 eventStateService.defineActiveState(event);
-                gameFacade.nextGameActions(absSender, event, message);
+                gameFacade.nextGameActions(event, message);
                 break;
             default:
                 break;

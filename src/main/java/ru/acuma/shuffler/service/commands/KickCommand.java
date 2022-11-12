@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.commands;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
@@ -38,8 +37,8 @@ public class KickCommand extends BaseBotCommand {
 
     @SneakyThrows
     @Override
-    public void execute(AbsSender absSender, Message message) {
-        maintenanceService.sweepMessage(absSender, message);
+    public void execute(Message message) {
+        maintenanceService.sweepMessage(message);
         final var event = eventContextService.getCurrentEvent(message.getChatId());
         if (event == null || event.playerNotParticipate(message.getFrom().getId())) {
             return;
@@ -50,11 +49,11 @@ public class KickCommand extends BaseBotCommand {
             case WAITING_WITH_GAME:
                 eventStateService.evictingState(event);
                 gameStateService.cancelCheckingState(event.getLatestGame());
-                var method = kickService.prepareKickMessage(absSender, event);
+                var method = kickService.prepareKickMessage(event);
 
-                executeService.execute(absSender, method);
-                executeService.execute(absSender, messageService.updateLobbyMessage(event));
-                executeService.execute(absSender, messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
+                executeService.execute(method);
+                executeService.execute(messageService.updateLobbyMessage(event));
+                executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
         }
     }
 

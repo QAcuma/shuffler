@@ -15,13 +15,6 @@ public abstract class BaseBotCommand extends BotCommand {
     @Autowired
     private EventContextServiceImpl eventContextService;
 
-    /**
-     * Construct a command
-     *
-     * @param commandIdentifier the unique identifier of this command (e.g. the command string to
-     *                          enter into chat)
-     * @param description       the description of this command
-     */
     public BaseBotCommand(String commandIdentifier, String description) {
         super(commandIdentifier, description);
     }
@@ -32,13 +25,15 @@ public abstract class BaseBotCommand extends BotCommand {
             var event = eventContextService.getCurrentEvent(message.getChatId());
             event.watchMessage(message.getMessageId());
         }
-        execute(absSender, message);
+
+        execute(message);
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
+        log.warn("BotCommand execute not implemented");
     }
 
-    public abstract void execute(AbsSender absSender, Message message);
+    public abstract void execute(Message message);
 
 }

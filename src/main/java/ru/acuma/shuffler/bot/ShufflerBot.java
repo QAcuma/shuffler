@@ -1,9 +1,11 @@
 package ru.acuma.shuffler.bot;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.GetUserProfilePhotos;
@@ -16,98 +18,31 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.shuffler.service.api.GroupService;
 import ru.acuma.shuffler.service.api.NonCommandService;
 import ru.acuma.shuffler.service.api.UserService;
-import ru.acuma.shuffler.service.commands.BeginCommand;
-import ru.acuma.shuffler.service.commands.BlueCommand;
-import ru.acuma.shuffler.service.commands.CancelCommand;
-import ru.acuma.shuffler.service.commands.CancelEvictCommand;
-import ru.acuma.shuffler.service.commands.CancelGameCommand;
-import ru.acuma.shuffler.service.commands.EvictCommand;
-import ru.acuma.shuffler.service.commands.FinishCommand;
-import ru.acuma.shuffler.service.commands.JoinCommand;
-import ru.acuma.shuffler.service.commands.KickCommand;
-import ru.acuma.shuffler.service.commands.KickerCommand;
-import ru.acuma.shuffler.service.commands.LeaveCommand;
-import ru.acuma.shuffler.service.commands.NoCommand;
-import ru.acuma.shuffler.service.commands.PingPongCommand;
-import ru.acuma.shuffler.service.commands.RedCommand;
-import ru.acuma.shuffler.service.commands.ResetCommand;
-import ru.acuma.shuffler.service.commands.WaitCommand;
-import ru.acuma.shuffler.service.commands.YesCommand;
+import ru.acuma.shuffler.service.commands.BaseBotCommand;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class ShufflerBot extends TelegramLongPollingCommandBot {
 
-    private final String BOT_NAME;
-    private final String BOT_TOKEN;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private GroupService groupService;
-    @Autowired
-    private NonCommandService nonCommandService;
-    @Autowired
-    private KickerCommand kickerCommand;
-    @Autowired
-    private PingPongCommand pingPongCommand;
-    @Autowired
-    private JoinCommand joinCommand;
-    @Autowired
-    private LeaveCommand leaveCommand;
-    @Autowired
-    private KickCommand kickCommand;
-    @Autowired
-    private EvictCommand evictCommand;
-    @Autowired
-    private CancelCommand cancelCommand;
-    @Autowired
-    private CancelEvictCommand cancelEvictCommand;
-    @Autowired
-    private CancelGameCommand cancelGameCommand;
-    @Autowired
-    private YesCommand yesCommand;
-    @Autowired
-    private NoCommand noCommand;
-    @Autowired
-    private RedCommand redCommand;
-    @Autowired
-    private BlueCommand blueCommand;
-    @Autowired
-    private WaitCommand waitCommand;
-    @Autowired
-    private BeginCommand beginCommand;
-    @Autowired
-    private FinishCommand finishCommand;
-    @Autowired
-    private ResetCommand resetCommand;
+    @Value("${telegram.bot.name}")
+    private String botName;
 
-    public ShufflerBot(String botName, String botToken) {
-        super();
-        BOT_NAME = botName;
-        BOT_TOKEN = botToken;
-    }
+    @Value("${telegram.bot.token}")
+    private String botToken;
+
+    private final List<BaseBotCommand> commands;
+    private final UserService userService;
+    private final NonCommandService nonCommandService;
+    private final GroupService groupService;
 
     @PostConstruct
     private void init() {
-        register(kickerCommand);
-        register(pingPongCommand);
-        register(joinCommand);
-        register(leaveCommand);
-        register(kickCommand);
-        register(evictCommand);
-        register(cancelCommand);
-        register(cancelGameCommand);
-        register(cancelEvictCommand);
-        register(yesCommand);
-        register(noCommand);
-        register(redCommand);
-        register(blueCommand);
-        register(waitCommand);
-        register(beginCommand);
-        register(finishCommand);
-        register(resetCommand);
+        commands.forEach(this::register);
     }
 
     @Override
@@ -171,12 +106,12 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
 
     @Override
     public String getBotUsername() {
-        return BOT_NAME;
+        return botName;
     }
 
     @Override
     public String getBotToken() {
-        return BOT_TOKEN;
+        return botToken;
     }
 
 }
