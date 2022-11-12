@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.commands;
+package ru.acuma.shuffler.service.command;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

@@ -1,56 +1,53 @@
-package ru.acuma.shuffler.service.commands;
+package ru.acuma.shuffler.service.command;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
+import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
+import ru.acuma.shuffler.service.api.GameStateService;
+import ru.acuma.shuffler.service.api.MaintenanceService;
 import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.service.api.PlayerService;
 
 @Component
-public class LeaveCommand extends BaseBotCommand {
+public class CancelEvictCommand extends BaseBotCommand {
 
     private final EventContextServiceImpl eventContextService;
+    private final GameStateService gameStateService;
     private final EventStateService eventStateService;
-    private final PlayerService playerService;
-    private final MessageService messageService;
     private final ExecuteService executeService;
+    private final MessageService messageService;
+    private final MaintenanceService maintenanceService;
 
-    public LeaveCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, PlayerService playerService, MessageService messageService, ExecuteService executeService) {
-        super(Command.LEAVE.getCommand(), "Покинуть список участников");
+    public CancelEvictCommand(EventContextServiceImpl eventContextService, GameStateService gameStateService, EventStateService eventStateService, ExecuteService executeService, MessageService messageService, MaintenanceService maintenanceService) {
+        super(Command.CANCEL_EVICT.getCommand(), "Не исключать игрока");
         this.eventContextService = eventContextService;
+        this.gameStateService = gameStateService;
         this.eventStateService = eventStateService;
-        this.playerService = playerService;
-        this.messageService = messageService;
         this.executeService = executeService;
+        this.messageService = messageService;
+        this.maintenanceService = maintenanceService;
     }
 
     @SneakyThrows
     @Override
     public void execute(Message message) {
+        maintenanceService.sweepMessage(message);
         final var event = eventContextService.getCurrentEvent(message.getChatId());
         if (event == null || event.playerNotParticipate(message.getFrom().getId())) {
             return;
         }
         switch (event.getEventState()) {
-            case CREATED:
-            case READY:
-                playerService.leaveLobby(event, message.getFrom().getId());
-                eventStateService.definePreparingState(event);
-                executeService.execute(messageService.updateLobbyMessage(event));
-                break;
-            case PLAYING:
-            case WAITING:
-            case WAITING_WITH_GAME:
-                playerService.leaveLobby(event, message.getFrom().getId());
+            case EVICTING:
                 eventStateService.defineActiveState(event);
+                gameStateService.activeState(event.getLatestGame());
+
                 executeService.execute(messageService.updateLobbyMessage(event));
-                break;
+                executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
         }
     }
-
 }
 

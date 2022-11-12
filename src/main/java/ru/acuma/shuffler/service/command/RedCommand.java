@@ -1,30 +1,34 @@
-package ru.acuma.shuffler.service.commands;
+package ru.acuma.shuffler.service.command;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.GameState;
+import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 
+import static ru.acuma.shuffler.model.enums.GameState.BLUE_CHECKING;
+import static ru.acuma.shuffler.model.enums.GameState.CANCEL_CHECKING;
+import static ru.acuma.shuffler.model.enums.GameState.RED_CHECKING;
+
 @Component
-public class CancelGameCommand extends BaseBotCommand {
+public class RedCommand extends BaseBotCommand {
 
     private final EventContextServiceImpl eventContextService;
     private final GameStateService gameStateService;
-    private final ExecuteService executeService;
     private final MessageService messageService;
+    private final ExecuteService executeService;
 
-    public CancelGameCommand(EventContextServiceImpl eventContextService, GameStateService gameStateService, ExecuteService executeService, MessageService messageService) {
-        super(Command.CANCEL_GAME.getCommand(), "Отменить игру");
+    public RedCommand(EventContextServiceImpl eventContextService, GameStateService gameStateService, MessageService messageService, ExecuteService executeService) {
+        super(Command.RED.getCommand(), "Красные");
         this.eventContextService = eventContextService;
         this.gameStateService = gameStateService;
-        this.executeService = executeService;
         this.messageService = messageService;
+        this.executeService = executeService;
     }
 
     @SneakyThrows
@@ -32,11 +36,11 @@ public class CancelGameCommand extends BaseBotCommand {
     public void execute(Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
         var gameState = event.getLatestGame().getState();
-        if (gameState == GameState.BLUE_CHECKING || gameState == GameState.RED_CHECKING || gameState == GameState.CANCEL_CHECKING) {
+        if (gameState.in(BLUE_CHECKING, RED_CHECKING, CANCEL_CHECKING) || event.getEventState().in(EventState.FINISH_CHECKING)) {
             return;
         }
 
-        gameStateService.cancelCheckingState(event.getLatestGame());
+        gameStateService.redCheckingState(event.getLatestGame());
         executeService.execute(messageService.updateLobbyMessage(event));
         executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
         executeService.execute(messageService.sendMessage(event, MessageType.CHECKING));

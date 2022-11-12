@@ -3,6 +3,8 @@ package ru.acuma.shuffler.service.telegram;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -34,7 +36,13 @@ public class ExecuteServiceImpl implements ExecuteService {
     private final EventContextServiceImpl eventContextService;
     private final MessageService messageService;
     private final KeyboardService keyboardService;
-    private final ShufflerBot shufflerBot;
+
+    private ShufflerBot shufflerBot;
+
+    @Autowired
+    public void setShufflerBot(@Lazy ShufflerBot shufflerBot) {
+        this.shufflerBot = shufflerBot;
+    }
 
     @Override
     @SneakyThrows

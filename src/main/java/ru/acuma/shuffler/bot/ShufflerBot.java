@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.shuffler.service.api.GroupService;
 import ru.acuma.shuffler.service.api.NonCommandService;
 import ru.acuma.shuffler.service.api.UserService;
-import ru.acuma.shuffler.service.commands.BaseBotCommand;
+import ru.acuma.shuffler.service.command.BaseBotCommand;
 
 import javax.annotation.PostConstruct;
 import java.util.List;

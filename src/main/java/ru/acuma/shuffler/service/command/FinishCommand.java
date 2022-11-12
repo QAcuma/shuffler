@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.commands;
+package ru.acuma.shuffler.service.command;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -8,39 +8,39 @@ import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
+import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 
 @Component
-public class RedCommand extends BaseBotCommand {
+public class FinishCommand extends BaseBotCommand {
 
     private final EventContextServiceImpl eventContextService;
-    private final GameStateService gameStateService;
-    private final MessageService messageService;
+    private final EventStateService eventStateService;
     private final ExecuteService executeService;
+    private final MessageService messageService;
 
-    public RedCommand(EventContextServiceImpl eventContextService, GameStateService gameStateService, MessageService messageService, ExecuteService executeService) {
-        super(Command.RED.getCommand(), "Красные");
+    public FinishCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, ExecuteService executeService, MessageService messageService) {
+        super(Command.FINISH.getCommand(), "Завершить чемпионат");
         this.eventContextService = eventContextService;
-        this.gameStateService = gameStateService;
-        this.messageService = messageService;
+        this.eventStateService = eventStateService;
         this.executeService = executeService;
+        this.messageService = messageService;
     }
 
     @SneakyThrows
     @Override
     public void execute(Message message) {
         final var event = eventContextService.getCurrentEvent(message.getChatId());
-        var gameState = event.getLatestGame().getState();
-        if (gameState.in(GameState.BLUE_CHECKING, GameState.RED_CHECKING, GameState.CANCEL_CHECKING) || event.getEventState().in(EventState.FINISH_CHECKING)) {
+
+        if (event.getEventState().in(EventState.FINISH_CHECKING)
+                || event.getLatestGame().getState().in(GameState.RED_CHECKING, GameState.BLUE_CHECKING, GameState.CANCEL_CHECKING)) {
             return;
         }
 
-        gameStateService.redCheckingState(event.getLatestGame());
-        executeService.execute(messageService.updateLobbyMessage(event));
+        eventStateService.finishCheckState(event);
         executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
-        executeService.execute(messageService.sendMessage(event, MessageType.CHECKING));
+        executeService.executeAsyncTimer(event, messageService.sendMessage(event, MessageType.CHECKING_TIMED));
     }
 }
 
