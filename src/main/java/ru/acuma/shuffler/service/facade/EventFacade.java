@@ -23,7 +23,6 @@ public class EventFacade {
 
     @SneakyThrows
     public void finishEventActions(TgEvent event, Message message) {
-        maintenanceService.sweepMessage(message);
         maintenanceService.sweepMessage(message.getChatId(), event.getLatestGame().getMessageId());
         gameService.applyGameChecking(event);
         championshipService.finishChampionship(event);

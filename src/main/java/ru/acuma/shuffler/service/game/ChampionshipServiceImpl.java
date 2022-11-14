@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.service.api.ChampionshipService;
 import ru.acuma.shuffler.service.api.EventContextService;
 import ru.acuma.shuffler.service.api.EventStateService;
@@ -38,13 +37,14 @@ public class ChampionshipServiceImpl implements ChampionshipService {
         maintenanceService.sweepChat(event);
         maintenanceService.sweepEvent(event, false);
 
-        executeService.executeLater(
-                () -> maintenanceService.sweepMessage(
-                        Long.valueOf(update.getChatId()),
-                        update.getMessageId()
-                ),
-                Values.CANCELLED_MESSAGE_TIMEOUT
-        );
+        //TODO: executeLater
+//        executeService.executeLater(
+//                () -> maintenanceService.sweepMessage(
+//                        Long.valueOf(update.getChatId()),
+//                        update.getMessageId()
+//                ),
+//                Values.CANCELLED_MESSAGE_TIMEOUT
+//        );
     }
 
     @SneakyThrows

@@ -13,12 +13,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import static ru.acuma.shuffler.model.enums.EventState.ANY;
+
 @Component
-public class ExecutorFactory implements MessageExecutor<EventState>, CommandRegister<EventState> {
+public class CommandExecutorFactory implements MessageExecutor<EventState>, CommandRegister<EventState> {
 
     private final Map<EventState, Map<Class<? extends BaseBotCommand>, BiConsumer<Message, TgEvent>>> executors;
 
-    public ExecutorFactory() {
+    public CommandExecutorFactory() {
         this.executors = new HashMap<>();
     }
 
@@ -33,9 +35,8 @@ public class ExecutorFactory implements MessageExecutor<EventState>, CommandRegi
 
     @Override
     public BiConsumer<Message, TgEvent> getExecutor(EventState type, Class<? extends BaseBotCommand> command) {
-        return Optional.of(executors.get(type))
-                .orElse(executors.get(EventState.ANY))
-                .get(command);
+        return Optional.ofNullable(executors.get(type).get(command))
+                .orElse(executors.get(ANY).get(command));
     }
 
     @Override

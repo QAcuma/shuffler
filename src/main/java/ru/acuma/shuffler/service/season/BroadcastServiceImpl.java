@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.acuma.shuffler.service.api.BroadcastService;
+import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.api.TextBuilderService;
 import ru.acuma.shuffler.tables.pojos.GroupInfo;
@@ -27,6 +28,7 @@ public class BroadcastServiceImpl implements BroadcastService {
     private final GroupRepository groupRepository;
     private final PlayerRepository playerRepository;
     private final MessageService messageService;
+    private final ExecuteService executeService;
     private final TextBuilderService textBuilderService;
 
     @Value("${rating.calibration.games}")
@@ -70,7 +72,7 @@ public class BroadcastServiceImpl implements BroadcastService {
                 .text(textBuilderService.buildSeasonReport(ladderResult))
                 .build();
 
-        messageService.sendMessage(message);
+        executeService.execute(message);
     }
 
     private boolean filterLazy(WebPlayerDetails player) {

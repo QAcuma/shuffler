@@ -1,6 +1,5 @@
 package ru.acuma.shuffler.service.command;
 
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -11,21 +10,20 @@ import ru.acuma.shuffler.service.command.service.CommandService;
 @Component
 public class NoCommand extends BaseBotCommand {
 
-    private CommandService<YesCommand> commandService;
+    private CommandService<NoCommand> commandService;
 
     public NoCommand() {
         super(Command.NO.getCommand(), "Нет");
     }
 
     @Autowired
-    public void setCommandService(@Lazy CommandService<YesCommand> commandService) {
+    public void setCommandService(@Lazy CommandService<NoCommand> commandService) {
         this.commandService = commandService;
     }
 
-    @SneakyThrows
     @Override
     public void execute(Message message) {
-        commandService.doExecute(message);
+        commandService.handle(message);
     }
 }
 

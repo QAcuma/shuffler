@@ -36,7 +36,7 @@ public class PingPongCommand extends BaseBotCommand {
         }
         final var event = eventContextService.buildEvent(message.getChatId(), Discipline.PING_PONG);
         var baseMessage = executeService.execute(messageService.sendMessage(event, MessageType.LOBBY));
-        executeService.execute(messageService.pinedMessage(baseMessage));
+        executeService.execute(messageService.pinMessage(baseMessage));
         event.watchMessage(baseMessage.getMessageId());
     }
 }

@@ -1,6 +1,6 @@
 package ru.acuma.shuffler.model.enums;
-// Перенести в апп проперти
 
+//TODO: Перенести в апп проперти
 public final class Values {
     public static final int TIMEOUT = 3;
     public static final int GAME_PLAYERS_COUNT = 4;

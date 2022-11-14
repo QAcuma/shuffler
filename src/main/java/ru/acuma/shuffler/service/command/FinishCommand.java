@@ -39,8 +39,12 @@ public class FinishCommand extends BaseBotCommand {
         }
 
         eventStateService.finishCheckState(event);
-        executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
-        executeService.executeAsyncTimer(event, messageService.sendMessage(event, MessageType.CHECKING_TIMED));
+        var gameMessage = messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME);
+        executeService.execute(gameMessage);
+        var lobbyMessage = messageService.updateLobbyMessage(event);
+        executeService.execute(lobbyMessage);
+        var checkingMessage = messageService.sendMessage(event, MessageType.CHECKING_TIMED);
+        executeService.executeSequence(checkingMessage, event);
     }
 }
 

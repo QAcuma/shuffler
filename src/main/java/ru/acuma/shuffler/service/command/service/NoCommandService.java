@@ -12,9 +12,8 @@ import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.NoCommand;
-import ru.acuma.shuffler.service.executor.ExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
 
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static ru.acuma.shuffler.model.enums.EventState.BEGIN_CHECKING;
@@ -29,7 +28,7 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 public class NoCommandService extends CommandService<NoCommand> {
 
     private final EventContextService eventContextService;
-    private final ExecutorFactory executorFactory;
+    private final CommandExecutorFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
     private final EventStateService eventStateService;
@@ -37,12 +36,12 @@ public class NoCommandService extends CommandService<NoCommand> {
 
     @Override
     public void init() {
-        executorFactory.register(CANCEL_CHECKING, getCommandClass(), getCancelBeginCheckingConsumer());
-        executorFactory.register(BEGIN_CHECKING, getCommandClass(), getCancelBeginCheckingConsumer());
-        executorFactory.register(PLAYING, getCommandClass(), getPlayingPlayingWithGameConsumer());
-        executorFactory.register(WAITING_WITH_GAME, getCommandClass(), getPlayingPlayingWithGameConsumer());
-        executorFactory.register(WAITING, getCommandClass(), getWaitingFinishCheckingConsumer());
-        executorFactory.register(FINISH_CHECKING, getCommandClass(), getWaitingFinishCheckingConsumer());
+        commandExecutorFactory.register(CANCEL_CHECKING, getCommandClass(), getCancelBeginCheckingConsumer());
+        commandExecutorFactory.register(BEGIN_CHECKING, getCommandClass(), getCancelBeginCheckingConsumer());
+        commandExecutorFactory.register(PLAYING, getCommandClass(), getPlayingPlayingWithGameConsumer());
+        commandExecutorFactory.register(WAITING_WITH_GAME, getCommandClass(), getPlayingPlayingWithGameConsumer());
+        commandExecutorFactory.register(WAITING, getCommandClass(), getWaitingFinishCheckingConsumer());
+        commandExecutorFactory.register(FINISH_CHECKING, getCommandClass(), getWaitingFinishCheckingConsumer());
     }
 
     @Override
@@ -52,12 +51,8 @@ public class NoCommandService extends CommandService<NoCommand> {
 
     @Override
     @SweepMessage
-    public void doExecute(Message message) {
-        Optional.ofNullable(eventContextService.getCurrentEvent(message.getChatId()))
-                .ifPresent(event -> {
-                    executorFactory.getExecutor(event.getEventState(), getCommandClass())
-                            .accept(message, event);
-                });
+    public void handle(Message message) {
+        super.handle(message);
     }
 
     private BiConsumer<Message, TgEvent> getWaitingFinishCheckingConsumer() {

@@ -11,11 +11,10 @@ import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.YesCommand;
-import ru.acuma.shuffler.service.executor.ExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
 import ru.acuma.shuffler.service.facade.EventFacade;
 import ru.acuma.shuffler.service.facade.GameFacade;
 
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static ru.acuma.shuffler.model.enums.EventState.BEGIN_CHECKING;
@@ -29,7 +28,7 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 public class YesCommandService extends CommandService<YesCommand> {
 
     private final EventContextService eventContextService;
-    private final ExecutorFactory executorFactory;
+    private final CommandExecutorFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final ChampionshipService championshipService;
     private final MessageService messageService;
@@ -39,11 +38,11 @@ public class YesCommandService extends CommandService<YesCommand> {
 
     @Override
     public void init() {
-        executorFactory.register(CANCEL_CHECKING, getCommandClass(), getCancelCheckingConsumer());
-        executorFactory.register(BEGIN_CHECKING, getCommandClass(), getBeginCheckingConsumer());
-        executorFactory.register(PLAYING, getCommandClass(), getPlayingConsumer());
-        executorFactory.register(WAITING_WITH_GAME, getCommandClass(), getWaitingWithGameConsumer());
-        executorFactory.register(FINISH_CHECKING, getCommandClass(), getFinishCheckingConsumer());
+        commandExecutorFactory.register(CANCEL_CHECKING, getCommandClass(), getCancelCheckingConsumer());
+        commandExecutorFactory.register(BEGIN_CHECKING, getCommandClass(), getBeginCheckingConsumer());
+        commandExecutorFactory.register(PLAYING, getCommandClass(), getPlayingConsumer());
+        commandExecutorFactory.register(WAITING_WITH_GAME, getCommandClass(), getWaitingWithGameConsumer());
+        commandExecutorFactory.register(FINISH_CHECKING, getCommandClass(), getFinishCheckingConsumer());
     }
 
     @Override
@@ -53,13 +52,10 @@ public class YesCommandService extends CommandService<YesCommand> {
 
     @Override
     @SweepMessage
-    public void doExecute(Message message) {
-        Optional.ofNullable(eventContextService.getCurrentEvent(message.getChatId()))
-                .ifPresent(event -> {
-                    executorFactory.getExecutor(event.getEventState(), getCommandClass())
-                            .accept(message, event);
-                });
+    public void handle(Message message) {
+        super.handle(message);
     }
+
 
     private BiConsumer<Message, TgEvent> getCancelCheckingConsumer() {
         return (message, event) -> championshipService.finishEvent(event);
