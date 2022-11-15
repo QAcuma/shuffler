@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.api.EventContextService;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameStateService;
@@ -25,9 +24,8 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 
 @Service
 @RequiredArgsConstructor
-public class NoCommandService extends CommandService<NoCommand> {
+public class NoCommandHandler extends CommandHandler<NoCommand> {
 
-    private final EventContextService eventContextService;
     private final CommandExecutorFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
@@ -58,14 +56,18 @@ public class NoCommandService extends CommandService<NoCommand> {
     private BiConsumer<Message, TgEvent> getWaitingFinishCheckingConsumer() {
         return (message, event) -> {
             eventStateService.defineActiveState(event);
-            executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
+            var lobbyMessage = messageService.updateLobbyMessage(event);
+            executeService.execute(lobbyMessage);
+            var gameMessage = messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME);
+            executeService.execute(gameMessage);
         };
     }
 
     private BiConsumer<Message, TgEvent> getCancelBeginCheckingConsumer() {
         return (message, event) -> {
             eventStateService.definePreparingState(event);
-            executeService.execute(messageService.updateLobbyMessage(event));
+            var lobbyMessage = messageService.updateLobbyMessage(event);
+            executeService.execute(lobbyMessage);
         };
     }
 
@@ -73,8 +75,10 @@ public class NoCommandService extends CommandService<NoCommand> {
         return (message, event) -> {
             gameStateService.activeState(event.getLatestGame());
             eventStateService.defineActiveState(event);
-            executeService.execute(messageService.updateLobbyMessage(event));
-            executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
+            var lobbyMessage = messageService.updateLobbyMessage(event);
+            executeService.execute(lobbyMessage);
+            var gameMessage = messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME);
+            executeService.execute(gameMessage);
         };
     }
 

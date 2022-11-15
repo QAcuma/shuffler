@@ -1,7 +1,6 @@
 package ru.acuma.shuffler.service.facade;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.entity.TgEvent;
@@ -21,12 +20,12 @@ public class EventFacade {
     private final ChampionshipService championshipService;
     private final GameService gameService;
 
-    @SneakyThrows
     public void finishEventActions(TgEvent event, Message message) {
         maintenanceService.sweepMessage(message.getChatId(), event.getLatestGame().getMessageId());
         gameService.applyGameChecking(event);
         championshipService.finishChampionship(event);
-        executeService.execute(messageService.updateLobbyMessage(event));
+        var lobbyUpdate = messageService.updateLobbyMessage(event);
+        executeService.execute(lobbyUpdate);
     }
 
 }

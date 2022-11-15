@@ -25,7 +25,7 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 
 @Service
 @RequiredArgsConstructor
-public class YesCommandService extends CommandService<YesCommand> {
+public class YesCommandHandler extends CommandHandler<YesCommand> {
 
     private final EventContextService eventContextService;
     private final CommandExecutorFactory commandExecutorFactory;

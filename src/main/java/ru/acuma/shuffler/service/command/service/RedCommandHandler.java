@@ -18,7 +18,7 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 
 @Service
 @RequiredArgsConstructor
-public class RedCommandService extends CommandService<RedCommand> {
+public class RedCommandHandler extends CommandHandler<RedCommand> {
 
     private final GameStateService gameStateService;
     private final MessageService messageService;

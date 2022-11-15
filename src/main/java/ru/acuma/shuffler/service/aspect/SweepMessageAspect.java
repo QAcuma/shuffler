@@ -5,10 +5,10 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.service.api.MaintenanceService;
+import ru.acuma.shuffler.util.AspectUtil;
 
-import java.util.Arrays;
+import javax.ws.rs.NotFoundException;
 import java.util.Objects;
 
 @Aspect
@@ -20,22 +20,12 @@ public class SweepMessageAspect {
 
     @Before("@annotation(SweepMessage)")
     public void authChat(JoinPoint joinPoint) {
-        var message = extractMessage(joinPoint);
+        var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
         if (Objects.isNull(message)) {
             return;
         }
 
         maintenanceService.sweepMessage(message);
-    }
-
-    private Message extractMessage(JoinPoint joinPoint) {
-        var args = joinPoint.getArgs();
-
-        return Arrays.stream(args)
-                .filter(Message.class::isInstance)
-                .map(Message.class::cast)
-                .findFirst()
-                .orElse(null);
     }
 
 }

@@ -17,7 +17,7 @@ import static ru.acuma.shuffler.model.enums.EventState.READY;
 
 @Service
 @RequiredArgsConstructor
-public class BeginCommandService extends CommandService<BeginCommand> {
+public class BeginCommandHandler extends CommandHandler<BeginCommand> {
 
     private final CommandExecutorFactory commandExecutorFactory;
     private final EventStateService eventStateService;

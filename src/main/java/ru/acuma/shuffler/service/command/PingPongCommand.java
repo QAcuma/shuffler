@@ -1,42 +1,28 @@
 package ru.acuma.shuffler.service.command;
 
-import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.MaintenanceService;
-import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.service.command.service.CommandHandler;
 
 @Component
 public class PingPongCommand extends BaseBotCommand {
 
-    private final EventContextServiceImpl eventContextService;
-    private final MaintenanceService maintenanceService;
-    private final MessageService messageService;
-    private final ExecuteService executeService;
+    private CommandHandler<PingPongCommand> commandHandler;
 
-    public PingPongCommand(EventContextServiceImpl eventContextService, MaintenanceService maintenanceService, MessageService messageService, ExecuteService executeService) {
-        super(Command.PING_PONG.getCommand(), "Время пинать сферическую штуку");
-        this.eventContextService = eventContextService;
-        this.maintenanceService = maintenanceService;
-        this.messageService = messageService;
-        this.executeService = executeService;
+    @Autowired
+    public void setCommandService(@Lazy CommandHandler<PingPongCommand> commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
-    @SneakyThrows
+    public PingPongCommand() {
+        super(Command.PING_PONG.getCommand(), "Время пинать сферическую штуку");
+    }
+
     @Override
     public void execute(Message message) {
-        maintenanceService.sweepMessage(message);
-        if (eventContextService.isActive(message.getChatId())) {
-            return;
-        }
-        final var event = eventContextService.buildEvent(message.getChatId(), Discipline.PING_PONG);
-        var baseMessage = executeService.execute(messageService.sendMessage(event, MessageType.LOBBY));
-        executeService.execute(messageService.pinMessage(baseMessage));
-        event.watchMessage(baseMessage.getMessageId());
+        commandHandler.handle(message);
     }
 }

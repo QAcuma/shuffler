@@ -1,68 +1,31 @@
 package ru.acuma.shuffler.service.command;
 
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.cache.EventContextServiceImpl;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.service.api.PlayerService;
-import ru.acuma.shuffler.service.facade.GameFacade;
+import ru.acuma.shuffler.service.command.service.CommandHandler;
 
 @Component
 public class JoinCommand extends BaseBotCommand {
 
-    private final EventContextServiceImpl eventContextService;
-    private final EventStateService eventStateService;
-    private final MessageService messageService;
-    private final ExecuteService executeService;
-    private final PlayerService playerService;
-    private final GameFacade gameFacade;
+    private CommandHandler<JoinCommand> commandHandler;
 
-    public JoinCommand(EventContextServiceImpl eventContextService, EventStateService eventStateService, MessageService messageService, ExecuteService executeService, PlayerService playerService, GameFacade gameFacade) {
+    @Autowired
+    public void setCommandService(@Lazy CommandHandler<JoinCommand> commandHandler) {
+        this.commandHandler = commandHandler;
+    }
+
+    public JoinCommand() {
         super(Command.JOIN.getCommand(), "Присоединиться к игре");
-        this.eventContextService = eventContextService;
-        this.eventStateService = eventStateService;
-        this.messageService = messageService;
-        this.executeService = executeService;
-        this.playerService = playerService;
-        this.gameFacade = gameFacade;
     }
 
     @SneakyThrows
     @Override
     public void execute(Message message) {
-        final var event = eventContextService.getCurrentEvent(message.getChatId());
-
-        if (event == null || !event.playerNotParticipate(message.getFrom().getId())) {
-            return;
-        }
-        switch (event.getEventState()) {
-            case CREATED:
-            case READY:
-                playerService.authenticate(event, message.getFrom());
-                eventStateService.definePreparingState(event);
-                executeService.execute(messageService.updateMessage(event, event.getBaseMessage(), MessageType.LOBBY));
-                break;
-            case WAITING:
-                playerService.joinLobby(event, message.getFrom());
-                eventStateService.defineActiveState(event);
-                executeService.execute(messageService.updateLobbyMessage(event));
-                gameFacade.nextGameActions(event, message);
-                break;
-            case WAITING_WITH_GAME:
-                playerService.joinLobby(event, message.getFrom());
-                eventStateService.defineActiveState(event);
-                executeService.execute(messageService.updateLobbyMessage(event));
-                break;
-            case PLAYING:
-                playerService.joinLobby(event, message.getFrom());
-                executeService.execute(messageService.updateLobbyMessage(event));
-                break;
-        }
+        commandHandler.handle(message);
     }
 }
 

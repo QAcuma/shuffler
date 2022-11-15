@@ -1,31 +1,29 @@
 package ru.acuma.shuffler.service.command;
 
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.command.service.CommandService;
+import ru.acuma.shuffler.service.command.service.CommandHandler;
 
 @Component
 public class RedCommand extends BaseBotCommand {
 
-    private CommandService<RedCommand> commandService;
+    private CommandHandler<RedCommand> commandHandler;
 
     @Autowired
-    public void setCommandService(@Lazy CommandService<RedCommand> commandService) {
-        this.commandService = commandService;
+    public void setCommandService(@Lazy CommandHandler<RedCommand> commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
     public RedCommand() {
         super(Command.RED.getCommand(), "Красные");
     }
 
-    @SneakyThrows
     @Override
     public void execute(Message message) {
-        commandService.handle(message);
+        commandHandler.handle(message);
     }
 }
 

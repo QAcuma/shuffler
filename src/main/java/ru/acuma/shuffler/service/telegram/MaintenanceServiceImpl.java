@@ -49,7 +49,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     }
 
     @Override
-    public void sweepEvent(TgEvent event, boolean store) {
+    public void sweepEvent(TgEvent event) {
         eventContextService.evictEvent(event.getChatId());
     }
 }

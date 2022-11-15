@@ -7,7 +7,7 @@ import ru.acuma.shuffler.service.executor.Executor;
 
 import javax.annotation.PostConstruct;
 
-public abstract class CommandService<T extends BaseBotCommand> {
+public abstract class CommandHandler<T extends BaseBotCommand> {
 
     @Autowired
     protected Executor executor;

@@ -5,16 +5,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.command.service.CommandService;
+import ru.acuma.shuffler.service.command.service.CommandHandler;
 
 @Component
 public class CancelEvictCommand extends BaseBotCommand {
 
-    private CommandService<CancelCommand> commandService;
+    private CommandHandler<CancelEvictCommand> commandHandler;
 
     @Autowired
-    public void setCommandService(@Lazy CommandService<CancelCommand> commandService) {
-        this.commandService = commandService;
+    public void setCommandService(@Lazy CommandHandler<CancelEvictCommand> commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
     public CancelEvictCommand() {
@@ -23,7 +23,7 @@ public class CancelEvictCommand extends BaseBotCommand {
 
     @Override
     public void execute(Message message) {
-        commandService.handle(message);
+        commandHandler.handle(message);
     }
 }
 
