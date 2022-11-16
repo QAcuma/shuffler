@@ -27,7 +27,6 @@ public class BroadcastServiceImpl implements BroadcastService {
 
     private final GroupRepository groupRepository;
     private final PlayerRepository playerRepository;
-    private final MessageService messageService;
     private final ExecuteService executeService;
     private final TextBuilderService textBuilderService;
 
