@@ -11,7 +11,7 @@ import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.NoCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -26,7 +26,7 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class NoCommandHandler extends CommandHandler<NoCommand> {
 
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
     private final EventStateService eventStateService;

@@ -14,4 +14,6 @@ public interface ExecuteService {
 
     <T extends Serializable, M extends BotApiMethod<T>> void executeSequence(M method, TgEvent event);
 
+    <T extends Serializable, M extends BotApiMethod<T>> T executeApi(M method) throws TelegramApiException;
+
 }

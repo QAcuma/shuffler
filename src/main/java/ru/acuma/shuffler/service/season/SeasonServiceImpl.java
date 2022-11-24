@@ -16,7 +16,9 @@ public class SeasonServiceImpl implements SeasonService {
 
     @Override
     public Season getCurrentSeason() {
-        return season == null ? setSeason() : season;
+        return season == null
+                ? setSeason()
+                : season;
     }
 
     @Override

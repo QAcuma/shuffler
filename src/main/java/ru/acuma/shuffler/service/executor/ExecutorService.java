@@ -16,7 +16,7 @@ import static ru.acuma.shuffler.model.enums.EventState.ANY;
 @RequiredArgsConstructor
 public class ExecutorService implements Executor {
 
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final EventContextServiceImpl eventContextService;
 
     @Override

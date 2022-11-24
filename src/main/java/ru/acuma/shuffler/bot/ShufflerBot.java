@@ -7,22 +7,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
-import org.telegram.telegrambots.meta.api.methods.GetUserProfilePhotos;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.acuma.shuffler.service.api.GroupService;
-import ru.acuma.shuffler.service.api.NonCommandService;
-import ru.acuma.shuffler.service.api.UserService;
+import ru.acuma.shuffler.service.aspect.GroupAuth;
+import ru.acuma.shuffler.service.aspect.UserAuth;
 import ru.acuma.shuffler.service.command.BaseBotCommand;
 
 import javax.annotation.PostConstruct;
+import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -36,9 +31,6 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
     private String botToken;
 
     private final List<BaseBotCommand> commands;
-    private final UserService userService;
-    private final NonCommandService nonCommandService;
-    private final GroupService groupService;
 
     @PostConstruct
     private void init() {
@@ -46,29 +38,10 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
     }
 
     @Override
-    @SneakyThrows
-    protected boolean filter(Message message) {
-        var method = new GetUserProfilePhotos();
-        method.setUserId(message.getFrom().getId());
-        var photos = this.sendApiMethod(method);
-        var fileMethod = new GetFile();
-
-        photos.getPhotos().stream()
-                .findFirst()
-                .flatMap(photo -> photo.stream().findFirst())
-                .ifPresent(smallPhoto -> {
-                    fileMethod.setFileId(smallPhoto.getFileId());
-                    loadUserProfilePicture(message.getFrom().getId(), fileMethod);
-                });
-
-        return groupService.authenticate(message.getChat()) && !userService.authenticate(message.getFrom());
-    }
-
-    @SneakyThrows
-    private void loadUserProfilePicture(Long telegramId, GetFile fileMethod) {
-        File photo = this.sendApiMethod(fileMethod);
-
-        userService.saveProfilePhotos(telegramId, photo);
+    @UserAuth
+    @GroupAuth
+    public boolean filter(Message message) {
+        return false;
     }
 
     @Override
@@ -76,7 +49,11 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
         if (update.getCallbackQuery() != null) {
             processCallback(update.getCallbackQuery());
         }
-        reply(nonCommandService.process(update));
+    }
+
+    @SneakyThrows
+    public final <T extends Serializable, M extends BotApiMethod<T>> T executeApiMethod(M method) {
+        return super.execute(method);
     }
 
     private void processCallback(CallbackQuery callbackQuery) {
@@ -91,17 +68,6 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
                 callbackQuery.getMessage(),
                 new String[]{}
         );
-    }
-
-    public <M extends SendMessage> void reply(M message) {
-        if (Objects.isNull(message)) {
-            return;
-        }
-        try {
-            this.execute(message);
-        } catch (TelegramApiException e) {
-            log.error("Failed to send answer", e);
-        }
     }
 
     @Override

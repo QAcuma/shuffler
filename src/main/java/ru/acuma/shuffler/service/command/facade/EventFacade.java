@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.facade;
+package ru.acuma.shuffler.service.command.facade;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -8,9 +8,8 @@ import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.CancelCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -22,7 +21,7 @@ import static ru.acuma.shuffler.model.enums.EventState.READY;
 public class CancelCommandHandler extends CommandHandler<CancelCommand> {
 
     private final EventStateService eventStateService;
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
 
@@ -38,7 +37,6 @@ public class CancelCommandHandler extends CommandHandler<CancelCommand> {
     }
 
     @Override
-    @SweepMessage
     public void handle(Message message) {
         super.handle(message);
     }

@@ -9,7 +9,7 @@ import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.command.CancelGameCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -20,7 +20,7 @@ import static ru.acuma.shuffler.model.enums.EventState.ANY;
 public class CancelGameCommandHandler extends CommandHandler<CancelGameCommand> {
 
     private final GameStateService gameStateService;
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
 

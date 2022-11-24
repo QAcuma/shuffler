@@ -12,7 +12,7 @@ import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.aspect.CheckPlayerInEvent;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.CancelEvictCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -22,7 +22,7 @@ import static ru.acuma.shuffler.model.enums.EventState.EVICTING;
 @RequiredArgsConstructor
 public class CancelEvictCommandHandler extends CommandHandler<CancelEvictCommand> {
 
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final EventStateService eventStateService;
     private final ExecuteService executeService;
     private final MessageService messageService;

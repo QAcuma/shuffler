@@ -10,7 +10,7 @@ import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.api.PlayerService;
 import ru.acuma.shuffler.service.aspect.CheckPlayerInEvent;
 import ru.acuma.shuffler.service.command.LeaveCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -24,7 +24,7 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class LeaveCommandHandler extends CommandHandler<LeaveCommand> {
 
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
     private final EventStateService eventStateService;

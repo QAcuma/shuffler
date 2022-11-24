@@ -9,7 +9,7 @@ import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.command.BlueCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -23,7 +23,7 @@ public class BlueCommandHandler extends CommandHandler<BlueCommand> {
     private final GameStateService gameStateService;
     private final MessageService messageService;
     private final ExecuteService executeService;
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
 
     @Override
     protected void init() {

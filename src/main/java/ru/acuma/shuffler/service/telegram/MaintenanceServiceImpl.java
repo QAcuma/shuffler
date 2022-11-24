@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.service.api.EventContextService;
@@ -11,8 +12,7 @@ import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
 import ru.acuma.shuffler.service.api.MessageService;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -25,12 +25,11 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Override
     public void sweepChat(TgEvent event) {
-        Set<Integer> copyIds = new HashSet<>(event.getMessages());
-        copyIds.forEach(id -> {
-            var deleteMessage = messageService.deleteMessage(event.getChatId(), id);
-            executeService.execute(deleteMessage);
-            event.missMessage(id);
-        });
+        event.getMessages().stream()
+                .map(messageId -> messageService.deleteMessage(event.getChatId(), messageId))
+                .peek(executeService::execute)
+                .map(DeleteMessage::getMessageId)
+                .forEach(event::missMessage);
     }
 
     @Override
@@ -40,12 +39,10 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @SneakyThrows
     public void sweepMessage(Long chatId, Integer messageId) {
-        final var event = eventContextService.getCurrentEvent(chatId);
-        var deleteMessage = messageService.deleteMessage(chatId, messageId);
-        executeService.execute(deleteMessage);
-        if (eventContextService.isActive(chatId)) {
-            event.missMessage(messageId);
-        }
+        CompletableFuture.supplyAsync(() -> messageService.deleteMessage(chatId, messageId))
+                .thenAccept(executeService::execute)
+                .thenApply(future -> eventContextService.getCurrentEvent(chatId))
+                .thenAccept(event -> event.missMessage(messageId));
     }
 
     @Override

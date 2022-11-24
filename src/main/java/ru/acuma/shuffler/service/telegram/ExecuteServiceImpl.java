@@ -90,6 +90,11 @@ public class ExecuteServiceImpl implements ExecuteService {
         });
     }
 
+    @Override
+    public <T extends Serializable, M extends BotApiMethod<T>> T executeApi(M method) {
+        return shufflerBot.executeApiMethod(method);
+    }
+
     @SneakyThrows
     private <T extends Serializable, M extends BotApiMethod<T>> T doExecute(M method) {
         var delay = 30_000L;

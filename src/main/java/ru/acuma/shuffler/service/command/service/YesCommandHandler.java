@@ -11,9 +11,9 @@ import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.YesCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
-import ru.acuma.shuffler.service.facade.EventFacade;
-import ru.acuma.shuffler.service.facade.GameFacade;
+import ru.acuma.shuffler.service.command.facade.EventFacade;
+import ru.acuma.shuffler.service.command.facade.GameFacade;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -28,7 +28,7 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 public class YesCommandHandler extends CommandHandler<YesCommand> {
 
     private final EventContextService eventContextService;
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final ChampionshipService championshipService;
     private final MessageService messageService;

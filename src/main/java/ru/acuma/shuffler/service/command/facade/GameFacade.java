@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.facade;
+package ru.acuma.shuffler.service.command.facade;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -29,7 +29,8 @@ public class GameFacade {
     public void finishGameActions(TgEvent event, Message message) {
         maintenanceService.sweepMessage(message.getChatId(), event.getLatestGame().getMessageId());
         eventStateService.defineActiveState(event);
-        executeService.execute(messageService.updateLobbyMessage(event));
+        var lobbyMessage = messageService.updateLobbyMessage(event);
+        executeService.execute(lobbyMessage);
     }
 
     @SneakyThrows

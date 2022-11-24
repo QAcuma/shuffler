@@ -5,9 +5,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.methods.GetUserProfilePhotos;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.UserProfilePhotos;
 import ru.acuma.shuffler.mapper.UserMapper;
+import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.UserService;
 import ru.acuma.shuffler.tables.pojos.UserInfo;
 import ru.acuma.shufflerlib.repository.UserRepository;
@@ -17,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,6 +30,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ExecuteService executeService;
 
     @Value("${telegram.bot.token}")
     private String botToken;
@@ -37,9 +43,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.get(telegramId);
     }
 
-    @Override
     @SneakyThrows
-    public void saveProfilePhotos(Long telegramId, File photo) {
+    private void saveProfilePhotos(Long telegramId, File photo) {
         try {
             URL url = new URL(photo.getFileUrl(botToken));
             ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
@@ -53,10 +58,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private Boolean hasAccess(Long telegramId) {
-        return (userRepository.isActive(telegramId));
-    }
-
     @Override
     public boolean authenticate(User user) {
         if (hasAccess(user.getId())) {
@@ -66,5 +67,38 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<UserInfo> getUsers() {
+        return userRepository.getAll(Boolean.FALSE);
+    }
+
+    @Override
+    public void saveUserAvatar(Long userId) {
+        findUserPictures(userId).getPhotos().stream()
+                .findFirst()
+                .flatMap(picture -> picture.stream().findFirst())
+                .ifPresent(smallPhoto -> {
+                    var getFile = new GetFile(smallPhoto.getFileId());
+                    var file = loadUserProfilePicture(getFile);
+                    saveProfilePhotos(userId, file);
+                });
+    }
+
+    private Boolean hasAccess(Long telegramId) {
+        return userRepository.isActive(telegramId);
+    }
+
+    @SneakyThrows
+    private UserProfilePhotos findUserPictures(Long getUserPhotos) {
+        var method = new GetUserProfilePhotos(getUserPhotos);
+
+        return executeService.executeApi(method);
+    }
+
+    @SneakyThrows
+    private File loadUserProfilePicture(GetFile getFile) {
+        return executeService.executeApi(getFile);
     }
 }

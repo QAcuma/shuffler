@@ -16,11 +16,11 @@ import java.util.function.BiConsumer;
 import static ru.acuma.shuffler.model.enums.EventState.ANY;
 
 @Component
-public class CommandExecutorFactory implements MessageExecutor<EventState>, CommandRegister<EventState> {
+public class CommandExecutorSourceFactory implements CommandExecutorSource<EventState>, CommandRegister<EventState> {
 
     private final Map<EventState, Map<Class<? extends BaseBotCommand>, BiConsumer<Message, TgEvent>>> executors;
 
-    public CommandExecutorFactory() {
+    public CommandExecutorSourceFactory() {
         this.executors = new HashMap<>();
     }
 

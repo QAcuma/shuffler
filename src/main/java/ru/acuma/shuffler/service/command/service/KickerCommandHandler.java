@@ -12,7 +12,7 @@ import ru.acuma.shuffler.service.aspect.CheckNoActiveEvent;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.BaseBotCommand;
 import ru.acuma.shuffler.service.command.KickerCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 import ru.acuma.shuffler.service.executor.Executor;
 import ru.acuma.shufflerlib.model.Discipline;
 
@@ -24,7 +24,7 @@ import static ru.acuma.shuffler.model.enums.EventState.ANY;
 @RequiredArgsConstructor
 public class KickerCommandHandler extends CommandHandler<KickerCommand> {
 
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
     private final EventContextServiceImpl eventContextService;

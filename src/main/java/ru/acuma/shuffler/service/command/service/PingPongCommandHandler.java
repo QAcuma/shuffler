@@ -11,7 +11,7 @@ import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.aspect.CheckNoActiveEvent;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.PingPongCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.util.function.BiConsumer;
@@ -22,7 +22,7 @@ import static ru.acuma.shuffler.model.enums.EventState.ANY;
 @RequiredArgsConstructor
 public class PingPongCommandHandler extends CommandHandler<PingPongCommand> {
 
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
     private final EventContextServiceImpl eventContextService;

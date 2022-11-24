@@ -1,6 +1,7 @@
 package ru.acuma.shuffler.service.keyboard;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -9,7 +10,6 @@ import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.keyboards.Created;
-import ru.acuma.shuffler.model.enums.keyboards.Game;
 import ru.acuma.shuffler.model.enums.keyboards.Playing;
 import ru.acuma.shuffler.model.enums.keyboards.Ready;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking;
@@ -19,15 +19,14 @@ import ru.acuma.shuffler.model.enums.keyboards.checking.Checking3;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.KeyboardService;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static ru.acuma.shuffler.model.enums.EventState.BEGIN_CHECKING;
 import static ru.acuma.shuffler.model.enums.EventState.CANCEL_CHECKING;
@@ -58,6 +57,7 @@ public class KeyboardServiceImpl implements KeyboardService {
             PLAYING, () -> List.of(Playing.values()),
             WAITING_WITH_GAME, () -> List.of(Playing.values()),
             WAITING, () -> List.of(Playing.values()),
+            EventState.CANCELLED, Collections::emptyList,
             FINISHED, Collections::emptyList
     );
 
@@ -130,39 +130,24 @@ public class KeyboardServiceImpl implements KeyboardService {
     }
 
     private InlineKeyboardMarkup buildKeyboard(List<EventStatusButton> names) {
-        List<List<InlineKeyboardButton>> buttons = new LinkedList<>();
-
-        List<InlineKeyboardButton> row1 = names.stream()
-                .filter(button -> button.getRow() == 1)
-                .map(button -> InlineKeyboardButton.builder()
-                        .text(button.getAlias())
-                        .callbackData(button.getAction())
-                        .build())
+        List<List<InlineKeyboardButton>> buttons = IntStream.rangeClosed(1, 3)
+                .mapToObj(rowNum -> getInlineKeyboardButtons(names, rowNum))
                 .collect(Collectors.toList());
-
-        List<InlineKeyboardButton> row2 = names.stream()
-                .filter(button -> button.getRow() == 2)
-                .map(button -> InlineKeyboardButton.builder()
-                        .text(button.getAlias())
-                        .callbackData(button.getAction())
-                        .build())
-                .collect(Collectors.toList());
-
-        List<InlineKeyboardButton> row3 = names.stream()
-                .filter(button -> button.getRow() == 3)
-                .map(button -> InlineKeyboardButton.builder()
-                        .text(button.getAlias())
-                        .callbackData(button.getAction())
-                        .build())
-                .collect(Collectors.toList());
-
-        buttons.add(row1);
-        buttons.add(row2);
-        buttons.add(row3);
 
         return InlineKeyboardMarkup.builder()
                 .keyboard(buttons)
                 .build();
+    }
+
+    @NotNull
+    private List<InlineKeyboardButton> getInlineKeyboardButtons(List<EventStatusButton> names, int row) {
+        return names.stream()
+                .filter(button -> button.getRow() == row)
+                .map(button -> InlineKeyboardButton.builder()
+                        .text(button.getAlias())
+                        .callbackData(button.getAction())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private List<EventStatusButton> buildTimedButtons(Integer time) {
@@ -180,12 +165,6 @@ public class KeyboardServiceImpl implements KeyboardService {
         return gameState.in(GameState.RED_CHECKING, GameState.BLUE_CHECKING, GameState.CANCEL_CHECKING)
                 ? checkingButtons
                 : buttons;
-    }
-
-    private List<EventStatusButton> buildGameButtons(TgEvent event) {
-        return event.getLatestGameState() == GameState.ACTIVE && event.getEventState() != FINISH_CHECKING
-                ? List.of(Game.values())
-                : new ArrayList<>();
     }
 
 }

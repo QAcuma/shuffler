@@ -13,8 +13,8 @@ import ru.acuma.shuffler.service.api.PlayerService;
 import ru.acuma.shuffler.service.aspect.CheckPlayerInEvent;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.command.EvictCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
-import ru.acuma.shuffler.service.facade.GameFacade;
+import ru.acuma.shuffler.service.command.facade.GameFacade;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -24,7 +24,7 @@ import static ru.acuma.shuffler.model.enums.EventState.EVICTING;
 @RequiredArgsConstructor
 public class EvictCommandHandler extends CommandHandler<EvictCommand> {
 
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final EventStateService eventStateService;
     private final ExecuteService executeService;
     private final MessageService messageService;

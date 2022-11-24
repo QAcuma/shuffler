@@ -9,7 +9,7 @@ import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.command.BeginCommand;
-import ru.acuma.shuffler.service.executor.CommandExecutorFactory;
+import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
@@ -19,7 +19,7 @@ import static ru.acuma.shuffler.model.enums.EventState.READY;
 @RequiredArgsConstructor
 public class BeginCommandHandler extends CommandHandler<BeginCommand> {
 
-    private final CommandExecutorFactory commandExecutorFactory;
+    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final EventStateService eventStateService;
     private final ExecuteService executeService;
     private final MessageService messageService;
