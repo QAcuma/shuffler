@@ -1,7 +1,6 @@
 package ru.acuma.shuffler.bot;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +10,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.acuma.shuffler.service.aspect.GroupAuth;
-import ru.acuma.shuffler.service.aspect.UserAuth;
-import ru.acuma.shuffler.service.command.BaseBotCommand;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.acuma.shuffler.controller.BaseBotCommand;
+import ru.acuma.shuffler.service.user.AuthService;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
@@ -31,6 +30,7 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
     private String botToken;
 
     private final List<BaseBotCommand> commands;
+    private final AuthService authService;
 
     @PostConstruct
     private void init() {
@@ -38,10 +38,8 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
     }
 
     @Override
-    @UserAuth
-    @GroupAuth
     public boolean filter(Message message) {
-        return false;
+        return authService.doAuth(message);
     }
 
     @Override
@@ -51,8 +49,7 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
         }
     }
 
-    @SneakyThrows
-    public final <T extends Serializable, M extends BotApiMethod<T>> T executeApiMethod(M method) {
+    public final <T extends Serializable, M extends BotApiMethod<T>> T executeApiMethod(M method) throws TelegramApiException {
         return super.execute(method);
     }
 

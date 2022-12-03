@@ -4,30 +4,22 @@ import ru.acuma.shuffler.model.entity.TgEvent;
 
 public interface EventStateService {
 
-    void definePreparingState(TgEvent event);
+    void prepare(TgEvent event);
 
-    void defineActiveState(TgEvent event);
+    void active(TgEvent event);
 
-    void createdState(TgEvent event);
+    void cancel(TgEvent event);
 
-    void cancelCheckState(TgEvent event);
+    void check(TgEvent event);
 
-    void cancelledState(TgEvent event);
+    void cancelled(TgEvent event);
 
-    void readyState(TgEvent event);
+    void begin(TgEvent event);
 
-    void beginCheckState(TgEvent event);
+    void evicting(TgEvent event);
 
-    void playingState(TgEvent event);
+    void finishCheck(TgEvent event);
 
-    void evictingState(TgEvent event);
-
-    void waitingState(TgEvent event);
-
-    void waitingWithGameState(TgEvent event);
-
-    void finishCheckState(TgEvent event);
-
-    void finishedState(TgEvent event);
+    void finished(TgEvent event);
 
 }

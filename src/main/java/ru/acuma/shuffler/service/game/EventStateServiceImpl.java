@@ -15,90 +15,90 @@ import java.time.LocalDateTime;
 public class EventStateServiceImpl implements EventStateService {
 
     @Override
-    public void definePreparingState(TgEvent event) {
+    public void prepare(TgEvent event) {
         var state = event.getEventState();
         if (isPreparingState(state)) {
             if (event.getPlayers().size() >= Values.GAME_PLAYERS_COUNT) {
-                readyState(event);
+                ready(event);
 
                 return;
             }
-            createdState(event);
+            created(event);
         }
     }
 
     @Override
-    public void defineActiveState(TgEvent event) {
+    public void active(TgEvent event) {
         if (event.getActivePlayers().size() >= Values.GAME_PLAYERS_COUNT) {
-            playingState(event);
+            playing(event);
 
             return;
         }
         if (event.getLatestGame().getState().in(GameState.ACTIVE, GameState.CANCEL_CHECKING, GameState.RED_CHECKING, GameState.BLUE_CHECKING)) {
-            waitingWithGameState(event);
+            waitingWithGame(event);
 
             return;
         }
-        waitingState(event);
+        waiting(event);
+    }
+
+    @Override
+    public void cancel(TgEvent event) {
+        event.setEventState(EventState.CANCEL_CHECKING);
+    }
+
+    @Override
+    public void check(TgEvent event) {
+        event.setEventState(EventState.CHECKING);
+    }
+
+    @Override
+    public void cancelled(TgEvent event) {
+        event.setEventState(EventState.CANCELLED);
+    }
+
+    @Override
+    public void begin(TgEvent event) {
+        event.setEventState(EventState.BEGIN_CHECKING);
+    }
+
+    @Override
+    public void evicting(TgEvent event) {
+        event.setEventState(EventState.EVICTING);
+    }
+
+    @Override
+    public void finishCheck(TgEvent event) {
+        event.setEventState(EventState.FINISH_CHECKING);
+    }
+
+    @Override
+    public void finished(TgEvent event) {
+        event.setEventState(EventState.FINISHED);
+        event.setFinishedAt(LocalDateTime.now());
     }
 
     private boolean isPreparingState(EventState state) {
         return state.in(EventState.CREATED, EventState.READY, EventState.CANCEL_CHECKING, EventState.BEGIN_CHECKING);
     }
 
-    @Override
-    public void createdState(TgEvent event) {
+    private void created(TgEvent event) {
         event.setEventState(EventState.CREATED);
     }
 
-    @Override
-    public void readyState(TgEvent event) {
+    private void ready(TgEvent event) {
         event.setEventState(EventState.READY);
     }
 
-    @Override
-    public void cancelCheckState(TgEvent event) {
-        event.setEventState(EventState.CANCEL_CHECKING);
-    }
-
-    @Override
-    public void cancelledState(TgEvent event) {
-        event.setEventState(EventState.CANCELLED);
-    }
-
-    @Override
-    public void beginCheckState(TgEvent event) {
-        event.setEventState(EventState.BEGIN_CHECKING);
-    }
-
-    @Override
-    public void playingState(TgEvent event) {
-        event.setEventState(EventState.PLAYING);
-    }
-
-    @Override
-    public void evictingState(TgEvent event) {
-        event.setEventState(EventState.EVICTING);
-    }
-
-    @Override
-    public void waitingState(TgEvent event) {
+    private void waiting(TgEvent event) {
         event.setEventState(EventState.WAITING);
     }
 
-    @Override
-    public void waitingWithGameState(TgEvent event) {
+    private void playing(TgEvent event) {
+        event.setEventState(EventState.PLAYING);
+    }
+
+    private void waitingWithGame(TgEvent event) {
         event.setEventState(EventState.WAITING_WITH_GAME);
-    }
-
-    @Override
-    public void finishCheckState(TgEvent event) {
-        event.setEventState(EventState.FINISH_CHECKING);
-    }
-
-    @Override
-    public void finishedState(TgEvent event) {
-        event.setEventState(EventState.FINISHED);
-        event.setFinishedAt(LocalDateTime.now());
     }
 }

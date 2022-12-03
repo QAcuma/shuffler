@@ -7,79 +7,48 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.keyboards.Created;
+import ru.acuma.shuffler.model.enums.keyboards.Game;
 import ru.acuma.shuffler.model.enums.keyboards.Playing;
 import ru.acuma.shuffler.model.enums.keyboards.Ready;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking1;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking2;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking3;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.KeyboardService;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static ru.acuma.shuffler.model.enums.EventState.BEGIN_CHECKING;
-import static ru.acuma.shuffler.model.enums.EventState.CANCEL_CHECKING;
-import static ru.acuma.shuffler.model.enums.EventState.CREATED;
-import static ru.acuma.shuffler.model.enums.EventState.FINISHED;
-import static ru.acuma.shuffler.model.enums.EventState.FINISH_CHECKING;
-import static ru.acuma.shuffler.model.enums.EventState.PLAYING;
-import static ru.acuma.shuffler.model.enums.EventState.READY;
-import static ru.acuma.shuffler.model.enums.EventState.WAITING;
-import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
-import static ru.acuma.shuffler.model.enums.messages.MessageType.CANCELLED;
-import static ru.acuma.shuffler.model.enums.messages.MessageType.CHECKING;
-import static ru.acuma.shuffler.model.enums.messages.MessageType.CHECKING_TIMED;
-import static ru.acuma.shuffler.model.enums.messages.MessageType.GAME;
-import static ru.acuma.shuffler.model.enums.messages.MessageType.LOBBY;
-import static ru.acuma.shuffler.model.enums.messages.MessageType.STAT;
 
 @Service
 @RequiredArgsConstructor
 public class KeyboardServiceImpl implements KeyboardService {
 
-    private final Map<EventState, Supplier<List<EventStatusButton>>> lobbyButtons = Map.of(
-            CREATED, () -> List.of(Created.values()),
-            READY, () -> List.of(Ready.values()),
-            CANCEL_CHECKING, () -> List.of(Checking.values()),
-            BEGIN_CHECKING, () -> List.of(Checking.values()),
-            FINISH_CHECKING, () -> List.of(Checking.values()),
-            PLAYING, () -> List.of(Playing.values()),
-            WAITING_WITH_GAME, () -> List.of(Playing.values()),
-            WAITING, () -> List.of(Playing.values()),
-            EventState.CANCELLED, Collections::emptyList,
-            FINISHED, Collections::emptyList
-    );
+    @Override
+    public InlineKeyboardMarkup getLobbyKeyboard(TgEvent event) {
+        var lobbyButtons = buildLobbyButtons(event);
 
-    private final Map<MessageType, Function<TgEvent, InlineKeyboardMarkup>> messageButtons = Map.of(
-            CHECKING, event -> buildKeyboard(List.of(Checking.values())),
-            CHECKING_TIMED, event -> buildKeyboard(buildLobbyButtons(event)),
-            CANCELLED, event -> buildKeyboard(buildLobbyButtons(event)),
-            GAME, event -> buildKeyboard(buildLobbyButtons(event)),
-            LOBBY, event -> buildKeyboard(buildLobbyButtons(event)),
-            STAT, event -> buildKeyboard(buildLobbyButtons(event))
-    );
-
-    private final Map<Integer, Supplier<List<EventStatusButton>>> timedButtons = Map.of(
-            3, () -> List.of(Checking3.values()),
-            2, () -> List.of(Checking2.values()),
-            1, () -> List.of(Checking1.values()),
-            0, () -> List.of(Checking.values())
-    );
+        return buildKeyboard(lobbyButtons);
+    }
 
     @Override
-    public InlineKeyboardMarkup getKeyboard(TgEvent event, MessageType type) {
-        return messageButtons.get(type).apply(event);
+    public InlineKeyboardMarkup getCheckingKeyboard(TgEvent event) {
+        List<EventStatusButton> checkingButtons = List.of(Checking.values());
+
+        return buildKeyboard(checkingButtons);
+    }
+
+    @Override
+    public InlineKeyboardMarkup getGamingKeyboard(TgEvent event) {
+        var gameState = event.getLatestGameState();
+        var gameButtons = buildGameButtons(gameState);
+
+        return buildKeyboard(gameButtons);
     }
 
     @Override
@@ -102,7 +71,7 @@ public class KeyboardServiceImpl implements KeyboardService {
                 .collect(Collectors.toList());
         var extraButtons = Arrays.stream(buttons)
                 .map(this::wrapToRow)
-                .collect(Collectors.toList());
+                .toList();
         rows.addAll(extraButtons);
 
         return InlineKeyboardMarkup.builder()
@@ -151,20 +120,31 @@ public class KeyboardServiceImpl implements KeyboardService {
     }
 
     private List<EventStatusButton> buildTimedButtons(Integer time) {
-        return timedButtons.getOrDefault(time, () -> List.of(Checking.values())).get();
+        return switch (time) {
+            case 3 -> List.of(Checking3.values());
+            case 2 -> List.of(Checking2.values());
+            case 1 -> List.of(Checking1.values());
+            default -> List.of(Checking.values());
+        };
     }
 
     private List<EventStatusButton> buildLobbyButtons(TgEvent event) {
         var eventState = event.getEventState();
-        var gameState = event.getLatestGameState();
-        var buttons = lobbyButtons.get(eventState).get();
-        var checkingButtons = buttons.stream()
-                .filter(button -> button.getRow() == 1)
-                .collect(Collectors.toList());
 
-        return gameState.in(GameState.RED_CHECKING, GameState.BLUE_CHECKING, GameState.CANCEL_CHECKING)
-                ? checkingButtons
-                : buttons;
+        return switch (eventState) {
+            case CREATED -> List.of(Created.values());
+            case READY -> List.of(Ready.values());
+            case CHECKING, CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING, EVICTING, ANY, CANCELLED, FINISHED -> Collections.emptyList();
+            case PLAYING, WAITING_WITH_GAME, WAITING -> List.of(Playing.values());
+        };
+    }
+
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
+    private List<EventStatusButton> buildGameButtons(GameState gameState) {
+        return switch (gameState) {
+            case ACTIVE -> List.of(Game.values());
+            default -> Collections.emptyList();
+        };
     }
 
 }

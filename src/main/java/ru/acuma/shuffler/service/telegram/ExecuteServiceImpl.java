@@ -3,9 +3,12 @@ package ru.acuma.shuffler.service.telegram;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.GetUserProfilePhotos;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.acuma.shuffler.bot.ShufflerBot;
 import ru.acuma.shuffler.cache.EventContextServiceImpl;
@@ -15,9 +18,11 @@ import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.KeyboardService;
 import ru.acuma.shuffler.service.api.MessageService;
+import ru.acuma.shuffler.service.api.UserService;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,6 +36,7 @@ import java.util.stream.IntStream;
 public class ExecuteServiceImpl implements ExecuteService {
 
     private static final int TOO_MANY_REQUESTS_CODE = 429;
+    private static final int BAD_REQUEST_COE = 400;
     private static final String TIMEOUT_REGEX = "(?<=after )\\d+$";
     private static final Pattern pattern = Pattern.compile(TIMEOUT_REGEX);
 
@@ -38,6 +44,8 @@ public class ExecuteServiceImpl implements ExecuteService {
     private final ScheduledExecutorService asyncExecutors = Executors.newScheduledThreadPool(4);
 
     private final EventContextServiceImpl eventContextService;
+    private final @Lazy
+    UserService userService;
     private final MessageService messageService;
     private final KeyboardService keyboardService;
     private final ShufflerBot shufflerBot;
@@ -91,28 +99,48 @@ public class ExecuteServiceImpl implements ExecuteService {
     }
 
     @Override
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public <T extends Serializable, M extends BotApiMethod<T>> T executeApi(M method) {
-        return shufflerBot.executeApiMethod(method);
+        var userId = method instanceof GetUserProfilePhotos getPhotos
+                ? getPhotos.getUserId()
+                : 0L;
+        T result = null;
+        try {
+            result = shufflerBot.executeApiMethod(method);
+        } catch (TelegramApiException exception) {
+            var reason = "";
+            if (exception instanceof TelegramApiRequestException requestException) {
+                reason = requestException.getApiResponse();
+            }
+            switch (reason) {
+                case "Bad Request: user not found" -> userService.deleteUser(userId);
+                default -> log.warn(reason);
+            }
+        }
+
+        return result;
     }
 
     @SneakyThrows
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     private <T extends Serializable, M extends BotApiMethod<T>> T doExecute(M method) {
-        var delay = 30_000L;
         try {
             return shufflerBot.execute(method);
         } catch (TelegramApiRequestException e) {
             log.warn(e.getMessage());
-            if (e.getErrorCode() == TOO_MANY_REQUESTS_CODE) {
-                var matcher = pattern.matcher(e.getMessage());
-                delay = matcher.find()
-                        ? Long.parseLong(matcher.group(0))
-                        : 30_000L;
 
-                return asyncExecutors.schedule(() -> doExecute(method), delay, TimeUnit.SECONDS).get();
-            }
-
-            return syncExecutors.submit(() -> shufflerBot.execute(method)).get();
+            return switch (e.getErrorCode()) {
+                case TOO_MANY_REQUESTS_CODE -> repeatLater(method, e);
+                default -> syncExecutors.submit(() -> shufflerBot.execute(method)).get();
+            };
         }
+    }
+
+    private <T extends Serializable, M extends BotApiMethod<T>> T repeatLater(M method, TelegramApiRequestException e) throws InterruptedException, ExecutionException {
+        var matcher = pattern.matcher(e.getMessage());
+        var delay = matcher.find() ? Long.parseLong(matcher.group(0)) : 30_000L;
+
+        return asyncExecutors.schedule(() -> doExecute(method), delay, TimeUnit.SECONDS).get();
     }
 
 }

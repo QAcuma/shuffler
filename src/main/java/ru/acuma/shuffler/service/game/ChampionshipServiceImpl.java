@@ -27,7 +27,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     @SneakyThrows
     @Override
     public void finishEvent(TgEvent event) {
-        eventStateService.cancelledState(event);
+        eventStateService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
         eventContextService.update(event);
 
@@ -45,7 +45,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     @SneakyThrows
     @Override
     public void finishChampionship(TgEvent event) {
-        eventStateService.finishedState(event);
+        eventStateService.finished(event);
         maintenanceService.sweepEvent(event);
         eventContextService.update(event);
     }

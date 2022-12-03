@@ -96,6 +96,7 @@ public final class BuildMessageUtil {
             case READY:
             case CANCEL_CHECKING:
             case BEGIN_CHECKING:
+            case CHECKING:
                 getMainEventMessage(event, builder);
                 break;
             case WAITING:

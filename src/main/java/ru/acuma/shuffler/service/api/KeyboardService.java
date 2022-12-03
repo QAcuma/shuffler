@@ -4,17 +4,20 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
 
 import java.util.Map;
 
 public interface KeyboardService {
 
-    InlineKeyboardMarkup getKeyboard(TgEvent event, MessageType type);
+    InlineKeyboardMarkup getLobbyKeyboard(TgEvent event);
 
-    InlineKeyboardMarkup getEmptyKeyboard();
+    InlineKeyboardMarkup getCheckingKeyboard(TgEvent event);
+
+    InlineKeyboardMarkup getGamingKeyboard(TgEvent event);
 
     InlineKeyboardMarkup getTimedKeyboard(int time);
+
+    InlineKeyboardMarkup getEmptyKeyboard();
 
     InlineKeyboardMarkup getDynamicListKeyboard(Command command, Map<Long, String> map, InlineKeyboardButton... buttons);
 

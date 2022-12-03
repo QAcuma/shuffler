@@ -9,37 +9,37 @@ import ru.acuma.shuffler.service.api.GameStateService;
 public class GameStateServiceImpl implements GameStateService {
 
     @Override
-    public void activeState(TgGame game) {
+    public void active(TgGame game) {
         game.setState(GameState.ACTIVE);
     }
 
     @Override
-    public void cancelState(TgGame game) {
+    public void cancel(TgGame game) {
         game.setState(GameState.CANCELLED);
     }
 
     @Override
-    public void cancelCheckingState(TgGame game) {
+    public void cancelCheck(TgGame game) {
         game.setState(GameState.CANCEL_CHECKING);
     }
 
     @Override
-    public void redCheckingState(TgGame game) {
+    public void redCheck(TgGame game) {
         game.setState(GameState.RED_CHECKING);
     }
 
     @Override
-    public void blueCheckingState(TgGame game) {
+    public void blueCheck(TgGame game) {
         game.setState(GameState.BLUE_CHECKING);
     }
 
     @Override
-    public void finishedState(TgGame game) {
+    public void finished(TgGame game) {
         game.setState(GameState.FINISHED);
     }
 
     @Override
-    public void notExistState(TgGame game) {
+    public void notExist(TgGame game) {
         game.setState(GameState.NOT_EXIST);
     }
 }

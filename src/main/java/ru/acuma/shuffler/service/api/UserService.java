@@ -13,5 +13,9 @@ public interface UserService {
 
     UserInfo getUser(Long telegramId);
 
+    void deleteUser(Long telegramId);
+
     void saveUserAvatar(Long userId);
+
+    void updateProfilePicture();
 }

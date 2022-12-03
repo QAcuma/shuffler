@@ -10,16 +10,17 @@ import java.util.Arrays;
 public enum EventState {
 
     CREATED(2),
+    READY(3),
     CANCEL_CHECKING(1),
     CANCELLED(0),
-    READY(3),
     BEGIN_CHECKING(1),
     PLAYING(2),
     WAITING(0),
-    EVICTING(0),
+    CHECKING(0),
     WAITING_WITH_GAME(0),
     FINISH_CHECKING(1),
     FINISHED(2),
+    EVICTING(0),
     ANY(0);
 
     private final int rows;
