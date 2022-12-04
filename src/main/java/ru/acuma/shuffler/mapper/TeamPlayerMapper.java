@@ -1,16 +1,15 @@
 package ru.acuma.shuffler.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.tables.pojos.TeamPlayer;
 
-@Component
-public class TeamPlayerMapper {
+@Mapper(componentModel = "spring")
+public abstract class TeamPlayerMapper {
 
-    public TeamPlayer toTeamPlayer(TgEventPlayer player, Long teamId) {
-        return new TeamPlayer()
-                .setPlayerId(player.getId())
-                .setTeamId(teamId);
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "player.id", target = "playerId")
+    public abstract TeamPlayer toTeamPlayer(TgEventPlayer player, Long teamId);
 
 }

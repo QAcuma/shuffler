@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -114,12 +113,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.isActive(telegramId);
     }
 
-    @NotNull
     private Function<UserProfilePhotos, Optional<? extends PhotoSize>> getPhotosFunction() {
         return pictures -> pictures.getPhotos().stream().findFirst().flatMap(picture -> picture.stream().findFirst());
     }
 
-    @NotNull
     private Consumer<PhotoSize> getSizeConsumer(Long userId) {
         return smallPhoto -> {
             var getFile = new GetFile(smallPhoto.getFileId());

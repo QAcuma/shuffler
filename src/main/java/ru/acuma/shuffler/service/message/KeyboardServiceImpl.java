@@ -1,7 +1,6 @@
 package ru.acuma.shuffler.service.message;
 
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -113,7 +112,6 @@ public class KeyboardServiceImpl implements KeyboardService {
                 .build();
     }
 
-    @NotNull
     private List<InlineKeyboardButton> getInlineKeyboardButtons(List<EventStatusButton> names, int row) {
         return names.stream()
                 .filter(button -> button.getRow() == row)

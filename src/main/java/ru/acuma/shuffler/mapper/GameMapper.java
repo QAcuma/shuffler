@@ -1,20 +1,12 @@
 package ru.acuma.shuffler.mapper;
 
-import ma.glasnost.orika.MapperFacade;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 import ru.acuma.shuffler.model.entity.TgGame;
 import ru.acuma.shuffler.tables.pojos.Game;
-import ru.acuma.shufflerlib.mapper.BaseMapper;
 
-@Component
-public class GameMapper extends BaseMapper {
+@Mapper(uses = OffsetDateTimeMapper.class, componentModel = "spring")
+public abstract class GameMapper {
 
-    public Game toGame(TgGame tgGame) {
-        mapperFactory.classMap(TgGame.class, Game.class)
-                .byDefault()
-                .register();
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(tgGame, Game.class);
-    }
+    public abstract Game toGame(TgGame source);
 
 }

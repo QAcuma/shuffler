@@ -1,22 +1,15 @@
 package ru.acuma.shuffler.mapper;
 
-import ma.glasnost.orika.MapperFacade;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.tables.pojos.Event;
-import ru.acuma.shufflerlib.mapper.BaseMapper;
 
-@Component
-public class EventMapper extends BaseMapper {
+@Mapper(uses = OffsetDateTimeMapper.class, componentModel = "spring")
+public abstract class EventMapper {
 
-    public Event toEvent(TgEvent tgEvent) {
-        mapperFactory.classMap(TgEvent.class, Event.class)
-                .field("eventState", "state")
-                .byDefault()
-                .register();
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(tgEvent, Event.class);
-    }
+    @Mapping(source = "eventState", target = "state")
+    public abstract Event toEvent(TgEvent source);
 
 
 }

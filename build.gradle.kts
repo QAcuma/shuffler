@@ -27,10 +27,13 @@ dependencies {
     implementation(libs.bundles.telegram)
     implementation(libs.bundles.data)
     implementation(libs.jooq)
+    implementation(libs.mapstruct)
     implementation(libs.bundles.util)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+    annotationProcessor(libs.mapstruct.processor)
+    annotationProcessor(libs.mapstruct.lombok)
 
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
@@ -42,5 +45,8 @@ tasks.withType<Test> {
 }
 
 application {
-    applicationDefaultJvmArgs = listOf("---add-opens java.base/java.lang=ALL-UNNAMED")
+    applicationDefaultJvmArgs = listOf(
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
+    )
 }
