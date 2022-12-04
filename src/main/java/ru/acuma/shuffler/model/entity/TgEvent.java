@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
 import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
@@ -40,6 +42,8 @@ public class TgEvent {
     private final List<TgGame> tgGames = new ArrayList<>();
 
     private Discipline discipline;
+
+    private final List<Future<?>> futures = new ArrayList<>();
 
     public Integer getBaseMessage() {
         return Collections.min(this.messages);
@@ -95,6 +99,14 @@ public class TgEvent {
         return latestGame != null
                 ? latestGame.getState()
                 : GameState.NOT_EXIST;
+    }
+
+    public void watchFuture(ScheduledFuture<?> futureExecutor) {
+        futures.add(futureExecutor);
+    }
+
+    public void cancelFutures() {
+        futures.forEach(future -> future.cancel(true));
     }
 
 }

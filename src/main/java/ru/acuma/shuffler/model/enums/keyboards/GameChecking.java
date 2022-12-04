@@ -3,7 +3,7 @@ package ru.acuma.shuffler.model.enums.keyboards;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.buttons.EventStatusButton;
+import ru.acuma.shuffler.service.message.EventStatusButton;
 
 @Getter
 @AllArgsConstructor

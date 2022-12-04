@@ -1,139 +1,45 @@
 package ru.acuma.shuffler.bot;
 
-import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
-import org.telegram.telegrambots.meta.api.methods.GetUserProfilePhotos;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.acuma.shuffler.service.api.GroupService;
-import ru.acuma.shuffler.service.api.NonCommandService;
-import ru.acuma.shuffler.service.api.UserService;
-import ru.acuma.shuffler.service.commands.BeginCommand;
-import ru.acuma.shuffler.service.commands.BlueCommand;
-import ru.acuma.shuffler.service.commands.CancelCommand;
-import ru.acuma.shuffler.service.commands.CancelEvictCommand;
-import ru.acuma.shuffler.service.commands.CancelGameCommand;
-import ru.acuma.shuffler.service.commands.EvictCommand;
-import ru.acuma.shuffler.service.commands.FinishCommand;
-import ru.acuma.shuffler.service.commands.JoinCommand;
-import ru.acuma.shuffler.service.commands.KickCommand;
-import ru.acuma.shuffler.service.commands.KickerCommand;
-import ru.acuma.shuffler.service.commands.LeaveCommand;
-import ru.acuma.shuffler.service.commands.NoCommand;
-import ru.acuma.shuffler.service.commands.PingPongCommand;
-import ru.acuma.shuffler.service.commands.RedCommand;
-import ru.acuma.shuffler.service.commands.ResetCommand;
-import ru.acuma.shuffler.service.commands.WaitCommand;
-import ru.acuma.shuffler.service.commands.YesCommand;
+import ru.acuma.shuffler.controller.BaseBotCommand;
+import ru.acuma.shuffler.service.user.AuthService;
 
 import javax.annotation.PostConstruct;
-import java.util.Objects;
+import java.io.Serializable;
+import java.util.List;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class ShufflerBot extends TelegramLongPollingCommandBot {
 
-    private final String BOT_NAME;
-    private final String BOT_TOKEN;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private GroupService groupService;
-    @Autowired
-    private NonCommandService nonCommandService;
-    @Autowired
-    private KickerCommand kickerCommand;
-    @Autowired
-    private PingPongCommand pingPongCommand;
-    @Autowired
-    private JoinCommand joinCommand;
-    @Autowired
-    private LeaveCommand leaveCommand;
-    @Autowired
-    private KickCommand kickCommand;
-    @Autowired
-    private EvictCommand evictCommand;
-    @Autowired
-    private CancelCommand cancelCommand;
-    @Autowired
-    private CancelEvictCommand cancelEvictCommand;
-    @Autowired
-    private CancelGameCommand cancelGameCommand;
-    @Autowired
-    private YesCommand yesCommand;
-    @Autowired
-    private NoCommand noCommand;
-    @Autowired
-    private RedCommand redCommand;
-    @Autowired
-    private BlueCommand blueCommand;
-    @Autowired
-    private WaitCommand waitCommand;
-    @Autowired
-    private BeginCommand beginCommand;
-    @Autowired
-    private FinishCommand finishCommand;
-    @Autowired
-    private ResetCommand resetCommand;
+    @Value("${telegram.bot.name}")
+    private String botName;
 
-    public ShufflerBot(String botName, String botToken) {
-        super();
-        BOT_NAME = botName;
-        BOT_TOKEN = botToken;
-    }
+    @Value("${telegram.bot.token}")
+    private String botToken;
+
+    private final List<BaseBotCommand> commands;
+    private final AuthService authService;
 
     @PostConstruct
     private void init() {
-        register(kickerCommand);
-        register(pingPongCommand);
-        register(joinCommand);
-        register(leaveCommand);
-        register(kickCommand);
-        register(evictCommand);
-        register(cancelCommand);
-        register(cancelGameCommand);
-        register(cancelEvictCommand);
-        register(yesCommand);
-        register(noCommand);
-        register(redCommand);
-        register(blueCommand);
-        register(waitCommand);
-        register(beginCommand);
-        register(finishCommand);
-        register(resetCommand);
+        commands.forEach(this::register);
     }
 
     @Override
-    @SneakyThrows
-    protected boolean filter(Message message) {
-        var method = new GetUserProfilePhotos();
-        method.setUserId(message.getFrom().getId());
-        var photos = this.sendApiMethod(method);
-        var fileMethod = new GetFile();
-
-        photos.getPhotos().stream()
-                .findFirst()
-                .flatMap(photo -> photo.stream().findFirst())
-                .ifPresent(smallPhoto -> {
-                    fileMethod.setFileId(smallPhoto.getFileId());
-                    loadUserProfilePicture(message.getFrom().getId(), fileMethod);
-                });
-
-        return groupService.authenticate(message.getChat()) && !userService.authenticate(message.getFrom());
-    }
-
-    @SneakyThrows
-    private void loadUserProfilePicture(Long telegramId, GetFile fileMethod) {
-        File photo = this.sendApiMethod(fileMethod);
-
-        userService.saveProfilePhotos(telegramId, photo);
+    public boolean filter(Message message) {
+        return authService.doAuth(message);
     }
 
     @Override
@@ -141,7 +47,10 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
         if (update.getCallbackQuery() != null) {
             processCallback(update.getCallbackQuery());
         }
-        reply(nonCommandService.process(update));
+    }
+
+    public final <T extends Serializable, M extends BotApiMethod<T>> T executeApiMethod(M method) throws TelegramApiException {
+        return super.execute(method);
     }
 
     private void processCallback(CallbackQuery callbackQuery) {
@@ -158,25 +67,14 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
         );
     }
 
-    public <M extends SendMessage> void reply(M message) {
-        if (Objects.isNull(message)) {
-            return;
-        }
-        try {
-            this.execute(message);
-        } catch (TelegramApiException e) {
-            log.error("Failed to send answer", e);
-        }
-    }
-
     @Override
     public String getBotUsername() {
-        return BOT_NAME;
+        return botName;
     }
 
     @Override
     public String getBotToken() {
-        return BOT_TOKEN;
+        return botToken;
     }
 
 }

@@ -9,8 +9,8 @@ group = "ru.acuma"
 version = "2.0.0"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_13
-    targetCompatibility = JavaVersion.VERSION_13
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -20,9 +20,10 @@ repositories {
 }
 
 dependencies {
-    implementation("ru.acuma:shuffler-lib:${libs.versions.shuffler.lib.get()}")
+    implementation("ru.acuma:shuffler-lib:2.0.0")
     implementation(libs.spring.starter)
     implementation(libs.spring.web)
+    implementation(libs.spring.aop)
     implementation(libs.bundles.telegram)
     implementation(libs.bundles.data)
     implementation(libs.jooq)

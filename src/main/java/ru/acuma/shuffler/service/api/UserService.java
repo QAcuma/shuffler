@@ -1,14 +1,21 @@
 package ru.acuma.shuffler.service.api;
 
-import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.tables.pojos.UserInfo;
 
+import java.util.List;
+
 public interface UserService {
+
+    boolean authenticate(User user);
+
+    List<UserInfo> getUsers();
 
     UserInfo getUser(Long telegramId);
 
-    void saveProfilePhotos(Long telegramId, File photo);
+    void deleteUser(Long telegramId);
 
-    boolean authenticate(User user);
+    void saveUserAvatar(Long userId);
+
+    void updateProfilePicture();
 }

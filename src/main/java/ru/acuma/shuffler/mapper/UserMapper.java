@@ -27,6 +27,7 @@ public class UserMapper extends BaseMapper {
         UserInfo userInfo = mapper.map(user, UserInfo.class);
         userInfo.setIsBlocked(Boolean.FALSE)
                 .setCreatedAt(OffsetDateTime.now());
+
         return userInfo;
     }
 }
