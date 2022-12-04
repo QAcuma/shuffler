@@ -17,6 +17,7 @@ import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
 
+import static ru.acuma.shuffler.model.enums.EventState.ANY;
 import static ru.acuma.shuffler.model.enums.EventState.PLAYING;
 import static ru.acuma.shuffler.model.enums.EventState.WAITING;
 import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
@@ -37,6 +38,7 @@ public class KickCommandHandler extends CommandHandler<KickCommand> {
         commandExecutorFactory.register(PLAYING, getCommandClass(), getPlayingWaitingWaitingWIthGameConsumer());
         commandExecutorFactory.register(WAITING, getCommandClass(), getPlayingWaitingWaitingWIthGameConsumer());
         commandExecutorFactory.register(WAITING_WITH_GAME, getCommandClass(), getPlayingWaitingWaitingWIthGameConsumer());
+        commandExecutorFactory.register(ANY, getCommandClass(), (message, event) -> {});
     }
 
     @Override
