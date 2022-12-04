@@ -10,6 +10,7 @@ public abstract class GroupMapper {
 
     @Mapping(source = "id", target = "chatId")
     @Mapping(target = "isBlocked", constant = "false")
+    @Mapping(target = "name", ignore = true)
     public abstract GroupInfo toGroupInfo(Chat source);
 
 }

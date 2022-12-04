@@ -9,6 +9,7 @@ import ru.acuma.shuffler.tables.pojos.Event;
 public abstract class EventMapper {
 
     @Mapping(source = "eventState", target = "state")
+    @Mapping(target = "seasonId", ignore = true)
     public abstract Event toEvent(TgEvent source);
 
 
