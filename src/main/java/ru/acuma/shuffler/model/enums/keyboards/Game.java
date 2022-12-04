@@ -3,7 +3,7 @@ package ru.acuma.shuffler.model.enums.keyboards;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.keyboard.EventStatusButton;
+import ru.acuma.shuffler.service.message.EventStatusButton;
 
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;

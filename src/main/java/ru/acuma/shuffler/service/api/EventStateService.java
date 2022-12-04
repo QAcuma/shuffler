@@ -10,7 +10,7 @@ public interface EventStateService {
 
     void cancel(TgEvent event);
 
-    void check(TgEvent event);
+    void gameCheck(TgEvent event);
 
     void cancelled(TgEvent event);
 

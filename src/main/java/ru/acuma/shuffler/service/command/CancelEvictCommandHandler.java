@@ -5,11 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.CancelEvictCommand;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.GameStateService;
-import ru.acuma.shuffler.service.api.MessageService;
+import ru.acuma.shuffler.service.api.EventFacade;
 import ru.acuma.shuffler.service.aspect.CheckPlayerInEvent;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
@@ -23,10 +19,7 @@ import static ru.acuma.shuffler.model.enums.EventState.EVICTING;
 public class CancelEvictCommandHandler extends CommandHandler<CancelEvictCommand> {
 
     private final CommandExecutorSourceFactory commandExecutorFactory;
-    private final EventStateService eventStateService;
-    private final ExecuteService executeService;
-    private final MessageService messageService;
-    private final GameStateService gameStateService;
+    private final EventFacade eventFacade;
 
     @Override
     protected void init() {
@@ -46,11 +39,6 @@ public class CancelEvictCommandHandler extends CommandHandler<CancelEvictCommand
     }
 
     private BiConsumer<Message, TgEvent> getEvictingConsumer() {
-        return (message, event) -> {
-            eventStateService.active(event);
-            gameStateService.active(event.getLatestGame());
-            executeService.execute(messageService.updateLobbyMessage(event));
-            executeService.execute(messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME));
-        };
+        return eventFacade.getCheckingConsumer();
     }
 }

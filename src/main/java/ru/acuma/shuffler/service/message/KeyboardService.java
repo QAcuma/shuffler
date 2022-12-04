@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.api;
+package ru.acuma.shuffler.service.message;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;

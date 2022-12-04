@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.api;
+package ru.acuma.shuffler.service.season;
 
 import ru.acuma.shufflerlib.model.web.entity.WebPlayerDetails;
 

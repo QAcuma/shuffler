@@ -1,6 +1,5 @@
 package ru.acuma.shuffler.controller;
 
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,6 @@ public class JoinCommand extends BaseBotCommand {
         super(Command.JOIN.getCommand(), "Присоединиться к игре");
     }
 
-    @SneakyThrows
     @Override
     public void execute(Message message) {
         commandHandler.handle(message);

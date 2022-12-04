@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.keyboard;
+package ru.acuma.shuffler.service.message;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,6 @@ import ru.acuma.shuffler.model.enums.keyboards.checking.Checking;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking1;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking2;
 import ru.acuma.shuffler.model.enums.keyboards.checking.Checking3;
-import ru.acuma.shuffler.service.api.KeyboardService;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -99,7 +98,13 @@ public class KeyboardServiceImpl implements KeyboardService {
     }
 
     private InlineKeyboardMarkup buildKeyboard(List<EventStatusButton> names) {
-        List<List<InlineKeyboardButton>> buttons = IntStream.rangeClosed(1, 3)
+        return names.isEmpty()
+                ? new InlineKeyboardMarkup(Collections.emptyList())
+                : buildKeyboardStructure(names);
+    }
+
+    private InlineKeyboardMarkup buildKeyboardStructure(List<EventStatusButton> names) {
+        var buttons = IntStream.rangeClosed(1, 3)
                 .mapToObj(rowNum -> getInlineKeyboardButtons(names, rowNum))
                 .collect(Collectors.toList());
 
@@ -134,7 +139,7 @@ public class KeyboardServiceImpl implements KeyboardService {
         return switch (eventState) {
             case CREATED -> List.of(Created.values());
             case READY -> List.of(Ready.values());
-            case CHECKING, CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING, EVICTING, ANY, CANCELLED, FINISHED -> Collections.emptyList();
+            case GAME_CHECKING, CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING, EVICTING, ANY, CANCELLED, FINISHED -> Collections.emptyList();
             case PLAYING, WAITING_WITH_GAME, WAITING -> List.of(Playing.values());
         };
     }

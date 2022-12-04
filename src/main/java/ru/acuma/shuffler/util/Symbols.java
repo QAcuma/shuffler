@@ -8,6 +8,7 @@ public final class Symbols {
     public static final String MEMBERS_EMOJI = "\uD83D\uDC68\u200D\uD83D\uDC66\u200D\uD83D\uDC66";
     public static final String KEBABS_EMOJI = "\uD83C\uDF62";
     public static final String PONG_EMOJI = "\uD83C\uDFD3";
+    public static final String DICE_EMOJI = "\uD83C\uDFB2";
     public static final String CARAMEL_EMOJI = "\uD83C\uDF6D";
     public static final String GOBLET_EMOJI = "\uD83C\uDFC6";
     public static final String SAND_CLOCK_EMOJI = "⏳";

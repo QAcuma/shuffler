@@ -6,5 +6,5 @@ public interface GameService {
 
     void nextGame(TgEvent event);
 
-    void applyGameChecking(TgEvent event);
+    void handleGameCheck(TgEvent event);
 }

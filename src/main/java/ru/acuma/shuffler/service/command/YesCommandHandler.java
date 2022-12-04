@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 import static ru.acuma.shuffler.model.enums.EventState.BEGIN_CHECKING;
 import static ru.acuma.shuffler.model.enums.EventState.CANCEL_CHECKING;
 import static ru.acuma.shuffler.model.enums.EventState.FINISH_CHECKING;
-import static ru.acuma.shuffler.model.enums.EventState.PLAYING;
+import static ru.acuma.shuffler.model.enums.EventState.GAME_CHECKING;
 import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 
 @Service
@@ -32,13 +32,13 @@ public class YesCommandHandler extends CommandHandler<YesCommand> {
     private final MessageService messageService;
     private final GameService gameService;
     private final GameFacade gameFacade;
-    private final EventFacade eventFacade;
+    private final EventFacadeImpl eventFacade;
 
     @Override
     public void init() {
         commandExecutorFactory.register(CANCEL_CHECKING, getCommandClass(), getCancelCheckingConsumer());
         commandExecutorFactory.register(BEGIN_CHECKING, getCommandClass(), getBeginCheckingConsumer());
-        commandExecutorFactory.register(PLAYING, getCommandClass(), getPlayingConsumer());
+        commandExecutorFactory.register(GAME_CHECKING, getCommandClass(), getCheckingConsumer());
         commandExecutorFactory.register(WAITING_WITH_GAME, getCommandClass(), getWaitingWithGameConsumer());
         commandExecutorFactory.register(FINISH_CHECKING, getCommandClass(), getFinishCheckingConsumer());
     }
@@ -66,9 +66,9 @@ public class YesCommandHandler extends CommandHandler<YesCommand> {
         };
     }
 
-    private BiConsumer<Message, TgEvent> getPlayingConsumer() {
+    private BiConsumer<Message, TgEvent> getCheckingConsumer() {
         return (message, event) -> {
-            gameService.applyGameChecking(event);
+            gameService.handleGameCheck(event);
             gameFacade.finishGameActions(event, message);
             gameFacade.nextGameActions(event, message);
         };
@@ -76,7 +76,7 @@ public class YesCommandHandler extends CommandHandler<YesCommand> {
 
     private BiConsumer<Message, TgEvent> getWaitingWithGameConsumer() {
         return (message, event) -> {
-            gameService.applyGameChecking(event);
+            gameService.handleGameCheck(event);
             gameFacade.finishGameActions(event, message);
         };
     }

@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.keyboard;
+package ru.acuma.shuffler.service.message;
 
 public interface EventStatusButton {
 

@@ -7,8 +7,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.entity.TgEventPlayer;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.api.KeyboardService;
 import ru.acuma.shuffler.service.api.KickService;
+import ru.acuma.shuffler.service.message.KeyboardService;
 
 import java.util.List;
 import java.util.function.Predicate;

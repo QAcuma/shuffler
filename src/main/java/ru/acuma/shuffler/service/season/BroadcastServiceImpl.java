@@ -7,8 +7,6 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.acuma.shuffler.service.api.BroadcastService;
 import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.service.api.TextBuilderService;
 import ru.acuma.shuffler.tables.pojos.GroupInfo;
 import ru.acuma.shufflerlib.model.Discipline;
 import ru.acuma.shufflerlib.model.Filter;

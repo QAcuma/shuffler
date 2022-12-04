@@ -71,36 +71,33 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void applyGameChecking(TgEvent event) {
+    public void handleGameCheck(TgEvent event) {
         var game = event.getLatestGame();
-        if (game == null) {
-            return;
-        }
         switch (game.getState()) {
-            case RED_CHECKING:
+            case RED_CHECKING -> {
                 game.getRedTeam().setWinner(true);
                 finishGameWithWinner(game);
-                break;
-            case BLUE_CHECKING:
+            }
+            case BLUE_CHECKING -> {
                 game.getBlueTeam().setWinner(true);
                 finishGameWithWinner(game);
-                break;
-            case CANCEL_CHECKING:
-                finishCancelledGame(game);
-                break;
+            }
+            case CANCEL_CHECKING -> finishCancelledGame(game);
+
         }
-        game.setFinishedAt(LocalDateTime.now());
         saveGameData(event);
     }
 
     private void finishGameWithWinner(TgGame game) {
-        game.setState(GameState.FINISHED);
+        game.setState(GameState.FINISHED)
+                .setFinishedAt(LocalDateTime.now());
         teamService.fillLastGameMate(game.getWinnerTeam());
         teamService.fillLastGameMate(game.getLoserTeam());
     }
 
     private void finishCancelledGame(TgGame game) {
-        game.setState(GameState.CANCELLED);
+        game.setState(GameState.CANCELLED)
+                .setFinishedAt(LocalDateTime.now());
     }
 
     private void saveGameData(TgEvent event) {

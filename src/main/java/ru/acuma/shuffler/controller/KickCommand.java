@@ -1,6 +1,5 @@
 package ru.acuma.shuffler.controller;
 
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,6 @@ public class KickCommand extends BaseBotCommand {
         super(Command.KICK.getCommand(), "Исключить отсутствующего игрока");
     }
 
-    @SneakyThrows
     @Override
     public void execute(Message message) {
         commandHandler.handle(message);

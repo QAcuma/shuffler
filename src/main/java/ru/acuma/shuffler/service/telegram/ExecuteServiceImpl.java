@@ -16,9 +16,9 @@ import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.KeyboardService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.api.UserService;
+import ru.acuma.shuffler.service.message.KeyboardService;
 
 import java.io.Serializable;
 import java.util.Optional;

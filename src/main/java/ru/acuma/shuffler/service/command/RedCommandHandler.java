@@ -5,11 +5,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.RedCommand;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameStateService;
-import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
 import java.util.function.BiConsumer;
@@ -23,8 +20,7 @@ public class RedCommandHandler extends CommandHandler<RedCommand> {
 
     private final GameStateService gameStateService;
     private final EventStateService eventStateService;
-    private final MessageService messageService;
-    private final ExecuteService executeService;
+    private final EventFacadeImpl eventFacade;
     private final CommandExecutorSourceFactory commandExecutorFactory;
 
     @Override
@@ -40,16 +36,9 @@ public class RedCommandHandler extends CommandHandler<RedCommand> {
 
     private BiConsumer<Message, TgEvent> getPlayingWaitingWithGameConsumer() {
         return (message, event) -> {
-            eventStateService.check(event);
+            eventStateService.gameCheck(event);
             gameStateService.redCheck(event.getLatestGame());
-
-            var lobbyUpdate = messageService.updateLobbyMessage(event);
-            var gameUpdate = messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME);
-            var checkingMessage = messageService.sendMessage(event, MessageType.CHECKING);
-
-            executeService.execute(lobbyUpdate);
-            executeService.execute(gameUpdate);
-            executeService.execute(checkingMessage);
+            eventFacade.checkingStateActions(event);
         };
     }
 }

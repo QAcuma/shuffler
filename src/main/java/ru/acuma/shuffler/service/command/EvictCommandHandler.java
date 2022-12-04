@@ -52,9 +52,11 @@ public class EvictCommandHandler extends CommandHandler<EvictCommand> {
         return (message, event) -> {
             playerService.leaveLobby(event, Long.valueOf(message.getText()));
             eventStateService.active(event);
+
             executeService.execute(messageService.updateMessage(event, event.getBaseMessage(), MessageType.LOBBY));
-            gameService.applyGameChecking(event);
+            gameService.handleGameCheck(event);
             gameFacade.finishGameActions(event, message);
+
             eventStateService.active(event);
             gameFacade.nextGameActions(event, message);
         };

@@ -16,7 +16,7 @@ public enum EventState {
     BEGIN_CHECKING(1),
     PLAYING(2),
     WAITING(0),
-    CHECKING(0),
+    GAME_CHECKING(0),
     WAITING_WITH_GAME(0),
     FINISH_CHECKING(1),
     FINISHED(2),

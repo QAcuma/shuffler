@@ -2,10 +2,11 @@ package ru.acuma.shuffler.model.enums.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.acuma.shuffler.service.keyboard.EventConstantButton;
+import ru.acuma.shuffler.service.message.EventConstantButton;
 
 import static ru.acuma.shuffler.util.Symbols.AUTUMN_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
+import static ru.acuma.shuffler.util.Symbols.DICE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.GOBLET_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.MEMBERS_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.NICE_MOON_EMOJI;
@@ -22,6 +23,7 @@ public enum EventConstant implements EventConstantButton {
     SPACE_MESSAGE("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"),
     LOBBY_MESSAGE_KICKER(AUTUMN_EMOJI + " Готовимся к игре! " + AUTUMN_EMOJI + "\n"),
     LOBBY_MESSAGE_PING_PONG(PONG_EMOJI + " Время бить мяч! " + PONG_EMOJI + "\n"),
+    LOBBY_MESSAGE_DEFAULT(DICE_EMOJI + " Время распределяться по командам! " + DICE_EMOJI + "\n"),
     LOBBY_PLAYING_MESSAGE(AUTUMN_EMOJI + " Чемпионат в разгаре! " + AUTUMN_EMOJI + "\n"),
     LOBBY_FINISHED_MESSAGE(AUTUMN_EMOJI + " Чемпионат завершен! " + AUTUMN_EMOJI + "\n"),
     LOBBY_WAITING_MESSAGE(SAND_CLOCK_EMOJI + " Ждём игроков! " + SAND_CLOCK_EMOJI + "\n"),

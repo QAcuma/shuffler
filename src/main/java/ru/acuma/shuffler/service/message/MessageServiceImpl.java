@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.telegram;
+package ru.acuma.shuffler.service.message;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
-import ru.acuma.shuffler.service.api.KeyboardService;
 import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.util.BuildMessageUtil;
 
 @Slf4j
 @Service
@@ -25,12 +23,13 @@ import ru.acuma.shuffler.util.BuildMessageUtil;
 public class MessageServiceImpl implements MessageService {
 
     private final KeyboardService keyboardService;
+    private final MessageContentService messageContentService;
 
     @Override
     public BotApiMethod<Message> sendMessage(TgEvent event, MessageType type) {
         return SendMessage.builder()
                 .chatId(String.valueOf(event.getChatId()))
-                .text(BuildMessageUtil.buildText(event, type))
+                .text(messageContentService.buildContent(event, type))
                 .replyMarkup(getKeyboard(event, type))
                 .parseMode(ParseMode.HTML)
                 .build();
@@ -41,7 +40,7 @@ public class MessageServiceImpl implements MessageService {
         return EditMessageText.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .messageId(messageId)
-                .text(BuildMessageUtil.buildText(event, type))
+                .text(messageContentService.buildContent(event, type))
                 .replyMarkup(getKeyboard(event, type))
                 .parseMode(ParseMode.HTML)
                 .build();

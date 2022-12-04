@@ -2,7 +2,6 @@ package ru.acuma.shuffler.service.season;
 
 import net.steppschuh.markdowngenerator.table.Table;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.service.api.TextBuilderService;
 import ru.acuma.shufflerlib.model.web.entity.WebPlayerDetails;
 
 import java.util.List;

@@ -48,8 +48,8 @@ public class EventStateServiceImpl implements EventStateService {
     }
 
     @Override
-    public void check(TgEvent event) {
-        event.setEventState(EventState.CHECKING);
+    public void gameCheck(TgEvent event) {
+        event.setEventState(EventState.GAME_CHECKING);
     }
 
     @Override
