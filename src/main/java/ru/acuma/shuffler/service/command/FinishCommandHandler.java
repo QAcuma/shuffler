@@ -52,7 +52,7 @@ public class FinishCommandHandler extends CommandHandler<FinishCommand> {
 
             executeService.execute(lobbyMessage);
             executeService.execute(gameMessage);
-            executeService.executeSequence(checkingMessage, event);
+            executeService.executeRepeat(checkingMessage, event);
         };
     }
 

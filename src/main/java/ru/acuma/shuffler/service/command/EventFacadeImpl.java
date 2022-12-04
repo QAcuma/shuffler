@@ -39,8 +39,8 @@ public class EventFacadeImpl implements EventFacade {
 
     @Override
     public void checkingStateActions(TgEvent event) {
-        var lobbyUpdate = messageService.updateLobbyMessage(event);
-        var gameUpdate = messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME);
+        var lobbyUpdate = messageService.updateMarkup(event, event.getBaseMessage(), MessageType.LOBBY);
+        var gameUpdate = messageService.updateMarkup(event, event.getLatestGame().getMessageId(), MessageType.GAME);
         var checkingMessage = messageService.sendMessage(event, MessageType.CHECKING);
 
         executeService.execute(lobbyUpdate);
@@ -51,14 +51,15 @@ public class EventFacadeImpl implements EventFacade {
     @Override
     public BiConsumer<Message, TgEvent> getCheckingConsumer() {
         return (message, event) -> {
+            event.cancelFutures();
             eventStateService.active(event);
             gameStateService.active(event.getLatestGame());
 
-            var lobbyMessage = messageService.updateMarkup(event, event.getBaseMessage(), MessageType.LOBBY);
-            var gameMessage = messageService.updateMarkup(event, event.getLatestGame().getMessageId(), MessageType.GAME);
+            var lobbyUpdate = messageService.updateMarkup(event, event.getBaseMessage(), MessageType.LOBBY);
+            var gameUpdate = messageService.updateMarkup(event, event.getLatestGame().getMessageId(), MessageType.GAME);
 
-            executeService.execute(lobbyMessage);
-            executeService.execute(gameMessage);
+            executeService.execute(lobbyUpdate);
+            executeService.execute(gameUpdate);
         };
     }
 

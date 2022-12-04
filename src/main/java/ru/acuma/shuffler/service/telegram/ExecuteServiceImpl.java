@@ -72,7 +72,7 @@ public class ExecuteServiceImpl implements ExecuteService {
     }
 
     @Override
-    public <T extends Serializable, M extends BotApiMethod<T>> void executeSequence(M method, TgEvent event) {
+    public <T extends Serializable, M extends BotApiMethod<T>> void executeRepeat(M method, TgEvent event) {
         var message = Optional.of(execute(method))
                 .filter(Message.class::isInstance)
                 .map(Message.class::cast)
@@ -90,11 +90,12 @@ public class ExecuteServiceImpl implements ExecuteService {
                 doExecute(update);
             };
 
-            asyncExecutors.schedule(
+            var futureExecutor = asyncExecutors.schedule(
                     repeatableExecutor,
                     delay,
                     TimeUnit.SECONDS
             );
+            event.watchFuture(futureExecutor);
         });
     }
 

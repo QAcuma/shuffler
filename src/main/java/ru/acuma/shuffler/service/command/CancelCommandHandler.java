@@ -47,7 +47,7 @@ public class CancelCommandHandler extends CommandHandler<CancelCommand> {
             var lobbyMessage = messageService.updateLobbyMessage(event);
             executeService.execute(lobbyMessage);
             var checkingMessage = messageService.sendMessage(event, MessageType.CHECKING_TIMED);
-            executeService.executeSequence(checkingMessage, event);
+            executeService.executeRepeat(checkingMessage, event);
         };
     }
 

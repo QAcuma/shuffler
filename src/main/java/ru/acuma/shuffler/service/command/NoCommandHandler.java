@@ -5,11 +5,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.NoCommand;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventFacade;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
 import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
@@ -31,7 +29,6 @@ public class NoCommandHandler extends CommandHandler<NoCommand> {
     private final ExecuteService executeService;
     private final MessageService messageService;
     private final EventStateService eventStateService;
-    private final GameStateService gameStateService;
     private final EventFacade eventFacade;
 
     @Override
@@ -40,8 +37,8 @@ public class NoCommandHandler extends CommandHandler<NoCommand> {
         commandExecutorFactory.register(BEGIN_CHECKING, getCommandClass(), getCancelBeginCheckingConsumer());
         commandExecutorFactory.register(GAME_CHECKING, getCommandClass(), getCheckingConsumer());
         commandExecutorFactory.register(EVICTING, getCommandClass(), getCheckingConsumer());
-        commandExecutorFactory.register(WAITING, getCommandClass(), getWaitingFinishCheckingConsumer());
-        commandExecutorFactory.register(FINISH_CHECKING, getCommandClass(), getWaitingFinishCheckingConsumer());
+        commandExecutorFactory.register(WAITING, getCommandClass(), getCheckingConsumer());
+        commandExecutorFactory.register(FINISH_CHECKING, getCommandClass(), getCheckingConsumer());
     }
 
     @Override
@@ -55,22 +52,9 @@ public class NoCommandHandler extends CommandHandler<NoCommand> {
         super.handle(message);
     }
 
-    private BiConsumer<Message, TgEvent> getWaitingFinishCheckingConsumer() {
-        return (message, event) -> {
-            eventStateService.active(event);
-            gameStateService.active(event.getLatestGame());
-
-            var lobbyMessage = messageService.updateLobbyMessage(event);
-            var gameMessage = messageService.updateMessage(event, event.getLatestGame().getMessageId(), MessageType.GAME);
-
-            eventStateService.active(event);
-            executeService.execute(lobbyMessage);
-            executeService.execute(gameMessage);
-        };
-    }
-
     private BiConsumer<Message, TgEvent> getCancelBeginCheckingConsumer() {
         return (message, event) -> {
+            event.cancelFutures();
             eventStateService.prepare(event);
             var lobbyMessage = messageService.updateLobbyMessage(event);
             executeService.execute(lobbyMessage);
