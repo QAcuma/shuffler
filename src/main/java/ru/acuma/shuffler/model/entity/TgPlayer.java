@@ -18,16 +18,16 @@ public class TgPlayer extends UserInfo {
 
     private int score;
 
-    private boolean isCalibrated;
+    private boolean calibrated;
 
     private int calibrationMultiplier;
 
     public int getScoreSorting() {
-        return isCalibrated ? score : 0;
+        return calibrated ? score : 0;
     }
 
     public String getScoreString() {
-        return isCalibrated ? String.valueOf(score) : "calibrating";
+        return calibrated ? String.valueOf(score) : "calibrating";
     }
 
     public String getName() {
@@ -45,7 +45,7 @@ public class TgPlayer extends UserInfo {
     }
 
     public int getCalibrationMultiplier() {
-        return isCalibrated ? 1 : calibrationMultiplier;
+        return calibrated ? 1 : calibrationMultiplier;
     }
 
 }

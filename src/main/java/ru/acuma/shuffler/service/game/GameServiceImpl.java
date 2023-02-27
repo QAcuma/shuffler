@@ -41,7 +41,7 @@ public class GameServiceImpl implements GameService {
 
         var secondTeamPlayers = players.stream()
                 .filter(Predicate.not(redTeam.getPlayers()::contains))
-                .collect(Collectors.toList());
+                .toList();
         var blueTeam = teamService.buildTeam(secondTeamPlayers);
 
         ratingService.applyBet(redTeam, blueTeam);

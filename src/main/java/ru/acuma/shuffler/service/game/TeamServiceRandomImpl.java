@@ -2,7 +2,6 @@ package ru.acuma.shuffler.service.game;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.mapper.TeamPlayerMapper;
@@ -20,11 +19,6 @@ import java.util.List;
 import static ru.acuma.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
 
 @Service
-@ConditionalOnProperty(
-        prefix = "rating",
-        name = "team-build-strategy",
-        havingValue = "random"
-)
 @RequiredArgsConstructor
 public class TeamServiceRandomImpl implements TeamService {
 

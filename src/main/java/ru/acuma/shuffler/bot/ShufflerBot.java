@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.bot;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +15,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.shuffler.controller.BaseBotCommand;
 import ru.acuma.shuffler.service.user.AuthService;
 
-import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.List;
 

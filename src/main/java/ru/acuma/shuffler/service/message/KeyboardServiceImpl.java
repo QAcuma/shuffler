@@ -1,7 +1,6 @@
 package ru.acuma.shuffler.service.message;
 
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -67,7 +66,7 @@ public class KeyboardServiceImpl implements KeyboardService {
         var rows = map.entrySet().stream()
                 .map(entry -> buildButtonWithParam(command, entry.getKey(), entry.getValue()))
                 .map(this::wrapToRow)
-                .collect(Collectors.toList());
+                .toList();
         var extraButtons = Arrays.stream(buttons)
                 .map(this::wrapToRow)
                 .toList();
@@ -106,14 +105,13 @@ public class KeyboardServiceImpl implements KeyboardService {
     private InlineKeyboardMarkup buildKeyboardStructure(List<EventStatusButton> names) {
         var buttons = IntStream.rangeClosed(1, 3)
                 .mapToObj(rowNum -> getInlineKeyboardButtons(names, rowNum))
-                .collect(Collectors.toList());
+                .toList();
 
         return InlineKeyboardMarkup.builder()
                 .keyboard(buttons)
                 .build();
     }
 
-    @NotNull
     private List<InlineKeyboardButton> getInlineKeyboardButtons(List<EventStatusButton> names, int row) {
         return names.stream()
                 .filter(button -> button.getRow() == row)
@@ -121,7 +119,7 @@ public class KeyboardServiceImpl implements KeyboardService {
                         .text(button.getAlias())
                         .callbackData(button.getAction())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<EventStatusButton> buildTimedButtons(Integer time) {

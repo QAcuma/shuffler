@@ -2,11 +2,18 @@ plugins {
     java
     application
     idea
-    id("org.springframework.boot") version "2.7.3"
+    id("org.springframework.boot") version "3.0.2"
+    id("org.flywaydb.flyway") version "8.2.3"
 }
 
+val dbHost = System.getenv("SHUFFLER_DB_SERVER_HOST") ?: "localhost" as String?
+val dbPort = System.getenv("SHUFFLER_DB_SERVER_PORT") ?: "5432" as String?
+val dbName = System.getenv("SHUFFLER_DB_NAME") ?: "shuffler_local" as String?
+val dbUser = System.getenv("SHUFFLER_DB_USER") ?: "local" as String?
+val dbPassword = System.getenv("SHUFFLER_DB_PASSWORD") ?: "root" as String?
+
 group = "ru.acuma"
-version = "2.0.0"
+version = "2.0.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -20,17 +27,20 @@ repositories {
 }
 
 dependencies {
-    implementation("ru.acuma:shuffler-lib:2.0.0")
+    implementation("ru.acuma:shuffler-lib:3.0.3")
     implementation(libs.spring.starter)
     implementation(libs.spring.web)
     implementation(libs.spring.aop)
     implementation(libs.bundles.telegram)
     implementation(libs.bundles.data)
     implementation(libs.jooq)
+    implementation(libs.mapstruct)
     implementation(libs.bundles.util)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+    annotationProcessor(libs.mapstruct.processor)
+    annotationProcessor(libs.mapstruct.lombok)
 
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
@@ -42,5 +52,17 @@ tasks.withType<Test> {
 }
 
 application {
-    applicationDefaultJvmArgs = listOf("---add-opens java.base/java.lang=ALL-UNNAMED")
+    applicationDefaultJvmArgs = listOf(
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
+    )
+}
+
+flyway {
+    driver = "org.postgresql.Driver"
+    url = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
+    user = dbUser
+    password = dbPassword
+    cleanDisabled = false
+    encoding = "UTF-8"
 }

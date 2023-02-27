@@ -1,23 +1,16 @@
 package ru.acuma.shuffler.mapper;
 
-import ma.glasnost.orika.MapperFacade;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import ru.acuma.shuffler.tables.pojos.GroupInfo;
-import ru.acuma.shufflerlib.mapper.BaseMapper;
 
-@Component
-public class GroupMapper extends BaseMapper {
+@Mapper(componentModel = "spring")
+public abstract class GroupMapper {
 
-    public GroupInfo toGroupInfo(Chat chat) {
-        mapperFactory.classMap(Chat.class, GroupInfo.class)
-                .field("id", "chatId")
-                .byDefault()
-                .register();
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        GroupInfo groupInfo = mapper.map(chat, GroupInfo.class);
-        groupInfo.setIsBlocked(Boolean.FALSE);
-        return groupInfo;
-    }
+    @Mapping(source = "id", target = "chatId")
+    @Mapping(target = "isBlocked", constant = "false")
+    @Mapping(target = "name", ignore = true)
+    public abstract GroupInfo toGroupInfo(Chat source);
 
 }

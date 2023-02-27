@@ -1,26 +1,17 @@
 package ru.acuma.shuffler.mapper;
 
-import ma.glasnost.orika.MapperFacade;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.acuma.shuffler.model.entity.TgTeam;
 import ru.acuma.shuffler.tables.pojos.Team;
-import ru.acuma.shufflerlib.mapper.BaseMapper;
 
-@Component
-public class TeamMapper extends BaseMapper {
+@Mapper(componentModel = "spring")
+public abstract class TeamMapper {
 
-    public Team toTeam(TgTeam team) {
-        return toTeam(team, null);
-    }
+    @Mapping(source = "winner", target = "isWinner")
+    public abstract Team toTeam(TgTeam team);
 
-    public Team toTeam(TgTeam source, Long gameId) {
-        mapperFactory.classMap(TgTeam.class, Team.class)
-                .byDefault()
-                .register();
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        Team target = mapper.map(source, Team.class);
-        return target.setGameId(gameId)
-                .setIsWinner(source.isWinner());
-    }
+    @Mapping(source = "team.winner", target = "isWinner")
+    public abstract Team toTeam(TgTeam team, Long gameId);
 
 }

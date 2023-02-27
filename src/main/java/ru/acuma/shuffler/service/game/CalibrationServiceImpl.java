@@ -33,7 +33,7 @@ public class CalibrationServiceImpl implements CalibrationService {
         );
         var playerHistory = changes.stream()
                 .filter(change -> change.getPlayerId().equals(playerId))
-                .collect(Collectors.toList());
+                .toList();
 
         return Math.toIntExact(playerHistory.stream()
                 .flatMap(change -> matesFilter(change, changes).stream())
@@ -58,7 +58,7 @@ public class CalibrationServiceImpl implements CalibrationService {
         return changes.stream()
                 .filter(change -> change.getGameId().equals(history.getGameId()))
                 .filter(change -> !change.getChange().equals(history.getChange()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

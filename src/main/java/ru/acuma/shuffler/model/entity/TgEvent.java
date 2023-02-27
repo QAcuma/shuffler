@@ -65,7 +65,7 @@ public class TgEvent {
     public List<TgEventPlayer> getActivePlayers() {
         return players.values().stream()
                 .filter(player -> !player.isLeft())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public void watchMessage(Integer messageId) {
