@@ -38,7 +38,8 @@ public class EventContextServiceImpl implements EventContextService {
     public boolean isActive(Long chatId) {
         final var event = getCurrentEvent(chatId);
         if (event != null) {
-            return !event.getEventState().equals(EventState.FINISHED);
+            return EventState.FINISHED != event.getEventState()
+                    && EventState.CANCELLED != event.getEventState();
         }
         return false;
     }

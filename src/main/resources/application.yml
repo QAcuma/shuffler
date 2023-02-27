@@ -23,7 +23,6 @@ application:
     link: ${SHUFFLER_AVATAR_PATH:https://shuffler.fun/avatar/}
 
 rating:
-  team-build-strategy: ${SHUFFLER_TEAM_BUILD_STRATEGY:random}
   calibration:
     games: ${SHUFFLER_CALIBRATION_GAMES:9}
     enemies: ${SHUFFLER_CALIBRATION_ENEMIES:3}

@@ -57,7 +57,7 @@ public class BroadcastServiceImpl implements BroadcastService {
                 .map(playerId -> playerRepository.findPlayerInfo(filter.setPlayerId(playerId)))
                 .filter(this::filterLazy)
                 .sorted(Comparator.comparingLong(WebPlayer::getScore).reversed())
-                .collect(Collectors.toList());
+                .toList();
 
         if (ladderResult.isEmpty()) {
             return;

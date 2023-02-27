@@ -1,11 +1,11 @@
 package ru.acuma.shuffler.service.command;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.BaseBotCommand;
 import ru.acuma.shuffler.service.executor.Executor;
 
-import javax.annotation.PostConstruct;
 
 public abstract class CommandHandler<T extends BaseBotCommand> {
 

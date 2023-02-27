@@ -10,9 +10,13 @@ import java.util.Objects;
 @Service
 public class AuthService {
 
+    public static final String PRIVATE_CHAT = "private";
+
     @UserAuth
     @GroupAuth
     public boolean doAuth(Message message) {
-        return Objects.isNull(message.getFrom());
+        var chat = message.getChat();
+
+        return PRIVATE_CHAT.equals(chat.getType()) || Objects.isNull(message.getFrom());
     }
 }
