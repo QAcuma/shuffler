@@ -2,8 +2,8 @@ plugins {
     java
     application
     idea
-    id("org.springframework.boot") version "3.0.2"
-    id("org.flywaydb.flyway") version "8.2.3"
+    alias(libs.plugins.springframework)
+    alias(libs.plugins.flyway)
 }
 
 val dbHost = System.getenv("SHUFFLER_DB_SERVER_HOST") ?: "localhost" as String?
@@ -31,6 +31,8 @@ dependencies {
     implementation(libs.spring.starter)
     implementation(libs.spring.web)
     implementation(libs.spring.aop)
+    implementation(libs.spring.redis)
+    implementation(libs.spring.data.jpa)
     implementation(libs.bundles.telegram)
     implementation(libs.bundles.data)
     implementation(libs.jooq)

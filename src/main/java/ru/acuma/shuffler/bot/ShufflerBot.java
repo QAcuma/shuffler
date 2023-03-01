@@ -33,7 +33,7 @@ public class ShufflerBot extends TelegramLongPollingCommandBot {
     private final AuthService authService;
 
     @PostConstruct
-    private void init() {
+    private void init(Message message) {
         commands.forEach(this::register);
     }
 

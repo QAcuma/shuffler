@@ -29,7 +29,7 @@ public class GameFacade {
     public void finishGameActions(TgEvent event, Message message) {
         maintenanceService.sweepMessage(message.getChatId(), event.getLatestGame().getMessageId());
         eventStateService.active(event);
-        var lobbyMessage = messageService.updateLobbyMessage(event);
+        var lobbyMessage = messageService.buildLobbyMessageUpdate(event);
         executeService.execute(lobbyMessage);
     }
 
@@ -42,7 +42,7 @@ public class GameFacade {
         eventStateService.active(event);
         gameService.nextGame(event);
 
-        var method = messageService.sendMessage(event, MessageType.GAME);
+        var method = messageService.buildMessage(event, MessageType.GAME);
         var gameMessage = executeService.execute(method);
         event.getLatestGame().setMessageId(gameMessage.getMessageId());
     }

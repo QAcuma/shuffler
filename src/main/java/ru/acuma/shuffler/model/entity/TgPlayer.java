@@ -5,21 +5,18 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.tables.pojos.UserInfo;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 @Getter
 @Setter
 @Accessors(chain = true)
-public class TgPlayer extends UserInfo {
+public class TgPlayer extends UserInfo implements Serializable {
 
     private Long id;
-
     private Long chatId;
-
     private int score;
-
     private boolean calibrated;
-
     private int calibrationMultiplier;
 
     public int getScoreSorting() {

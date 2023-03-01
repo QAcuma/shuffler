@@ -1,7 +1,7 @@
 telegram:
   bot:
     name: ${SHUFFLER_BOT_NAME}
-    token: ${SHUFFLER_TOKEN}
+    token: ${SHUFFLER_BOT_TOKEN}
 
 spring:
   main:
@@ -12,10 +12,14 @@ spring:
     username: ${SHUFFLER_DB_USER:local}
     password: ${SHUFFLER_DB_PASSWORD:root}
   flyway:
-    out-of-order: false
     enabled: true
     locations:
       - classpath:db/migration
+  data:
+    redis:
+      host: ${SHUFFLER_REDIS_HOST:localhost}
+      port: ${SHUFFLER_REDIS_PORT:6379}
+      password: ${SHUFFLER_REDIS_PASSWORD:root}
 
 application:
   media:

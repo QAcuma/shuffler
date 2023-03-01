@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.acuma.shuffler.bot.ShufflerBot;
-import ru.acuma.shuffler.cache.EventContextServiceImpl;
+import ru.acuma.shuffler.cache.EventContext;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
@@ -43,7 +43,7 @@ public class ExecuteServiceImpl implements ExecuteService {
     private final ExecutorService syncExecutors = Executors.newFixedThreadPool(4);
     private final ScheduledExecutorService asyncExecutors = Executors.newScheduledThreadPool(4);
 
-    private final EventContextServiceImpl eventContextService;
+    private final EventContext eventContext;
     private final @Lazy
     UserService userService;
     private final MessageService messageService;
@@ -59,8 +59,9 @@ public class ExecuteServiceImpl implements ExecuteService {
                 .filter(Message.class::isInstance)
                 .map(Message.class::cast)
                 .ifPresent(message -> {
-                    var event = eventContextService.getCurrentEvent(message.getChatId());
-                    Optional.ofNullable(event).ifPresent(activeEvent -> activeEvent.watchMessage(message.getMessageId()));
+                    var event = eventContext.findEvent(message.getChatId());
+                    Optional.ofNullable(event)
+                            .ifPresent(activeEvent -> activeEvent.spyMessage(message.getMessageId()));
                 });
 
         return result;
@@ -78,7 +79,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 .map(Message.class::cast)
                 .orElseThrow();
 
-        var update = messageService.updateMarkup(
+        var update = messageService.buildReplyMarkupUpdate(
                 event,
                 message.getMessageId(),
                 MessageType.CHECKING_TIMED

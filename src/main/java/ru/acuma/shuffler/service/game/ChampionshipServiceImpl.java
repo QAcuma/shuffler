@@ -3,10 +3,10 @@ package ru.acuma.shuffler.service.game;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import ru.acuma.shuffler.cache.EventContext;
 import ru.acuma.shuffler.model.entity.TgEvent;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.service.api.ChampionshipService;
-import ru.acuma.shuffler.service.api.EventContextService;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class ChampionshipServiceImpl implements ChampionshipService {
 
     private final EventStateService eventStateService;
-    private final EventContextService eventContextService;
+    private final EventContext eventContext;
     private final MessageService messageService;
     private final ExecuteService executeService;
     private final MaintenanceService maintenanceService;
@@ -29,9 +29,9 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     public void finishEvent(TgEvent event) {
         eventStateService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
-        eventContextService.update(event);
+        eventContext.update(event);
 
-        var update = messageService.updateLobbyMessage(event);
+        var update = messageService.buildLobbyMessageUpdate(event);
         executeService.execute(update);
 
         event.missMessage(event.getBaseMessage());
@@ -47,7 +47,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     public void finishChampionship(TgEvent event) {
         eventStateService.finished(event);
         maintenanceService.sweepEvent(event);
-        eventContextService.update(event);
+        eventContext.update(event);
     }
 
 }

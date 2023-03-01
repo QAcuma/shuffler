@@ -6,6 +6,7 @@ import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shufflerlib.model.Discipline;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,26 +24,17 @@ import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
 
 @Data
 @Builder
-public class TgEvent {
+public class TgEvent implements Serializable {
 
     private Long Id;
-
     private Long chatId;
-
     private final Set<Integer> messages = new TreeSet<>();
-
     private EventState eventState;
-
     private final Map<Long, TgEventPlayer> players = new HashMap<>();
-
     private LocalDateTime startedAt;
-
     private LocalDateTime finishedAt;
-
     private final List<TgGame> tgGames = new ArrayList<>();
-
     private Discipline discipline;
-
     private final List<Future<?>> futures = new ArrayList<>();
 
     public Integer getBaseMessage() {
@@ -65,10 +57,10 @@ public class TgEvent {
     public List<TgEventPlayer> getActivePlayers() {
         return players.values().stream()
                 .filter(player -> !player.isLeft())
-                .toList();
+                .collect(Collectors.toList());
     }
 
-    public void watchMessage(Integer messageId) {
+    public void spyMessage(Integer messageId) {
         this.messages.add(messageId);
     }
 

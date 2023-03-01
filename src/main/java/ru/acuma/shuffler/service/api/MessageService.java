@@ -11,13 +11,13 @@ import ru.acuma.shuffler.model.enums.messages.MessageType;
 
 public interface MessageService {
 
-    BotApiMethod<Message> sendMessage(TgEvent event, MessageType type);
+    BotApiMethod<Message> buildMessage(TgEvent event, MessageType type);
 
-    EditMessageText updateMessage(TgEvent event, Integer messageId, MessageType type);
+    EditMessageText buildMessageUpdate(TgEvent event, Integer messageId, MessageType type);
 
-    EditMessageReplyMarkup updateMarkup(TgEvent event, Integer messageId, MessageType type);
+    EditMessageReplyMarkup buildReplyMarkupUpdate(TgEvent event, Integer messageId, MessageType type);
 
-    EditMessageText updateLobbyMessage(TgEvent event);
+    EditMessageText buildLobbyMessageUpdate(TgEvent event);
 
     PinChatMessage pinMessage(Message message);
 

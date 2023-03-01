@@ -11,15 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 public class TgEventPlayer extends TgPlayer {
 
     private int gameCount;
-
     private long spreadScore;
-
     private int sessionScore;
-
     private TgEventPlayer lastGamePlayer;
-
     private boolean left;
-
     private int lastChange;
 
     @Override

@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.LeaveCommand;
 import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.api.PlayerService;
 import ru.acuma.shuffler.service.aspect.CheckPlayerInEvent;
-import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
 import static ru.acuma.shuffler.model.enums.EventState.CREATED;
@@ -22,40 +23,28 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 
 @Service
 @RequiredArgsConstructor
-public class LeaveCommandHandler extends CommandHandler<LeaveCommand> {
+public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
 
-    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
     private final EventStateService eventStateService;
     private final PlayerService playerService;
 
     @Override
-    public void init() {
-        commandExecutorFactory.register(CREATED, getCommandClass(), getCreatedReadyConsumer());
-        commandExecutorFactory.register(READY, getCommandClass(), getCreatedReadyConsumer());
-        commandExecutorFactory.register(PLAYING, getCommandClass(), getPlayingWaitingWaitingWIthGameConsumer());
-        commandExecutorFactory.register(WAITING, getCommandClass(), getPlayingWaitingWaitingWIthGameConsumer());
-        commandExecutorFactory.register(WAITING_WITH_GAME, getCommandClass(), getPlayingWaitingWaitingWIthGameConsumer());
-    }
-
-    @Override
-    public Class<LeaveCommand> getCommandClass() {
-        return LeaveCommand.class;
+    protected List<EventState> getSupportedStates() {
+        return List.of(CREATED, READY, PLAYING, WAITING, WAITING_WITH_GAME);
     }
 
     @Override
     @CheckPlayerInEvent
     public void handle(Message message) {
-        super.handle(message);
     }
-
 
     private BiConsumer<Message, TgEvent> getCreatedReadyConsumer() {
         return (message, event) -> {
             playerService.leaveLobby(event, message.getFrom().getId());
             eventStateService.prepare(event);
-            executeService.execute(messageService.updateLobbyMessage(event));
+            executeService.execute(messageService.buildLobbyMessageUpdate(event));
         };
     }
 
@@ -63,7 +52,7 @@ public class LeaveCommandHandler extends CommandHandler<LeaveCommand> {
         return (message, event) -> {
             playerService.leaveLobby(event, message.getFrom().getId());
             eventStateService.active(event);
-            executeService.execute(messageService.updateLobbyMessage(event));
+            executeService.execute(messageService.buildLobbyMessageUpdate(event));
         };
     }
 }

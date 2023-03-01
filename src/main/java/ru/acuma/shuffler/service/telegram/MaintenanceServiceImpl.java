@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.acuma.shuffler.cache.EventContext;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.service.api.EventContextService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
 import ru.acuma.shuffler.service.api.MessageService;
@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class MaintenanceServiceImpl implements MaintenanceService {
 
-    private final EventContextService eventContextService;
+    private final EventContext eventContext;
     private final ExecuteService executeService;
     private final MessageService messageService;
 
@@ -41,12 +41,12 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     public void sweepMessage(Long chatId, Integer messageId) {
         CompletableFuture.supplyAsync(() -> messageService.deleteMessage(chatId, messageId))
                 .thenAccept(executeService::execute)
-                .thenApply(future -> eventContextService.getCurrentEvent(chatId))
+                .thenApply(future -> eventContext.findEvent(chatId))
                 .thenAccept(event -> event.missMessage(messageId));
     }
 
     @Override
     public void sweepEvent(TgEvent event) {
-        eventContextService.evictEvent(event.getChatId());
+        eventContext.sweepEvent(event.getChatId());
     }
 }

@@ -2,8 +2,10 @@ package ru.acuma.shuffler.model.entity;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public final class TgGameBet {
+public final class TgGameBet implements Serializable {
 
     private final int caseWin;
     private final int caseLose;

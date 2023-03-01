@@ -73,7 +73,7 @@ public class ShuffleServiceImpl implements ShuffleService {
     private List<TgEventPlayer> shufflePriority(List<TgEventPlayer> members, int index) {
         List<TgEventPlayer> priority = members.stream()
                 .filter(member -> member.getGameCount() == index)
-                .toList();
+                .collect(Collectors.toList());
 
         return shuffleEvenly(priority);
     }

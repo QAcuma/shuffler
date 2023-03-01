@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.util.Symbols;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,22 +18,15 @@ import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
 @Setter
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TgGame {
+public class TgGame implements Serializable {
 
     private Long id;
-
     private int index;
-
     private int messageId;
-
     private GameState state;
-
     private TgTeam redTeam;
-
     private TgTeam blueTeam;
-
     private LocalDateTime startedAt;
-
     private LocalDateTime finishedAt;
 
     public List<TgEventPlayer> getPlayers() {

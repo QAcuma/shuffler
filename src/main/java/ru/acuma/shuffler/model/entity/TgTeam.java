@@ -15,15 +15,10 @@ import static ru.acuma.shuffler.util.Symbols.MEDAL_EMOJI;
 public class TgTeam {
 
     private Long id;
-
     private TgEventPlayer player1;
-
     private TgEventPlayer player2;
-
     private int score;
-
     private boolean isWinner;
-
     private TgGameBet bet;
 
     public TgTeam(TgEventPlayer player1, TgEventPlayer player2) {

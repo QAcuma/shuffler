@@ -66,7 +66,7 @@ public class KeyboardServiceImpl implements KeyboardService {
         var rows = map.entrySet().stream()
                 .map(entry -> buildButtonWithParam(command, entry.getKey(), entry.getValue()))
                 .map(this::wrapToRow)
-                .toList();
+                .collect(Collectors.toList());
         var extraButtons = Arrays.stream(buttons)
                 .map(this::wrapToRow)
                 .toList();

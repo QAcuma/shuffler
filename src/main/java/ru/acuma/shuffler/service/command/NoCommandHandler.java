@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.NoCommand;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.service.api.EventFacade;
+import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.aspect.SweepMessage;
-import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
 import static ru.acuma.shuffler.model.enums.EventState.BEGIN_CHECKING;
@@ -23,40 +23,28 @@ import static ru.acuma.shuffler.model.enums.EventState.WAITING;
 
 @Service
 @RequiredArgsConstructor
-public class NoCommandHandler extends CommandHandler<NoCommand> {
+public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
-    private final CommandExecutorSourceFactory commandExecutorFactory;
     private final ExecuteService executeService;
     private final MessageService messageService;
     private final EventStateService eventStateService;
     private final EventFacade eventFacade;
 
     @Override
-    public void init() {
-        commandExecutorFactory.register(CANCEL_CHECKING, getCommandClass(), getCancelBeginCheckingConsumer());
-        commandExecutorFactory.register(BEGIN_CHECKING, getCommandClass(), getCancelBeginCheckingConsumer());
-        commandExecutorFactory.register(GAME_CHECKING, getCommandClass(), getCheckingConsumer());
-        commandExecutorFactory.register(EVICTING, getCommandClass(), getCheckingConsumer());
-        commandExecutorFactory.register(WAITING, getCommandClass(), getCheckingConsumer());
-        commandExecutorFactory.register(FINISH_CHECKING, getCommandClass(), getCheckingConsumer());
-    }
-
-    @Override
-    public Class<NoCommand> getCommandClass() {
-        return NoCommand.class;
+    protected List<EventState> getSupportedStates() {
+        return List.of(CANCEL_CHECKING, BEGIN_CHECKING, GAME_CHECKING, EVICTING, WAITING, FINISH_CHECKING);
     }
 
     @Override
     @SweepMessage
     public void handle(Message message) {
-        super.handle(message);
     }
 
     private BiConsumer<Message, TgEvent> getCancelBeginCheckingConsumer() {
         return (message, event) -> {
             event.cancelFutures();
             eventStateService.prepare(event);
-            var lobbyMessage = messageService.updateLobbyMessage(event);
+            var lobbyMessage = messageService.buildLobbyMessageUpdate(event);
             executeService.execute(lobbyMessage);
         };
     }

@@ -5,15 +5,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.command.CommandHandler;
+import ru.acuma.shuffler.service.command.BaseCommandHandler;
 
 @Component
 public class KickCommand extends BaseBotCommand {
 
-    private CommandHandler<KickCommand> commandHandler;
+    private BaseCommandHandler<KickCommand> commandHandler;
 
     @Autowired
-    public void setCommandService(@Lazy CommandHandler<KickCommand> commandHandler) {
+    public void setCommandService(@Lazy BaseCommandHandler<KickCommand> commandHandler) {
         this.commandHandler = commandHandler;
     }
 

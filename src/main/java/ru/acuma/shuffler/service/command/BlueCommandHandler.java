@@ -5,34 +5,32 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.BlueCommand;
 import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.service.api.EventFacade;
+import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.GameStateService;
-import ru.acuma.shuffler.service.executor.CommandExecutorSourceFactory;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
-import static ru.acuma.shuffler.model.enums.EventState.PLAYING;
+import static ru.acuma.shuffler.model.enums.EventState.READY;
 import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 
 @Service
 @RequiredArgsConstructor
-public class BlueCommandHandler extends CommandHandler<BlueCommand> {
+public class BlueCommandHandler extends BaseCommandHandler<BlueCommand> {
 
     private final GameStateService gameStateService;
     private final EventStateService eventStateService;
     private final EventFacade eventFacade;
-    private final CommandExecutorSourceFactory commandExecutorFactory;
 
     @Override
-    protected void init() {
-        commandExecutorFactory.register(PLAYING, getCommandClass(), getPlayingWaitingWithGameConsumer());
-        commandExecutorFactory.register(WAITING_WITH_GAME, getCommandClass(), getPlayingWaitingWithGameConsumer());
+    protected List<EventState> getSupportedStates() {
+        return List.of(READY, WAITING_WITH_GAME);
     }
 
     @Override
-    public Class<BlueCommand> getCommandClass() {
-        return BlueCommand.class;
+    public void handle(Message message) {
+
     }
 
     private BiConsumer<Message, TgEvent> getPlayingWaitingWithGameConsumer() {

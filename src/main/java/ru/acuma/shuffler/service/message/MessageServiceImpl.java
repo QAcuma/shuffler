@@ -26,7 +26,7 @@ public class MessageServiceImpl implements MessageService {
     private final MessageContentService messageContentService;
 
     @Override
-    public BotApiMethod<Message> sendMessage(TgEvent event, MessageType type) {
+    public BotApiMethod<Message> buildMessage(TgEvent event, MessageType type) {
         return SendMessage.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .text(messageContentService.buildContent(event, type))
@@ -36,7 +36,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public EditMessageText updateMessage(TgEvent event, Integer messageId, MessageType type) {
+    public EditMessageText buildMessageUpdate(TgEvent event, Integer messageId, MessageType type) {
         return EditMessageText.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .messageId(messageId)
@@ -47,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public EditMessageReplyMarkup updateMarkup(TgEvent event, Integer messageId, MessageType type) {
+    public EditMessageReplyMarkup buildReplyMarkupUpdate(TgEvent event, Integer messageId, MessageType type) {
         return EditMessageReplyMarkup.builder()
                 .chatId(String.valueOf(event.getChatId()))
                 .messageId(messageId)
@@ -56,8 +56,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public EditMessageText updateLobbyMessage(TgEvent event) {
-        return updateMessage(event, event.getBaseMessage(), MessageType.LOBBY);
+    public EditMessageText buildLobbyMessageUpdate(TgEvent event) {
+        return buildMessageUpdate(event, event.getBaseMessage(), MessageType.LOBBY);
     }
 
     @Override

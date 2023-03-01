@@ -6,16 +6,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.enums.Command;
-import ru.acuma.shuffler.service.command.CommandHandler;
+import ru.acuma.shuffler.service.command.BaseCommandHandler;
 
 @Slf4j
 @Component
 public class ResetCommand extends BaseBotCommand {
 
-    private CommandHandler<ResetCommand> commandHandler;
+    private BaseCommandHandler<ResetCommand> commandHandler;
 
     @Autowired
-    public void setCommandService(@Lazy CommandHandler<ResetCommand> commandHandler) {
+    public void setCommandService(@Lazy BaseCommandHandler<ResetCommand> commandHandler) {
         this.commandHandler = commandHandler;
     }
 

@@ -6,7 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import ru.acuma.shuffler.cache.EventContextServiceImpl;
+import ru.acuma.shuffler.cache.EventContext;
 import ru.acuma.shuffler.util.AspectUtil;
 
 import javax.ws.rs.NotFoundException;
@@ -19,13 +19,13 @@ public class CheckPermissionsAspect {
 
     private static final Long ID = 285250417L;
 
-    private final EventContextServiceImpl eventContextService;
+    private final EventContext eventContext;
 
     @Around("@annotation(CheckPlayerInEvent)")
     @SneakyThrows
     public Object inEventCheck(ProceedingJoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
-        var event = eventContextService.getCurrentEvent(message.getChatId());
+        var event = eventContext.findEvent(message.getChatId());
         if (event == null || event.playerNotParticipate(message.getFrom().getId())) {
             return Optional.empty();
         }
@@ -37,7 +37,7 @@ public class CheckPermissionsAspect {
     @SneakyThrows
     public Object notInEventCheck(ProceedingJoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
-        var event = eventContextService.getCurrentEvent(message.getChatId());
+        var event = eventContext.findEvent(message.getChatId());
         if (event == null || !event.playerNotParticipate(message.getFrom().getId())) {
             return Optional.empty();
         }
@@ -49,7 +49,7 @@ public class CheckPermissionsAspect {
     @SneakyThrows
     public Object noActiveEventCheck(ProceedingJoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
-        if (eventContextService.isActive(message.getChatId())) {
+        if (eventContext.isActive(message.getChatId())) {
             return Optional.empty();
         }
 
