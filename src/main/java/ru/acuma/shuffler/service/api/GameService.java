@@ -1,6 +1,6 @@
 package ru.acuma.shuffler.service.api;
 
-import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.dto.TgEvent;
 
 public interface GameService {
 

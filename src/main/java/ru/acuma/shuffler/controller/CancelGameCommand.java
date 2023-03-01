@@ -12,13 +12,13 @@ public class CancelGameCommand extends BaseBotCommand {
 
     private BaseCommandHandler<CancelGameCommand> commandHandler;
 
+    public CancelGameCommand() {
+        super(Command.CANCEL_GAME.getCommand(), "Отменить игру");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<CancelGameCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public CancelGameCommand() {
-        super(Command.CANCEL_GAME.getCommand(), "Отменить игру");
     }
 
     @Override

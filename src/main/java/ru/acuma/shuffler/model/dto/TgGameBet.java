@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.model.entity;
+package ru.acuma.shuffler.model.dto;
 
 import lombok.Getter;
 

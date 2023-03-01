@@ -12,13 +12,13 @@ public class EventCommand extends BaseBotCommand {
 
     private BaseCommandHandler<EventCommand> commandHandler;
 
+    public EventCommand() {
+        super(Command.EVENT.getCommand(), "Время покрутить шашлыки");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<EventCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public EventCommand() {
-        super(Command.EVENT.getCommand(), "Время покрутить шашлыки");
     }
 
     @Override

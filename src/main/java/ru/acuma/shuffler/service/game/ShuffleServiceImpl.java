@@ -3,8 +3,8 @@ package ru.acuma.shuffler.service.game;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.model.entity.TgEventPlayer;
+import ru.acuma.shuffler.model.dto.TgEvent;
+import ru.acuma.shuffler.model.dto.TgEventPlayer;
 import ru.acuma.shuffler.model.enums.Values;
 import ru.acuma.shuffler.service.api.ShuffleService;
 

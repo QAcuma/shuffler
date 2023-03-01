@@ -12,13 +12,13 @@ public class YesCommand extends BaseBotCommand {
 
     private BaseCommandHandler<YesCommand> commandHandler;
 
+    public YesCommand() {
+        super(Command.YES.getCommand(), "Да");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<YesCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public YesCommand() {
-        super(Command.YES.getCommand(), "Да");
     }
 
     @Override

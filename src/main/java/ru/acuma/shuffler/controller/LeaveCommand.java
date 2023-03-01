@@ -12,13 +12,13 @@ public class LeaveCommand extends BaseBotCommand {
 
     private BaseCommandHandler<LeaveCommand> commandHandler;
 
+    public LeaveCommand() {
+        super(Command.LEAVE.getCommand(), "Покинуть список участников");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<LeaveCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public LeaveCommand() {
-        super(Command.LEAVE.getCommand(), "Покинуть список участников");
     }
 
     @Override

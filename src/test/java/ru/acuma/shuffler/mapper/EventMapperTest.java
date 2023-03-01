@@ -1,10 +1,9 @@
 package ru.acuma.shuffler.mapper;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.acuma.shuffler.base.AbstractUnitTest;
-import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.dto.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shufflerlib.model.Discipline;
 

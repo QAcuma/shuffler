@@ -12,13 +12,13 @@ public class BlueCommand extends BaseBotCommand {
 
     private BaseCommandHandler<BlueCommand> commandHandler;
 
+    public BlueCommand() {
+        super(Command.BLUE.getCommand(), "Синие");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<BlueCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public BlueCommand() {
-        super(Command.BLUE.getCommand(), "Синие");
     }
 
     @Override

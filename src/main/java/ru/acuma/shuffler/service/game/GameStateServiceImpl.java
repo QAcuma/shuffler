@@ -1,7 +1,7 @@
 package ru.acuma.shuffler.service.game;
 
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.model.entity.TgGame;
+import ru.acuma.shuffler.model.dto.TgGame;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.service.api.GameStateService;
 

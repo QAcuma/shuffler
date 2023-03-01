@@ -12,13 +12,13 @@ public class FinishCommand extends BaseBotCommand {
 
     private BaseCommandHandler<FinishCommand> commandHandler;
 
+    public FinishCommand() {
+        super(Command.FINISH.getCommand(), "Завершить чемпионат");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<FinishCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public FinishCommand() {
-        super(Command.FINISH.getCommand(), "Завершить чемпионат");
     }
 
     @Override

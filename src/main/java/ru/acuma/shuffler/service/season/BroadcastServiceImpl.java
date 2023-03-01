@@ -17,7 +17,6 @@ import ru.acuma.shufflerlib.repository.PlayerRepository;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

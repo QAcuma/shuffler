@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.GameMapper;
-import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.model.entity.TgEventPlayer;
-import ru.acuma.shuffler.model.entity.TgGame;
+import ru.acuma.shuffler.model.dto.TgEvent;
+import ru.acuma.shuffler.model.dto.TgEventPlayer;
+import ru.acuma.shuffler.model.dto.TgGame;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.RatingService;
@@ -18,7 +18,6 @@ import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

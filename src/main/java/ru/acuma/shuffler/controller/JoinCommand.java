@@ -12,13 +12,13 @@ public class JoinCommand extends BaseBotCommand {
 
     private BaseCommandHandler<JoinCommand> commandHandler;
 
+    public JoinCommand() {
+        super(Command.JOIN.getCommand(), "Присоединиться к игре");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<JoinCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public JoinCommand() {
-        super(Command.JOIN.getCommand(), "Присоединиться к игре");
     }
 
     @Override

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.dto.TgEvent;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.keyboards.Created;
@@ -137,7 +137,8 @@ public class KeyboardServiceImpl implements KeyboardService {
         return switch (eventState) {
             case CREATED -> List.of(Created.values());
             case READY -> List.of(Ready.values());
-            case GAME_CHECKING, CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING, EVICTING, ANY, CANCELLED, FINISHED -> Collections.emptyList();
+            case GAME_CHECKING, CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING, EVICTING, ANY, CANCELLED, FINISHED ->
+                    Collections.emptyList();
             case PLAYING, WAITING_WITH_GAME, WAITING -> List.of(Playing.values());
         };
     }

@@ -1,7 +1,7 @@
 package ru.acuma.shuffler.service.api;
 
-import ru.acuma.shuffler.model.entity.TgEventPlayer;
-import ru.acuma.shuffler.model.entity.TgTeam;
+import ru.acuma.shuffler.model.dto.TgEventPlayer;
+import ru.acuma.shuffler.model.dto.TgTeam;
 
 import java.util.List;
 

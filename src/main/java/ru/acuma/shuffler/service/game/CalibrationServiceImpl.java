@@ -10,7 +10,6 @@ import ru.acuma.shufflerlib.model.Discipline;
 import ru.acuma.shufflerlib.repository.RatingHistoryRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

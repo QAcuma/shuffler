@@ -12,13 +12,13 @@ public class PingPongCommand extends BaseBotCommand {
 
     private BaseCommandHandler<PingPongCommand> commandHandler;
 
+    public PingPongCommand() {
+        super(Command.PING_PONG.getCommand(), "Время пинать сферическую штуку");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<PingPongCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public PingPongCommand() {
-        super(Command.PING_PONG.getCommand(), "Время пинать сферическую штуку");
     }
 
     @Override

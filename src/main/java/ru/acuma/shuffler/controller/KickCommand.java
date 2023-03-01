@@ -12,13 +12,13 @@ public class KickCommand extends BaseBotCommand {
 
     private BaseCommandHandler<KickCommand> commandHandler;
 
+    public KickCommand() {
+        super(Command.KICK.getCommand(), "Исключить отсутствующего игрока");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<KickCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public KickCommand() {
-        super(Command.KICK.getCommand(), "Исключить отсутствующего игрока");
     }
 
     @Override

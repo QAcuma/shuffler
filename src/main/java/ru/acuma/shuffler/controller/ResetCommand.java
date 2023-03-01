@@ -14,13 +14,13 @@ public class ResetCommand extends BaseBotCommand {
 
     private BaseCommandHandler<ResetCommand> commandHandler;
 
+    public ResetCommand() {
+        super(Command.RESET.getCommand(), "Сбросить текущий эвент");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<ResetCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public ResetCommand() {
-        super(Command.RESET.getCommand(), "Сбросить текущий эвент");
     }
 
     @Override

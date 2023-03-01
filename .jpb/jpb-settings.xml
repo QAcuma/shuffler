@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaPluginProjectSettings">
+    <option name="entityNameTemplate" />
+    <option name="generateSerialVersionUID" value="true" />
+    <option name="generateTypeOnEntity" value="true" />
+    <option name="constantsOnColumnName" value="false" />
+    <option name="constantsOnEntityName" value="false" />
+    <option name="constantsOnTableName" value="false" />
+    <option name="isLombokToString" value="true" />
+    <option name="isLombokBuilder" value="true" />
+    <option name="isLombokAllArgsConstructor" value="true" />
+    <option name="isLombokNoArgsConstructor" value="true" />
+    <option name="useLazyOnToOneAssociations" value="true" />
+    <option name="scaffoldingLanguage" />
+  </component>
+</project>

@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.model.entity;
+package ru.acuma.shuffler.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,13 +11,14 @@ import java.util.Optional;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class TgPlayer extends UserInfo implements Serializable {
+public class TgPlayer implements Serializable {
 
     private Long id;
     private Long chatId;
     private int score;
     private boolean calibrated;
     private int calibrationMultiplier;
+    private TgUserInfo userInfo;
 
     public int getScoreSorting() {
         return calibrated ? score : 0;
@@ -28,9 +29,9 @@ public class TgPlayer extends UserInfo implements Serializable {
     }
 
     public String getName() {
-        return super.getFirstName() +
+        return userInfo.getFirstName() +
                 " " +
-                Optional.ofNullable(super.getLastName()).orElse("Doe") +
+                Optional.ofNullable(userInfo.getLastName()).orElse("Doe") +
                 this.getScoreString();
     }
 

@@ -2,7 +2,7 @@ package ru.acuma.shuffler.service.api;
 
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.dto.TgEvent;
 
 import java.io.Serializable;
 

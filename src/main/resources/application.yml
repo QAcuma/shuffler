@@ -6,7 +6,13 @@ telegram:
 spring:
   main:
     web-application-type: none
+  jpa:
+    properties:
+      hibernate:
+        default_schema: public
   datasource:
+    hikari:
+      schema: public
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${SHUFFLER_DB_SERVER_HOST:localhost}:${SHUFFLER_DB_SERVER_PORT:5432}/${SHUFFLER_DB_NAME:shuffler_local}${SHUFFLER_DB_URL_PARAMS:}
     username: ${SHUFFLER_DB_USER:local}

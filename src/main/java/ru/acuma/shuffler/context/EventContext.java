@@ -1,11 +1,11 @@
-package ru.acuma.shuffler.cache;
+package ru.acuma.shuffler.context;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.EventMapper;
-import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.dto.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shufflerlib.model.Discipline;
 import ru.acuma.shufflerlib.repository.EventRepository;

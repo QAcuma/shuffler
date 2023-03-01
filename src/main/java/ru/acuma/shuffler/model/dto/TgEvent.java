@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.model.entity;
+package ru.acuma.shuffler.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -26,16 +26,16 @@ import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
 @Builder
 public class TgEvent implements Serializable {
 
+    private final Set<Integer> messages = new TreeSet<>();
+    private final Map<Long, TgEventPlayer> players = new HashMap<>();
+    private final List<TgGame> tgGames = new ArrayList<>();
+    private final List<Future<?>> futures = new ArrayList<>();
     private Long Id;
     private Long chatId;
-    private final Set<Integer> messages = new TreeSet<>();
     private EventState eventState;
-    private final Map<Long, TgEventPlayer> players = new HashMap<>();
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
-    private final List<TgGame> tgGames = new ArrayList<>();
     private Discipline discipline;
-    private final List<Future<?>> futures = new ArrayList<>();
 
     public Integer getBaseMessage() {
         return Collections.min(this.messages);
@@ -46,8 +46,8 @@ public class TgEvent implements Serializable {
         return null == player || player.isLeft();
     }
 
-    public void joinPlayer(TgEventPlayer tgEventPlayer) {
-        this.players.put(tgEventPlayer.getTelegramId(), tgEventPlayer);
+    public void joinPlayer(TgEventPlayer eventPlayer) {
+        this.players.put(eventPlayer.getUserInfo().getTelegramId(), eventPlayer);
     }
 
     public void leaveLobby(Long telegramId) {

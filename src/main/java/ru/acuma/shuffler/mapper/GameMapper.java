@@ -1,7 +1,7 @@
 package ru.acuma.shuffler.mapper;
 
 import org.mapstruct.Mapper;
-import ru.acuma.shuffler.model.entity.TgGame;
+import ru.acuma.shuffler.model.dto.TgGame;
 import ru.acuma.shuffler.tables.pojos.Game;
 
 @Mapper(uses = OffsetDateTimeMapper.class, componentModel = "spring")

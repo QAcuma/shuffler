@@ -23,14 +23,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShufflerBot extends TelegramLongPollingCommandBot {
 
-    @Value("${telegram.bot.name}")
-    private String botName;
-
-    @Value("${telegram.bot.token}")
-    private String botToken;
-
     private final List<BaseBotCommand> commands;
     private final AuthService authService;
+    @Value("${telegram.bot.name}")
+    private String botName;
+    @Value("${telegram.bot.token}")
+    private String botToken;
 
     @PostConstruct
     private void init(Message message) {

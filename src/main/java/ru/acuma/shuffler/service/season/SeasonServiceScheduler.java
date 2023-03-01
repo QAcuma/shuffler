@@ -16,11 +16,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeasonServiceScheduler {
 
+    private final static String hourly = "0 0 * ? * *";
     private final SeasonRepository seasonRepository;
     private final SeasonService seasonService;
     private final BroadcastService broadcastService;
-
-    private final static String hourly = "0 0 * ? * *";
 
     @Scheduled(cron = hourly)
     public void watchSeason() {

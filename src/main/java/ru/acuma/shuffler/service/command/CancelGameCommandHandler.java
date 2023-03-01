@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.CancelGameCommand;
-import ru.acuma.shuffler.model.entity.TgEvent;
+import ru.acuma.shuffler.model.dto.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.GameStateService;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static ru.acuma.shuffler.model.enums.EventState.PLAYING;
-import static ru.acuma.shuffler.model.enums.EventState.READY;
 import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
 
 @Service

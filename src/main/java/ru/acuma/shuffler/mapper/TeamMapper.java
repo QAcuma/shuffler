@@ -2,7 +2,7 @@ package ru.acuma.shuffler.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.acuma.shuffler.model.entity.TgTeam;
+import ru.acuma.shuffler.model.dto.TgTeam;
 import ru.acuma.shuffler.tables.pojos.Team;
 
 @Mapper(componentModel = "spring")

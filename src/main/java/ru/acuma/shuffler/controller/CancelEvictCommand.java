@@ -12,13 +12,13 @@ public class CancelEvictCommand extends BaseBotCommand {
 
     private BaseCommandHandler<CancelEvictCommand> commandHandler;
 
+    public CancelEvictCommand() {
+        super(Command.CANCEL_EVICT.getCommand(), "Не исключать игрока");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<CancelEvictCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public CancelEvictCommand() {
-        super(Command.CANCEL_EVICT.getCommand(), "Не исключать игрока");
     }
 
     @Override

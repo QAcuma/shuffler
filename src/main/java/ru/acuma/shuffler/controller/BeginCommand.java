@@ -12,13 +12,13 @@ public class BeginCommand extends BaseBotCommand {
 
     private BaseCommandHandler<BeginCommand> commandHandler;
 
+    public BeginCommand() {
+        super(Command.BEGIN.getCommand(), "Начать турнир");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<BeginCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public BeginCommand() {
-        super(Command.BEGIN.getCommand(), "Начать турнир");
     }
 
     @Override

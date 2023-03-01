@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  redis:
+    container_name: shuffler-redis
+    image: redis:7.0.9-alpine
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+  postgres:
+    container_name: shuffler-postgres
+    image: postgres:15.2-alpine
+    environment:
+      POSTGRES_DB: "shuffler_local"
+      POSTGRES_USER: "local"
+      POSTGRES_PASSWORD: "root"
+      PGDATA: "/var/lib/postgresql/data"
+    volumes:
+      - postgres-db:/data/postgres
+    ports:
+      - "5432:5432"
+  shuffler:
+    container_name: shuffler
+    build:
+      dockerfile: Dockerfile
+    environment:
+      SHUFFLER_BOT_NAME: "${SHUFFLER_BOT_NAME}"
+      SHUFFLER_TOKEN: "${SHUFFLER_TOKEN}"
+volumes:
+  postgres-db:
+    driver: local

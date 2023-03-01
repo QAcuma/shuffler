@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.model.entity;
+package ru.acuma.shuffler.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,9 +13,9 @@ public class TgEventPlayer extends TgPlayer {
     private int gameCount;
     private long spreadScore;
     private int sessionScore;
-    private TgEventPlayer lastGamePlayer;
     private boolean left;
     private int lastChange;
+    private TgEventPlayer lastGamePlayer;
 
     @Override
     public int applyRating(int change) {
@@ -31,15 +31,15 @@ public class TgEventPlayer extends TgPlayer {
     }
 
     public String getName() {
-        return super.getFirstName() +
+        return getUserInfo().getFirstName() +
                 " " +
                 getFormatName();
     }
 
     private String getFormatName() {
         String lastName = "";
-        if (getLastName() != null) {
-            lastName = getLastName().charAt(0) + ".";
+        if (getUserInfo().getLastName() != null) {
+            lastName = getUserInfo().getLastName().charAt(0) + ".";
         }
         StringUtils.capitalize(lastName);
 

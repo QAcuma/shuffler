@@ -12,13 +12,13 @@ public class CancelCommand extends BaseBotCommand {
 
     private BaseCommandHandler<CancelCommand> commandHandler;
 
+    public CancelCommand() {
+        super(Command.CANCEL.getCommand(), "Отменить турнир");
+    }
+
     @Autowired
     public void setCommandService(@Lazy BaseCommandHandler<CancelCommand> commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    public CancelCommand() {
-        super(Command.CANCEL.getCommand(), "Отменить турнир");
     }
 
     @Override

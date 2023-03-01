@@ -6,7 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import ru.acuma.shuffler.cache.EventContext;
+import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.util.AspectUtil;
 
 import javax.ws.rs.NotFoundException;

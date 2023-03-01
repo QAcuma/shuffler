@@ -1,7 +1,7 @@
 package ru.acuma.shuffler.service.api;
 
-import ru.acuma.shuffler.model.entity.TgEvent;
-import ru.acuma.shuffler.model.entity.TgTeam;
+import ru.acuma.shuffler.model.dto.TgEvent;
+import ru.acuma.shuffler.model.dto.TgTeam;
 import ru.acuma.shuffler.tables.pojos.Rating;
 import ru.acuma.shufflerlib.model.Discipline;
 
