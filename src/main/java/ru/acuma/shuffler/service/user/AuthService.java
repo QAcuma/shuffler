@@ -14,7 +14,7 @@ public class AuthService {
 
     @UserAuth
     @GroupAuth
-    public boolean doAuth(Message message) {
+    public boolean doAuth(Message message, String... args) {
         var chat = message.getChat();
 
         return PRIVATE_CHAT.equals(chat.getType()) || Objects.isNull(message.getFrom());

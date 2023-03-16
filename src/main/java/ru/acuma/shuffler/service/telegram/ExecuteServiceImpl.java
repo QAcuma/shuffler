@@ -13,12 +13,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.acuma.shuffler.bot.ShufflerBot;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.dto.TgEvent;
-import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.model.enums.Constants;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.service.api.UserService;
 import ru.acuma.shuffler.service.message.KeyboardService;
+import ru.acuma.shuffler.service.user.UserService;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -44,8 +44,7 @@ public class ExecuteServiceImpl implements ExecuteService {
     private final ScheduledExecutorService asyncExecutors = Executors.newScheduledThreadPool(4);
 
     private final EventContext eventContext;
-    private final @Lazy
-    UserService userService;
+    private final @Lazy UserService userService;
     private final MessageService messageService;
     private final KeyboardService keyboardService;
     private final ShufflerBot shufflerBot;
@@ -85,9 +84,9 @@ public class ExecuteServiceImpl implements ExecuteService {
                 MessageType.CHECKING_TIMED
         );
 
-        IntStream.rangeClosed(1, Values.TIMEOUT).forEach(delay -> {
+        IntStream.rangeClosed(1, Constants.DISABLED_BUtTON_TIMEOUT).forEach(delay -> {
             Runnable repeatableExecutor = () -> {
-                update.setReplyMarkup(keyboardService.getTimedKeyboard(Values.TIMEOUT - delay));
+                update.setReplyMarkup(keyboardService.getTimedKeyboard(Constants.DISABLED_BUtTON_TIMEOUT - delay));
                 doExecute(update);
             };
 

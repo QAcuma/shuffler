@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import javax.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+@Accessors(chain = true)
 @ToString
 @Entity
 @Table(name = "rating")

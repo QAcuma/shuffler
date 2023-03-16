@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.dto.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
-import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.model.enums.Constants;
 import ru.acuma.shuffler.service.api.EventStateService;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public class EventStateServiceImpl implements EventStateService {
     public void prepare(TgEvent event) {
         var state = event.getEventState();
         if (isPreparingState(state)) {
-            if (event.getPlayers().size() >= Values.GAME_PLAYERS_COUNT) {
+            if (event.getPlayers().size() >= Constants.GAME_PLAYERS_COUNT) {
                 ready(event);
 
                 return;
@@ -29,7 +29,7 @@ public class EventStateServiceImpl implements EventStateService {
 
     @Override
     public void active(TgEvent event) {
-        if (event.getActivePlayers().size() >= Values.GAME_PLAYERS_COUNT) {
+        if (event.getActivePlayers().size() >= Constants.GAME_PLAYERS_COUNT) {
             playing(event);
 
             return;

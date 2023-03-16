@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.dto.TgEvent;
 import ru.acuma.shuffler.model.dto.TgEventPlayer;
-import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.model.enums.Constants;
 import ru.acuma.shuffler.service.api.ShuffleService;
 
 import java.security.SecureRandom;
@@ -26,7 +26,7 @@ public class ShuffleServiceImpl implements ShuffleService {
 
         List<TgEventPlayer> members = event.getActivePlayers();
 
-        if (members.size() < Values.GAME_PLAYERS_COUNT) {
+        if (members.size() < Constants.GAME_PLAYERS_COUNT) {
             throw new NoSuchElementException("Not enough players to start event");
         }
 
@@ -44,7 +44,7 @@ public class ShuffleServiceImpl implements ShuffleService {
         }
         List<TgEventPlayer> players = new ArrayList<>();
         for (int i = minGames; i <= maxGames; i++) {
-            int vacancy = Values.GAME_PLAYERS_COUNT - players.size();
+            int vacancy = Constants.GAME_PLAYERS_COUNT - players.size();
             List<TgEventPlayer> shuffled = shufflePriority(members, i);
 
             if (shuffled.size() >= vacancy) {
@@ -52,7 +52,7 @@ public class ShuffleServiceImpl implements ShuffleService {
             } else {
                 players.addAll(shuffled);
             }
-            if (players.size() == Values.GAME_PLAYERS_COUNT) {
+            if (players.size() == Constants.GAME_PLAYERS_COUNT) {
                 break;
             }
         }
@@ -62,11 +62,11 @@ public class ShuffleServiceImpl implements ShuffleService {
     @SneakyThrows
     private List<TgEventPlayer> shuffleEvenly(List<TgEventPlayer> members) {
         Collections.shuffle(members, SecureRandom.getInstance("SHA1PRNG", "SUN"));
-        if (members.size() < Values.GAME_PLAYERS_COUNT) {
+        if (members.size() < Constants.GAME_PLAYERS_COUNT) {
             return members;
         }
 
-        return members.subList(0, Values.GAME_PLAYERS_COUNT);
+        return members.subList(0, Constants.GAME_PLAYERS_COUNT);
     }
 
     @SneakyThrows

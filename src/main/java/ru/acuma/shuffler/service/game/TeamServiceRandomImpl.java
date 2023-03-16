@@ -16,7 +16,7 @@ import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.acuma.shuffler.model.enums.Values.GAME_PLAYERS_COUNT;
+import static ru.acuma.shuffler.model.enums.Constants.GAME_PLAYERS_COUNT;
 
 @Service
 @RequiredArgsConstructor

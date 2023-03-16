@@ -10,7 +10,7 @@ import ru.acuma.shuffler.model.dto.TgEventPlayer;
 import ru.acuma.shuffler.model.dto.TgGame;
 import ru.acuma.shuffler.model.dto.TgGameBet;
 import ru.acuma.shuffler.model.dto.TgTeam;
-import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.model.enums.Constants;
 import ru.acuma.shuffler.service.api.CalibrationService;
 import ru.acuma.shuffler.service.api.RatingService;
 import ru.acuma.shuffler.service.api.SeasonService;
@@ -101,10 +101,10 @@ public class RatingServiceImpl implements RatingService {
 
     private int winCase(TgTeam team1, TgTeam team2) {
         var diff = team1.getScore() - team2.getScore();
-        var limitedDiff = Math.min(diff, Values.RATING_REFERENCE);
+        var limitedDiff = Math.min(diff, Constants.RATING_REFERENCE);
         var change = diff >= 0
-                ? Values.BASE_RATING_CHANGE * (1 - ((float) limitedDiff / Values.RATING_REFERENCE))
-                : Values.BASE_RATING_CHANGE * (1 + ((float) -limitedDiff / Values.RATING_REFERENCE));
+                ? Constants.BASE_RATING_CHANGE * (1 - ((float) limitedDiff / Constants.RATING_REFERENCE))
+                : Constants.BASE_RATING_CHANGE * (1 + ((float) -limitedDiff / Constants.RATING_REFERENCE));
 
         return Math.round(change);
     }
@@ -125,7 +125,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private int getBasePool(boolean isCalibrating) {
-        return isCalibrating ? Values.BASE_RATING_CHANGE : Values.BASE_RATING_CHANGE * 2;
+        return isCalibrating ? Constants.BASE_RATING_CHANGE : Constants.BASE_RATING_CHANGE * 2;
     }
 
     private Rating newDefaultRating(Long playerId, Discipline discipline) {
@@ -133,7 +133,7 @@ public class RatingServiceImpl implements RatingService {
                 .setDiscipline(discipline.name())
                 .setSeasonId(seasonService.getCurrentSeason().getId())
                 .setPlayerId(playerId)
-                .setScore(Values.DEFAULT_RATING)
+                .setScore(Constants.BASE_RATING)
                 .setIsCalibrated(false);
 
         return rating.setId(ratingRepository.save(rating));

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.service.api.BroadcastService;
 import ru.acuma.shuffler.service.api.SeasonService;
 import ru.acuma.shufflerlib.repository.SeasonRepository;
 

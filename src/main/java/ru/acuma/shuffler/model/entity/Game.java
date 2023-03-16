@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.enums.GameState;
 
 import javax.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Accessors(chain = true)
 @ToString
 @Entity
 @Table(name = "game")

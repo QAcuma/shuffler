@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.acuma.shuffler.model.dto.TgEvent;
-import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.model.enums.Constants;
 import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.MessageService;
 
@@ -81,7 +81,7 @@ public class MessageServiceImpl implements MessageService {
             case LOBBY -> keyboardService.getLobbyKeyboard(event);
             case CHECKING -> keyboardService.getCheckingKeyboard(event);
             case GAME -> keyboardService.getGamingKeyboard(event);
-            case CHECKING_TIMED -> keyboardService.getTimedKeyboard(Values.TIMEOUT);
+            case CHECKING_TIMED -> keyboardService.getTimedKeyboard(Constants.DISABLED_BUtTON_TIMEOUT);
             case CANCELLED, STAT -> keyboardService.getEmptyKeyboard();
         };
     }

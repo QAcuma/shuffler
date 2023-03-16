@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import ru.acuma.shuffler.service.api.BroadcastService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.tables.pojos.GroupInfo;
 import ru.acuma.shufflerlib.model.Discipline;
@@ -20,7 +19,7 @@ import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
-public class BroadcastServiceImpl implements BroadcastService {
+public class BroadcastService {
 
     private final GroupRepository groupRepository;
     private final PlayerRepository playerRepository;
@@ -30,19 +29,16 @@ public class BroadcastServiceImpl implements BroadcastService {
     @Value("${rating.calibration.games}")
     private int requiredGames;
 
-    @Override
     public void seasonResultBroadcast(Long seasonId) {
         groupRepository.findActiveGroups(seasonId)
                 .forEach(groupInfo -> seasonResultBroadcast(seasonId, groupInfo));
     }
 
-    @Override
     public void seasonResultBroadcast(Long seasonId, GroupInfo groupInfo) {
         Arrays.stream(Discipline.values())
                 .forEach(discipline -> seasonResultBroadcast(seasonId, groupInfo, discipline));
     }
 
-    @Override
     public void seasonResultBroadcast(Long seasonId, GroupInfo groupInfo, Discipline discipline) {
         var filter = Filter.builder()
                 .seasonId(seasonId)

@@ -2,7 +2,6 @@ telegram:
   bot:
     name: ${SHUFFLER_BOT_NAME}
     token: ${SHUFFLER_BOT_TOKEN}
-
 spring:
   main:
     web-application-type: none
@@ -36,5 +35,5 @@ rating:
   calibration:
     games: ${SHUFFLER_CALIBRATION_GAMES:9}
     enemies: ${SHUFFLER_CALIBRATION_ENEMIES:3}
-    multiplier: ${SHUFFLER_CALIBRATION_MULTIPLIER:6}
+    multiplier: ${SHUFFLER_CALIBRATION_MULTIPLIER:5}
     game-penalty: ${SHUFFLER_CALIBRATION_PENALTY_MULTIPLIER:0.5}

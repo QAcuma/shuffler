@@ -2,7 +2,6 @@ package ru.acuma.shuffler.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.acuma.shuffler.service.api.UserService;
 
 @Component
 @RequiredArgsConstructor

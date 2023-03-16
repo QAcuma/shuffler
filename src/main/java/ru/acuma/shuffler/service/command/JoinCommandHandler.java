@@ -10,8 +10,8 @@ import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.service.api.PlayerService;
 import ru.acuma.shuffler.service.aspect.CheckPlayerNotInEvent;
+import ru.acuma.shuffler.service.user.PlayerService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -43,12 +43,10 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
     }
 
 
-    private BiConsumer<Message, TgEvent> getCreatedReadyConsumer() {
-        return (message, event) -> {
-            playerService.authenticate(event, message.getFrom());
+    private void joinPlayer(Message message, TgEvent event) {
+            var player = playerService.getEventPlayer(message.getFrom(), event);
             eventStateService.prepare(event);
             executeService.execute(messageService.buildMessageUpdate(event, event.getBaseMessage(), MessageType.LOBBY));
-        };
     }
 
     private BiConsumer<Message, TgEvent> getPlayingConsumer() {

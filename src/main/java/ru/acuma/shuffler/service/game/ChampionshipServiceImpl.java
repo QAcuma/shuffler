@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.dto.TgEvent;
-import ru.acuma.shuffler.model.enums.Values;
+import ru.acuma.shuffler.model.enums.Constants;
 import ru.acuma.shuffler.service.api.ChampionshipService;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
@@ -39,7 +39,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
         maintenanceService.sweepEvent(event);
 
         var deleteMethod = messageService.deleteMessage(event.getChatId(), update.getMessageId());
-        executeService.executeLater(deleteMethod, Values.CANCELLED_MESSAGE_TIMEOUT);
+        executeService.executeLater(deleteMethod, Constants.CANCELLED_MESSAGE_TTL_BEFORE_DELETE);
     }
 
     @SneakyThrows

@@ -5,8 +5,8 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-import ru.acuma.shuffler.service.api.GroupService;
-import ru.acuma.shuffler.service.api.UserService;
+import ru.acuma.shuffler.service.telegram.GroupService;
+import ru.acuma.shuffler.service.user.UserService;
 import ru.acuma.shuffler.util.AspectUtil;
 
 import javax.ws.rs.NotFoundException;
@@ -22,14 +22,13 @@ public class AuthAspect {
     @Before("@annotation(UserAuth)")
     public void authUser(JoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
-        userService.authenticate(message.getFrom());
+        userService.signIn(message.getFrom());
     }
 
     @Before("@annotation(GroupAuth)")
     public void authChat(JoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
-        groupService.authenticate(message.getChat());
+        groupService.signIn(message.getChat());
     }
-
 
 }
