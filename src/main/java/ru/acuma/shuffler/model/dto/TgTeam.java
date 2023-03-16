@@ -1,24 +1,28 @@
 package ru.acuma.shuffler.model.dto;
 
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 import static ru.acuma.shuffler.util.Symbols.MEDAL_EMOJI;
 
-@Getter
-@Setter
+@Data
+@SuperBuilder
+@NoArgsConstructor
 @Accessors(chain = true)
 public class TgTeam {
 
     private Long id;
     private TgEventPlayer player1;
     private TgEventPlayer player2;
-    private int score;
-    private boolean isWinner;
+    private Integer score;
+    private Boolean isWinner;
     private TgGameBet bet;
 
     public TgTeam(TgEventPlayer player1, TgEventPlayer player2) {
@@ -34,7 +38,7 @@ public class TgTeam {
     }
 
     public void applyRating() {
-        var change = isWinner() ? bet.getCaseWin() : bet.getCaseLose();
+        var change = getIsWinner() ? bet.getCaseWin() : bet.getCaseLose();
         getPlayers().forEach(player -> player.applyRating(change));
     }
 
@@ -47,7 +51,7 @@ public class TgTeam {
     }
 
     public boolean containsCalibrating() {
-        return getPlayers().stream().anyMatch(Predicate.not(TgEventPlayer::isCalibrated));
+        return getPlayers().stream().anyMatch(Predicate.not(TgEventPlayer::getCalibrated));
     }
 
     public List<TgEventPlayer> getPlayers() {

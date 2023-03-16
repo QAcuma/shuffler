@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.mapper.TeamPlayerMapper;
 import ru.acuma.shuffler.model.dto.TgEventPlayer;
+import ru.acuma.shuffler.model.dto.TgGame;
 import ru.acuma.shuffler.model.dto.TgTeam;
-import ru.acuma.shuffler.service.api.TeamService;
+import ru.acuma.shuffler.repository.TeamPlayerRepository;
+import ru.acuma.shuffler.repository.TeamRepository;
 import ru.acuma.shuffler.util.TeamServiceUtil;
-import ru.acuma.shufflerlib.repository.TeamPlayerRepository;
-import ru.acuma.shufflerlib.repository.TeamRepository;
 
 import java.security.SecureRandom;
 import java.util.Collections;
@@ -20,14 +20,13 @@ import static ru.acuma.shuffler.model.enums.Constants.GAME_PLAYERS_COUNT;
 
 @Service
 @RequiredArgsConstructor
-public class TeamServiceRandomImpl implements TeamService {
+public class TeamService {
 
     private final TeamMapper teamMapper;
     private final TeamPlayerMapper teamPlayerMapper;
     private final TeamRepository teamRepository;
     private final TeamPlayerRepository teamPlayerRepository;
 
-    @Override
     public TgTeam buildTeam(List<TgEventPlayer> players) {
         if (players.size() < GAME_PLAYERS_COUNT / 2) {
             throw new IllegalArgumentException("Not enough players");
@@ -36,24 +35,19 @@ public class TeamServiceRandomImpl implements TeamService {
         return build(players, 20);
     }
 
-    @Override
-    public TgTeam save(TgTeam team, Long gameId) {
-        var mappedTeam = teamMapper.toTeam(team, gameId);
-        team.setId(teamRepository.save(mappedTeam));
+    public TgTeam save(TgTeam team, TgGame game) {
+        var mappedTeam = teamMapper.toTeam(team, game);
         team.getPlayers().forEach(player -> saveTeamPlayer(player, team.getId()));
 
         return team;
     }
 
-    @Override
     public TgTeam update(TgTeam team) {
         var mappedTeam = teamMapper.toTeam(team);
-        team.setId(teamRepository.update(mappedTeam));
 
         return team;
     }
 
-    @Override
     public void saveTeamPlayer(TgEventPlayer player, Long teamId) {
         var mappedTeamPlayer = teamPlayerMapper.toTeamPlayer(player, teamId);
         teamPlayerRepository.save(mappedTeamPlayer);

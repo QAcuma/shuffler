@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.service.api.SeasonService;
-import ru.acuma.shufflerlib.repository.SeasonRepository;
+import ru.acuma.shuffler.repository.SeasonRepository;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -16,7 +15,7 @@ import java.util.List;
 public class SeasonServiceScheduler {
 
     private final static String hourly = "0 0 * ? * *";
-    private final SeasonRepository seasonRepository;
+    private final SeasonService seasonRepository;
     private final SeasonService seasonService;
     private final BroadcastService broadcastService;
 
@@ -40,7 +39,7 @@ public class SeasonServiceScheduler {
 
     private void startNewSeason(YearSeason liveYearSeason) {
         broadcastService.seasonResultBroadcast(seasonService.getCurrentSeason().getId());
-        seasonRepository.startNewSeason(liveYearSeason.name() + OffsetDateTime.now().getYear());
+//        seasonRepository.startNewSeason(liveYearSeason.name() + OffsetDateTime.now().getYear());
         seasonService.evictSeason();
     }
 

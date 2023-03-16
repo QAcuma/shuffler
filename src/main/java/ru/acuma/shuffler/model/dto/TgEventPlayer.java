@@ -1,26 +1,30 @@
 package ru.acuma.shuffler.model.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-@Getter
-@Setter
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class TgEventPlayer extends TgPlayer {
 
-    private int gameCount;
-    private long spreadScore;
-    private int sessionScore;
-    private boolean left;
-    private int lastChange;
+    private Integer gameCount;
+    private Integer spreadScore;
+    private Integer sessionScore;
+    private Integer lastChange;
+    private Boolean left;
     private TgEventPlayer lastGamePlayer;
 
     @Override
-    public int applyRating(int change) {
+    public Integer applyRating(int change) {
         var applied = super.applyRating(change);
-        sessionScore = isCalibrated() ? sessionScore + applied : 0;
+        sessionScore = getCalibrated() ? sessionScore + applied : 0;
         lastChange = applied;
 
         return applied;
@@ -32,8 +36,8 @@ public class TgEventPlayer extends TgPlayer {
 
     public String getName() {
         return getUserInfo().getFirstName() +
-                " " +
-                getFormatName();
+            " " +
+            getFormatName();
     }
 
     private String getFormatName() {
@@ -48,24 +52,24 @@ public class TgEventPlayer extends TgPlayer {
 
     public String getLobbyName() {
         return strikethroughBegin() +
-                getName() +
-                strikethroughEnd() +
-                " " +
-                getScoreString() +
-                (isCalibrated() ? getSessionRatingToString() : "");
+            getName() +
+            strikethroughEnd() +
+            " " +
+            getScoreString() +
+            (getCalibrated() ? getSessionRatingToString() : "");
     }
 
     private String strikethroughBegin() {
-        return isLeft() ? "<s>" : "";
+        return getLeft() ? "<s>" : "";
     }
 
     private String strikethroughEnd() {
-        return isLeft() ? "</s>" : "";
+        return getLeft() ? "</s>" : "";
     }
 
     String getSessionRatingToString() {
         return getSessionScore() > 0
-                ? " (+" + getSessionScore() + ")"
-                : " (" + getSessionScore() + ")";
+               ? " (+" + getSessionScore() + ")"
+               : " (" + getSessionScore() + ")";
     }
 }

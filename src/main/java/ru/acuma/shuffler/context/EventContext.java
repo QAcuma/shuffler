@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.dto.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.repository.EventRepository;
 import ru.acuma.shufflerlib.model.Discipline;
-import ru.acuma.shufflerlib.repository.EventRepository;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -45,17 +45,17 @@ public class EventContext {
     @Deprecated
     public TgEvent update(TgEvent tgEvent) {
         var mapped = eventMapper.toEvent(tgEvent);
-        eventRepository.update(mapped);
+        eventRepository.save(mapped);
 
         return tgEvent;
     }
 
     private TgEvent buildEvent(Long chatId, Discipline discipline) {
         return TgEvent.builder()
-                .eventState(EventState.CREATED)
-                .chatId(chatId)
-                .startedAt(LocalDateTime.now())
-                .discipline(discipline)
-                .build();
+            .eventState(EventState.CREATED)
+            .chatId(chatId)
+            .startedAt(LocalDateTime.now())
+            .discipline(discipline)
+            .build();
     }
 }

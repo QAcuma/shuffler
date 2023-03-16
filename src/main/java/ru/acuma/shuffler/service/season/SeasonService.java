@@ -2,37 +2,38 @@ package ru.acuma.shuffler.service.season;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.service.api.SeasonService;
-import ru.acuma.shuffler.tables.pojos.Season;
-import ru.acuma.shufflerlib.repository.SeasonRepository;
+import ru.acuma.shuffler.model.entity.Season;
+import ru.acuma.shuffler.repository.SeasonRepository;
 
 @Service
 @RequiredArgsConstructor
-public class SeasonServiceImpl implements SeasonService {
+public class SeasonService {
 
     private final SeasonRepository seasonRepository;
 
     private Season season;
 
-    @Override
     public Season getCurrentSeason() {
         return season == null
-                ? setSeason()
-                : season;
+               ? setSeason()
+               : season;
     }
 
-    @Override
     public Season evictSeason() {
         return season = null;
     }
 
-    @Override
     public void invalidateSeason() {
         season = null;
     }
 
     private Season setSeason() {
-        season = seasonRepository.getCurrentSeason();
+        season = seasonRepository.findByFinishedAtIsNull()
+            .orElseGet(() -> startNewSeason());
         return season;
+    }
+
+    public Season startNewSeason() {
+        return new Season();
     }
 }

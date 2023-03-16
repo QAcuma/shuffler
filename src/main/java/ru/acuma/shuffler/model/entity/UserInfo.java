@@ -51,7 +51,7 @@ public class UserInfo implements Serializable {
 
     @NotNull
     @Column(name = "is_blocked", nullable = false)
-    private Boolean isBlocked = false;
+    private Boolean isBlocked;
 
     @Column(name = "last_message_at")
     private OffsetDateTime lastMessageAt;

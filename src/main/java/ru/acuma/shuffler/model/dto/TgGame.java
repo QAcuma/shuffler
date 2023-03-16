@@ -1,9 +1,11 @@
 package ru.acuma.shuffler.model.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.util.Symbols;
 
@@ -14,15 +16,15 @@ import java.util.List;
 
 import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
 
-@Getter
-@Setter
+@Data
+@SuperBuilder
 @NoArgsConstructor
 @Accessors(chain = true)
 public class TgGame implements Serializable {
 
     private Long id;
-    private int index;
-    private int messageId;
+    private Integer index;
+    private Integer messageId;
     private GameState state;
     private TgTeam redTeam;
     private TgTeam blueTeam;
@@ -39,7 +41,7 @@ public class TgGame implements Serializable {
 
     public TgTeam getWinnerTeam() {
         if (state == FINISHED) {
-            return redTeam.isWinner() ? redTeam : blueTeam;
+            return redTeam.getIsWinner() ? redTeam : blueTeam;
         }
 
         return null;
@@ -47,7 +49,7 @@ public class TgGame implements Serializable {
 
     public TgTeam getLoserTeam() {
         if (state == FINISHED) {
-            return redTeam.isWinner() ? blueTeam : redTeam;
+            return redTeam.getIsWinner() ? blueTeam : redTeam;
         }
 
         return null;

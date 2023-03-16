@@ -1,14 +1,19 @@
 package ru.acuma.shuffler.model.dto;
 
+import lombok.Data;
 import lombok.Getter;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
-@Getter
+@Data
+@SuperBuilder
+@Accessors(chain = true)
 public final class TgGameBet implements Serializable {
 
-    private final int caseWin;
-    private final int caseLose;
+    private final Integer caseWin;
+    private final Integer caseLose;
 
     public TgGameBet(int caseWin, int caseLose) {
         this.caseWin = caseWin;

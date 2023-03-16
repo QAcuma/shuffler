@@ -36,7 +36,7 @@ public class KickServiceImpl implements KickService {
     public SendMessage prepareKickMessage(TgEvent event) {
         List<TgEventPlayer> players = event.getLatestGame().getPlayers()
                 .stream()
-                .filter(Predicate.not(TgEventPlayer::isLeft))
+                .filter(Predicate.not(TgEventPlayer::getLeft))
                 .toList();
         var keyboard = preparePlayersKeyboard(players);
 

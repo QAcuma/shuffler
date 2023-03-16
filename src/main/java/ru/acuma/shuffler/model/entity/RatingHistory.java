@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,13 +22,10 @@ import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 
+@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Accessors(chain = true)
 @ToString
+
 @Entity
 @Table(name = "rating_history")
 public class RatingHistory implements Serializable {
@@ -64,7 +62,7 @@ public class RatingHistory implements Serializable {
 
     @NotNull
     @Column(name = "is_calibrated", nullable = false)
-    private Boolean isCalibrated = false;
+    private Boolean isCalibrated;
 
     @Size(max = 32)
     @Column(name = "discipline", length = 32)

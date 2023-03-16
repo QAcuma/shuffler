@@ -2,6 +2,9 @@ package ru.acuma.shuffler.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shufflerlib.model.Discipline;
@@ -23,7 +26,9 @@ import java.util.stream.Collectors;
 import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
 
 @Data
-@Builder
+@SuperBuilder
+@NoArgsConstructor
+@Accessors(chain = true)
 public class TgEvent implements Serializable {
 
     private final Set<Integer> messages = new TreeSet<>();
@@ -43,7 +48,7 @@ public class TgEvent implements Serializable {
 
     public boolean playerNotParticipate(Long telegramId) {
         var player = players.get(telegramId);
-        return null == player || player.isLeft();
+        return null == player || player.getLeft();
     }
 
     public void joinPlayer(TgEventPlayer eventPlayer) {
@@ -56,7 +61,7 @@ public class TgEvent implements Serializable {
 
     public List<TgEventPlayer> getActivePlayers() {
         return players.values().stream()
-                .filter(player -> !player.isLeft())
+                .filter(player -> !player.getLeft())
                 .collect(Collectors.toList());
     }
 
@@ -78,11 +83,11 @@ public class TgEvent implements Serializable {
         tgGames.add(tgGame);
     }
 
-    public boolean isCalibrating() {
+    public Boolean isCalibrating() {
         return getTgGames().stream().anyMatch(TgGame::isCalibrating);
     }
 
-    public boolean hasAnyGameFinished() {
+    public Boolean hasAnyGameFinished() {
         return getTgGames().stream().anyMatch(game -> game.getState() == FINISHED);
     }
 

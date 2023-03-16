@@ -9,7 +9,7 @@ import ru.acuma.shuffler.model.dto.TgEvent;
 import ru.acuma.shuffler.model.dto.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.repository.PlayerRepository;
-import ru.acuma.shuffler.service.api.RatingService;
+import ru.acuma.shuffler.service.game.RatingService;
 import ru.acuma.shuffler.service.telegram.GroupService;
 
 import java.util.Comparator;
@@ -28,8 +28,8 @@ public class PlayerService {
     public TgEventPlayer getEventPlayer(User user, TgEvent event) {
         var userInfo = userService.getUser(user.getId());
         var player = getOrSignUpPlayer(event.getChatId(), user.getId());
-        var rating = ratingService.getRating(player.getId(), event.getDiscipline());
-        var tgEventPlayer = playerMapper.toTgEventPlayer(appUser, player, rating);
+        var rating = ratingService.getRating(player, event.getDiscipline());
+        var tgEventPlayer = playerMapper.toTgEventPlayer(userInfo, player, rating);
 
         return tgEventPlayer;
     }
@@ -53,7 +53,7 @@ public class PlayerService {
             event.getPlayers().get(user.getId()).setLeft(false);
             player.setGameCount(maxGames);
         } else {
-            authenticate(event, user);
+//            authenticate(event, user);
             player = members.get(user.getId());
             player.setGameCount(maxGames);
         }
@@ -74,7 +74,8 @@ public class PlayerService {
             .build();
 
         playerRepository.save(player);
-        ratingService.defaultRating(player.getId());
+//        ratingService.defaultRating(player);
+        return player;
     }
 
 }
