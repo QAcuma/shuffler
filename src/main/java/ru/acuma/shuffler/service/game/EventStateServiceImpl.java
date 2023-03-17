@@ -2,7 +2,7 @@ package ru.acuma.shuffler.service.game;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.model.dto.TgEvent;
+import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.model.enums.Constants;

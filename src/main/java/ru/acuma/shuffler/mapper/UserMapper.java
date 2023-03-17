@@ -2,10 +2,8 @@ package ru.acuma.shuffler.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.acuma.shuffler.model.dto.TgUserInfo;
+import ru.acuma.shuffler.model.domain.TgUserInfo;
 import ru.acuma.shuffler.model.entity.UserInfo;
-
-import java.time.OffsetDateTime;
 
 @Mapper(
     config = MapperConfiguration.class

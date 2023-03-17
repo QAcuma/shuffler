@@ -1,6 +1,5 @@
-package ru.acuma.shuffler.model.dto;
+package ru.acuma.shuffler.model.domain;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -48,7 +47,7 @@ public class TgEvent implements Serializable {
 
     public boolean playerNotParticipate(Long telegramId) {
         var player = players.get(telegramId);
-        return null == player || player.getLeft();
+        return null == player || player.getEventContext().getLeft();
     }
 
     public void joinPlayer(TgEventPlayer eventPlayer) {
@@ -61,7 +60,7 @@ public class TgEvent implements Serializable {
 
     public List<TgEventPlayer> getActivePlayers() {
         return players.values().stream()
-                .filter(player -> !player.getLeft())
+                .filter(player -> !player.getEventContext().getLeft())
                 .collect(Collectors.toList());
     }
 

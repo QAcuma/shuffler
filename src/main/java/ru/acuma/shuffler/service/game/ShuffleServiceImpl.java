@@ -3,8 +3,9 @@ package ru.acuma.shuffler.service.game;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.model.dto.TgEvent;
-import ru.acuma.shuffler.model.dto.TgEventPlayer;
+import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TgEventContext;
+import ru.acuma.shuffler.model.domain.TgEventPlayer;
 import ru.acuma.shuffler.model.enums.Constants;
 import ru.acuma.shuffler.service.api.ShuffleService;
 
@@ -31,13 +32,15 @@ public class ShuffleServiceImpl implements ShuffleService {
         }
 
         int minGames = members.stream()
-                .min(Comparator.comparingInt(TgEventPlayer::getGameCount))
-                .orElseThrow(() -> new NoSuchElementException("Group member not found"))
-                .getGameCount();
+            .map(TgEventPlayer::getEventContext)
+            .min(Comparator.comparingInt(TgEventContext::getGameCount))
+            .orElseThrow(() -> new NoSuchElementException("Group member not found"))
+            .getGameCount();
         int maxGames = members.stream()
-                .max(Comparator.comparingInt(TgEventPlayer::getGameCount))
-                .orElseThrow(() -> new NoSuchElementException("Group member not found"))
-                .getGameCount();
+            .map(TgEventPlayer::getEventContext)
+            .max(Comparator.comparingInt(TgEventContext::getGameCount))
+            .orElseThrow(() -> new NoSuchElementException("Group member not found"))
+            .getGameCount();
 
         if (minGames == maxGames) {
             return shuffleEvenly(members);
@@ -72,8 +75,8 @@ public class ShuffleServiceImpl implements ShuffleService {
     @SneakyThrows
     private List<TgEventPlayer> shufflePriority(List<TgEventPlayer> members, int index) {
         List<TgEventPlayer> priority = members.stream()
-                .filter(member -> member.getGameCount() == index)
-                .collect(Collectors.toList());
+            .filter(member -> member.getEventContext().getGameCount() == index)
+            .collect(Collectors.toList());
 
         return shuffleEvenly(priority);
     }

@@ -5,11 +5,11 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.acuma.shuffler.model.dto.TgEvent;
-import ru.acuma.shuffler.model.dto.TgEventPlayer;
-import ru.acuma.shuffler.model.dto.TgGame;
-import ru.acuma.shuffler.model.dto.TgGameBet;
-import ru.acuma.shuffler.model.dto.TgTeam;
+import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TgEventPlayer;
+import ru.acuma.shuffler.model.domain.TgGame;
+import ru.acuma.shuffler.model.domain.TgGameBet;
+import ru.acuma.shuffler.model.domain.TgTeam;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.model.entity.Rating;
 import ru.acuma.shuffler.model.entity.RatingHistory;
@@ -129,7 +129,7 @@ public class RatingService {
 
     private void applyCalibratingStatus(TgEventPlayer player, Discipline discipline) {
         var isCalibrated = calibrationService.isCalibrated(player.getId(), discipline);
-        player.setCalibrated(isCalibrated);
+        player.getRatingContext().setCalibrated(isCalibrated);
     }
 
     private void applyChanges(TgEvent event) {
@@ -140,8 +140,8 @@ public class RatingService {
 
     private void saveRating(TgEventPlayer player, Discipline discipline) {
         Rating rating = getRating(null, discipline);
-        rating.setScore(player.getScore());
-        rating.setIsCalibrated(player.getCalibrated());
+        rating.setScore(player.getRatingContext().getScore());
+        rating.setIsCalibrated(player.isCalibrated());
 
         ratingRepository.save(rating);
     }
@@ -150,11 +150,11 @@ public class RatingService {
         RatingHistory ratingHistory = RatingHistory.builder()
             .game(null)
             .player(null)
-            .isCalibrated(player.getCalibrated())
-            .change(player.getLastChange())
+            .isCalibrated(player.isCalibrated())
+            .change(player.getRatingContext().getLastScoreChange())
             .discipline(discipline)
             .season(seasonService.getCurrentSeason())
-            .score(player.getScore())
+            .score(player.getRatingContext().getScore())
             .build();
 
         ratingHistoryRepository.save(ratingHistory);

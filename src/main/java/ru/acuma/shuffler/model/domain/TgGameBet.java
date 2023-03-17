@@ -1,7 +1,6 @@
-package ru.acuma.shuffler.model.dto;
+package ru.acuma.shuffler.model.domain;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 

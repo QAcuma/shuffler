@@ -1,10 +1,7 @@
-package ru.acuma.shuffler.model.dto;
+package ru.acuma.shuffler.model.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import ru.acuma.shuffler.model.entity.UserInfo;
