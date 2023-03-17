@@ -1,6 +1,6 @@
 package ru.acuma.shuffler.util;
 
-import ru.acuma.shuffler.model.dto.TgTeam;
+import ru.acuma.shuffler.model.domain.TgTeam;
 
 public final class TeamServiceUtil {
 

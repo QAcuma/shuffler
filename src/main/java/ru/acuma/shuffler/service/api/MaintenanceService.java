@@ -1,7 +1,7 @@
 package ru.acuma.shuffler.service.api;
 
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.model.dto.TgEvent;
+import ru.acuma.shuffler.model.domain.TgEvent;
 
 public interface MaintenanceService {
 

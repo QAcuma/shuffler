@@ -1,9 +1,7 @@
-package ru.acuma.shuffler.model.dto;
+package ru.acuma.shuffler.model.domain;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -29,7 +27,7 @@ public class TgTeam {
         this.player1 = player1;
         this.player2 = player2;
         this.isWinner = false;
-        this.score = (player1.getScore() + player2.getScore()) / 2;
+        this.score = (player1.getRatingContext().getScore() + player2.getRatingContext().getScore()) / 2;
     }
 
     @Override
@@ -51,7 +49,8 @@ public class TgTeam {
     }
 
     public boolean containsCalibrating() {
-        return getPlayers().stream().anyMatch(Predicate.not(TgEventPlayer::getCalibrated));
+        return getPlayers().stream()
+            .anyMatch(Predicate.not(TgEventPlayer::isCalibrated));
     }
 
     public List<TgEventPlayer> getPlayers() {

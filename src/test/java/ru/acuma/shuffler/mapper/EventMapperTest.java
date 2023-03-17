@@ -3,7 +3,7 @@ package ru.acuma.shuffler.mapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.acuma.shuffler.base.AbstractUnitTest;
-import ru.acuma.shuffler.model.dto.TgEvent;
+import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shufflerlib.model.Discipline;
 
@@ -28,7 +28,6 @@ class EventMapperTest extends AbstractUnitTest {
 
         var event = eventMapper.toEvent(tgEvent);
         assertAll(
-                () -> assertEquals(event.getChatId(), tgEvent.getChatId()),
                 () -> assertEquals(event.getDiscipline(), tgEvent.getDiscipline().name()),
                 () -> assertEquals(event.getStartedAt().toLocalDateTime(), tgEvent.getStartedAt()),
                 () -> assertEquals(event.getState(), tgEvent.getEventState().name())

@@ -5,8 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.mapper.PlayerMapper;
-import ru.acuma.shuffler.model.dto.TgEvent;
-import ru.acuma.shuffler.model.dto.TgEventPlayer;
+import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TgEventContext;
+import ru.acuma.shuffler.model.domain.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.repository.PlayerRepository;
 import ru.acuma.shuffler.service.game.RatingService;
@@ -29,7 +30,7 @@ public class PlayerService {
         var userInfo = userService.getUser(user.getId());
         var player = getOrSignUpPlayer(event.getChatId(), user.getId());
         var rating = ratingService.getRating(player, event.getDiscipline());
-        var tgEventPlayer = playerMapper.toTgEventPlayer(userInfo, player, rating);
+        var tgEventPlayer = playerMapper.toTgEventPlayer(player, userInfo, rating);
 
         return tgEventPlayer;
     }
@@ -37,7 +38,7 @@ public class PlayerService {
     public void leaveLobby(TgEvent event, Long userId) {
         switch (event.getEventState()) {
             case CREATED, READY -> event.leaveLobby(userId);
-            default -> event.getPlayers().get(userId).setLeft(true);
+            default -> event.getPlayers().get(userId).getEventContext().setLeft(true);
         }
     }
 
@@ -46,16 +47,17 @@ public class PlayerService {
         var player = members.get(user.getId());
         int maxGames = members.values()
             .stream()
-            .max(Comparator.comparingInt(TgEventPlayer::getGameCount))
+            .map(TgEventPlayer::getEventContext)
+            .max(Comparator.comparingInt(TgEventContext::getGameCount))
             .orElseThrow(() -> new NoSuchElementException("Group member not found"))
             .getGameCount();
         if (player != null) {
-            event.getPlayers().get(user.getId()).setLeft(false);
-            player.setGameCount(maxGames);
+            event.getPlayers().get(user.getId()).getEventContext().setLeft(false);
+            player.getEventContext().setGameCount(maxGames);
         } else {
 //            authenticate(event, user);
             player = members.get(user.getId());
-            player.setGameCount(maxGames);
+            player.getEventContext().setGameCount(maxGames);
         }
     }
 

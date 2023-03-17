@@ -2,7 +2,7 @@ package ru.acuma.shuffler.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.acuma.shuffler.model.dto.TgEventPlayer;
+import ru.acuma.shuffler.model.domain.TgEventPlayer;
 import ru.acuma.shuffler.model.entity.TeamPlayer;
 
 @Mapper(

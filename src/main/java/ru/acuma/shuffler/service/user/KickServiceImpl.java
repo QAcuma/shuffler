@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.acuma.shuffler.model.dto.TgEvent;
-import ru.acuma.shuffler.model.dto.TgEventPlayer;
+import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TgEventPlayer;
 import ru.acuma.shuffler.model.enums.Command;
 import ru.acuma.shuffler.service.api.KickService;
 import ru.acuma.shuffler.service.message.KeyboardService;
@@ -36,7 +36,7 @@ public class KickServiceImpl implements KickService {
     public SendMessage prepareKickMessage(TgEvent event) {
         List<TgEventPlayer> players = event.getLatestGame().getPlayers()
                 .stream()
-                .filter(Predicate.not(TgEventPlayer::getLeft))
+                .filter(Predicate.not(TgEventPlayer::isLeft))
                 .toList();
         var keyboard = preparePlayersKeyboard(players);
 
