@@ -24,11 +24,10 @@ public class GroupService {
         if (!(chat.isGroupChat() || chat.isSuperGroupChat())) {
             return false;
         }
-//        if (!groupInfoRepository.isActive(chat.getId())) {
-//            groupInfoRepository.save(groupMapper.toGroupInfo(chat));
-//            return true;
-//        }
-        return true;
+        var groupInfo = getGroupInfo(chat.getId());
+        groupMapper.mergeGroupInfo(groupInfo, chat);
+
+        return groupInfo.getIsActive();
     }
 
 }

@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.entity;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +16,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import javax.validation.constraints.NotNull;
@@ -22,12 +27,21 @@ import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Accessors(chain = true)
 @ToString
 
 @Entity
 @Table(name = "rating_history")
+@DynamicUpdate
+@DynamicInsert
+
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class RatingHistory implements Serializable {
     @Serial
     private static final long serialVersionUID = -7120320525887086913L;

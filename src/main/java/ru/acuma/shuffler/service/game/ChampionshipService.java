@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.enums.Constants;
-import ru.acuma.shuffler.service.api.ChampionshipService;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class ChampionshipServiceImpl implements ChampionshipService {
+public class ChampionshipService {
 
     private final EventStateService eventStateService;
     private final EventContext eventContext;
@@ -25,7 +24,6 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     private final MaintenanceService maintenanceService;
 
     @SneakyThrows
-    @Override
     public void finishEvent(TgEvent event) {
         eventStateService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
@@ -43,7 +41,6 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     }
 
     @SneakyThrows
-    @Override
     public void finishChampionship(TgEvent event) {
         eventStateService.finished(event);
         maintenanceService.sweepEvent(event);

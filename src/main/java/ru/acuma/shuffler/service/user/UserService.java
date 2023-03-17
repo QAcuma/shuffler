@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.UserProfilePhotos;
 import ru.acuma.shuffler.exception.DataException;
+import ru.acuma.shuffler.mapper.UserMapper;
 import ru.acuma.shuffler.model.entity.UserInfo;
 import ru.acuma.shuffler.model.enums.ExceptionCause;
 import ru.acuma.shuffler.repository.UserInfoRepository;
@@ -35,6 +36,7 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class UserService {
     private final UserInfoRepository userRepository;
+    private final UserMapper userMapper;
     private final ExecuteService executeService;
 
     @Value("${telegram.bot.token}")
@@ -62,8 +64,9 @@ public class UserService {
     @Transactional
     public boolean signIn(User user) {
         var userInfo = getUser(user.getId());
+        userMapper.mergeUserInfo(userInfo, user);
 
-        return userInfo.getIsBlocked();
+        return userInfo.getIsActive();
     }
 
     @Transactional

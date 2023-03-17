@@ -7,7 +7,6 @@ import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.domain.TgEventContext;
 import ru.acuma.shuffler.model.domain.TgEventPlayer;
 import ru.acuma.shuffler.model.enums.Constants;
-import ru.acuma.shuffler.service.api.ShuffleService;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -19,10 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ShuffleServiceImpl implements ShuffleService {
+public class ShuffleService {
 
     @SneakyThrows
-    @Override
     public List<TgEventPlayer> shuffle(TgEvent event) {
 
         List<TgEventPlayer> members = event.getActivePlayers();

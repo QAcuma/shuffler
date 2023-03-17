@@ -17,6 +17,7 @@ public abstract class RatingMapper {
 
     @Mapping(target = "calibrated", source = "isCalibrated", defaultValue = "false")
     @Mapping(target = "eventScoreChange", constant = "0")
+    @Mapping(target = "lastScoreChange", constant = "0")
     @Mapping(target = "calibrationMultiplier", constant = "", qualifiedByName = "mapCalibrationMultiplier")
     public abstract TgRatingContext toRatingContext(Rating rating);
 

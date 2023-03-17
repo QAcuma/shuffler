@@ -23,7 +23,7 @@ public class TgUserInfo implements Serializable {
     private String firstName;
     private String lastName;
     private String userName;
-    private Boolean isBlocked;
+    private Boolean isActive;
     private OffsetDateTime lastMessageAt;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;

@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.entity;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,6 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
@@ -24,8 +29,14 @@ import java.time.OffsetDateTime;
 @Setter
 @Accessors(chain = true)
 @ToString
+
 @Entity
 @Table(name = "user_info")
+@DynamicUpdate
+@DynamicInsert
+
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = 5629283560177967494L;
@@ -50,8 +61,8 @@ public class UserInfo implements Serializable {
     private String userName;
 
     @NotNull
-    @Column(name = "is_blocked", nullable = false)
-    private Boolean isBlocked;
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
 
     @Column(name = "last_message_at")
     private OffsetDateTime lastMessageAt;

@@ -44,7 +44,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
 
 
     private void joinPlayer(Message message, TgEvent event) {
-            var player = playerService.getEventPlayer(message.getFrom(), event);
+            playerService.getEventPlayer(message.getFrom(), event);
             eventStateService.prepare(event);
             executeService.execute(messageService.buildMessageUpdate(event, event.getBaseMessage(), MessageType.LOBBY));
     }

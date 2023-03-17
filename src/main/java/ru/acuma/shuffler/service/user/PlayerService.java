@@ -76,7 +76,7 @@ public class PlayerService {
             .build();
 
         playerRepository.save(player);
-//        ratingService.defaultRating(player);
+        ratingService.defaultRating(player);
         return player;
     }
 

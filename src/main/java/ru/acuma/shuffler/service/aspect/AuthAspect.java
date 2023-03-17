@@ -5,6 +5,8 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
+import ru.acuma.shuffler.exception.DataException;
+import ru.acuma.shuffler.model.enums.ExceptionCause;
 import ru.acuma.shuffler.service.telegram.GroupService;
 import ru.acuma.shuffler.service.user.UserService;
 import ru.acuma.shuffler.util.AspectUtil;
@@ -22,13 +24,18 @@ public class AuthAspect {
     @Before("@annotation(UserAuth)")
     public void authUser(JoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
-        userService.signIn(message.getFrom());
+        boolean signedIn = userService.signIn(message.getFrom());
+        if (!signedIn) {
+            throw new DataException(ExceptionCause.USER_IS_NOT_ACTIVE, message.getFrom().getId());
+        }
     }
 
     @Before("@annotation(GroupAuth)")
     public void authChat(JoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
-        groupService.signIn(message.getChat());
+        boolean signedIn = groupService.signIn(message.getChat());
+        if (!signedIn) {
+            throw new DataException(ExceptionCause.CHAT_IS_NOT_ACTIVE, message.getChat().getId());
+        }
     }
-
 }

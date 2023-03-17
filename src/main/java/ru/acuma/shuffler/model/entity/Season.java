@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.entity;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,6 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,8 +30,14 @@ import java.time.OffsetDateTime;
 @Setter
 @Accessors(chain = true)
 @ToString
+
 @Entity
 @Table(name = "season")
+@DynamicUpdate
+@DynamicInsert
+
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Season implements Serializable {
     @Serial
     private static final long serialVersionUID = 1332356971301754202L;

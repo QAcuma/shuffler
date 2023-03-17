@@ -10,7 +10,6 @@ import ru.acuma.shuffler.model.domain.TgGame;
 import ru.acuma.shuffler.model.enums.GameState;
 import ru.acuma.shuffler.repository.GameRepository;
 import ru.acuma.shuffler.service.api.GameService;
-import ru.acuma.shuffler.service.api.ShuffleService;
 
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;

@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.entity;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +17,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import ru.acuma.shuffler.model.enums.EventState;
 
 import javax.validation.constraints.NotNull;
@@ -31,8 +36,14 @@ import java.time.OffsetDateTime;
 @Setter
 @Accessors(chain = true)
 @ToString
+
 @Entity
 @Table(name = "event")
+@DynamicUpdate
+@DynamicInsert
+
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Event implements Serializable {
     @Serial
     private static final long serialVersionUID = 7613068652225005723L;
