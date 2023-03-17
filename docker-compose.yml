@@ -5,6 +5,8 @@ services:
     image: redis:7.0.9-alpine
     environment:
       REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    ports:
+      - "6379:6379"
   postgres:
     container_name: shuffler-postgres
     image: postgres:15.2-alpine

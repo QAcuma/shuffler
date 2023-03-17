@@ -10,7 +10,7 @@ spring:
       hibernate:
         default_schema: public
         cache:
-          use_second_level_cache: true
+          use_second_level_cache: false
           region:
             factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
   datasource:
@@ -29,7 +29,8 @@ spring:
       host: ${SHUFFLER_REDIS_HOST:localhost}
       port: ${SHUFFLER_REDIS_PORT:6379}
       password: ${SHUFFLER_REDIS_PASSWORD:root}
-
+      repositories:
+        enabled: false
 application:
   media:
     location: ${SHUFFLER_MEDIA_LOCATION:/media/avatar/}

@@ -35,7 +35,6 @@ dependencies {
     implementation(libs.spring.data.jpa)
     implementation(libs.bundles.telegram)
     implementation(libs.bundles.data)
-    implementation(libs.hibernate.ehcache)
     implementation(libs.mapstruct)
     implementation(libs.bundles.util)
 

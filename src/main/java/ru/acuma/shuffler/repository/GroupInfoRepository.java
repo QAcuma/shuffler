@@ -6,5 +6,5 @@ import ru.acuma.shuffler.model.entity.GroupInfo;
 import java.util.List;
 
 public interface GroupInfoRepository extends JpaRepository<GroupInfo, Long> {
-    List<GroupInfo> findAllBySeasonIdAndIsBlockedIsFalse(Long seasonId);
+    List<GroupInfo> findAllByIsActiveTrue();
 }

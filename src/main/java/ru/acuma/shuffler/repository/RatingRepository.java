@@ -9,7 +9,6 @@ import ru.acuma.shufflerlib.model.Discipline;
 
 import java.util.Optional;
 
-@Repository
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     Optional<Rating> findBySeasonAndPlayerIdAndDiscipline(Season season, Player player, Discipline discipline);
 }

@@ -10,11 +10,9 @@ import ru.acuma.shuffler.repository.GroupInfoRepository;
 import ru.acuma.shuffler.repository.PlayerRepository;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shufflerlib.model.Discipline;
-import ru.acuma.shufflerlib.model.web.entity.WebPlayer;
 import ru.acuma.shufflerlib.model.web.entity.WebPlayerDetails;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class BroadcastService {
     private int requiredGames;
 
     public void seasonResultBroadcast(Long seasonId) {
-        groupInfoRepository.findAllBySeasonIdAndIsBlockedIsFalse(seasonId)
+        groupInfoRepository.findAllByIsActiveTrue()
             .forEach(groupInfo -> seasonResultBroadcast(seasonId, groupInfo));
     }
 

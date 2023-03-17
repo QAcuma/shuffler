@@ -53,7 +53,7 @@ public class UserService {
 
     @Transactional
     public List<UserInfo> getActiveUsers() {
-        return userRepository.findAllByIsBlockedIsFalse();
+        return userRepository.findAllByIsActiveTrue();
     }
 
     @Transactional

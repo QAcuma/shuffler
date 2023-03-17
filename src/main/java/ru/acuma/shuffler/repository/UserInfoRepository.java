@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
 
-    List<UserInfo> findAllByIsBlockedIsFalse();
+    List<UserInfo> findAllByIsActiveTrue();
 
 }
