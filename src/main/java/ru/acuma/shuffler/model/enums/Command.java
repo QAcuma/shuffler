@@ -7,8 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Command {
 
-    EVENT("kicker"),
-    PING_PONG("ping_pong"),
+    EVENT("event"),
     JOIN("join"),
     LEAVE("leave"),
     KICK("kick"),

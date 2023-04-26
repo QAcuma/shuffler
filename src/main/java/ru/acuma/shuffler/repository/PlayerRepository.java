@@ -12,7 +12,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query(value = """
         from Player
-        join 
+        join GroupInfo
         """)
     List<Player> findAllActiveBySeasonIdAndChatIdAndDiscipline(Long seasonId, Long chatId, Discipline discipline);
 }

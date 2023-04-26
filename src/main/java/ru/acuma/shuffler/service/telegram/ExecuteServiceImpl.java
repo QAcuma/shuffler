@@ -44,7 +44,6 @@ public class ExecuteServiceImpl implements ExecuteService {
     private final ScheduledExecutorService asyncExecutors = Executors.newScheduledThreadPool(4);
 
     private final EventContext eventContext;
-    private final @Lazy UserService userService;
     private final MessageService messageService;
     private final KeyboardService keyboardService;
     private final ShufflerBot shufflerBot;
@@ -113,10 +112,11 @@ public class ExecuteServiceImpl implements ExecuteService {
             if (exception instanceof TelegramApiRequestException requestException) {
                 reason = requestException.getApiResponse();
             }
-            switch (reason) {
-                case "Bad Request: user not found" -> userService.deleteUser(userId);
-                default -> log.warn(reason);
-            }
+//            TODO: ???
+//            switch (reason) {
+//                case "Bad Request: user not found" -> userService.deleteUser(userId);
+//                default -> log.warn(reason);
+//            }
         }
 
         return result;

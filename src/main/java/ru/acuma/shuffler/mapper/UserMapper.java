@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.mapper;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -21,6 +22,11 @@ public abstract class UserMapper {
     @Mapping(target = "telegramId", source = "id")
     public abstract TgUserInfo toUserInfo(UserInfo source);
 
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "userName", source = "userName")
+    @Mapping(target = "languageCode", source = "languageCode")
     @Transactional(propagation = Propagation.MANDATORY)
     public abstract void mergeUserInfo(@MappingTarget UserInfo userInfo, User user);
 }

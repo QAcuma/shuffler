@@ -27,7 +27,7 @@ public class ChampionshipService {
     public void finishEvent(TgEvent event) {
         eventStateService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
-        eventContext.update(event);
+//        eventContext.update(event);
 
         var update = messageService.buildLobbyMessageUpdate(event);
         executeService.execute(update);
@@ -44,7 +44,7 @@ public class ChampionshipService {
     public void finishChampionship(TgEvent event) {
         eventStateService.finished(event);
         maintenanceService.sweepEvent(event);
-        eventContext.update(event);
+//        eventContext.update(event);
     }
 
 }

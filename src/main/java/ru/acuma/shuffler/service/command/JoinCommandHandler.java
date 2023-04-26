@@ -10,7 +10,7 @@ import ru.acuma.shuffler.model.enums.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.service.aspect.CheckPlayerNotInEvent;
+import ru.acuma.shuffler.aspect.marker.CheckPlayerNotInEvent;
 import ru.acuma.shuffler.service.user.PlayerService;
 
 import java.util.List;

@@ -45,13 +45,13 @@ public class UserService {
     @Value("${application.media.location}")
     private String mediaLocation;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserInfo getUser(Long telegramId) {
         return userRepository.findById(telegramId)
             .orElseThrow(() -> new DataException(ExceptionCause.USER_NOT_FOUND, telegramId));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<UserInfo> getActiveUsers() {
         return userRepository.findAllByIsActiveTrue();
     }

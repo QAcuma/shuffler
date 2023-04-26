@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.repository.EventRepository;
 import ru.acuma.shufflerlib.model.Discipline;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Slf4j
@@ -20,11 +18,13 @@ public class EventContext {
 
     private final EventMapper eventMapper;
     private final EventRepository eventRepository;
-    @Qualifier("eventStorage")
+    @Qualifier("redisEventStorage")
     private final Map<Long, TgEvent> eventStorage;
+    @Qualifier("redisEventSnapshotStorage")
+    private final Map<Long, TgEvent> eventSnapshotStorage;
 
     public TgEvent createEvent(Long chatId, Discipline discipline) {
-        var event = buildEvent(chatId, discipline);
+        var event = eventMapper.initEvent(chatId, discipline);
         eventStorage.put(chatId, event);
 
         return event;
@@ -38,24 +38,25 @@ public class EventContext {
         return eventStorage.containsKey(chatId);
     }
 
-    public void sweepEvent(Long chatId) {
+    public void flushEvent(Long chatId) {
         eventStorage.remove(chatId);
     }
 
-    @Deprecated
-    public TgEvent update(TgEvent tgEvent) {
-        var mapped = eventMapper.toEvent(tgEvent);
-        eventRepository.save(mapped);
+    /**
+     * Создает снепшот эвента перед внесением изменений в него
+     */
+    public TgEvent snapshotEvent(Long chatId) {
+        var event = findEvent(chatId);
+        eventSnapshotStorage.put(chatId, event);
 
-        return tgEvent;
+        return event;
     }
 
-    private TgEvent buildEvent(Long chatId, Discipline discipline) {
-        return TgEvent.builder()
-            .eventState(EventState.CREATED)
-            .chatId(chatId)
-            .startedAt(LocalDateTime.now())
-            .discipline(discipline)
-            .build();
+    /**
+     * Откатывает версию эвента до последней успешной для чата
+     */
+    public void rollbackEvent(Long chatId) {
+        var event = eventSnapshotStorage.get(chatId);
+        eventStorage.put(chatId, event);
     }
 }

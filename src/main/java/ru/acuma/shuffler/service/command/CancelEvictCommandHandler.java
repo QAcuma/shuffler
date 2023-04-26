@@ -6,8 +6,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.CancelEvictCommand;
 import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
-import ru.acuma.shuffler.service.aspect.CheckPlayerInEvent;
-import ru.acuma.shuffler.service.aspect.SweepMessage;
+import ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent;
+import ru.acuma.shuffler.aspect.marker.SweepMessage;
 
 import java.util.List;
 import java.util.function.BiConsumer;

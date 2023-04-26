@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.aspect;
+package ru.acuma.shuffler.aspect.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
@@ -21,7 +21,7 @@ public class AuthAspect {
     private final UserService userService;
     private final GroupService groupService;
 
-    @Before("@annotation(UserAuth)")
+    @Before("@annotation(ru.acuma.shuffler.aspect.marker.UserAuth)")
     public void authUser(JoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
         boolean signedIn = userService.signIn(message.getFrom());
@@ -30,7 +30,7 @@ public class AuthAspect {
         }
     }
 
-    @Before("@annotation(GroupAuth)")
+    @Before("@annotation(ru.acuma.shuffler.aspect.marker.GroupAuth)")
     public void authChat(JoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
         boolean signedIn = groupService.signIn(message.getChat());

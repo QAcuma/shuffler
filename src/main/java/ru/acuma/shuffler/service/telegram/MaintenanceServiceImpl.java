@@ -47,6 +47,6 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Override
     public void sweepEvent(TgEvent event) {
-        eventContext.sweepEvent(event.getChatId());
+        eventContext.flushEvent(event.getChatId());
     }
 }

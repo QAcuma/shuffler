@@ -32,6 +32,8 @@ spring:
       repositories:
         enabled: false
 application:
+  users:
+    root: ${SHUFFLER_ROOT_USERS}
   media:
     location: ${SHUFFLER_MEDIA_LOCATION:/media/avatar/}
     link: ${SHUFFLER_AVATAR_PATH:https://shuffler.fun/avatar/}

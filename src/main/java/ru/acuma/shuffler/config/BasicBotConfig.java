@@ -3,13 +3,17 @@ package ru.acuma.shuffler.config;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.validation.annotation.Validated;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.acuma.shuffler.bot.ShufflerBot;
+import ru.acuma.shuffler.config.properties.BotProperties;
+import ru.acuma.shuffler.service.telegram.CommandRouter;
 
 @Slf4j
 @Configuration
@@ -17,12 +21,23 @@ import ru.acuma.shuffler.bot.ShufflerBot;
 @RequiredArgsConstructor
 public class BasicBotConfig {
 
-    private final ShufflerBot shufflerBot;
+    @Lazy
+    private final CommandRouter commandRouter;
+
+    @Bean
+    @Validated
+    @ConfigurationProperties(prefix = "telegram.bot")
+    public BotProperties telegramBotProperties() {
+        return new BotProperties();
+    }
 
     @Bean
     @SneakyThrows
-    public void connect() {
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+    public ShufflerBot shufflerBot(final BotProperties botProperties) {
+        var shufflerBot = new ShufflerBot(botProperties, commandRouter);
+        var telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(shufflerBot);
+
+        return shufflerBot;
     }
 }

@@ -12,8 +12,8 @@ import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.KickService;
 import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.service.aspect.CheckPlayerInEvent;
-import ru.acuma.shuffler.service.aspect.SweepMessage;
+import ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent;
+import ru.acuma.shuffler.aspect.marker.SweepMessage;
 
 import java.util.List;
 import java.util.function.BiConsumer;

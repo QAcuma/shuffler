@@ -9,8 +9,8 @@ import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.enums.EventState;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
-import ru.acuma.shuffler.service.aspect.CheckUserIsAdmin;
-import ru.acuma.shuffler.service.aspect.SweepMessage;
+import ru.acuma.shuffler.aspect.marker.CheckUserIsAdmin;
+import ru.acuma.shuffler.aspect.marker.SweepMessage;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,7 +41,7 @@ public class ResetCommandHandler extends BaseCommandHandler<ResetCommand> {
         return (message, event) -> {
             eventStateService.cancelled(event);
             event.setFinishedAt(LocalDateTime.now());
-            eventContext.update(event);
+//            eventContext.update(event);
             maintenanceService.sweepChat(event);
             maintenanceService.sweepEvent(event);
         };

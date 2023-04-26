@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.aspect;
+package ru.acuma.shuffler.aspect.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
@@ -20,8 +20,8 @@ public class SweepMessageAspect {
 
     private final MaintenanceService maintenanceService;
 
-    @Before("@annotation(SweepMessage)")
-    public void authChat(JoinPoint joinPoint) {
+    @Before("@annotation(ru.acuma.shuffler.aspect.marker.SweepMessage)")
+    public void sweepMessage(JoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
         if (Objects.isNull(message)) {
             return;
@@ -29,5 +29,4 @@ public class SweepMessageAspect {
 
         maintenanceService.sweepMessage(message);
     }
-
 }
