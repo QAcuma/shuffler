@@ -13,7 +13,7 @@ public class RedCommand extends BaseBotCommand {
     private final BaseCommandHandler<RedCommand> commandHandler;
 
     @Override
-    public void execute(Message message, String... args) {
+    public void execute(final Message message, final String... args) {
         commandHandler.handle(message);
     }
 

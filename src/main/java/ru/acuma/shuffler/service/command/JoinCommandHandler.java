@@ -34,7 +34,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
 
     @Override
     @CheckPlayerNotInEvent
-    public void handle(Message message, String... args) {
+    public void handle(final Message message, final String... args) {
     }
 
     private void joinPlayer(Message message, TgEvent event) {

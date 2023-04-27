@@ -13,7 +13,7 @@ public class EvictCommand extends BaseBotCommand {
     private final BaseCommandHandler<EvictCommand> commandHandler;
 
     @Override
-    public void execute(Message message, String... args) {
+    public void execute(final Message message, final String... args) {
         commandHandler.handle(message);
     }
 

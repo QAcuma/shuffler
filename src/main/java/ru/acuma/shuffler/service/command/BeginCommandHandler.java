@@ -25,7 +25,7 @@ public class BeginCommandHandler extends BaseCommandHandler<BeginCommand> {
     }
 
     @Override
-    public void handle(Message message, String... args) {
+    public void handle(final Message message, final String... args) {
 
     }
 

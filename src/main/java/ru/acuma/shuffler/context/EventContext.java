@@ -10,6 +10,7 @@ import ru.acuma.shuffler.repository.EventRepository;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -46,8 +47,8 @@ public class EventContext {
      * Создает снепшот эвента перед внесением изменений в него
      */
     public void snapshotEvent(Long chatId) {
-        var event = findEvent(chatId);
-        eventSnapshotStorage.put(chatId, event);
+        Optional.ofNullable(findEvent(chatId))
+            .ifPresent(event -> eventSnapshotStorage.put(chatId, event));
     }
 
     /**

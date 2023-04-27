@@ -20,6 +20,8 @@ public class TelegramCommandRegistry {
     }
 
     public BaseBotCommand resolve(final String commandIdentifier) {
-        return commandRegistry.get(commandIdentifier);
+        var pureCommand = commandIdentifier.replace("/", "");
+
+        return commandRegistry.get(pureCommand);
     }
 }

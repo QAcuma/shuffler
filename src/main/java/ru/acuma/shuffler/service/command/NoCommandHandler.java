@@ -33,7 +33,7 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
     @Override
     @SweepMessage
-    public void handle(Message message, String... args) {
+    public void handle(final Message message, final String... args) {
     }
 
     private BiConsumer<Message, TgEvent> getCancelBeginCheckingConsumer() {

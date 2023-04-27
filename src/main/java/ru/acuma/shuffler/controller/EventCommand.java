@@ -13,7 +13,7 @@ public class EventCommand extends BaseBotCommand {
     private final BaseCommandHandler<EventCommand> commandHandler;
 
     @Override
-    public void execute(Message message, String... args) {
+    public void execute(final Message message, final String... args) {
         commandHandler.handle(message);
     }
 

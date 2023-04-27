@@ -13,7 +13,7 @@ public class YesCommand extends BaseBotCommand {
     private final BaseCommandHandler<YesCommand> commandHandler;
 
     @Override
-    public void execute(Message message, String... args) {
+    public void execute(final Message message, final String... args) {
         commandHandler.handle(message);
     }
 

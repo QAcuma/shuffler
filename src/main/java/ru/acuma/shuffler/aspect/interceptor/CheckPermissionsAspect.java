@@ -24,8 +24,8 @@ public class CheckPermissionsAspect {
 
     private final EventContext eventContext;
 
-    @Around("@annotation(ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent)")
     @SneakyThrows
+    @Around("@annotation(ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent)")
     public Object inEventCheck(ProceedingJoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
         var event = eventContext.findEvent(message.getChatId());
@@ -36,8 +36,8 @@ public class CheckPermissionsAspect {
         return joinPoint.proceed();
     }
 
-    @Around("@annotation(ru.acuma.shuffler.aspect.marker.CheckPlayerNotInEvent)")
     @SneakyThrows
+    @Around("@annotation(ru.acuma.shuffler.aspect.marker.CheckPlayerNotInEvent)")
     public Object notInEventCheck(ProceedingJoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
         var event = eventContext.findEvent(message.getChatId());
@@ -48,8 +48,8 @@ public class CheckPermissionsAspect {
         return joinPoint.proceed();
     }
 
-    @Around("@annotation(ru.acuma.shuffler.aspect.marker.CheckNoActiveEvent)")
     @SneakyThrows
+    @Around("@annotation(ru.acuma.shuffler.aspect.marker.CheckNoActiveEvent)")
     public Object noActiveEventCheck(ProceedingJoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
         if (eventContext.isActive(message.getChatId())) {
@@ -59,8 +59,8 @@ public class CheckPermissionsAspect {
         return joinPoint.proceed();
     }
 
-    @Around("@annotation(ru.acuma.shuffler.aspect.marker.CheckUserIsAdmin)")
     @SneakyThrows
+    @Around("@annotation(ru.acuma.shuffler.aspect.marker.CheckUserIsAdmin)")
     public Object userIsAdminCheck(ProceedingJoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint).orElseThrow(NotFoundException::new);
         if (rootUsers.contains(message.getFrom().getId())) {
@@ -69,5 +69,4 @@ public class CheckPermissionsAspect {
 
         return joinPoint.proceed();
     }
-
 }

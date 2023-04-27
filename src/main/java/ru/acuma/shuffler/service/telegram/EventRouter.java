@@ -2,11 +2,14 @@ package ru.acuma.shuffler.service.telegram;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.acuma.shuffler.controller.BaseBotCommand;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +27,14 @@ public class EventRouter {
     public void route(final Update update) {
         if (update.getCallbackQuery() != null) {
             callbackService.accept(update.getCallbackQuery());
+        } else if (Objects.nonNull(update.getMessage()) && isCommandMessage(update.getMessage())) {
+            callbackService.accept(update.getMessage());
         }
+    }
+
+    private boolean isCommandMessage(final Message message) {
+        var text = message.getText();
+
+        return StringUtils.isNotBlank(text) && StringUtils.startsWith(text, "/");
     }
 }

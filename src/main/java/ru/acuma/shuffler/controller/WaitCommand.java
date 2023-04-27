@@ -12,7 +12,7 @@ import ru.acuma.shuffler.model.constant.Command;
 public class WaitCommand extends BaseBotCommand {
 
     @Override
-    public void execute(Message message, String... args) {
+    public void execute(final Message message, final String... args) {
         log.debug("Нужно подождать таймер");
     }
 

@@ -39,6 +39,16 @@ public class CallbackService {
         handle(command, message, args);
     }
 
+    public void accept(final Message message) {
+        authFilters.forEach(filter -> filter.accept(message));
+
+        var command = StringUtils.substringBefore(message.getText(), "?");
+        var argSection = StringUtils.substringAfter(message.getText(), "?");
+        var args = argSection.split("&");
+
+        handle(command, message, args);
+    }
+
     public final void handle(final String command, final Message message, final String... args) {
         var chatId = message.getChatId();
 

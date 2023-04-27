@@ -2,6 +2,7 @@ package ru.acuma.shuffler.service.telegram;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.GroupMapper;
@@ -20,6 +21,7 @@ public class GroupService {
             .orElseThrow(() -> new DataException(ExceptionCause.GROUP_NOT_FOUND, chatId));
     }
 
+    @Transactional
     public boolean signIn(Chat chat) {
         if (!(chat.isGroupChat() || chat.isSuperGroupChat())) {
             return false;

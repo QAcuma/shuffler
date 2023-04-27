@@ -28,7 +28,7 @@ public class CancelEvictCommandHandler extends BaseCommandHandler<CancelEvictCom
     @Override
     @SweepMessage
     @CheckPlayerInEvent
-    public void handle(Message message, String... args) {
+    public void handle(final Message message, final String... args) {
     }
 
     private BiConsumer<Message, TgEvent> getEvictingConsumer() {
