@@ -3,14 +3,11 @@ package ru.acuma.shuffler.service.command;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.acuma.shuffler.aspect.marker.CheckNoActiveEvent;
+import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.controller.EventCommand;
 import ru.acuma.shuffler.model.constant.EventState;
-import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.MessageService;
-import ru.acuma.shuffler.aspect.marker.CheckNoActiveEvent;
-import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.util.List;
@@ -18,8 +15,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
-    private final ExecuteService executeService;
-    private final MessageService messageService;
     private final EventContext eventContext;
 
     @Override
@@ -35,12 +30,12 @@ public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
     }
 
     private void beginEvent(Long chatId, Discipline discipline) {
-        var event = eventContext.createEvent(chatId, discipline);
-        var response = messageService.buildMessage(event, MessageType.LOBBY);
-
-        var baseMessage = executeService.execute(response);
-        var pinned = messageService.pinMessage(baseMessage);
-        executeService.execute(pinned);
+//        var event = eventContext.createEvent(chatId, discipline);
+//        var response = messageService.buildMessage(event, MessageType.LOBBY);
+//
+//        var baseMessage = executeService.execute(response);
+//        var pinned = messageService.pinMessage(baseMessage);
+//        executeService.execute(pinned);
 
     }
 }

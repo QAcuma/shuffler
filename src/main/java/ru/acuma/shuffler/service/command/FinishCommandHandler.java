@@ -8,9 +8,9 @@ import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.constant.EventState;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameStateService;
-import ru.acuma.shuffler.service.api.MessageService;
+import ru.acuma.shuffler.service.message.MessageService;
+import ru.acuma.shuffler.service.telegram.ExecuteService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -25,7 +25,6 @@ public class FinishCommandHandler extends BaseCommandHandler<FinishCommand> {
 
     private final EventStateService eventStateService;
     private final GameStateService gameStateService;
-
     private final ExecuteService executeService;
     private final MessageService messageService;
 
@@ -44,13 +43,13 @@ public class FinishCommandHandler extends BaseCommandHandler<FinishCommand> {
             eventStateService.finishCheck(event);
             gameStateService.cancelCheck(event.getLatestGame());
 
-            var lobbyMessage = messageService.buildReplyMarkupUpdate(event, event.getBaseMessage(), MessageType.LOBBY);
+            var lobbyMessage = messageService.buildReplyMarkupUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY);
             var gameMessage = messageService.buildReplyMarkupUpdate(event, event.getLatestGame().getMessageId(), MessageType.GAME);
             var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING_TIMED);
 
-            executeService.execute(lobbyMessage);
-            executeService.execute(gameMessage);
-            executeService.executeRepeat(checkingMessage, event);
+//            executeService.execute(lobbyMessage);
+//            executeService.execute(gameMessage);
+//            executeService.executeRepeat(checkingMessage, event);
         };
     }
 

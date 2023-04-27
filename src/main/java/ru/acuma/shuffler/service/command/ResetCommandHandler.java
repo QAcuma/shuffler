@@ -8,7 +8,7 @@ import ru.acuma.shuffler.controller.ResetCommand;
 import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.constant.EventState;
 import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.MaintenanceService;
+import ru.acuma.shuffler.service.message.MaintenanceService;
 import ru.acuma.shuffler.aspect.marker.CheckUserIsAdmin;
 import ru.acuma.shuffler.aspect.marker.SweepMessage;
 

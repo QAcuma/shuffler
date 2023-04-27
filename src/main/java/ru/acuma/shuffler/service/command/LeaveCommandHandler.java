@@ -3,13 +3,11 @@ package ru.acuma.shuffler.service.command;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.controller.LeaveCommand;
-import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.constant.EventState;
-import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent;
+import ru.acuma.shuffler.controller.LeaveCommand;
+import ru.acuma.shuffler.model.constant.EventState;
+import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.user.PlayerService;
 
 import java.util.List;
@@ -25,8 +23,6 @@ import static ru.acuma.shuffler.model.constant.EventState.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
 
-    private final ExecuteService executeService;
-    private final MessageService messageService;
     private final EventStateService eventStateService;
     private final PlayerService playerService;
 
@@ -44,7 +40,7 @@ public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
         return (message, event) -> {
             playerService.leaveLobby(event, message.getFrom().getId());
             eventStateService.prepare(event);
-            executeService.execute(messageService.buildLobbyMessageUpdate(event));
+//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
         };
     }
 
@@ -52,7 +48,7 @@ public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
         return (message, event) -> {
             playerService.leaveLobby(event, message.getFrom().getId());
             eventStateService.active(event);
-            executeService.execute(messageService.buildLobbyMessageUpdate(event));
+//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
         };
     }
 }

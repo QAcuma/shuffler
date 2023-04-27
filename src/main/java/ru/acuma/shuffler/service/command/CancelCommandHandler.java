@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.CancelCommand;
-import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.constant.EventState;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
+import ru.acuma.shuffler.service.message.Render;
+import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.MessageService;
+import ru.acuma.shuffler.service.message.MessageService;
+import ru.acuma.shuffler.service.telegram.ExecuteService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -40,9 +41,10 @@ public class CancelCommandHandler extends BaseCommandHandler<CancelCommand> {
         return (message, event) -> {
             eventStateService.cancel(event);
             var lobbyMessage = messageService.buildLobbyMessageUpdate(event);
-            executeService.execute(lobbyMessage);
+//            executeService.execute(lobbyMessage);
             var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING_TIMED);
-            executeService.executeRepeat(checkingMessage, event);
+            event.action(MessageType.CHECKING, Render.forSend().withSchedule());
+//            executeService.executeRepeat(checkingMessage, event);
         };
     }
 

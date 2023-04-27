@@ -8,10 +8,9 @@ import lombok.Getter;
 public enum MessageType {
 
     LOBBY,
+    GAME,
     CHECKING,
     CHECKING_TIMED,
     CANCELLED,
-    GAME,
-    STAT;
-
+    STAT
 }

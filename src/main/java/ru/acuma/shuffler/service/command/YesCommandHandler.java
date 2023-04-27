@@ -3,13 +3,11 @@ package ru.acuma.shuffler.service.command;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.controller.YesCommand;
-import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.constant.EventState;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.GameService;
-import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.aspect.marker.SweepMessage;
+import ru.acuma.shuffler.controller.YesCommand;
+import ru.acuma.shuffler.model.constant.EventState;
+import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.game.ChampionshipService;
 
 import java.util.List;
@@ -25,9 +23,7 @@ import static ru.acuma.shuffler.model.constant.EventState.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
 
-    private final ExecuteService executeService;
     private final ChampionshipService championshipService;
-    private final MessageService messageService;
     private final GameService gameService;
     private final GameFacade gameFacade;
     private final EventFacade eventFacade;
@@ -50,7 +46,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     private BiConsumer<Message, TgEvent> getBeginCheckingConsumer() {
         return (message, event) -> {
             gameFacade.nextGameActions(event, message);
-            executeService.execute(messageService.buildLobbyMessageUpdate(event));
+//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
         };
     }
 

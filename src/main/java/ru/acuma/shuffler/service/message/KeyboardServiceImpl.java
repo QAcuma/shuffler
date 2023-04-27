@@ -96,10 +96,10 @@ public class KeyboardServiceImpl implements KeyboardService {
                 .build();
     }
 
-    private InlineKeyboardMarkup buildKeyboard(List<EventStatusButton> names) {
-        return names.isEmpty()
+    private InlineKeyboardMarkup buildKeyboard(List<EventStatusButton> buttons) {
+        return buttons.isEmpty()
                 ? new InlineKeyboardMarkup(Collections.emptyList())
-                : buildKeyboardStructure(names);
+                : buildKeyboardStructure(buttons);
     }
 
     private InlineKeyboardMarkup buildKeyboardStructure(List<EventStatusButton> names) {

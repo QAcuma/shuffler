@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import ru.acuma.shuffler.service.api.MaintenanceService;
+import ru.acuma.shuffler.service.message.MaintenanceService;
 import ru.acuma.shuffler.util.AspectUtil;
 
 import javax.ws.rs.NotFoundException;

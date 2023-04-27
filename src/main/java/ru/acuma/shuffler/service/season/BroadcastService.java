@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.acuma.shuffler.model.entity.GroupInfo;
 import ru.acuma.shuffler.repository.GroupInfoRepository;
 import ru.acuma.shuffler.repository.PlayerRepository;
-import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shufflerlib.model.Discipline;
 import ru.acuma.shufflerlib.model.web.entity.WebPlayerDetails;
 
@@ -20,7 +19,6 @@ public class BroadcastService {
 
     private final GroupInfoRepository groupInfoRepository;
     private final PlayerRepository playerRepository;
-    private final ExecuteService executeService;
     private final TextBuilderService textBuilderService;
 
     @Value("${rating.calibration.games}")
@@ -58,7 +56,7 @@ public class BroadcastService {
             .text(textBuilderService.buildSeasonReport(null))
             .build();
 
-        executeService.execute(message);
+//        executeService.execute(message);
     }
 
     private boolean filterNonCalibratedPlayers(WebPlayerDetails player) {

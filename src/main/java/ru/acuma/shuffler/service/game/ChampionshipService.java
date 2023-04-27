@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.EventContext;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
+import ru.acuma.shuffler.service.message.Render;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.MaintenanceService;
-import ru.acuma.shuffler.service.api.MessageService;
+import ru.acuma.shuffler.service.message.MaintenanceService;
+import ru.acuma.shuffler.service.message.MessageService;
 
 import java.time.LocalDateTime;
 
@@ -19,24 +19,15 @@ public class ChampionshipService {
 
     private final EventStateService eventStateService;
     private final EventContext eventContext;
-    private final MessageService messageService;
-    private final ExecuteService executeService;
     private final MaintenanceService maintenanceService;
+    private final MessageService messageService;
 
     @SneakyThrows
     public void finishEvent(TgEvent event) {
         eventStateService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
-//        eventContext.update(event);
 
-        var update = messageService.buildLobbyMessageUpdate(event);
-        executeService.execute(update);
-
-        maintenanceService.sweepChat(event);
-        maintenanceService.flushEvent(event);
-
-        var deleteMethod = messageService.deleteMessage(event.getChatId(), update.getMessageId());
-        executeService.executeLater(deleteMethod, Constants.CANCELLED_MESSAGE_TTL_BEFORE_DELETE);
+        event.action(MessageType.LOBBY, Render.forUpdate(event.getLobbyMessageId()));
     }
 
     @SneakyThrows

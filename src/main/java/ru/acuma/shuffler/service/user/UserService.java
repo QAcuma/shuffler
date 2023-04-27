@@ -16,10 +16,9 @@ import org.telegram.telegrambots.meta.api.objects.UserProfilePhotos;
 import ru.acuma.shuffler.config.properties.BotProperties;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.UserMapper;
-import ru.acuma.shuffler.model.entity.UserInfo;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
+import ru.acuma.shuffler.model.entity.UserInfo;
 import ru.acuma.shuffler.repository.UserInfoRepository;
-import ru.acuma.shuffler.service.api.ExecuteService;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -38,7 +37,6 @@ import java.util.function.Predicate;
 public class UserService {
     private final UserInfoRepository userRepository;
     private final UserMapper userMapper;
-    private final ExecuteService executeService;
     private final BotProperties botProperties;
 
     @Value("${application.media.location}")
@@ -116,11 +114,13 @@ public class UserService {
     private UserProfilePhotos findUserPictures(Long getUserPhotos) {
         var method = new GetUserProfilePhotos(getUserPhotos);
 
-        return executeService.executeApi(method);
+//        return executeService.executeApi(method);
+        return null;
     }
 
     @SneakyThrows
     private File loadUserProfilePicture(GetFile getFile) {
-        return executeService.executeApi(getFile);
+//        return executeService.executeApi(getFile);
+        return null;
     }
 }

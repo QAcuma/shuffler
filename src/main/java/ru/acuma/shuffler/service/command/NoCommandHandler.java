@@ -3,13 +3,11 @@ package ru.acuma.shuffler.service.command;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.controller.NoCommand;
-import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.constant.EventState;
-import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
-import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.aspect.marker.SweepMessage;
+import ru.acuma.shuffler.controller.NoCommand;
+import ru.acuma.shuffler.model.constant.EventState;
+import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.service.api.EventStateService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -25,8 +23,6 @@ import static ru.acuma.shuffler.model.constant.EventState.WAITING;
 @RequiredArgsConstructor
 public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
-    private final ExecuteService executeService;
-    private final MessageService messageService;
     private final EventStateService eventStateService;
     private final EventFacade eventFacade;
 
@@ -44,8 +40,8 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
         return (message, event) -> {
             event.cancelFutures();
             eventStateService.prepare(event);
-            var lobbyMessage = messageService.buildLobbyMessageUpdate(event);
-            executeService.execute(lobbyMessage);
+//            var lobbyMessage = messageService.buildLobbyMessageUpdate(event);
+//            executeService.execute(lobbyMessage);
         };
     }
 

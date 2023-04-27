@@ -7,18 +7,19 @@ import lombok.experimental.SuperBuilder;
 import ru.acuma.shuffler.model.constant.EventState;
 import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
+import ru.acuma.shuffler.service.message.Render;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
-import java.util.stream.Collectors;
 
 import static ru.acuma.shuffler.model.constant.GameState.FINISHED;
 
@@ -34,12 +35,16 @@ public class TgEvent implements Serializable {
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
     private Discipline discipline;
-    private final HashMap<MessageType, MessageContainer<?>> messages = new HashMap<>();
     private final Map<Long, TgEventPlayer> players = new HashMap<>();
     private final List<TgGame> tgGames = new ArrayList<>();
-    private final List<Future<?>> futures = new ArrayList<>();
+    private final EnumMap<MessageType, Render> messages = new EnumMap<>(MessageType.class);
+    private final transient List<Future<?>> futures = new ArrayList<>();
 
-    public Integer getBaseMessage() {
+    public void action(final MessageType messageType, final Render render) {
+        messages.put(messageType, render);
+    }
+
+    public Integer getLobbyMessageId() {
         return messages.get(MessageType.LOBBY).getMessageId();
     }
 
@@ -59,7 +64,7 @@ public class TgEvent implements Serializable {
     public List<TgEventPlayer> getActivePlayers() {
         return players.values().stream()
             .filter(player -> !player.getEventContext().getLeft())
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public TgGame getLatestGame() {
@@ -87,12 +92,11 @@ public class TgEvent implements Serializable {
                : GameState.NOT_EXIST;
     }
 
-    public void watchFuture(ScheduledFuture<?> futureExecutor) {
+    public void scheduleFuture(ScheduledFuture<?> futureExecutor) {
         futures.add(futureExecutor);
     }
 
     public void cancelFutures() {
         futures.forEach(future -> future.cancel(true));
     }
-
 }

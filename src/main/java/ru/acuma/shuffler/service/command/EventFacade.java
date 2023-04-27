@@ -4,14 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
-import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.GameStateService;
-import ru.acuma.shuffler.service.api.MaintenanceService;
-import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.game.ChampionshipService;
+import ru.acuma.shuffler.service.message.MaintenanceService;
 
 import java.util.function.BiConsumer;
 
@@ -22,8 +19,6 @@ public class EventFacade {
     private final EventStateService eventStateService;
     private final GameStateService gameStateService;
     private final MaintenanceService maintenanceService;
-    private final MessageService messageService;
-    private final ExecuteService executeService;
     private final ChampionshipService championshipService;
     private final GameService gameService;
 
@@ -31,18 +26,18 @@ public class EventFacade {
         maintenanceService.sweepMessage(message.getChatId(), event.getLatestGame().getMessageId());
         gameService.handleGameCheck(event);
         championshipService.finishChampionship(event);
-        var lobbyUpdate = messageService.buildLobbyMessageUpdate(event);
-        executeService.execute(lobbyUpdate);
+//        var lobbyUpdate = messageService.buildLobbyMessageUpdate(event);
+//        executeService.execute(lobbyUpdate);
     }
 
     public void checkingStateActions(TgEvent event) {
-        var lobbyUpdate = messageService.buildReplyMarkupUpdate(event, event.getBaseMessage(), MessageType.LOBBY);
-        var gameUpdate = messageService.buildReplyMarkupUpdate(event, event.getLatestGame().getMessageId(), MessageType.GAME);
-        var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING);
-
-        executeService.execute(lobbyUpdate);
-        executeService.execute(gameUpdate);
-        executeService.execute(checkingMessage);
+//        var lobbyUpdate = messageService.buildReplyMarkupUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY);
+//        var gameUpdate = messageService.buildReplyMarkupUpdate(event, event.getLatestGame().getMessageId(), MessageType.GAME);
+//        var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING);
+//
+//        executeService.execute(lobbyUpdate);
+//        executeService.execute(gameUpdate);
+//        executeService.execute(checkingMessage);
     }
 
     public BiConsumer<Message, TgEvent> getCheckingConsumer() {
@@ -51,11 +46,11 @@ public class EventFacade {
             eventStateService.active(event);
             gameStateService.active(event.getLatestGame());
 
-            var lobbyUpdate = messageService.buildReplyMarkupUpdate(event, event.getBaseMessage(), MessageType.LOBBY);
-            var gameUpdate = messageService.buildReplyMarkupUpdate(event, event.getLatestGame().getMessageId(), MessageType.GAME);
-
-            executeService.execute(lobbyUpdate);
-            executeService.execute(gameUpdate);
+//            var lobbyUpdate = messageService.buildReplyMarkupUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY);
+//            var gameUpdate = messageService.buildReplyMarkupUpdate(event, event.getLatestGame().getMessageId(), MessageType.GAME);
+//
+//            executeService.execute(lobbyUpdate);
+//            executeService.execute(gameUpdate);
         };
     }
 
