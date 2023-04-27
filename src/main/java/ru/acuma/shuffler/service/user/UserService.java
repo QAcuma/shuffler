@@ -13,10 +13,11 @@ import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.UserProfilePhotos;
+import ru.acuma.shuffler.config.properties.BotProperties;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.UserMapper;
 import ru.acuma.shuffler.model.entity.UserInfo;
-import ru.acuma.shuffler.model.enums.ExceptionCause;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.repository.UserInfoRepository;
 import ru.acuma.shuffler.service.api.ExecuteService;
 
@@ -38,9 +39,7 @@ public class UserService {
     private final UserInfoRepository userRepository;
     private final UserMapper userMapper;
     private final ExecuteService executeService;
-
-    @Value("${telegram.bot.token}")
-    private String botToken;
+    private final BotProperties botProperties;
 
     @Value("${application.media.location}")
     private String mediaLocation;
@@ -100,7 +99,7 @@ public class UserService {
     @SneakyThrows
     private void saveProfilePhotos(Long telegramId, File photo) {
         try {
-            URL url = new URL(photo.getFileUrl(botToken));
+            URL url = new URL(photo.getFileUrl(botProperties.getToken()));
             ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
             BufferedImage image = ImageIO.read(bis);
             var extension = StringUtils.substringAfterLast(photo.getFilePath(), ".");

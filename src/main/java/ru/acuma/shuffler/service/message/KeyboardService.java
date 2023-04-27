@@ -3,7 +3,7 @@ package ru.acuma.shuffler.service.message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.Command;
+import ru.acuma.shuffler.model.constant.Command;
 
 import java.util.Map;
 

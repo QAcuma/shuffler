@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.domain.TgEventPlayer;
 import ru.acuma.shuffler.model.domain.TgGame;
-import ru.acuma.shuffler.model.enums.messages.EventConstant;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
+import ru.acuma.shuffler.model.constant.messages.EventConstant;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-import static ru.acuma.shuffler.model.enums.EventState.WAITING;
-import static ru.acuma.shuffler.model.enums.messages.EventConstant.LET_JOIN_TEXT;
-import static ru.acuma.shuffler.model.enums.messages.EventConstant.MEMBERS_TEXT;
+import static ru.acuma.shuffler.model.constant.EventState.WAITING;
+import static ru.acuma.shuffler.model.constant.messages.EventConstant.LET_JOIN_TEXT;
+import static ru.acuma.shuffler.model.constant.messages.EventConstant.MEMBERS_TEXT;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;

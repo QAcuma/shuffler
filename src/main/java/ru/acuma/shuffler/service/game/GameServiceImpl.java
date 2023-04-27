@@ -7,7 +7,7 @@ import ru.acuma.shuffler.mapper.GameMapper;
 import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.domain.TgEventPlayer;
 import ru.acuma.shuffler.model.domain.TgGame;
-import ru.acuma.shuffler.model.enums.GameState;
+import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.repository.GameRepository;
 import ru.acuma.shuffler.service.api.GameService;
 

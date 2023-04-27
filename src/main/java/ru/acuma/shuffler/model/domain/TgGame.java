@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import ru.acuma.shuffler.model.enums.GameState;
+import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.util.Symbols;
 
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.acuma.shuffler.model.enums.GameState.FINISHED;
+import static ru.acuma.shuffler.model.constant.GameState.FINISHED;
 
 @Data
 @SuperBuilder

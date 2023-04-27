@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.model.enums.Command;
+import ru.acuma.shuffler.model.constant.Command;
 
 @Slf4j
 @Component
@@ -12,7 +12,7 @@ import ru.acuma.shuffler.model.enums.Command;
 public class WaitCommand extends BaseBotCommand {
 
     @Override
-    public void execute(Message message) {
+    public void execute(Message message, String... args) {
         log.debug("Нужно подождать таймер");
     }
 

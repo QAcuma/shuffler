@@ -14,18 +14,5 @@ public abstract class BaseBotCommand {
     private RenderService renderService;
 
     public abstract String getCommandIdentifier();
-    protected abstract void execute(Message message);
-
-    public final void handleCommand(Message message, String[] arguments) {
-        var chatId = message.getChatId();
-        var event = eventContext.snapshotEvent(chatId);
-
-        try {
-            execute(message);
-        } catch (Exception e) {
-            eventContext.rollbackEvent(chatId);
-        } finally {
-            renderService.render(event);
-        }
-    }
+    public abstract void execute(Message message, String... args);
 }

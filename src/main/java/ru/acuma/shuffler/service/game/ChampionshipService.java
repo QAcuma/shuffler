@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.Constants;
+import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MaintenanceService;
@@ -32,9 +32,8 @@ public class ChampionshipService {
         var update = messageService.buildLobbyMessageUpdate(event);
         executeService.execute(update);
 
-        event.missMessage(event.getBaseMessage());
         maintenanceService.sweepChat(event);
-        maintenanceService.sweepEvent(event);
+        maintenanceService.flushEvent(event);
 
         var deleteMethod = messageService.deleteMessage(event.getChatId(), update.getMessageId());
         executeService.executeLater(deleteMethod, Constants.CANCELLED_MESSAGE_TTL_BEFORE_DELETE);
@@ -43,7 +42,7 @@ public class ChampionshipService {
     @SneakyThrows
     public void finishChampionship(TgEvent event) {
         eventStateService.finished(event);
-        maintenanceService.sweepEvent(event);
+        maintenanceService.flushEvent(event);
 //        eventContext.update(event);
     }
 

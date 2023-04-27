@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.acuma.shuffler.base.AbstractUnitTest;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.constant.EventState;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.time.LocalDateTime;

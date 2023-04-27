@@ -3,7 +3,7 @@ package ru.acuma.shuffler.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.model.enums.Command;
+import ru.acuma.shuffler.model.constant.Command;
 import ru.acuma.shuffler.service.command.BaseCommandHandler;
 
 @Component
@@ -13,7 +13,7 @@ public class RedCommand extends BaseBotCommand {
     private final BaseCommandHandler<RedCommand> commandHandler;
 
     @Override
-    public void execute(Message message) {
+    public void execute(Message message, String... args) {
         commandHandler.handle(message);
     }
 

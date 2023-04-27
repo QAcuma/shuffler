@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.domain.TgEventContext;
 import ru.acuma.shuffler.model.domain.TgEventPlayer;
-import ru.acuma.shuffler.model.enums.Constants;
+import ru.acuma.shuffler.model.constant.Constants;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;

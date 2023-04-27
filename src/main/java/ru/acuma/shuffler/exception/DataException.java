@@ -1,7 +1,7 @@
 package ru.acuma.shuffler.exception;
 
 import lombok.Getter;
-import ru.acuma.shuffler.model.enums.ExceptionCause;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
 
 
 public class DataException extends RuntimeException {

@@ -5,15 +5,15 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.acuma.shuffler.config.properties.BotProperties;
-import ru.acuma.shuffler.service.telegram.CommandRouter;
+import ru.acuma.shuffler.service.telegram.EventRouter;
 
 import java.io.Serializable;
 
 public class ShufflerBot extends TelegramLongPollingBot {
     private final BotProperties botProperties;
-    private final CommandRouter commandRouter;
+    private final EventRouter commandRouter;
 
-    public ShufflerBot(final BotProperties botProperties, final CommandRouter commandRouter) {
+    public ShufflerBot(final BotProperties botProperties, final EventRouter commandRouter) {
         super(botProperties.getToken());
         this.botProperties = botProperties;
         this.commandRouter = commandRouter;

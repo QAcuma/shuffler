@@ -13,7 +13,7 @@ import ru.acuma.shuffler.model.domain.TgTeam;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.model.entity.Rating;
 import ru.acuma.shuffler.model.entity.RatingHistory;
-import ru.acuma.shuffler.model.enums.Constants;
+import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.repository.RatingHistoryRepository;
 import ru.acuma.shuffler.repository.RatingRepository;
 import ru.acuma.shuffler.service.season.SeasonService;

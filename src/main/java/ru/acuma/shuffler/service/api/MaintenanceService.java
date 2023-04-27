@@ -11,6 +11,6 @@ public interface MaintenanceService {
 
     void sweepMessage(Long chatId, Integer messageId);
 
-    void sweepEvent(TgEvent event);
+    void flushEvent(TgEvent event);
 
 }

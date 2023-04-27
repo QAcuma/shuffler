@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Chat;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.GroupMapper;
 import ru.acuma.shuffler.model.entity.GroupInfo;
-import ru.acuma.shuffler.model.enums.ExceptionCause;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.repository.GroupInfoRepository;
 
 @Service
@@ -29,5 +29,4 @@ public class GroupService {
 
         return groupInfo.getIsActive();
     }
-
 }

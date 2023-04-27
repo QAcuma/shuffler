@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.acuma.shuffler.model.domain.TgEvent;
 import ru.acuma.shuffler.model.entity.Event;
-import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.constant.EventState;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.time.LocalDateTime;

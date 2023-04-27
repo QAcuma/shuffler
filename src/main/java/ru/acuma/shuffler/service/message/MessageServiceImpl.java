@@ -13,8 +13,8 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.Constants;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
+import ru.acuma.shuffler.model.constant.Constants;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.service.api.MessageService;
 
 @Slf4j

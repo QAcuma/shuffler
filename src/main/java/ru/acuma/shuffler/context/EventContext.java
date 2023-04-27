@@ -45,11 +45,9 @@ public class EventContext {
     /**
      * Создает снепшот эвента перед внесением изменений в него
      */
-    public TgEvent snapshotEvent(Long chatId) {
+    public void snapshotEvent(Long chatId) {
         var event = findEvent(chatId);
         eventSnapshotStorage.put(chatId, event);
-
-        return event;
     }
 
     /**

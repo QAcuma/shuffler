@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.JoinCommand;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.EventState;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
+import ru.acuma.shuffler.model.constant.EventState;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
@@ -16,11 +16,11 @@ import ru.acuma.shuffler.service.user.PlayerService;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static ru.acuma.shuffler.model.enums.EventState.CREATED;
-import static ru.acuma.shuffler.model.enums.EventState.PLAYING;
-import static ru.acuma.shuffler.model.enums.EventState.READY;
-import static ru.acuma.shuffler.model.enums.EventState.WAITING;
-import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
+import static ru.acuma.shuffler.model.constant.EventState.CREATED;
+import static ru.acuma.shuffler.model.constant.EventState.PLAYING;
+import static ru.acuma.shuffler.model.constant.EventState.READY;
+import static ru.acuma.shuffler.model.constant.EventState.WAITING;
+import static ru.acuma.shuffler.model.constant.EventState.WAITING_WITH_GAME;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
 
     @Override
     @CheckPlayerNotInEvent
-    public void handle(Message message) {
+    public void handle(Message message, String... args) {
     }
 
 

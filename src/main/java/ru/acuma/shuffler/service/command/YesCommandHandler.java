@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.controller.YesCommand;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.EventState;
+import ru.acuma.shuffler.model.constant.EventState;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.MessageService;
@@ -15,11 +15,11 @@ import ru.acuma.shuffler.service.game.ChampionshipService;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static ru.acuma.shuffler.model.enums.EventState.BEGIN_CHECKING;
-import static ru.acuma.shuffler.model.enums.EventState.CANCEL_CHECKING;
-import static ru.acuma.shuffler.model.enums.EventState.FINISH_CHECKING;
-import static ru.acuma.shuffler.model.enums.EventState.GAME_CHECKING;
-import static ru.acuma.shuffler.model.enums.EventState.WAITING_WITH_GAME;
+import static ru.acuma.shuffler.model.constant.EventState.BEGIN_CHECKING;
+import static ru.acuma.shuffler.model.constant.EventState.CANCEL_CHECKING;
+import static ru.acuma.shuffler.model.constant.EventState.FINISH_CHECKING;
+import static ru.acuma.shuffler.model.constant.EventState.GAME_CHECKING;
+import static ru.acuma.shuffler.model.constant.EventState.WAITING_WITH_GAME;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
 
     @Override
     @SweepMessage
-    public void handle(Message message) {
+    public void handle(Message message, String... args) {
 
     }
 

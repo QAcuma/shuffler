@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.telegram;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.GetUserProfilePhotos;
@@ -13,12 +12,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.acuma.shuffler.bot.ShufflerBot;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.Constants;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
+import ru.acuma.shuffler.model.constant.Constants;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.service.api.ExecuteService;
 import ru.acuma.shuffler.service.api.MessageService;
 import ru.acuma.shuffler.service.message.KeyboardService;
-import ru.acuma.shuffler.service.user.UserService;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -58,8 +56,8 @@ public class ExecuteServiceImpl implements ExecuteService {
                 .map(Message.class::cast)
                 .ifPresent(message -> {
                     var event = eventContext.findEvent(message.getChatId());
-                    Optional.ofNullable(event)
-                            .ifPresent(activeEvent -> activeEvent.spyMessage(message.getMessageId()));
+//                    Optional.ofNullable(event)
+//                            .ifPresent(activeEvent -> activeEvent.spyMessage(message.getMessageId()));
                 });
 
         return result;

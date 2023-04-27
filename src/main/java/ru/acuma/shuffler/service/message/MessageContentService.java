@@ -1,7 +1,7 @@
 package ru.acuma.shuffler.service.message;
 
 import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.enums.messages.MessageType;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 
 public interface MessageContentService {
 

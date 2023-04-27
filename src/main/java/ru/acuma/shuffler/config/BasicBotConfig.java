@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.acuma.shuffler.bot.ShufflerBot;
 import ru.acuma.shuffler.config.properties.BotProperties;
-import ru.acuma.shuffler.service.telegram.CommandRouter;
+import ru.acuma.shuffler.service.telegram.EventRouter;
 
 @Slf4j
 @Configuration
@@ -22,7 +22,7 @@ import ru.acuma.shuffler.service.telegram.CommandRouter;
 public class BasicBotConfig {
 
     @Lazy
-    private final CommandRouter commandRouter;
+    private final EventRouter commandRouter;
 
     @Bean
     @Validated

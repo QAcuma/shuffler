@@ -21,7 +21,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import ru.acuma.shuffler.model.enums.GameState;
+import ru.acuma.shuffler.model.constant.GameState;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
