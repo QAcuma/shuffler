@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class TgEventContext implements Serializable {
+public class TEventContext implements Serializable {
     private Integer gameCount;
     private Boolean left;
 

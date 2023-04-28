@@ -8,13 +8,13 @@ import ru.acuma.shuffler.service.command.BaseCommandHandler;
 
 @Component
 @RequiredArgsConstructor
-public class CancelCommand extends BaseBotCommand {
+public class CancelCommand implements BaseBotCommand {
 
     private final BaseCommandHandler<CancelCommand> commandHandler;
 
     @Override
     public void execute(final Message message, final String... args) {
-        commandHandler.handle(message);
+        commandHandler.handle(message, args);
     }
 
     @Override

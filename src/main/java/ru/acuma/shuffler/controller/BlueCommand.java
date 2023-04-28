@@ -8,13 +8,13 @@ import ru.acuma.shuffler.service.command.BaseCommandHandler;
 
 @Component
 @RequiredArgsConstructor
-public class BlueCommand extends BaseBotCommand {
+public class BlueCommand implements BaseBotCommand {
 
     private final BaseCommandHandler<BlueCommand> commandHandler;
 
     @Override
     public void execute(final Message message, final String... args) {
-        commandHandler.handle(message);
+        commandHandler.handle(message, args);
     }
 
     @Override

@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TEvent;
 
 @Slf4j
 @Service
@@ -24,7 +24,7 @@ public class MessageService {
     private final KeyboardService keyboardService;
     private final MessageContentService messageContentService;
 
-    public BotApiMethod<Message> buildMessage(TgEvent event, MessageType type) {
+    public BotApiMethod<Message> buildMessage(TEvent event, MessageType type) {
         return SendMessage.builder()
             .chatId(String.valueOf(event.getChatId()))
             .text(messageContentService.buildContent(event, type))
@@ -33,7 +33,7 @@ public class MessageService {
             .build();
     }
 
-    public EditMessageText buildMessageUpdate(TgEvent event, Integer messageId, MessageType type) {
+    public EditMessageText buildMessageUpdate(TEvent event, Integer messageId, MessageType type) {
         return EditMessageText.builder()
             .chatId(String.valueOf(event.getChatId()))
             .messageId(messageId)
@@ -43,7 +43,7 @@ public class MessageService {
             .build();
     }
 
-    public EditMessageReplyMarkup buildReplyMarkupUpdate(final TgEvent event, final Integer messageId, MessageType type) {
+    public EditMessageReplyMarkup buildReplyMarkupUpdate(final TEvent event, final Integer messageId, MessageType type) {
         return EditMessageReplyMarkup.builder()
             .chatId(String.valueOf(event.getChatId()))
             .messageId(messageId)
@@ -51,7 +51,7 @@ public class MessageService {
             .build();
     }
 
-    public EditMessageReplyMarkup buildReplyMarkupUpdate(final TgEvent event, final Integer messageId, final InlineKeyboardMarkup keyboard) {
+    public EditMessageReplyMarkup buildReplyMarkupUpdate(final TEvent event, final Integer messageId, final InlineKeyboardMarkup keyboard) {
         return EditMessageReplyMarkup.builder()
             .chatId(String.valueOf(event.getChatId()))
             .messageId(messageId)
@@ -59,7 +59,7 @@ public class MessageService {
             .build();
     }
 
-    public EditMessageText buildLobbyMessageUpdate(TgEvent event) {
+    public EditMessageText buildLobbyMessageUpdate(TEvent event) {
         return buildMessageUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY);
     }
 
@@ -70,14 +70,14 @@ public class MessageService {
             .build();
     }
 
-    public DeleteMessage deleteMessage(TgEvent event, Integer messageId) {
+    public DeleteMessage deleteMessage(TEvent event, Integer messageId) {
         return DeleteMessage.builder()
             .chatId(String.valueOf(event.getChatId()))
             .messageId(messageId)
             .build();
     }
 
-    private InlineKeyboardMarkup getKeyboard(TgEvent event, MessageType type) {
+    private InlineKeyboardMarkup getKeyboard(TEvent event, MessageType type) {
         return switch (type) {
             case LOBBY -> keyboardService.getLobbyKeyboard(event);
             case CHECKING -> keyboardService.getCheckingKeyboard(event);

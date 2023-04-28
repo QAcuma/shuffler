@@ -8,13 +8,13 @@ import ru.acuma.shuffler.service.command.BaseCommandHandler;
 
 @Component
 @RequiredArgsConstructor
-public class JoinCommand extends BaseBotCommand {
+public class JoinCommand implements BaseBotCommand {
 
     private final BaseCommandHandler<JoinCommand> commandHandler;
 
     @Override
     public void execute(final Message message, final String... args) {
-        commandHandler.handle(message);
+        commandHandler.handle(message, args);
     }
 
     @Override

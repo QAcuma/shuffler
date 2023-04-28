@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor
-public enum EventState {
+public enum EventStatus {
 
     CREATED(2),
     READY(3),
@@ -25,7 +25,7 @@ public enum EventState {
 
     private final int rows;
 
-    public boolean in(EventState... states) {
+    public boolean in(EventStatus... states) {
         return Arrays.asList(states).contains(this);
     }
 

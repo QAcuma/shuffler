@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Value;
-import ru.acuma.shuffler.model.domain.TgRatingContext;
+import ru.acuma.shuffler.model.domain.TRating;
 import ru.acuma.shuffler.model.entity.Rating;
 
 @Mapper(
@@ -19,7 +19,7 @@ public abstract class RatingMapper {
     @Mapping(target = "eventScoreChange", constant = "0")
     @Mapping(target = "lastScoreChange", constant = "0")
     @Mapping(target = "calibrationMultiplier", constant = "", qualifiedByName = "mapCalibrationMultiplier")
-    public abstract TgRatingContext toRatingContext(Rating rating);
+    public abstract TRating toRatingContext(Rating rating);
 
     @Named("mapCalibrationMultiplier")
     protected Integer mapCalibrationMultiplier(String empty) {

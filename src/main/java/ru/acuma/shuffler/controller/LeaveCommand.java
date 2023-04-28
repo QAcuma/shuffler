@@ -8,13 +8,13 @@ import ru.acuma.shuffler.service.command.BaseCommandHandler;
 
 @Component
 @RequiredArgsConstructor
-public class LeaveCommand extends BaseBotCommand {
+public class LeaveCommand implements BaseBotCommand {
 
     private final BaseCommandHandler<LeaveCommand> commandHandler;
 
     @Override
     public void execute(final Message message, final String... args) {
-        commandHandler.handle(message);
+        commandHandler.handle(message, args);
     }
 
     @Override

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.domain.TgEventPlayer;
+import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.constant.Command;
 import ru.acuma.shuffler.service.api.KickService;
 import ru.acuma.shuffler.service.message.KeyboardService;
@@ -21,11 +21,11 @@ public class KickServiceImpl implements KickService {
     private final KeyboardService keyboardService;
 
     @Override
-    public InlineKeyboardMarkup preparePlayersKeyboard(List<TgEventPlayer> players) {
+    public InlineKeyboardMarkup preparePlayersKeyboard(List<TEventPlayer> players) {
         var playersMap = players.stream()
                 .collect(Collectors.toMap(
                         eventPlayer -> eventPlayer.getUserInfo().getTelegramId(),
-                        TgEventPlayer::getName)
+                        TEventPlayer::getName)
                 );
         var cancelButton = keyboardService.getSingleButton(Command.CANCEL_EVICT, "Не исключать");
 
@@ -33,10 +33,10 @@ public class KickServiceImpl implements KickService {
     }
 
     @Override
-    public SendMessage prepareKickMessage(TgEvent event) {
-        List<TgEventPlayer> players = event.getLatestGame().getPlayers()
+    public SendMessage prepareKickMessage(TEvent event) {
+        List<TEventPlayer> players = event.getLatestGame().getPlayers()
                 .stream()
-                .filter(Predicate.not(TgEventPlayer::isLeft))
+                .filter(Predicate.not(TEventPlayer::isLeft))
                 .toList();
         var keyboard = preparePlayersKeyboard(players);
 

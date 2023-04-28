@@ -9,7 +9,8 @@ import ru.acuma.shuffler.model.constant.messages.MessageAction;
 import ru.acuma.shuffler.model.constant.messages.MessageAfterAction;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,7 +22,7 @@ public class Render implements Serializable {
     private ExecuteStrategy executeStrategy;
     private Long delay;
     private MessageAction messageAction;
-    private List<MessageAfterAction> afterActions;
+    private Set<MessageAfterAction> afterActions;
 
     public boolean requireChanges() {
         return ExecuteStrategy.IDLE != executeStrategy;
@@ -31,6 +32,7 @@ public class Render implements Serializable {
         return Render.builder()
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.SEND)
+            .afterActions(new HashSet<>())
             .build();
     }
 
@@ -39,6 +41,7 @@ public class Render implements Serializable {
             .messageId(messageId)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.UPDATE)
+            .afterActions(new HashSet<>())
             .build();
     }
 
@@ -47,6 +50,7 @@ public class Render implements Serializable {
             .messageId(messageId)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.UPDATE_MARKUP)
+            .afterActions(new HashSet<>())
             .build();
     }
 
@@ -55,6 +59,7 @@ public class Render implements Serializable {
             .messageId(messageId)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.DELETE)
+            .afterActions(new HashSet<>())
             .build();
     }
 

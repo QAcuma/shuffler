@@ -5,9 +5,9 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.mapper.TeamPlayerMapper;
-import ru.acuma.shuffler.model.domain.TgEventPlayer;
-import ru.acuma.shuffler.model.domain.TgGame;
-import ru.acuma.shuffler.model.domain.TgTeam;
+import ru.acuma.shuffler.model.domain.TEventPlayer;
+import ru.acuma.shuffler.model.domain.TGame;
+import ru.acuma.shuffler.model.domain.TTeam;
 import ru.acuma.shuffler.repository.TeamPlayerRepository;
 import ru.acuma.shuffler.repository.TeamRepository;
 import ru.acuma.shuffler.util.TeamServiceUtil;
@@ -27,7 +27,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamPlayerRepository teamPlayerRepository;
 
-    public TgTeam buildTeam(List<TgEventPlayer> players) {
+    public TTeam buildTeam(List<TEventPlayer> players) {
         if (players.size() < GAME_PLAYERS_COUNT / 2) {
             throw new IllegalArgumentException("Not enough players");
         }
@@ -35,27 +35,27 @@ public class TeamService {
         return build(players, 20);
     }
 
-    public TgTeam save(TgTeam team, TgGame game) {
+    public TTeam save(TTeam team, TGame game) {
         var mappedTeam = teamMapper.toTeam(team, game);
         team.getPlayers().forEach(player -> saveTeamPlayer(player, team.getId()));
 
         return team;
     }
 
-    public TgTeam update(TgTeam team) {
+    public TTeam update(TTeam team) {
         var mappedTeam = teamMapper.toTeam(team);
 
         return team;
     }
 
-    public void saveTeamPlayer(TgEventPlayer player, Long teamId) {
+    public void saveTeamPlayer(TEventPlayer player, Long teamId) {
         var mappedTeamPlayer = teamPlayerMapper.toTeamPlayer(player, teamId);
         teamPlayerRepository.save(mappedTeamPlayer);
     }
 
     @SneakyThrows
-    private TgTeam build(List<TgEventPlayer> players, int retries) {
-        var team = new TgTeam(players.get(0), players.get(1));
+    private TTeam build(List<TEventPlayer> players, int retries) {
+        var team = new TTeam(players.get(0), players.get(1));
         if (retries == 0) {
             return team;
         }

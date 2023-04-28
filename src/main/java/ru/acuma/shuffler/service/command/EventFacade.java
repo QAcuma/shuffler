@@ -3,7 +3,7 @@ package ru.acuma.shuffler.service.command;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.api.EventStateService;
 import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.GameStateService;
@@ -22,7 +22,7 @@ public class EventFacade {
     private final ChampionshipService championshipService;
     private final GameService gameService;
 
-    public void finishEventActions(TgEvent event, Message message) {
+    public void finishEventActions(TEvent event, Message message) {
         maintenanceService.sweepMessage(message.getChatId(), event.getLatestGame().getMessageId());
         gameService.handleGameCheck(event);
         championshipService.finishChampionship(event);
@@ -30,7 +30,7 @@ public class EventFacade {
 //        executeService.execute(lobbyUpdate);
     }
 
-    public void checkingStateActions(TgEvent event) {
+    public void checkingStateActions(TEvent event) {
 //        var lobbyUpdate = messageService.buildReplyMarkupUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY);
 //        var gameUpdate = messageService.buildReplyMarkupUpdate(event, event.getLatestGame().getMessageId(), MessageType.GAME);
 //        var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING);
@@ -40,7 +40,7 @@ public class EventFacade {
 //        executeService.execute(checkingMessage);
     }
 
-    public BiConsumer<Message, TgEvent> getCheckingConsumer() {
+    public BiConsumer<Message, TEvent> getCheckingConsumer() {
         return (message, event) -> {
             event.cancelFutures();
             eventStateService.active(event);

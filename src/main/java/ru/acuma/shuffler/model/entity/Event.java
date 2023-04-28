@@ -21,7 +21,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import ru.acuma.shuffler.model.constant.EventState;
+import ru.acuma.shuffler.model.constant.EventStatus;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -67,7 +67,7 @@ public class Event implements Serializable {
     @NotNull
     @Column(name = "state", nullable = false, length = 32)
     @Enumerated(EnumType.STRING)
-    private EventState state;
+    private EventStatus state;
 
     @Size(max = 32)
     @NotNull

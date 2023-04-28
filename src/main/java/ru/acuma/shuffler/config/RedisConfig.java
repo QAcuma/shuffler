@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TEvent;
 
 import java.util.Map;
 
@@ -21,18 +21,14 @@ public class RedisConfig {
 
         return template;
     }
-
-    @Bean("redisEventStorage")
-    public Map<Long, TgEvent> redisEventStorage(final RedisTemplate<String, Object> redisTemplate) {
-        var pagePointers = redisTemplate.<Long, TgEvent>boundHashOps(EVENT_STORAGE);
-
-        return pagePointers.entries();
-    }
+//
+//    @Bean("redisEventStorage")
+//    public Map<Long, TEvent> redisEventStorage(final RedisTemplate<String, Object> redisTemplate) {
+//        return redisTemplate.<Long, TEvent>boundHashOps(EVENT_STORAGE).entries();
+//    }
 
     @Bean("redisEventSnapshotStorage")
-    public Map<Long, TgEvent> redisEventSnapshotStorage(final RedisTemplate<String, Object> redisTemplate) {
-        var pagePointers = redisTemplate.<Long, TgEvent>boundHashOps(EVENT_SNAPSHOT_STORAGE);
-
-        return pagePointers.entries();
+    public Map<Long, TEvent> redisEventSnapshotStorage(final RedisTemplate<String, Object> redisTemplate) {
+        return  redisTemplate.<Long, TEvent>boundHashOps(EVENT_SNAPSHOT_STORAGE).entries();
     }
 }

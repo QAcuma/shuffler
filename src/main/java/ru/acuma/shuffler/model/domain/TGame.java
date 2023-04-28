@@ -18,26 +18,26 @@ import static ru.acuma.shuffler.model.constant.GameState.FINISHED;
 @SuperBuilder
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TgGame implements Serializable {
+public class TGame implements Serializable {
 
     private Long id;
     private Integer index;
     private Integer messageId;
     private GameState state;
-    private TgTeam redTeam;
-    private TgTeam blueTeam;
+    private TTeam redTeam;
+    private TTeam blueTeam;
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
 
-    public List<TgEventPlayer> getPlayers() {
-        List<TgEventPlayer> players = new ArrayList<>();
+    public List<TEventPlayer> getPlayers() {
+        List<TEventPlayer> players = new ArrayList<>();
         players.addAll(blueTeam.getPlayers());
         players.addAll(redTeam.getPlayers());
 
         return players;
     }
 
-    public TgTeam getWinnerTeam() {
+    public TTeam getWinnerTeam() {
         if (state == FINISHED) {
             return redTeam.getIsWinner() ? redTeam : blueTeam;
         }
@@ -45,7 +45,7 @@ public class TgGame implements Serializable {
         return null;
     }
 
-    public TgTeam getLoserTeam() {
+    public TTeam getLoserTeam() {
         if (state == FINISHED) {
             return redTeam.getIsWinner() ? blueTeam : redTeam;
         }

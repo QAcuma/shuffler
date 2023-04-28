@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.context.EventContext;
-import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TEvent;
 
 @Slf4j
 @Service
@@ -15,7 +15,7 @@ public class MaintenanceService {
 
     private final EventContext eventContext;
 
-    public void sweepChat(TgEvent event) {
+    public void sweepChat(TEvent event) {
 //        event.getMessages().values()
 //            .stream()
 //            .map(Render::getMessageId)
@@ -29,13 +29,13 @@ public class MaintenanceService {
     }
 
     @SneakyThrows
-    public void sweepMessage(Long chatId, Integer messageId) {
+    public void sweepMessage(final Long chatId, Integer messageId) {
 //        CompletableFuture.supplyAsync(() -> messageService.deleteMessage(chatId, messageId))
 //            .thenAccept(executeService::execute)
 //            .thenApply(future -> eventContext.findEvent(chatId));
     }
 
-    public void flushEvent(TgEvent event) {
+    public void flushEvent(TEvent event) {
         eventContext.flushEvent(event.getChatId());
     }
 }

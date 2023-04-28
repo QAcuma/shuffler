@@ -5,11 +5,11 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.domain.TgEventPlayer;
-import ru.acuma.shuffler.model.domain.TgGame;
-import ru.acuma.shuffler.model.domain.TgGameBet;
-import ru.acuma.shuffler.model.domain.TgTeam;
+import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.model.domain.TEventPlayer;
+import ru.acuma.shuffler.model.domain.TGame;
+import ru.acuma.shuffler.model.domain.TGameBet;
+import ru.acuma.shuffler.model.domain.TTeam;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.model.entity.Rating;
 import ru.acuma.shuffler.model.entity.RatingHistory;
@@ -36,7 +36,7 @@ public class RatingService {
     @Value("${rating.calibration.game-penalty}")
     private float calibrationPenaltyMultiplier;
 
-    public void applyBet(TgTeam redTeam, TgTeam blueTeam) {
+    public void applyBet(TTeam redTeam, TTeam blueTeam) {
         boolean isCalibrating = redTeam.containsCalibrating() || blueTeam.containsCalibrating();
 
         var redWinCase = winCase(redTeam, blueTeam);
@@ -46,8 +46,8 @@ public class RatingService {
         var redLoseCase = -1 * blueWinCase;
         var blueLoseCase = -1 * limitedRedWinCase;
 
-        var redBet = new TgGameBet(limitedRedWinCase, redLoseCase);
-        var blueBet = new TgGameBet(blueWinCase, blueLoseCase);
+        var redBet = new TGameBet(limitedRedWinCase, redLoseCase);
+        var blueBet = new TGameBet(blueWinCase, blueLoseCase);
 
         redTeam.setBet(redBet);
         blueTeam.setBet(blueBet);
@@ -55,7 +55,7 @@ public class RatingService {
 
     @SneakyThrows
     @Transactional
-    public void update(TgEvent event) {
+    public void update(TEvent event) {
         var game = event.getLatestGame();
         Optional.ofNullable(game.getWinnerTeam()).orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
         applyChanges(event);
@@ -78,15 +78,15 @@ public class RatingService {
             .orElse(defaultRating(player, discipline));
     }
 
-    public void saveResults(TgEvent event) {
-        TgGame game = event.getLatestGame();
+    public void saveResults(TEvent event) {
+        TGame game = event.getLatestGame();
         event.getLatestGame().getPlayers()
             .stream()
             .peek(player -> saveRating(player, event.getDiscipline()))
             .forEach(player -> saveHistory(player, game, event.getDiscipline()));
     }
 
-    private int winCase(TgTeam team1, TgTeam team2) {
+    private int winCase(TTeam team1, TTeam team2) {
         var diff = team1.getScore() - team2.getScore();
         var limitedDiff = Math.min(diff, Constants.RATING_REFERENCE);
         var change = diff >= 0
@@ -127,18 +127,18 @@ public class RatingService {
         return ratingRepository.save(rating);
     }
 
-    private void applyCalibratingStatus(TgEventPlayer player, Discipline discipline) {
+    private void applyCalibratingStatus(TEventPlayer player, Discipline discipline) {
         var isCalibrated = calibrationService.isCalibrated(player.getId(), discipline);
         player.getRatingContext().setCalibrated(isCalibrated);
     }
 
-    private void applyChanges(TgEvent event) {
+    private void applyChanges(TEvent event) {
         var game = event.getLatestGame();
         game.getPlayers().forEach(player -> applyCalibratingStatus(player, event.getDiscipline()));
-        List.of(game.getWinnerTeam(), game.getLoserTeam()).forEach(TgTeam::applyRating);
+        List.of(game.getWinnerTeam(), game.getLoserTeam()).forEach(TTeam::applyRating);
     }
 
-    private void saveRating(TgEventPlayer player, Discipline discipline) {
+    private void saveRating(TEventPlayer player, Discipline discipline) {
         Rating rating = getRating(null, discipline);
         rating.setScore(player.getRatingContext().getScore());
         rating.setIsCalibrated(player.isCalibrated());
@@ -146,7 +146,7 @@ public class RatingService {
         ratingRepository.save(rating);
     }
 
-    private void saveHistory(TgEventPlayer player, TgGame game, Discipline discipline) {
+    private void saveHistory(TEventPlayer player, TGame game, Discipline discipline) {
         RatingHistory ratingHistory = RatingHistory.builder()
             .game(null)
             .player(null)

@@ -14,16 +14,16 @@ import static ru.acuma.shuffler.util.Symbols.MEDAL_EMOJI;
 @SuperBuilder
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TgTeam {
+public class TTeam {
 
     private Long id;
-    private TgEventPlayer player1;
-    private TgEventPlayer player2;
+    private TEventPlayer player1;
+    private TEventPlayer player2;
     private Integer score;
     private Boolean isWinner;
-    private TgGameBet bet;
+    private TGameBet bet;
 
-    public TgTeam(TgEventPlayer player1, TgEventPlayer player2) {
+    public TTeam(TEventPlayer player1, TEventPlayer player2) {
         this.player1 = player1;
         this.player2 = player2;
         this.isWinner = false;
@@ -50,10 +50,10 @@ public class TgTeam {
 
     public boolean containsCalibrating() {
         return getPlayers().stream()
-            .anyMatch(Predicate.not(TgEventPlayer::isCalibrated));
+            .anyMatch(Predicate.not(TEventPlayer::isCalibrated));
     }
 
-    public List<TgEventPlayer> getPlayers() {
+    public List<TEventPlayer> getPlayers() {
         return List.of(player1, player2);
     }
 }

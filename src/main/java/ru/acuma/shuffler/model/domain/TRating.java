@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class TgRatingContext implements Serializable {
+public class TRating implements Serializable {
     private Boolean calibrated;
     private Integer score;
     private Integer eventScoreChange;

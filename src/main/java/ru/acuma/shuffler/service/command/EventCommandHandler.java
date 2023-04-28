@@ -1,36 +1,40 @@
 package ru.acuma.shuffler.service.command;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.aspect.marker.CheckNoActiveEvent;
-import ru.acuma.shuffler.aspect.marker.SweepMessage;
-import ru.acuma.shuffler.context.EventContext;
+import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.EventCommand;
-import ru.acuma.shuffler.model.constant.EventState;
+import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageAfterAction;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
+import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.message.Render;
+import ru.acuma.shuffler.util.ArgumentUtil;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.util.List;
 
+@Slf4j
 @Service
-@RequiredArgsConstructor
 public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
 
-    private final EventContext eventContext;
+    private static final String DISCIPLINE_PARAM = "discipline";
 
     @Override
-    @SweepMessage
-    @CheckNoActiveEvent
-    public void handle(final Message message, final String... args) {
-        beginEvent(message.getChatId(), Discipline.KICKER);
+    protected List<EventStatus> getSupportedStatuses() {
+        return List.of(EventStatus.ANY);
     }
 
     @Override
-    protected List<EventState> getSupportedStates() {
-        return List.of(EventState.ANY);
+    public void invokeEventCommand(final User user, final TEvent event, final String... args) {
+        log.debug("Event is present in chat %s".formatted(event.getChatId()));
+    }
+
+    @Override
+    protected void invokeChatCommand(final Message message, final String[] args) {
+        var discipline = ArgumentUtil.extractParam(DISCIPLINE_PARAM, args);
+        beginEvent(message.getChatId(), Discipline.valueOf(discipline));
     }
 
     private void beginEvent(final Long chatId, final Discipline discipline) {

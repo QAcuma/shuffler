@@ -16,7 +16,7 @@ public class GroupService {
     private final GroupMapper groupMapper;
     private final GroupInfoRepository groupInfoRepository;
 
-    public GroupInfo getGroupInfo(Long chatId) {
+    public GroupInfo getGroupInfo(final Long chatId) {
         return groupInfoRepository.findById(chatId)
             .orElseThrow(() -> new DataException(ExceptionCause.GROUP_NOT_FOUND, chatId));
     }

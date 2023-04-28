@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TgUserInfo implements Serializable {
+public class TUserInfo implements Serializable {
     private Long telegramId;
     private String languageCode;
     private Boolean isBot;

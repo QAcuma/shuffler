@@ -3,8 +3,8 @@ package ru.acuma.shuffler.mapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.acuma.shuffler.base.AbstractUnitTest;
-import ru.acuma.shuffler.model.domain.TgEvent;
-import ru.acuma.shuffler.model.constant.EventState;
+import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.time.LocalDateTime;
@@ -19,9 +19,9 @@ class EventMapperTest extends AbstractUnitTest {
 
     @Test
     void toEvent() {
-        TgEvent tgEvent = TgEvent.builder()
+        TEvent tgEvent = TEvent.builder()
                 .discipline(Discipline.KICKER)
-                .eventState(EventState.CREATED)
+                .eventStatus(EventStatus.CREATED)
                 .chatId(12345L)
                 .startedAt(LocalDateTime.now())
                 .build();
@@ -30,7 +30,7 @@ class EventMapperTest extends AbstractUnitTest {
         assertAll(
                 () -> assertEquals(event.getDiscipline(), tgEvent.getDiscipline().name()),
                 () -> assertEquals(event.getStartedAt().toLocalDateTime(), tgEvent.getStartedAt()),
-                () -> assertEquals(event.getState(), tgEvent.getEventState().name())
+                () -> assertEquals(event.getState(), tgEvent.getEventStatus().name())
         );
     }
 }

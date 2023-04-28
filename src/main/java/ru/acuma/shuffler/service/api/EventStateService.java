@@ -1,25 +1,25 @@
 package ru.acuma.shuffler.service.api;
 
-import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TEvent;
 
 public interface EventStateService {
 
-    void prepare(TgEvent event);
+    void prepare(TEvent event);
 
-    void active(TgEvent event);
+    void active(TEvent event);
 
-    void cancel(TgEvent event);
+    void cancel(TEvent event);
 
-    void gameCheck(TgEvent event);
+    void gameCheck(TEvent event);
 
-    void cancelled(TgEvent event);
+    void cancelled(TEvent event);
 
-    void begin(TgEvent event);
+    void begin(TEvent event);
 
-    void evicting(TgEvent event);
+    void evicting(TEvent event);
 
-    void finishCheck(TgEvent event);
+    void finishCheck(TEvent event);
 
-    void finished(TgEvent event);
+    void finished(TEvent event);
 
 }

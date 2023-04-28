@@ -2,7 +2,7 @@ package ru.acuma.shuffler.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.acuma.shuffler.model.domain.TgGame;
+import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.entity.Game;
 
 @Mapper(
@@ -11,6 +11,6 @@ import ru.acuma.shuffler.model.entity.Game;
 public abstract class GameMapper {
 
     @Mapping(target = "event", ignore = true)
-    public abstract Game toGame(TgGame source);
+    public abstract Game toGame(TGame source);
 
 }

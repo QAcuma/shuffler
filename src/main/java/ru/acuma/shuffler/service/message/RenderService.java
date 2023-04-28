@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
 
 import java.io.Serializable;
@@ -35,7 +35,7 @@ public class RenderService {
     }
 
     private void executeMethod(
-        final TgEvent event,
+        final TEvent event,
         final MessageType messageType,
         final Render render
     ) {
@@ -50,7 +50,7 @@ public class RenderService {
     private BotApiMethod<?> resolveApiMethod(
         final MessageType messageType,
         final Render render,
-        final TgEvent event
+        final TEvent event
     ) {
         return switch (render.getMessageAction()) {
             case SEND -> messageService.buildMessage(event, messageType);
@@ -73,7 +73,7 @@ public class RenderService {
 
     public <T extends Serializable, M extends BotApiMethod<T>> void executeTimer(
         final M method,
-        final TgEvent event,
+        final TEvent event,
         final Render render
     ) {
         var message = Optional.of(executeService.execute(method, Render.forSend()))

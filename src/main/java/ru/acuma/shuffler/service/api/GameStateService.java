@@ -1,21 +1,21 @@
 package ru.acuma.shuffler.service.api;
 
-import ru.acuma.shuffler.model.domain.TgGame;
+import ru.acuma.shuffler.model.domain.TGame;
 
 public interface GameStateService {
 
-    void active(TgGame game);
+    void active(TGame game);
 
-    void cancel(TgGame game);
+    void cancel(TGame game);
 
-    void cancelCheck(TgGame game);
+    void cancelCheck(TGame game);
 
-    void redCheck(TgGame game);
+    void redCheck(TGame game);
 
-    void blueCheck(TgGame game);
+    void blueCheck(TGame game);
 
-    void finished(TgGame game);
+    void finished(TGame game);
 
-    void notExist(TgGame game);
+    void notExist(TGame game);
 
 }

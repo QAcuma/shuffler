@@ -9,12 +9,12 @@ import java.io.Serializable;
 @Data
 @SuperBuilder
 @Accessors(chain = true)
-public final class TgGameBet implements Serializable {
+public final class TGameBet implements Serializable {
 
     private final Integer caseWin;
     private final Integer caseLose;
 
-    public TgGameBet(int caseWin, int caseLose) {
+    public TGameBet(int caseWin, int caseLose) {
         this.caseWin = caseWin;
         this.caseLose = caseLose;
     }

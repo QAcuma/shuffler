@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.acuma.shuffler.model.domain.TgEvent;
+import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.constant.Command;
 import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.model.constant.keyboards.Created;
@@ -28,21 +28,21 @@ import java.util.stream.IntStream;
 public class KeyboardServiceImpl implements KeyboardService {
 
     @Override
-    public InlineKeyboardMarkup getLobbyKeyboard(TgEvent event) {
+    public InlineKeyboardMarkup getLobbyKeyboard(TEvent event) {
         var lobbyButtons = buildLobbyButtons(event);
 
         return buildKeyboard(lobbyButtons);
     }
 
     @Override
-    public InlineKeyboardMarkup getCheckingKeyboard(TgEvent event) {
+    public InlineKeyboardMarkup getCheckingKeyboard(TEvent event) {
         List<EventStatusButton> checkingButtons = List.of(Checking.values());
 
         return buildKeyboard(checkingButtons);
     }
 
     @Override
-    public InlineKeyboardMarkup getGamingKeyboard(TgEvent event) {
+    public InlineKeyboardMarkup getGamingKeyboard(TEvent event) {
         var gameState = event.getLatestGameState();
         var gameButtons = buildGameButtons(gameState);
 
@@ -131,8 +131,8 @@ public class KeyboardServiceImpl implements KeyboardService {
         };
     }
 
-    private List<EventStatusButton> buildLobbyButtons(TgEvent event) {
-        var eventState = event.getEventState();
+    private List<EventStatusButton> buildLobbyButtons(TEvent event) {
+        var eventState = event.getEventStatus();
 
         return switch (eventState) {
             case CREATED -> List.of(Created.values());

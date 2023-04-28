@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import ru.acuma.shuffler.model.constant.EventState;
+import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.service.message.Render;
@@ -27,21 +27,23 @@ import static ru.acuma.shuffler.model.constant.GameState.FINISHED;
 @SuperBuilder
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TgEvent implements Serializable {
+public class TEvent implements Serializable {
 
     private Long id;
     private Long chatId;
-    private EventState eventState;
+    private EventStatus eventStatus;
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
     private Discipline discipline;
-    private final Map<Long, TgEventPlayer> players = new HashMap<>();
-    private final List<TgGame> tgGames = new ArrayList<>();
+    private final Map<Long, TEventPlayer> players = new HashMap<>();
+    private final List<TGame> tgGames = new ArrayList<>();
     private final EnumMap<MessageType, Render> messages = new EnumMap<>(MessageType.class);
     private final transient List<Future<?>> futures = new ArrayList<>();
 
-    public void action(final MessageType messageType, final Render render) {
+    public TEvent action(final MessageType messageType, final Render render) {
         messages.put(messageType, render);
+
+        return this;
     }
 
     public Integer getLobbyMessageId() {
@@ -53,7 +55,7 @@ public class TgEvent implements Serializable {
         return null == player || player.getEventContext().getLeft();
     }
 
-    public void joinPlayer(TgEventPlayer eventPlayer) {
+    public void joinPlayer(TEventPlayer eventPlayer) {
         this.players.put(eventPlayer.getUserInfo().getTelegramId(), eventPlayer);
     }
 
@@ -61,24 +63,24 @@ public class TgEvent implements Serializable {
         this.players.remove(telegramId);
     }
 
-    public List<TgEventPlayer> getActivePlayers() {
+    public List<TEventPlayer> getActivePlayers() {
         return players.values().stream()
             .filter(player -> !player.getEventContext().getLeft())
             .toList();
     }
 
-    public TgGame getLatestGame() {
+    public TGame getLatestGame() {
         return tgGames.stream()
-            .max(Comparator.comparingInt(TgGame::getIndex))
+            .max(Comparator.comparingInt(TGame::getIndex))
             .orElse(null);
     }
 
-    public void applyGame(TgGame tgGame) {
+    public void applyGame(TGame tgGame) {
         tgGames.add(tgGame);
     }
 
     public Boolean isCalibrating() {
-        return getTgGames().stream().anyMatch(TgGame::isCalibrating);
+        return getTgGames().stream().anyMatch(TGame::isCalibrating);
     }
 
     public Boolean hasAnyGameFinished() {

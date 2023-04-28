@@ -9,7 +9,7 @@ import ru.acuma.shuffler.model.constant.Command;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WaitCommand extends BaseBotCommand {
+public class WaitCommand implements BaseBotCommand {
 
     @Override
     public void execute(final Message message, final String... args) {

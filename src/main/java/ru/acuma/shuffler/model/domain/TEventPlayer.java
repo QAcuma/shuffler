@@ -15,13 +15,13 @@ import java.util.Optional;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class TgEventPlayer implements Serializable {
+public class TEventPlayer implements Serializable {
     private Long id;
     private Long chatId;
-    private TgRatingContext ratingContext;
-    private TgEventContext eventContext;
-    private TgEventPlayer lastGamePlayer;
-    private TgUserInfo userInfo;
+    private TRating ratingContext;
+    private TEventContext eventContext;
+    private TEventPlayer lastGamePlayer;
+    private TUserInfo userInfo;
 
     public void applyRating(Integer change) {
         ratingContext.applyScore(change);
