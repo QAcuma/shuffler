@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.game;
+package ru.acuma.shuffler.service.event;
 
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.domain.TGame;

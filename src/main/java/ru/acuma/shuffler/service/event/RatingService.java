@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.game;
+package ru.acuma.shuffler.service.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -56,7 +56,7 @@ public class RatingService {
     @SneakyThrows
     @Transactional
     public void update(TEvent event) {
-        var game = event.getLatestGame();
+        var game = event.getCurrentGame();
         Optional.ofNullable(game.getWinnerTeam()).orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
         applyChanges(event);
         saveResults(event);
@@ -79,8 +79,8 @@ public class RatingService {
     }
 
     public void saveResults(TEvent event) {
-        TGame game = event.getLatestGame();
-        event.getLatestGame().getPlayers()
+        TGame game = event.getCurrentGame();
+        event.getCurrentGame().getPlayers()
             .stream()
             .peek(player -> saveRating(player, event.getDiscipline()))
             .forEach(player -> saveHistory(player, game, event.getDiscipline()));
@@ -133,7 +133,7 @@ public class RatingService {
     }
 
     private void applyChanges(TEvent event) {
-        var game = event.getLatestGame();
+        var game = event.getCurrentGame();
         game.getPlayers().forEach(player -> applyCalibratingStatus(player, event.getDiscipline()));
         List.of(game.getWinnerTeam(), game.getLoserTeam()).forEach(TTeam::applyRating);
     }

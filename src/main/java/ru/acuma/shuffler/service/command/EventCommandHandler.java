@@ -32,14 +32,14 @@ public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
     }
 
     @Override
-    protected void invokeChatCommand(final Message message, final String[] args) {
+    protected void invokeChatCommand(final Message message, final String... args) {
         var discipline = ArgumentUtil.extractParam(DISCIPLINE_PARAM, args);
         beginEvent(message.getChatId(), Discipline.valueOf(discipline));
     }
 
     private void beginEvent(final Long chatId, final Discipline discipline) {
         eventContext.createEvent(chatId, discipline)
-            .action(
+            .render(
                 MessageType.LOBBY,
                 Render.forSend().withAfterAction(MessageAfterAction.PIN)
             );

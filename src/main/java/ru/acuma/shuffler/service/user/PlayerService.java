@@ -10,11 +10,11 @@ import ru.acuma.shuffler.model.domain.TEventContext;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.repository.PlayerRepository;
-import ru.acuma.shuffler.service.game.RatingService;
+import ru.acuma.shuffler.service.event.RatingService;
 import ru.acuma.shuffler.service.telegram.GroupService;
 
-import java.util.Comparator;
-import java.util.NoSuchElementException;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,48 +27,52 @@ public class PlayerService {
 
     @Transactional(readOnly = true)
     public TEventPlayer getEventPlayer(final User user, final TEvent event) {
-        var userInfo = userService.getUser(user.getId());
         var player = getOrSignUpPlayer(event.getChatId(), user.getId());
+        var userInfo = userService.getUser(user.getId());
         var rating = ratingService.getRating(player, event.getDiscipline());
 
         return playerMapper.toTgEventPlayer(player, userInfo, rating);
     }
 
-    public void leaveLobby(TEvent event, Long userId) {
+    public void leaveLobby(User user, TEvent event) {
         switch (event.getEventStatus()) {
-            case CREATED, READY -> event.leaveLobby(userId);
-            default -> event.getPlayers().get(userId).getEventContext().setLeft(true);
+            case CREATED, READY -> event.leaveLobby(user.getId());
+            default -> event.getPlayers().get(user.getId()).getEventContext().setLeft(true);
         }
     }
 
-    public void joinLobby(TEvent event, User user) {
+    @Transactional(readOnly = true)
+    public void join(User user, TEvent event) {
         var members = event.getPlayers();
-        var player = members.get(user.getId());
-        int maxGames = members.values()
+        int maxGames = getMaxGames(members);
+        Optional.ofNullable(members.get(user.getId()))
+            .ifPresentOrElse(
+                player -> event.joinPlayer(player)
+                    .getEventContext()
+                    .setGameCount(maxGames),
+                () -> event.joinPlayer(getEventPlayer(user, event))
+                    .getEventContext()
+                    .setGameCount(maxGames)
+            );
+    }
+
+    private Integer getMaxGames(final Map<Long, TEventPlayer> members) {
+        return members.values()
             .stream()
             .map(TEventPlayer::getEventContext)
-            .max(Comparator.comparingInt(TEventContext::getGameCount))
-            .orElseThrow(() -> new NoSuchElementException("Group member not found"))
-            .getGameCount();
-        if (player != null) {
-            event.getPlayers().get(user.getId()).getEventContext().setLeft(false);
-            player.getEventContext().setGameCount(maxGames);
-        } else {
-//            authenticate(event, user);
-            player = members.get(user.getId());
-            player.getEventContext().setGameCount(maxGames);
-        }
+            .mapToInt(TEventContext::getGameCount)
+            .max()
+            .orElse(0);
     }
 
-    private Player getOrSignUpPlayer(Long groupId, Long userId) {
+    private Player getOrSignUpPlayer(final Long groupId, final Long userId) {
         return playerRepository.findById(userId)
             .orElseGet(() -> signUpPlayer(groupId, userId));
     }
 
-    private Player signUpPlayer(final Long chatId, Long userId) {
+    private Player signUpPlayer(final Long chatId, final Long userId) {
         var userInfo = userService.getUser(userId);
         var group = groupService.getGroupInfo(chatId);
-
         var player = Player.builder()
             .chat(group)
             .user(userInfo)
@@ -76,7 +80,7 @@ public class PlayerService {
 
         playerRepository.save(player);
         ratingService.defaultRating(player);
+
         return player;
     }
-
 }

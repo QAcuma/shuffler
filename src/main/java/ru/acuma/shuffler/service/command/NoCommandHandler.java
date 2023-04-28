@@ -8,7 +8,7 @@ import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shuffler.controller.NoCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -24,7 +24,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING;
 @RequiredArgsConstructor
 public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
-    private final EventStateService eventStateService;
+    private final EventStatusService eventStateService;
     private final EventFacade eventFacade;
 
     @Override

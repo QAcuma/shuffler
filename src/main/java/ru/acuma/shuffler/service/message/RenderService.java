@@ -13,6 +13,7 @@ import ru.acuma.shuffler.service.telegram.ExecuteService;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -24,14 +25,16 @@ public class RenderService {
     private final ExecuteService executeService;
 
     public void render(final Long chatId) {
-        final var event = eventContext.findEvent(chatId);
-        event.getMessages().entrySet()
-            .stream()
-            .filter(entry -> entry.getValue().requireChanges())
-            .forEach(entry -> {
-                executeMethod(event, entry.getKey(), entry.getValue());
-                executeAfterActions(chatId, entry.getValue());
-            });
+        Optional.ofNullable(eventContext.findEvent(chatId))
+            .ifPresent(event -> Stream.concat(
+                    event.getMessages().entrySet().stream(),
+                    event.getDeletes().entrySet().stream())
+                .filter(entry -> entry.getValue().requireChanges())
+                .forEach(entry -> {
+                    executeMethod(event, entry.getKey(), entry.getValue());
+                    executeAfterActions(chatId, entry.getValue());
+                })
+            );
     }
 
     private void executeMethod(
@@ -44,6 +47,7 @@ public class RenderService {
             case REGULAR -> executeService.execute(method, render);
             case DELAYED -> executeService.executeLater(method, render);
             case SCHEDULED -> executeTimer(method, event, render);
+            case IDLE -> render.success();
         }
     }
 

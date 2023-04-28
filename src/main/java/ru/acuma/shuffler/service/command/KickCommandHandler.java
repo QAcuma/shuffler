@@ -9,7 +9,7 @@ import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shuffler.controller.KickCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.api.KickService;
 
@@ -24,7 +24,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class KickCommandHandler extends BaseCommandHandler<KickCommand> {
 
-    private final EventStateService eventStateService;
+    private final EventStatusService eventStateService;
     private final KickService kickService;
     private final GameStateService gameStateService;
 
@@ -43,7 +43,7 @@ public class KickCommandHandler extends BaseCommandHandler<KickCommand> {
     private BiConsumer<Message, TEvent> getPlayingWaitingWaitingWIthGameConsumer() {
         return (message, event) -> {
             eventStateService.evicting(event);
-            gameStateService.cancelCheck(event.getLatestGame());
+            gameStateService.cancelCheck(event.getCurrentGame());
             var method = kickService.prepareKickMessage(event);
 
 //            executeService.execute(method);

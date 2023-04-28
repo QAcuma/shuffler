@@ -8,7 +8,7 @@ import ru.acuma.shuffler.controller.CancelCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.message.MessageService;
 import ru.acuma.shuffler.service.message.Render;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
@@ -23,7 +23,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.READY;
 @RequiredArgsConstructor
 public class CancelCommandHandler extends BaseCommandHandler<CancelCommand> {
 
-    private final EventStateService eventStateService;
+    private final EventStatusService eventStateService;
 
     private final ExecuteService executeService;
     private final MessageService messageService;
@@ -45,7 +45,7 @@ public class CancelCommandHandler extends BaseCommandHandler<CancelCommand> {
             var lobbyMessage = messageService.buildLobbyMessageUpdate(event);
 //            executeService.execute(lobbyMessage);
             var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING_TIMED);
-            event.action(MessageType.CHECKING, Render.forSend().withSchedule());
+            event.render(MessageType.CHECKING, Render.forSend().withSchedule());
 //            executeService.executeRepeat(checkingMessage, event);
         };
     }

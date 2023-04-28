@@ -57,6 +57,15 @@ public class TGame implements Serializable {
         return getRedTeam().containsCalibrating() || getBlueTeam().containsCalibrating();
     }
 
+    public boolean isActive() {
+        return List.of(
+            GameState.ACTIVE,
+            GameState.CANCEL_CHECKING,
+            GameState.BLUE_CHECKING,
+            GameState.RED_CHECKING
+        ).contains(getState());
+    }
+
     public String getGameResult() {
         if (getWinnerTeam() != null) {
             return index +

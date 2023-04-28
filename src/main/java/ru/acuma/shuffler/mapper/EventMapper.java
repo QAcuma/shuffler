@@ -23,7 +23,7 @@ public abstract class EventMapper {
             .build();
     }
 
-    @Mapping(source = "getEventStatus", target = "state")
+    @Mapping(source = "eventStatus", target = "state")
     @Mapping(target = "season", ignore = true)
     @Mapping(target = "chat", ignore = true)
     public abstract Event toEvent(TEvent source);

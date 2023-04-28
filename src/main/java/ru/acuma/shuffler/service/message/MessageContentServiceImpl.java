@@ -86,7 +86,7 @@ public class MessageContentServiceImpl implements MessageContentService {
 
     @SuppressWarnings("StringBufferReplaceableByString")
     private String buildGameContent(TEvent event) {
-        var game = event.getLatestGame();
+        var game = event.getCurrentGame();
         var builder = new StringBuilder();
 
         return builder.append(EventConstant.GAME_MESSAGE.getText())
@@ -125,7 +125,7 @@ public class MessageContentServiceImpl implements MessageContentService {
             case CANCEL_CHECKING -> EventConstant.CANCEL_CHECKING_MESSAGE.getText();
             case BEGIN_CHECKING -> EventConstant.BEGIN_CHECKING_MESSAGE.getText();
             case FINISH_CHECKING -> EventConstant.FINISH_CHECKING_MESSAGE.getText();
-            case GAME_CHECKING -> buildGameCheckingText(event.getLatestGame());
+            case GAME_CHECKING -> buildGameCheckingText(event.getCurrentGame());
             default -> EventConstant.BLANK_MESSAGE.getText();
         };
     }

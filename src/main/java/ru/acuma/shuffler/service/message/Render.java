@@ -10,6 +10,7 @@ import ru.acuma.shuffler.model.constant.messages.MessageAfterAction;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -23,6 +24,7 @@ public class Render implements Serializable {
     private Long delay;
     private MessageAction messageAction;
     private Set<MessageAfterAction> afterActions;
+    private List<Integer> deletes;
 
     public boolean requireChanges() {
         return ExecuteStrategy.IDLE != executeStrategy;

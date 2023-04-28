@@ -3,6 +3,8 @@ package ru.acuma.shuffler.model.entity;
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -40,7 +42,9 @@ import java.time.OffsetDateTime;
 public class UserInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = 5629283560177967494L;
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "telegram_id", nullable = false)
     private Long id;
 

@@ -2,16 +2,17 @@ package ru.acuma.shuffler.service.command;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.JoinCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.event.EventStatusService;
+import ru.acuma.shuffler.service.message.Render;
 import ru.acuma.shuffler.service.user.PlayerService;
 
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.Optional;
 
 import static ru.acuma.shuffler.model.constant.EventStatus.CREATED;
 import static ru.acuma.shuffler.model.constant.EventStatus.PLAYING;
@@ -23,7 +24,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
 
-    private final EventStateService eventStateService;
+    private final EventStatusService eventStateService;
     private final GameFacade gameFacade;
     private final PlayerService playerService;
 
@@ -33,42 +34,34 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
     }
 
     @Override
-    protected void invokeEventCommand(final User user, final TEvent event, final String[] args) {
+    protected void invokeEventCommand(final User user, final TEvent event, final String... args) {
+        playerService.join(user, event);
+
         switch (event.getEventStatus()) {
-            case CREATED, READY -> joinPlayer(user, event);
-            case PLAYING -> {}
-            case WAITING -> {}
-            case WAITING_WITH_GAME -> {}
+            case CREATED, READY -> onPreparing(event);
+            case PLAYING, WAITING_WITH_GAME -> onPlaying(event);
+            case WAITING -> onWaiting(event);
         }
     }
 
-    private void joinPlayer(final User user, final TEvent event) {
-        playerService.getEventPlayer(user, event);
+    private void onPreparing(final TEvent event) {
         eventStateService.prepare(event);
-//      executeService.execute(messageService.buildMessageUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY));
+
+        event.render(MessageType.LOBBY, Render.forUpdate(event.getLobbyMessageId()));
     }
 
-    private BiConsumer<Message, TEvent> getPlayingConsumer(final User user, final TEvent event) {
-        playerService.joinLobby(event, message.getFrom());
-//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
+    private void onPlaying(final TEvent event) {
+        eventStateService.resume(event);
+
+        event.render(MessageType.LOBBY, Render.forUpdate(event.getLobbyMessageId()));
     }
 
-    private BiConsumer<Message, TEvent> getWaitingConsumer() {
-        return (message, event) -> {
-            playerService.joinLobby(event, message.getFrom());
-            eventStateService.active(event);
-//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
-            gameFacade.nextGameActions(event, message);
-        };
-
-    }
-
-    private BiConsumer<Message, TEvent> getWaitingWithGameConsumer() {
-        return (message, event) -> {
-            playerService.joinLobby(event, message.getFrom());
-            eventStateService.active(event);
-
-//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
-        };
+    private void onWaiting(final TEvent event) {
+        Optional.of(eventStateService.resume(event))
+            .filter(PLAYING::equals)
+            .ifPresent(status -> {
+                gameFacade.nextGameActions(event);
+                event.render(MessageType.GAME, Render.forSend());
+            });
     }
 }

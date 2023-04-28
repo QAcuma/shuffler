@@ -14,7 +14,9 @@ public enum ExceptionCause {
     CHAT_IS_PRIVATE("Chat is private"),
     MESSAGE_MISSING("Callback message is null"),
     MESSAGE_FROM_MISSING("Callback message from is null"),
-    RATING_NOT_FOUND("Rating with id %s not found in database");
+    RATING_NOT_FOUND("Rating with id %s not found in database"),
+    GAME_NOT_FOUND("Game nor found for chat %s"),
+    EVENT_CONTEXT_IS_EMPTY("Event context game count is not present");
 
     private final String description;
 

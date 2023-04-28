@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.game;
+package ru.acuma.shuffler.service.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

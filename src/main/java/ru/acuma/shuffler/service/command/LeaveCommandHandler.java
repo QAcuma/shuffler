@@ -8,7 +8,7 @@ import ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent;
 import ru.acuma.shuffler.controller.LeaveCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.user.PlayerService;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
 
-    private final EventStateService eventStateService;
+    private final EventStatusService eventStateService;
     private final PlayerService playerService;
 
     @Override
@@ -37,20 +37,20 @@ public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
     @CheckPlayerInEvent
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
     }
-
-    private BiConsumer<Message, TEvent> getCreatedReadyConsumer() {
-        return (message, event) -> {
-            playerService.leaveLobby(event, message.getFrom().getId());
-            eventStateService.prepare(event);
-//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
-        };
-    }
-
-    private BiConsumer<Message, TEvent> getPlayingWaitingWaitingWIthGameConsumer() {
-        return (message, event) -> {
-            playerService.leaveLobby(event, message.getFrom().getId());
-            eventStateService.active(event);
-//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
-        };
-    }
+//
+//    private BiConsumer<Message, TEvent> getCreatedReadyConsumer() {
+//        return (message, event) -> {
+//            playerService.leaveLobby(event, message.getFrom().getId());
+//            eventStateService.prepare(event);
+////            executeService.execute(messageService.buildLobbyMessageUpdate(event));
+//        };
+//    }
+//
+//    private BiConsumer<Message, TEvent> getPlayingWaitingWaitingWIthGameConsumer() {
+//        return (message, event) -> {
+//            playerService.leaveLobby(event, message.getFrom().getId());
+//            eventStateService.resume(event);
+////            executeService.execute(messageService.buildLobbyMessageUpdate(event));
+//        };
+//    }
 }

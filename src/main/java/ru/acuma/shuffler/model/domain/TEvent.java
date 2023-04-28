@@ -4,7 +4,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import ru.acuma.shuffler.exception.DataException;
+import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.EventStatus;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.service.message.Render;
@@ -18,6 +21,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
@@ -38,10 +42,21 @@ public class TEvent implements Serializable {
     private final Map<Long, TEventPlayer> players = new HashMap<>();
     private final List<TGame> tgGames = new ArrayList<>();
     private final EnumMap<MessageType, Render> messages = new EnumMap<>(MessageType.class);
+    private final EnumMap<MessageType, Render> deletes = new EnumMap<>(MessageType.class);
     private final transient List<Future<?>> futures = new ArrayList<>();
 
-    public TEvent action(final MessageType messageType, final Render render) {
+    public TEvent render(final MessageType messageType, final Render render) {
         messages.put(messageType, render);
+
+        return this;
+    }
+
+    public TEvent delete(final MessageType messageType) {
+        Optional.ofNullable(messages.remove(messageType))
+                .ifPresent(message -> deletes.put(
+                    messageType,
+                    Render.forDelete(message.getMessageId())
+                ));
 
         return this;
     }
@@ -55,8 +70,8 @@ public class TEvent implements Serializable {
         return null == player || player.getEventContext().getLeft();
     }
 
-    public void joinPlayer(TEventPlayer eventPlayer) {
-        this.players.put(eventPlayer.getUserInfo().getTelegramId(), eventPlayer);
+    public TEventPlayer joinPlayer(TEventPlayer eventPlayer) {
+        return this.players.put(eventPlayer.getUserInfo().getTelegramId(), eventPlayer);
     }
 
     public void leaveLobby(Long telegramId) {
@@ -69,10 +84,14 @@ public class TEvent implements Serializable {
             .toList();
     }
 
-    public TGame getLatestGame() {
+    public boolean enoughPlayers() {
+        return getActivePlayers().size() >= Constants.GAME_PLAYERS_COUNT;
+    }
+
+    public TGame getCurrentGame() {
         return tgGames.stream()
             .max(Comparator.comparingInt(TGame::getIndex))
-            .orElse(null);
+            .orElseThrow(() -> new DataException(ExceptionCause.GAME_NOT_FOUND, chatId));
     }
 
     public void applyGame(TGame tgGame) {
@@ -88,7 +107,7 @@ public class TEvent implements Serializable {
     }
 
     public GameState getLatestGameState() {
-        var latestGame = getLatestGame();
+        var latestGame = getCurrentGame();
         return latestGame != null
                ? latestGame.getState()
                : GameState.NOT_EXIST;

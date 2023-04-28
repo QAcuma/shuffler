@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.BlueCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.api.GameStateService;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 public class BlueCommandHandler extends BaseCommandHandler<BlueCommand> {
 
     private final GameStateService gameStateService;
-    private final EventStateService eventStateService;
+    private final EventStatusService eventStateService;
     private final EventFacade eventFacade;
 
     @Override
@@ -38,7 +38,7 @@ public class BlueCommandHandler extends BaseCommandHandler<BlueCommand> {
     private BiConsumer<Message, TEvent> getPlayingWaitingWithGameConsumer() {
         return (message, event) -> {
             eventStateService.gameCheck(event);
-            gameStateService.blueCheck(event.getLatestGame());
+            gameStateService.blueCheck(event.getCurrentGame());
             eventFacade.checkingStateActions(event);
         };
     }

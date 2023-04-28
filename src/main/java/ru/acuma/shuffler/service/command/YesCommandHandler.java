@@ -9,7 +9,7 @@ import ru.acuma.shuffler.controller.YesCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.api.GameService;
-import ru.acuma.shuffler.service.game.ChampionshipService;
+import ru.acuma.shuffler.service.event.ChampionshipService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -40,35 +40,35 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
 
     }
-
-    private BiConsumer<Message, TEvent> getCancelCheckingConsumer() {
-        return (message, event) -> championshipService.finishEvent(event);
-    }
-
-    private BiConsumer<Message, TEvent> getBeginCheckingConsumer() {
-        return (message, event) -> {
-            gameFacade.nextGameActions(event, message);
-//            executeService.execute(messageService.buildLobbyMessageUpdate(event));
-        };
-    }
-
-    private BiConsumer<Message, TEvent> getCheckingConsumer() {
-        return (message, event) -> {
-            gameService.handleGameCheck(event);
-            gameFacade.finishGameActions(event, message);
-            gameFacade.nextGameActions(event, message);
-        };
-    }
-
-    private BiConsumer<Message, TEvent> getWaitingWithGameConsumer() {
-        return (message, event) -> {
-            gameService.handleGameCheck(event);
-            gameFacade.finishGameActions(event, message);
-        };
-    }
-
-    private BiConsumer<Message, TEvent> getFinishCheckingConsumer() {
-        return (message, event) -> eventFacade.finishEventActions(event, message);
-    }
+//
+//    private BiConsumer<Message, TEvent> getCancelCheckingConsumer() {
+//        return (message, event) -> championshipService.finishEvent(event);
+//    }
+//
+//    private BiConsumer<Message, TEvent> getBeginCheckingConsumer() {
+//        return (message, event) -> {
+//            gameFacade.nextGameActions(event, message);
+////            executeService.execute(messageService.buildLobbyMessageUpdate(event));
+//        };
+//    }
+//
+//    private BiConsumer<Message, TEvent> getCheckingConsumer() {
+//        return (message, event) -> {
+//            gameService.handleGameCheck(event);
+//            gameFacade.finishGameActions(event, message);
+//            gameFacade.nextGameActions(event, message);
+//        };
+//    }
+//
+//    private BiConsumer<Message, TEvent> getWaitingWithGameConsumer() {
+//        return (message, event) -> {
+//            gameService.handleGameCheck(event);
+//            gameFacade.finishGameActions(event, message);
+//        };
+//    }
+//
+//    private BiConsumer<Message, TEvent> getFinishCheckingConsumer() {
+//        return (message, event) -> eventFacade.finishEventActions(event, message);
+//    }
 
 }

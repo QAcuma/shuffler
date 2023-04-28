@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.game;
+package ru.acuma.shuffler.service.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -69,7 +69,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void handleGameCheck(TEvent event) {
-        var game = event.getLatestGame();
+        var game = event.getCurrentGame();
         switch (game.getState()) {
             case RED_CHECKING -> {
                 game.getRedTeam().setIsWinner(true);
@@ -98,7 +98,7 @@ public class GameServiceImpl implements GameService {
     }
 
     private void saveGameData(TEvent event) {
-        var game = event.getLatestGame();
+        var game = event.getCurrentGame();
         switch (game.getState()) {
             case CANCELLED:
                 break;

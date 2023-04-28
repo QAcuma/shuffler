@@ -58,6 +58,8 @@ public class CallbackService {
             eventContext.snapshotEvent(chatId);
             try {
                 commandRegistry.resolve(command).execute(message, args);
+                eventContext.saveResults(chatId);
+                eventContext.snapshotEvent(chatId);
             } catch (Exception e) {
                 log.error(e.getMessage());
                 eventContext.rollbackEvent(chatId);

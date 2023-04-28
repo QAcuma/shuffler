@@ -9,7 +9,7 @@ import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shuffler.controller.ResetCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.api.EventStateService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.message.MaintenanceService;
 
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.EVICTING;
 @RequiredArgsConstructor
 public class ResetCommandHandler extends BaseCommandHandler<ResetCommand> {
 
-    private final EventStateService eventStateService;
+    private final EventStatusService eventStateService;
     private final MaintenanceService maintenanceService;
 
     @Override

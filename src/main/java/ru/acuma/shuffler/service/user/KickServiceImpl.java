@@ -34,7 +34,7 @@ public class KickServiceImpl implements KickService {
 
     @Override
     public SendMessage prepareKickMessage(TEvent event) {
-        List<TEventPlayer> players = event.getLatestGame().getPlayers()
+        List<TEventPlayer> players = event.getCurrentGame().getPlayers()
                 .stream()
                 .filter(Predicate.not(TEventPlayer::isLeft))
                 .toList();

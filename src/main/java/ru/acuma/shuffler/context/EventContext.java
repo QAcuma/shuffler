@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.repository.EventRepository;
@@ -57,5 +58,13 @@ public class EventContext {
     public void rollbackEvent(final Long chatId) {
         Optional.ofNullable(eventSnapshotStorage.get(chatId))
             .ifPresent(event -> eventStorage.put(chatId, event));
+    }
+
+    @Transactional
+    public void saveResults(Long chatId) {
+        var event = findEvent(chatId);
+        var eventEntity = eventMapper.toEvent(event);
+
+        eventRepository.save(eventEntity);
     }
 }

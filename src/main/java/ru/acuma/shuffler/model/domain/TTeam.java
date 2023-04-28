@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -14,7 +15,7 @@ import static ru.acuma.shuffler.util.Symbols.MEDAL_EMOJI;
 @SuperBuilder
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TTeam {
+public class TTeam implements Serializable {
 
     private Long id;
     private TEventPlayer player1;
@@ -28,11 +29,6 @@ public class TTeam {
         this.player2 = player2;
         this.isWinner = false;
         this.score = (player1.getRatingContext().getScore() + player2.getRatingContext().getScore()) / 2;
-    }
-
-    @Override
-    public String toString() {
-        return player1.getName() + " %s " + player2.getName();
     }
 
     public void applyRating() {
@@ -55,5 +51,10 @@ public class TTeam {
 
     public List<TEventPlayer> getPlayers() {
         return List.of(player1, player2);
+    }
+
+    @Override
+    public String toString() {
+        return player1.getName() + " %s " + player2.getName();
     }
 }
