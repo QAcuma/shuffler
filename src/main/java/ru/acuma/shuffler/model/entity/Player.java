@@ -49,7 +49,7 @@ public class Player implements Serializable {
     private static final long serialVersionUID = -3901172463786438576L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

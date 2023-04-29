@@ -13,7 +13,7 @@ import static ru.acuma.shuffler.util.Symbols.PONG_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.SAND_CLOCK_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.WARNING_EMOJI;
-import static ru.acuma.shuffler.util.Symbols.WINTER_EMOJI;
+import static ru.acuma.shuffler.util.Symbols.SUMMER_EMOJI;
 
 @Getter
 @AllArgsConstructor
@@ -21,11 +21,11 @@ public enum EventConstant implements EventConstantButton {
 
     BLANK_MESSAGE(""),
     SPACE_MESSAGE("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"),
-    LOBBY_MESSAGE_KICKER(WINTER_EMOJI + " Готовимся к игре! " + WINTER_EMOJI + "\n"),
+    LOBBY_MESSAGE_KICKER(SUMMER_EMOJI + " Готовимся к игре! " + SUMMER_EMOJI + "\n"),
     LOBBY_MESSAGE_PING_PONG(PONG_EMOJI + " Время бить мяч! " + PONG_EMOJI + "\n"),
     LOBBY_MESSAGE_DEFAULT(DICE_EMOJI + " Время распределяться по командам! " + DICE_EMOJI + "\n"),
-    LOBBY_PLAYING_MESSAGE(WINTER_EMOJI + " Чемпионат в разгаре! " + WINTER_EMOJI + "\n"),
-    LOBBY_FINISHED_MESSAGE(WINTER_EMOJI + " Чемпионат завершен! " + WINTER_EMOJI + "\n"),
+    LOBBY_PLAYING_MESSAGE(SUMMER_EMOJI + " Чемпионат в разгаре! " + SUMMER_EMOJI + "\n"),
+    LOBBY_FINISHED_MESSAGE(SUMMER_EMOJI + " Чемпионат завершен! " + SUMMER_EMOJI + "\n"),
     LOBBY_WAITING_MESSAGE(SAND_CLOCK_EMOJI + " Ждём игроков! " + SAND_CLOCK_EMOJI + "\n"),
     WINNERS_MESSAGE("\n" + GOBLET_EMOJI + " Победители: \n"),
     GAME_MESSAGE("<b>Игра №</b>"),

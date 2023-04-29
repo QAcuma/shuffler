@@ -25,7 +25,7 @@ public class GroupFilter implements AuthFilter {
         filter(message);
     }
 
-    private void filter(Message message) {
+    private void filter(final Message message) {
         boolean signedIn = groupService.signIn(message.getChat());
 
         if (!signedIn) {

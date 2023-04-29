@@ -33,7 +33,6 @@ public class EvictCommandHandler extends BaseCommandHandler<EvictCommand> {
     }
 
     @Override
-    @SweepMessage
     @CheckPlayerInEvent
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
     }

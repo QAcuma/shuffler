@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Chat;
-import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.GroupMapper;
 import ru.acuma.shuffler.model.entity.GroupInfo;
-import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.repository.GroupInfoRepository;
+
+import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -16,9 +16,10 @@ public class GroupService {
     private final GroupMapper groupMapper;
     private final GroupInfoRepository groupInfoRepository;
 
+    @Transactional
     public GroupInfo getGroupInfo(final Long chatId) {
         return groupInfoRepository.findById(chatId)
-            .orElseThrow(() -> new DataException(ExceptionCause.GROUP_NOT_FOUND, chatId));
+            .orElseGet(() -> signUpGroup(chatId));
     }
 
     @Transactional
@@ -30,5 +31,15 @@ public class GroupService {
         groupMapper.mergeGroupInfo(groupInfo, chat);
 
         return groupInfo.getIsActive();
+    }
+
+    private GroupInfo signUpGroup(final Long chatId) {
+        var groupInfo = GroupInfo.builder()
+            .id(chatId)
+            .isActive(Boolean.TRUE)
+            .build();
+
+        return groupInfoRepository.save(groupInfo);
+
     }
 }

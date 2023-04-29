@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.message.Render;
+import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.service.message.MaintenanceService;
 import ru.acuma.shuffler.service.message.MessageService;
 

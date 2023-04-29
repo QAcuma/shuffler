@@ -1,8 +1,7 @@
-package ru.acuma.shuffler.service.message;
+package ru.acuma.shuffler.model.domain;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.constant.messages.ExecuteStrategy;
 import ru.acuma.shuffler.model.constant.messages.MessageAction;
@@ -10,11 +9,9 @@ import ru.acuma.shuffler.model.constant.messages.MessageAfterAction;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @Builder
 @Accessors(chain = true)
 public class Render implements Serializable {
@@ -24,7 +21,6 @@ public class Render implements Serializable {
     private Long delay;
     private MessageAction messageAction;
     private Set<MessageAfterAction> afterActions;
-    private List<Integer> deletes;
 
     public boolean requireChanges() {
         return ExecuteStrategy.IDLE != executeStrategy;

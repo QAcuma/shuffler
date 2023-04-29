@@ -26,9 +26,9 @@ public class EventRouter {
 
     public void route(final Update update) {
         if (update.getCallbackQuery() != null) {
-            callbackService.accept(update.getCallbackQuery());
+            callbackService.filter(update.getCallbackQuery());
         } else if (Objects.nonNull(update.getMessage()) && isCommandMessage(update.getMessage())) {
-            callbackService.accept(update.getMessage());
+            callbackService.filter(update.getMessage());
         }
     }
 

@@ -6,9 +6,9 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.JoinCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
+import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
-import ru.acuma.shuffler.service.message.Render;
 import ru.acuma.shuffler.service.user.PlayerService;
 
 import java.util.List;
@@ -41,6 +41,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
             case CREATED, READY -> onPreparing(event);
             case PLAYING, WAITING_WITH_GAME -> onPlaying(event);
             case WAITING -> onWaiting(event);
+            default -> idle();
         }
     }
 

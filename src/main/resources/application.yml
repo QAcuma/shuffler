@@ -6,6 +6,8 @@ spring:
   main:
     web-application-type: none
   jpa:
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
         default_schema: public

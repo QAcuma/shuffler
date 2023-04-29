@@ -14,9 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.UserProfilePhotos;
 import ru.acuma.shuffler.config.properties.BotProperties;
-import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.UserMapper;
-import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.entity.UserInfo;
 import ru.acuma.shuffler.repository.UserInfoRepository;
 
@@ -42,10 +40,21 @@ public class UserService {
     @Value("${application.media.location}")
     private String mediaLocation;
 
-    @Transactional(readOnly = true)
-    public UserInfo getUser(Long telegramId) {
+    @Transactional
+    public UserInfo getUser(final Long telegramId) {
         return userRepository.findById(telegramId)
-            .orElseThrow(() -> new DataException(ExceptionCause.USER_NOT_FOUND, telegramId));
+            .orElseGet(() -> signUpUser(telegramId));
+    }
+
+    private UserInfo signUpUser(final Long telegramId) {
+        var userInfo = UserInfo.builder()
+            .id(telegramId)
+            .userName("")
+            .isActive(Boolean.TRUE)
+            .createdAt(OffsetDateTime.now())
+            .build();
+
+        return userRepository.save(userInfo);
     }
 
     @Transactional(readOnly = true)

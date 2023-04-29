@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@EqualsAndHashCode
+@Builder
 @Accessors(chain = true)
 public class TEventPlayer implements Serializable {
     private Long id;

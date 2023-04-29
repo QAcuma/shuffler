@@ -26,7 +26,7 @@ class EventMapperTest extends AbstractUnitTest {
                 .startedAt(LocalDateTime.now())
                 .build();
 
-        var event = eventMapper.toEvent(tgEvent);
+        var event = eventMapper.toEvent(tgEvent, 1L);
         assertAll(
                 () -> assertEquals(event.getDiscipline(), tgEvent.getDiscipline().name()),
                 () -> assertEquals(event.getStartedAt().toLocalDateTime(), tgEvent.getStartedAt()),

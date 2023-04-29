@@ -1,6 +1,8 @@
 package ru.acuma.shuffler.model.domain;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
@@ -15,8 +17,7 @@ import java.util.List;
 import static ru.acuma.shuffler.model.constant.GameState.FINISHED;
 
 @Data
-@SuperBuilder
-@NoArgsConstructor
+@Builder
 @Accessors(chain = true)
 public class TGame implements Serializable {
 

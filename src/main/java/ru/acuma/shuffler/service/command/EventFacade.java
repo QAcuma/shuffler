@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.api.GameStateService;
 import ru.acuma.shuffler.service.event.ChampionshipService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.message.MaintenanceService;
 
 import java.util.function.BiConsumer;
@@ -23,9 +23,9 @@ public class EventFacade {
     private final GameService gameService;
 
     public void finishEventActions(TEvent event, Message message) {
-        maintenanceService.sweepMessage(message.getChatId(), event.getCurrentGame().getMessageId());
-        gameService.handleGameCheck(event);
-        championshipService.finishChampionship(event);
+//        maintenanceService.sweepMessage(message.getChatId(), event.getCurrentGame().getMessageId());
+//        gameService.handleGameCheck(event);
+//        championshipService.finishChampionship(event);
 //        var lobbyUpdate = messageService.buildLobbyMessageUpdate(event);
 //        executeService.execute(lobbyUpdate);
     }

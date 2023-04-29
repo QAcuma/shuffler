@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 )
 public abstract class EventMapper {
 
-    public TEvent initEvent(final Long chatId, Discipline discipline) {
+    public TEvent initEvent(final Long chatId, final Discipline discipline) {
         return TEvent.builder()
             .eventStatus(EventStatus.CREATED)
             .chatId(chatId)
@@ -23,9 +23,12 @@ public abstract class EventMapper {
             .build();
     }
 
-    @Mapping(source = "eventStatus", target = "state")
+    @Mapping(target = "chatId", source = "event.chatId")
+    @Mapping(target = "seasonId", source = "seasonId")
+    @Mapping(target = "state", source = "event.eventStatus")
+    @Mapping(target = "discipline", source = "event.discipline")
     @Mapping(target = "season", ignore = true)
     @Mapping(target = "chat", ignore = true)
-    public abstract Event toEvent(TEvent source);
+    public abstract Event toEvent(TEvent event, Long seasonId);
 
 }

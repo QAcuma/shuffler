@@ -23,7 +23,7 @@ public abstract class BaseCommandHandler<T extends BaseBotCommand> {
     public final void handle(final Message message, final String... args) {
         Optional.ofNullable(eventContext.findEvent(message.getChatId()))
             .ifPresentOrElse(
-                event -> Optional.of(event)
+                event -> Optional.of(event.snapshotHash())
                     .filter(this::isCommandSupported)
                     .ifPresent(status -> invokeEventCommand(message.getFrom(), event, args)),
                 () -> invokeChatCommand(message, args)
@@ -36,6 +36,10 @@ public abstract class BaseCommandHandler<T extends BaseBotCommand> {
 
     protected void invokeChatCommand(final Message message, final String[] args) {
         log.debug("Chat command not supported");
+    }
+
+    protected final void idle() {
+        log.debug("Idle command %s".formatted(getClass().getSimpleName()));
     }
 
     protected abstract void invokeEventCommand(final User user, final TEvent event, String[] args);

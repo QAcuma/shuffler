@@ -1,7 +1,6 @@
 package ru.acuma.shuffler.model.entity;
 
 import jakarta.persistence.Cacheable;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -52,7 +51,7 @@ public class Event implements Serializable {
     private static final long serialVersionUID = 7613068652225005723L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -62,16 +61,22 @@ public class Event implements Serializable {
     @JoinColumn(name = "chat_id", nullable = false, updatable = false, insertable = false)
     private GroupInfo chat;
 
-    @NotNull
+    @Column(name = "chat_id")
+    private Long chatId;
+
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "season_id", nullable = false, updatable = false, insertable = false)
     private Season season;
 
+    @NotNull
+    @Column(name = "season_id")
+    private Long seasonId;
+
     @Size(max = 32)
     @NotNull
-    @Column(name = "state", nullable = false, length = 32)
     @Enumerated(EnumType.STRING)
+    @Column(name = "state", nullable = false, length = 32)
     private EventStatus state;
 
     @Size(max = 32)

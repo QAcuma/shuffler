@@ -1,21 +1,18 @@
 package ru.acuma.shuffler.model.domain;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
 @Data
-@SuperBuilder
+@Builder
 @Accessors(chain = true)
 public final class TGameBet implements Serializable {
 
     private final Integer caseWin;
     private final Integer caseLose;
 
-    public TGameBet(int caseWin, int caseLose) {
-        this.caseWin = caseWin;
-        this.caseLose = caseLose;
-    }
 }

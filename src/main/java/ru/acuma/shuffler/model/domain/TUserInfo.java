@@ -1,9 +1,9 @@
 package ru.acuma.shuffler.model.domain;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 import ru.acuma.shuffler.model.entity.UserInfo;
 
 import java.io.Serializable;
@@ -13,8 +13,7 @@ import java.time.OffsetDateTime;
  * A DTO for the {@link UserInfo} entity
  */
 @Data
-@SuperBuilder
-@NoArgsConstructor
+@Builder
 @Accessors(chain = true)
 public class TUserInfo implements Serializable {
     private Long telegramId;

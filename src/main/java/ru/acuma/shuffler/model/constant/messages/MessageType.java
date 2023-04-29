@@ -12,5 +12,6 @@ public enum MessageType {
     CHECKING,
     CHECKING_TIMED,
     CANCELLED,
-    STAT
+    STAT,
+    OTHER
 }

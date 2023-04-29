@@ -83,7 +83,7 @@ public class MessageService {
             case CHECKING -> keyboardService.getCheckingKeyboard(event);
             case GAME -> keyboardService.getGamingKeyboard(event);
             case CHECKING_TIMED -> keyboardService.getTimedKeyboard(Constants.DISABLED_BUTTON_TIMEOUT);
-            case CANCELLED, STAT -> keyboardService.getEmptyKeyboard();
+            case CANCELLED, STAT, OTHER -> keyboardService.getEmptyKeyboard();
         };
     }
 }

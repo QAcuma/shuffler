@@ -1,9 +1,10 @@
 package ru.acuma.shuffler.model.domain;
 
+import jakarta.annotation.PostConstruct;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,8 +13,7 @@ import java.util.function.Predicate;
 import static ru.acuma.shuffler.util.Symbols.MEDAL_EMOJI;
 
 @Data
-@SuperBuilder
-@NoArgsConstructor
+@Builder
 @Accessors(chain = true)
 public class TTeam implements Serializable {
 
@@ -24,11 +24,10 @@ public class TTeam implements Serializable {
     private Boolean isWinner;
     private TGameBet bet;
 
-    public TTeam(TEventPlayer player1, TEventPlayer player2) {
-        this.player1 = player1;
-        this.player2 = player2;
-        this.isWinner = false;
-        this.score = (player1.getRatingContext().getScore() + player2.getRatingContext().getScore()) / 2;
+    @PostConstruct
+    public void init() {
+        isWinner = false;
+        score = (player1.getRatingContext().getScore() + player2.getRatingContext().getScore()) / 2;
     }
 
     public void applyRating() {

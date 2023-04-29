@@ -45,7 +45,7 @@ public class Season implements Serializable {
     private static final long serialVersionUID = 1332356971301754202L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

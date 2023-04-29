@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.api.GameService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.message.MaintenanceService;
 
 @Service
@@ -19,11 +19,10 @@ public class GameFacade {
     private final MaintenanceService maintenanceService;
     private final GameService gameService;
 
-    @SneakyThrows
     @Transactional
     public void finishGameActions(TEvent event, Message message) {
-        maintenanceService.sweepMessage(message.getChatId(), event.getCurrentGame().getMessageId());
-        eventStateService.resume(event);
+//        maintenanceService.sweepMessage(message.getChatId(), event.getCurrentGame().getMessageId());
+//        eventStateService.resume(event);
 //        var lobbyMessage = messageService.buildLobbyMessageUpdate(event);
 //        executeService.execute(lobbyMessage);
     }

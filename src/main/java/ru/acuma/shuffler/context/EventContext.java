@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.repository.EventRepository;
+import ru.acuma.shuffler.service.season.SeasonService;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ public class EventContext {
 
     private final EventMapper eventMapper;
     private final EventRepository eventRepository;
+    private final SeasonService seasonService;
     private final Map<Long, TEvent> eventStorage = new ConcurrentHashMap<>();
     @Qualifier("redisEventSnapshotStorage")
     private final Map<Long, TEvent> eventSnapshotStorage;
@@ -33,7 +35,8 @@ public class EventContext {
     }
 
     public TEvent findEvent(final Long chatId) {
-        return eventStorage.get(chatId);
+        return Optional.ofNullable(eventStorage.get(chatId))
+            .orElseGet(() -> rollbackEvent(chatId));
     }
 
     public boolean isActive(final Long chatId) {
@@ -55,16 +58,19 @@ public class EventContext {
     /**
      * Откатывает версию эвента до последней успешной для чата
      */
-    public void rollbackEvent(final Long chatId) {
-        Optional.ofNullable(eventSnapshotStorage.get(chatId))
-            .ifPresent(event -> eventStorage.put(chatId, event));
+    public TEvent rollbackEvent(final Long chatId) {
+        return Optional.ofNullable(eventSnapshotStorage.get(chatId))
+            .map(event -> eventStorage.put(chatId, event))
+            .orElse(null);
     }
 
     @Transactional
     public void saveResults(Long chatId) {
-        var event = findEvent(chatId);
-        var eventEntity = eventMapper.toEvent(event);
-
-        eventRepository.save(eventEntity);
+        Optional.ofNullable(findEvent(chatId))
+            .ifPresent(event -> {
+                    var eventEntity = eventMapper.toEvent(event, seasonService.getCurrentSeason().getId());
+                    eventRepository.save(eventEntity);
+                }
+            );
     }
 }

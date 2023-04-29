@@ -3,8 +3,6 @@ package ru.acuma.shuffler.model.entity;
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -43,7 +41,6 @@ public class GroupInfo implements Serializable {
     private static final long serialVersionUID = -4010360346875311472L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "chat_id", nullable = false)
     private Long id;
 

@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.acuma.shuffler.bot.ShufflerBot;
-import ru.acuma.shuffler.service.message.Render;
+import ru.acuma.shuffler.model.domain.Render;
 
 import java.io.Serializable;
 import java.util.Optional;

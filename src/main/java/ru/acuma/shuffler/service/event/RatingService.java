@@ -46,8 +46,8 @@ public class RatingService {
         var redLoseCase = -1 * blueWinCase;
         var blueLoseCase = -1 * limitedRedWinCase;
 
-        var redBet = new TGameBet(limitedRedWinCase, redLoseCase);
-        var blueBet = new TGameBet(blueWinCase, blueLoseCase);
+        var redBet = TGameBet.builder().caseWin(limitedRedWinCase).caseLose(redLoseCase).build();
+        var blueBet = TGameBet.builder().caseWin(blueWinCase).caseLose(blueLoseCase).build();
 
         redTeam.setBet(redBet);
         blueTeam.setBet(blueBet);
@@ -71,7 +71,7 @@ public class RatingService {
     }
 
     public Rating getRating(Player player, Discipline discipline) {
-        return ratingRepository.findBySeasonAndPlayerIdAndDiscipline(
+        return ratingRepository.findBySeasonAndPlayerAndDiscipline(
                 seasonService.getCurrentSeason(),
                 player,
                 discipline)

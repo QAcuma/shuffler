@@ -25,7 +25,7 @@ public class PlayerService {
     private final PlayerMapper playerMapper;
     private final PlayerRepository playerRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public TEventPlayer getEventPlayer(final User user, final TEvent event) {
         var player = getOrSignUpPlayer(event.getChatId(), user.getId());
         var userInfo = userService.getUser(user.getId());
@@ -41,28 +41,16 @@ public class PlayerService {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void join(User user, TEvent event) {
-        var members = event.getPlayers();
-        int maxGames = getMaxGames(members);
-        Optional.ofNullable(members.get(user.getId()))
+        Optional.ofNullable(event.getPlayers().get(user.getId()))
             .ifPresentOrElse(
-                player -> event.joinPlayer(player)
-                    .getEventContext()
-                    .setGameCount(maxGames),
-                () -> event.joinPlayer(getEventPlayer(user, event))
-                    .getEventContext()
-                    .setGameCount(maxGames)
+                event::joinPlayer,
+                () -> {
+                    var eventPlayer = getEventPlayer(user, event);
+                    event.joinPlayer(eventPlayer);
+                }
             );
-    }
-
-    private Integer getMaxGames(final Map<Long, TEventPlayer> members) {
-        return members.values()
-            .stream()
-            .map(TEventPlayer::getEventContext)
-            .mapToInt(TEventContext::getGameCount)
-            .max()
-            .orElse(0);
     }
 
     private Player getOrSignUpPlayer(final Long groupId, final Long userId) {
