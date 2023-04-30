@@ -9,7 +9,7 @@ import ru.acuma.shuffler.service.message.EventStatusButton;
 @AllArgsConstructor
 public enum Checking2 implements EventStatusButton {
 
-    BUTTON_YES(Command.WAIT.getCommand(), "2️⃣", 1),
+    BUTTON_YES(Command.IDLE.getCommand(), "2️⃣", 1),
     BUTTON_NO(Command.NO.getCommand(), "Нет", 1);
 
     public final String action;

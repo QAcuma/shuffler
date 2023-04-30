@@ -60,7 +60,7 @@ public class MessageService {
     }
 
     public EditMessageText buildLobbyMessageUpdate(TEvent event) {
-        return buildMessageUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY);
+        return buildMessageUpdate(event, event.getMessageId(MessageType.LOBBY), MessageType.LOBBY);
     }
 
     public PinChatMessage pinMessage(final Long chatId, final Integer messageId) {
@@ -70,9 +70,9 @@ public class MessageService {
             .build();
     }
 
-    public DeleteMessage deleteMessage(TEvent event, Integer messageId) {
+    public DeleteMessage deleteMessage(final Long chatId, final Integer messageId) {
         return DeleteMessage.builder()
-            .chatId(String.valueOf(event.getChatId()))
+            .chatId(String.valueOf(chatId))
             .messageId(messageId)
             .build();
     }

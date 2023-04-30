@@ -30,6 +30,11 @@ public class MaintenanceService {
             .ifPresent(event -> event.delete(message.getMessageId()));
     }
 
+    public void sweepMessage(final Long chatId, final Integer messageId) {
+        Optional.ofNullable(eventContext.findEvent(chatId))
+            .ifPresent(event -> event.delete(messageId));
+    }
+
     public void flushEvent(TEvent event) {
         eventContext.flushEvent(event.getChatId());
     }

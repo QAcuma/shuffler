@@ -9,16 +9,16 @@ import ru.acuma.shuffler.model.constant.Command;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WaitCommand implements BaseBotCommand {
+public class IdleCommand implements BaseBotCommand {
 
     @Override
     public void execute(final Message message, final String... args) {
-        log.debug("Нужно подождать таймер");
+        log.debug("Idle command");
     }
 
     @Override
     public String getCommandIdentifier() {
-        return Command.WAIT.getCommand();
+        return Command.IDLE.getCommand();
     }
 }
 

@@ -8,8 +8,8 @@ import ru.acuma.shuffler.controller.FinishCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.api.GameStateService;
+import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.message.MessageService;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
 
@@ -34,7 +34,6 @@ public class FinishCommandHandler extends BaseCommandHandler<FinishCommand> {
         return List.of(PLAYING, WAITING_WITH_GAME, FINISH_CHECKING);
     }
 
-
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
 
@@ -45,7 +44,7 @@ public class FinishCommandHandler extends BaseCommandHandler<FinishCommand> {
             eventStateService.finishCheck(event);
             gameStateService.cancelCheck(event.getCurrentGame());
 
-            var lobbyMessage = messageService.buildReplyMarkupUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY);
+            var lobbyMessage = messageService.buildReplyMarkupUpdate(event, event.getMessageId(MessageType.LOBBY), MessageType.LOBBY);
             var gameMessage = messageService.buildReplyMarkupUpdate(event, event.getCurrentGame().getMessageId(), MessageType.GAME);
             var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING_TIMED);
 

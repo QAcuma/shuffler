@@ -2,6 +2,7 @@ package ru.acuma.shuffler.service.telegram;
 
 import org.springframework.stereotype.Component;
 import ru.acuma.shuffler.controller.BaseBotCommand;
+import ru.acuma.shuffler.model.constant.Command;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,9 @@ public class TelegramCommandRegistry {
     public BaseBotCommand resolve(final String commandIdentifier) {
         var pureCommand = commandIdentifier.replace("/", "");
 
-        return commandRegistry.get(pureCommand);
+        return commandRegistry.getOrDefault(
+            pureCommand,
+            commandRegistry.get(Command.IDLE.getCommand())
+        );
     }
 }

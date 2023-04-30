@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.constant.Constants;
-import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
@@ -26,45 +25,49 @@ public class RenderService {
     private final KeyboardService keyboardService;
     private final ExecuteService executeService;
 
-    public void render(final Long chatId) {
+    public void delete(final Long chatId) {
         Optional.ofNullable(eventContext.findEvent(chatId))
             .filter(event -> !Objects.equals(event.getHash(), event.hashCode()))
             .ifPresent(event -> Stream.concat(
-                    event.getMessages().entrySet().stream(),
-                    event.getDeletes().entrySet().stream())
-                .filter(entry -> entry.getValue().requireChanges())
-                .forEach(entry -> {
-                    executeMethod(event, entry.getKey(), entry.getValue());
-                    executeAfterActions(chatId, entry.getValue());
-                    event.getDeletes().remove(entry.getKey());
+                    event.getMessages().stream(),
+                    event.getDeletes().stream())
+                .filter(Render::requireChanges)
+                .forEach(render -> {
+                    executeMethod(event, render);
+                    executeAfterActions(chatId, render);
                 })
             );
     }
 
+    public void delete(final Long chatId, final Render render) {
+        var method = messageService.deleteMessage(chatId, render.getMessageId());
+        executeService.execute(method, render);
+    }
+
     private void executeMethod(
         final TEvent event,
-        final MessageType messageType,
         final Render render
     ) {
-        var method = resolveApiMethod(messageType, render, event);
+        var method = resolveApiMethod(render, event);
         switch (render.getExecuteStrategy()) {
             case REGULAR -> executeService.execute(method, render);
             case DELAYED -> executeService.executeLater(method, render);
-            case SCHEDULED -> executeTimer(method, event, render);
+            case SCHEDULED -> executeTimedMarkup(method, event, render);
             case IDLE -> render.success();
         }
     }
 
     private BotApiMethod<?> resolveApiMethod(
-        final MessageType messageType,
         final Render render,
         final TEvent event
     ) {
+        var messageType = render.getMessageType();
+
         return switch (render.getMessageAction()) {
             case SEND -> messageService.buildMessage(event, messageType);
             case UPDATE -> messageService.buildMessageUpdate(event, render.getMessageId(), messageType);
             case UPDATE_MARKUP -> messageService.buildReplyMarkupUpdate(event, render.getMessageId(), messageType);
-            case DELETE -> messageService.deleteMessage(event, render.getMessageId());
+            case DELETE -> messageService.deleteMessage(event.getChatId(), render.getMessageId());
         };
     }
 
@@ -79,12 +82,12 @@ public class RenderService {
         );
     }
 
-    public <T extends Serializable, M extends BotApiMethod<T>> void executeTimer(
+    public <T extends Serializable, M extends BotApiMethod<T>> void executeTimedMarkup(
         final M method,
         final TEvent event,
         final Render render
     ) {
-        var message = Optional.of(executeService.execute(method, Render.forSend()))
+        var message = Optional.of(executeService.execute(method, Render.forSend(render.getMessageType())))
             .filter(Message.class::isInstance)
             .map(Message.class::cast)
             .orElseThrow();

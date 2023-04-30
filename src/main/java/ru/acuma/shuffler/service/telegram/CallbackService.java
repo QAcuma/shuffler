@@ -70,7 +70,7 @@ public class CallbackService {
                 e.printStackTrace();
                 eventContext.rollbackEvent(chatId);
             } finally {
-                renderService.render(chatId);
+                renderService.delete(chatId);
                 chatIdLocks.remove(chatId);
             }
         }

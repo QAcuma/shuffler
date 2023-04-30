@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.constant.messages.ExecuteStrategy;
 import ru.acuma.shuffler.model.constant.messages.MessageAction;
 import ru.acuma.shuffler.model.constant.messages.MessageAfterAction;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Set;
 public class Render implements Serializable {
 
     private Integer messageId;
+    private MessageType messageType;
     private ExecuteStrategy executeStrategy;
     private Long delay;
     private MessageAction messageAction;
@@ -26,26 +28,29 @@ public class Render implements Serializable {
         return ExecuteStrategy.IDLE != executeStrategy;
     }
 
-    public static Render forSend() {
+    public static Render forSend(final MessageType messageType) {
         return Render.builder()
+            .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.SEND)
             .afterActions(new HashSet<>())
             .build();
     }
 
-    public static Render forUpdate(final Integer messageId) {
+    public static Render forUpdate(final MessageType messageType, final Integer messageId) {
         return Render.builder()
             .messageId(messageId)
+            .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.UPDATE)
             .afterActions(new HashSet<>())
             .build();
     }
 
-    public static Render forMarkup(final Integer messageId) {
+    public static Render forMarkup(final MessageType messageType, final Integer messageId) {
         return Render.builder()
             .messageId(messageId)
+            .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.UPDATE_MARKUP)
             .afterActions(new HashSet<>())

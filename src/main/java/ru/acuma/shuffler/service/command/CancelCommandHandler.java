@@ -10,7 +10,6 @@ import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.message.MessageService;
-import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public class CancelCommandHandler extends BaseCommandHandler<CancelCommand> {
         return List.of(CREATED, READY);
     }
 
-
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
 
@@ -45,7 +43,7 @@ public class CancelCommandHandler extends BaseCommandHandler<CancelCommand> {
             var lobbyMessage = messageService.buildLobbyMessageUpdate(event);
 //            executeService.execute(lobbyMessage);
             var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING_TIMED);
-            event.render(MessageType.CHECKING, Render.forSend().withSchedule());
+//            event.render(MessageType.CHECKING, Render.forSend().withSchedule());
 //            executeService.executeRepeat(checkingMessage, event);
         };
     }

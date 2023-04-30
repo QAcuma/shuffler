@@ -48,13 +48,13 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
     private void onPreparing(final TEvent event) {
         eventStateService.prepare(event);
 
-        event.render(MessageType.LOBBY, Render.forUpdate(event.getLobbyMessageId()));
+        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 
     private void onPlaying(final TEvent event) {
         eventStateService.resume(event);
 
-        event.render(MessageType.LOBBY, Render.forUpdate(event.getLobbyMessageId()));
+        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 
     private void onWaiting(final TEvent event) {
@@ -62,7 +62,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
             .filter(PLAYING::equals)
             .ifPresent(status -> {
                 gameFacade.nextGameActions(event);
-                event.render(MessageType.GAME, Render.forSend());
+                event.render(Render.forSend(MessageType.GAME));
             });
     }
 }

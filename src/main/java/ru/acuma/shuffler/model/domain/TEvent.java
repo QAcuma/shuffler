@@ -18,11 +18,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
@@ -43,9 +42,9 @@ public class TEvent implements Serializable {
     private Discipline discipline;
     private final List<TGame> tgGames = new ArrayList<>();
     private final Map<Long, TEventPlayer> players = new HashMap<>();
-    private final EnumMap<MessageType, Render> deletes = new EnumMap<>(MessageType.class);
+    private final List<Render> deletes = new ArrayList<>();
     @EqualsAndHashCode.Exclude
-    private final EnumMap<MessageType, Render> messages = new EnumMap<>(MessageType.class);
+    private final List<Render> messages = new ArrayList<>();
     @EqualsAndHashCode.Exclude
     private final transient List<Future<?>> futures = new ArrayList<>();
     @EqualsAndHashCode.Exclude
@@ -57,30 +56,25 @@ public class TEvent implements Serializable {
         return this;
     }
 
-    public TEvent render(final MessageType messageType, final Render render) {
-        messages.put(messageType, render);
-
-        return this;
-    }
-
-    public TEvent delete(final MessageType messageType) {
-        Optional.ofNullable(messages.remove(messageType))
-            .ifPresent(message -> deletes.put(
-                messageType,
-                Render.forDelete(message.getMessageId())
-            ));
+    public TEvent render(final Render render) {
+        messages.add(render);
 
         return this;
     }
 
     public TEvent delete(final Integer messageId) {
-        deletes.put(MessageType.OTHER, Render.forDelete(messageId));
+        deletes.add(Render.forDelete(messageId));
 
         return this;
     }
 
-    public Integer getLobbyMessageId() {
-        return messages.get(MessageType.LOBBY).getMessageId();
+    public Integer getMessageId(final MessageType messageType) {
+        return messages.stream()
+            .filter(message -> Objects.equals(messageType, message.getMessageType()))
+            .filter(message -> Objects.nonNull(message.getMessageId()))
+            .findFirst()
+            .map(Render::getMessageId)
+            .orElseThrow(() -> new DataException(ExceptionCause.MESSAGE_NOT_FOUND, messageType));
     }
 
     public boolean playerNotParticipate(Long telegramId) {

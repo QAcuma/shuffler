@@ -13,7 +13,7 @@ public enum Command {
     KICK("kick"),
     EVICT("evict"),
     CANCEL("cancel"),
-    WAIT("wait"),
+    IDLE("idle"),
     YES("yes"),
     NO("no"),
     BEGIN("begin"),
