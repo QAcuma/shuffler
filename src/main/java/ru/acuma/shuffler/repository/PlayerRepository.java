@@ -7,6 +7,7 @@ import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shufflerlib.model.Discipline;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
@@ -15,4 +16,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
         join GroupInfo
         """)
     List<Player> findAllActiveBySeasonIdAndChatIdAndDiscipline(Long seasonId, Long chatId, Discipline discipline);
+
+    Optional<Player> findByidAndChatId(Long id, Long chatId);
 }

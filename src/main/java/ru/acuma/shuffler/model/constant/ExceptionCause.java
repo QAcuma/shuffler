@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum ExceptionCause {
 
     USER_NOT_FOUND("User with id %s not found in database"),
+    PLAYER_NOT_FOUND("Player with userId %s, chatId %s not found in database"),
     USER_IS_NOT_ACTIVE("User with id %s not active"),
     GROUP_NOT_FOUND("Group with id %s not found in database"),
     GROUP_IS_NOT_ACTIVE("Group with id %s not active"),

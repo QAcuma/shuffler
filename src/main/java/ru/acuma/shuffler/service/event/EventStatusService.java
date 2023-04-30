@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 public class EventStatusService {
 
     public EventStatus prepare(final TEvent event) {
-        if (event.enoughPlayers()) {
+        if (event.isPlayersEnough()) {
             return ready(event);
         }
         return created(event);
     }
 
     public EventStatus resume(final TEvent event) {
-        if (event.enoughPlayers()) {
+        if (event.isPlayersEnough()) {
             return playing(event);
         }
         if (event.getCurrentGame().isActive()) {

@@ -98,7 +98,7 @@ public class TEvent implements Serializable {
             .orElse(0);
     }
 
-    public void leaveLobby(Long telegramId) {
+    public void leaveLobby(final Long telegramId) {
         this.players.remove(telegramId);
     }
 
@@ -108,7 +108,7 @@ public class TEvent implements Serializable {
             .toList();
     }
 
-    public boolean enoughPlayers() {
+    public boolean isPlayersEnough() {
         return getActivePlayers().size() >= Constants.GAME_PLAYERS_COUNT;
     }
 

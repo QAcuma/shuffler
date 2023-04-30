@@ -8,8 +8,8 @@ import ru.acuma.shuffler.controller.EventCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageAfterAction;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.util.ArgumentUtil;
 import ru.acuma.shufflerlib.model.Discipline;
 
@@ -34,7 +34,7 @@ public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
     @Override
     protected void invokeChatCommand(final Message message, final String... args) {
         var discipline = ArgumentUtil.extractParam(DISCIPLINE_PARAM, args);
-        beginEvent(message.getChatId(), Discipline.valueOf(discipline));
+        beginEvent(message.getChatId(), Discipline.getByWebName(discipline));
     }
 
     private void beginEvent(final Long chatId, final Discipline discipline) {

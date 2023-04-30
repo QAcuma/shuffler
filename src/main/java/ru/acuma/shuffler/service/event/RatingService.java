@@ -62,15 +62,15 @@ public class RatingService {
         saveResults(event);
     }
 
-    public void defaultRating(Player player) {
+    public void defaultRating(final Player player) {
         Arrays.stream(Discipline.values()).forEach(discipline -> defaultRating(player, discipline));
     }
 
-    public Rating defaultRating(Player player, Discipline discipline) {
+    public Rating defaultRating(final Player player, final Discipline discipline) {
         return newDefaultRating(player, discipline);
     }
 
-    public Rating getRating(Player player, Discipline discipline) {
+    public Rating getRating(final Player player, final Discipline discipline) {
         return ratingRepository.findBySeasonAndPlayerAndDiscipline(
                 seasonService.getCurrentSeason(),
                 player,
@@ -78,7 +78,7 @@ public class RatingService {
             .orElse(defaultRating(player, discipline));
     }
 
-    public void saveResults(TEvent event) {
+    public void saveResults(final TEvent event) {
         TGame game = event.getCurrentGame();
         event.getCurrentGame().getPlayers()
             .stream()
@@ -86,7 +86,7 @@ public class RatingService {
             .forEach(player -> saveHistory(player, game, event.getDiscipline()));
     }
 
-    private int winCase(TTeam team1, TTeam team2) {
+    private int winCase(final TTeam team1, final TTeam team2) {
         var diff = team1.getScore() - team2.getScore();
         var limitedDiff = Math.min(diff, Constants.RATING_REFERENCE);
         var change = diff >= 0
@@ -105,10 +105,7 @@ public class RatingService {
             return getBasePool(isCalibrating) - 1;
         }
 
-        return Math.max(
-            Math.abs(Math.round(value)),
-            1
-        );
+        return Math.max(Math.abs(Math.round(value)), 1);
     }
 
     private int getBasePool(boolean isCalibrating) {

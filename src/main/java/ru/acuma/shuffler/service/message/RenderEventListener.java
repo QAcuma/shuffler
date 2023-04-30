@@ -11,8 +11,8 @@ public class RenderEventListener {
 
     private final RenderService renderService;
 
-    @EventListener
-    public void onRenderDeleteEvent(final RenderEvent renderEvent) {
+    @EventListener(condition = "#renderEvent.render.messageAction == T(ru.acuma.shuffler.model.constant.messages.MessageAction).DELETE")
+    public void onRenderDelete(final RenderEvent renderEvent) {
         renderService.delete(renderEvent.getChatId(), renderEvent.getRender());
     }
 }
