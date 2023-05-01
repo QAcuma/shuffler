@@ -27,7 +27,6 @@ repositories {
 }
 
 dependencies {
-    implementation("ru.acuma:shuffler-lib:3.0.4")
     implementation(libs.spring.starter)
     implementation(libs.spring.web)
     implementation(libs.spring.aop)

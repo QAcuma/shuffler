@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.constant.Constants;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
 
@@ -31,7 +31,7 @@ public class RenderService {
             .ifPresent(event -> Stream.concat(
                     event.getMessages().stream(),
                     event.getDeletes().stream())
-                .filter(Render::requireChanges)
+                .filter(TRender::requireChanges)
                 .forEach(render -> {
                     executeMethod(event, render);
                     executeAfterActions(chatId, render);
@@ -39,14 +39,14 @@ public class RenderService {
             );
     }
 
-    public void delete(final Long chatId, final Render render) {
+    public void delete(final Long chatId, final TRender render) {
         var method = messageService.deleteMessage(chatId, render.getMessageId());
         executeService.execute(method, render);
     }
 
     private void executeMethod(
         final TEvent event,
-        final Render render
+        final TRender render
     ) {
         var method = resolveApiMethod(render, event);
         switch (render.getExecuteStrategy()) {
@@ -58,7 +58,7 @@ public class RenderService {
     }
 
     private BotApiMethod<?> resolveApiMethod(
-        final Render render,
+        final TRender render,
         final TEvent event
     ) {
         var messageType = render.getMessageType();
@@ -71,7 +71,7 @@ public class RenderService {
         };
     }
 
-    private void executeAfterActions(final Long chatId, final Render render) {
+    private void executeAfterActions(final Long chatId, final TRender render) {
         render.getAfterActions().forEach(
             afterAction -> {
                 var method = switch (afterAction) {
@@ -85,9 +85,9 @@ public class RenderService {
     public <T extends Serializable, M extends BotApiMethod<T>> void executeTimedMarkup(
         final M method,
         final TEvent event,
-        final Render render
+        final TRender render
     ) {
-        var message = Optional.of(executeService.execute(method, Render.forSend(render.getMessageType())))
+        var message = Optional.of(executeService.execute(method, TRender.forSend(render.getMessageType())))
             .filter(Message.class::isInstance)
             .map(Message.class::cast)
             .orElseThrow();

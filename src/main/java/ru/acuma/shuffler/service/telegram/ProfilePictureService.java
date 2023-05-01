@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.user;
+package ru.acuma.shuffler.service.telegram;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -11,20 +11,15 @@ import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.GetUserProfilePhotos;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.UserProfilePhotos;
 import ru.acuma.shuffler.config.properties.BotProperties;
-import ru.acuma.shuffler.mapper.UserMapper;
 import ru.acuma.shuffler.model.entity.UserInfo;
-import ru.acuma.shuffler.repository.UserInfoRepository;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -32,52 +27,17 @@ import java.util.function.Predicate;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService {
-    private final UserInfoRepository userRepository;
-    private final UserMapper userMapper;
+public class ProfilePictureService {
+
+    private final UserService userService;
     private final BotProperties botProperties;
 
     @Value("${application.media.location}")
     private String mediaLocation;
 
     @Transactional
-    public UserInfo getUser(final Long telegramId) {
-        return userRepository.findById(telegramId)
-            .orElseGet(() -> signUpUser(telegramId));
-    }
-
-    private UserInfo signUpUser(final Long telegramId) {
-        var userInfo = UserInfo.builder()
-            .id(telegramId)
-            .userName("")
-            .isActive(Boolean.TRUE)
-            .createdAt(OffsetDateTime.now())
-            .build();
-
-        return userRepository.save(userInfo);
-    }
-
-    @Transactional(readOnly = true)
-    public List<UserInfo> getActiveUsers() {
-        return userRepository.findAllByIsActiveTrue();
-    }
-
-    @Transactional
-    public void deleteUser(Long telegramId) {
-        getUser(telegramId).setDeletedAt(OffsetDateTime.now());
-    }
-
-    @Transactional
-    public boolean signIn(User user) {
-        var userInfo = getUser(user.getId());
-        userMapper.mergeUserInfo(userInfo, user);
-
-        return userInfo.getIsActive();
-    }
-
-    @Transactional
     public void updateProfilePicture() {
-        getActiveUsers().stream()
+        userService.getActiveUsers().stream()
             .filter(Predicate.not(UserInfo::getIsBot))
             .filter(userInfo -> Objects.isNull(userInfo.getDeletedAt()))
             .map(UserInfo::getId)
@@ -112,7 +72,7 @@ public class UserService {
             var extension = StringUtils.substringAfterLast(photo.getFilePath(), ".");
             var outputFile = new java.io.File(mediaLocation + photo.getFileUniqueId() + "." + extension);
             ImageIO.write(image, extension, outputFile);
-            var user = getUser(telegramId);
+            var user = userService.getUser(telegramId);
             user.setMediaId(outputFile.getName());
         } catch (UnknownHostException e) {
             log.info("Failed to save picture for user {}. Cause: {}", telegramId, e.getMessage());
@@ -132,4 +92,5 @@ public class UserService {
 //        return executeService.executeApi(getFile);
         return null;
     }
+
 }

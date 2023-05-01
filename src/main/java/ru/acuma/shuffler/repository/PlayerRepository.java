@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.acuma.shuffler.model.entity.Player;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.model.constant.Discipline;
 
 import java.util.List;
 import java.util.Optional;

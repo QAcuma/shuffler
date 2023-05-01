@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.exception.DataException;
+import ru.acuma.shuffler.exception.IdleException;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
-import ru.acuma.shuffler.service.telegram.GroupService;
+import ru.acuma.shuffler.service.telegram.ChatService;
 
 @Service
 @RequiredArgsConstructor
 public class GroupFilter implements AuthFilter {
 
-    private final GroupService groupService;
+    private final ChatService chatService;
 
     @Override
     public void accept(final CallbackQuery callbackQuery) {
@@ -26,10 +26,12 @@ public class GroupFilter implements AuthFilter {
     }
 
     private void filter(final Message message) {
-        boolean signedIn = groupService.signIn(message.getChat());
+        var authStatus = chatService.authenticate(message.getChat().getId());
 
-        if (!signedIn) {
-            throw new DataException(ExceptionCause.GROUP_IS_NOT_ACTIVE, message.getChat().getId());
+        switch (authStatus) {
+            case UNREGISTERED -> chatService.signUp(message.getChat());
+            case SUCCESS -> chatService.update(message.getChat());
+            case DENY -> throw new IdleException(ExceptionCause.GROUP_IS_NOT_ACTIVE);
         }
     }
 }

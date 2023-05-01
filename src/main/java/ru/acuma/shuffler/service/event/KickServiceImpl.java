@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.user;
+package ru.acuma.shuffler.service.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

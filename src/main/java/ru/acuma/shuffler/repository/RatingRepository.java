@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.model.entity.Rating;
 import ru.acuma.shuffler.model.entity.Season;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.model.constant.Discipline;
 
 import java.util.Optional;
 

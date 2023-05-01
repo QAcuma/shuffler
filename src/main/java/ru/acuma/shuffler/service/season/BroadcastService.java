@@ -3,13 +3,10 @@ package ru.acuma.shuffler.service.season;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.ParseMode;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.entity.GroupInfo;
 import ru.acuma.shuffler.repository.GroupInfoRepository;
 import ru.acuma.shuffler.repository.PlayerRepository;
-import ru.acuma.shufflerlib.model.Discipline;
-import ru.acuma.shufflerlib.model.web.entity.WebPlayerDetails;
 
 import java.util.Arrays;
 
@@ -50,17 +47,13 @@ public class BroadcastService {
             return;
         }
 
-        var message = SendMessage.builder()
-            .chatId(String.valueOf(groupInfo.getId()))
-            .parseMode(ParseMode.MARKDOWNV2)
-            .text(textBuilderService.buildSeasonReport(null))
-            .build();
+//        var message = SendMessage.builder()
+//            .chatId(String.valueOf(groupInfo.getId()))
+//            .parseMode(ParseMode.MARKDOWNV2)
+//            .text(textBuilderService.buildSeasonReport(null))
+//            .build();
 
 //        executeService.execute(message);
-    }
-
-    private boolean filterNonCalibratedPlayers(WebPlayerDetails player) {
-        return player.getWinCount() + player.getLoseCount() >= requiredGames;
     }
 
 }

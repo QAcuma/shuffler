@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.user;
+package ru.acuma.shuffler.service.telegram;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,6 @@ import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.repository.PlayerRepository;
 import ru.acuma.shuffler.service.event.RatingService;
-import ru.acuma.shuffler.service.telegram.GroupService;
 
 import java.util.Optional;
 
@@ -21,7 +20,7 @@ import java.util.Optional;
 public class PlayerService {
     private final RatingService ratingService;
     private final UserService userService;
-    private final GroupService groupService;
+    private final ChatService chatService;
     private final PlayerMapper playerMapper;
     private final PlayerRepository playerRepository;
 
@@ -63,7 +62,7 @@ public class PlayerService {
 
     private Player signUpPlayer(final Long chatId, final Long userId) {
         var userInfo = userService.getUser(userId);
-        var group = groupService.getGroupInfo(chatId);
+        var group = chatService.getGroupInfo(chatId);
         var player = Player.builder()
             .chat(group)
             .user(userInfo)

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.entity.RatingHistory;
 import ru.acuma.shuffler.repository.RatingHistoryRepository;
 import ru.acuma.shuffler.service.season.SeasonService;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.model.constant.Discipline;
 
 import java.util.List;
 

@@ -11,7 +11,7 @@ import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.exception.GlobalExceptionHandler;
 import ru.acuma.shuffler.service.message.RenderService;
 import ru.acuma.shuffler.service.telegram.filter.AuthFilter;
-import ru.acuma.shuffler.service.telegram.filter.UpdateFilter;
+import ru.acuma.shuffler.service.telegram.filter.UpdateValidator;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class CallbackService {
 
     private static final Map<Long, Object> chatIdLocks = new ConcurrentHashMap<>();
 
-    private final List<UpdateFilter> updateFilters;
+    private final List<UpdateValidator> updateValidators;
     private final List<AuthFilter> authFilters;
     private final TelegramCommandRegistry commandRegistry;
     private final EventContext eventContext;
@@ -33,7 +33,7 @@ public class CallbackService {
 
     public void filter(final CallbackQuery callbackQuery) {
         callbackQuery.getMessage().setFrom(callbackQuery.getFrom());
-        updateFilters.forEach(filter -> filter.accept(callbackQuery));
+        updateValidators.forEach(filter -> filter.accept(callbackQuery));
         authFilters.forEach(filter -> filter.accept(callbackQuery));
         var message = callbackQuery.getMessage();
         var commandText = callbackQuery.getData();
@@ -43,7 +43,7 @@ public class CallbackService {
 
     @SweepMessage
     public void filter(final Message message) {
-        updateFilters.forEach(filter -> filter.accept(message));
+        updateValidators.forEach(filter -> filter.accept(message));
         authFilters.forEach(filter -> filter.accept(message));
         var commandText = message.getText();
 

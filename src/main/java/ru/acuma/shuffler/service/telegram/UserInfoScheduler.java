@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.user;
+package ru.acuma.shuffler.service.telegram;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserInfoScheduler {
 
-    private final UserService userService;
+    private final ProfilePictureService profilePictureService;
 
     //    @Scheduled(initialDelay = 0L, fixedDelay = 30_000L)
     public void syncUserInfo() {
-        userService.updateProfilePicture();
+        profilePictureService.updateProfilePicture();
     }
 
 }

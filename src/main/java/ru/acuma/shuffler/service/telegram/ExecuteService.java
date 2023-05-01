@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.acuma.shuffler.bot.ShufflerBot;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.model.domain.TRender;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -40,7 +40,7 @@ public class ExecuteService {
     }
 
     @SneakyThrows
-    public <T extends Serializable, M extends BotApiMethod<T>> T execute(final M method, final Render render) {
+    public <T extends Serializable, M extends BotApiMethod<T>> T execute(final M method, final TRender render) {
         var result = syncExecutors.submit(() -> doExecute(method)).get();
 
         Optional.ofNullable(result)
@@ -51,7 +51,7 @@ public class ExecuteService {
         return result;
     }
 
-    public <T extends Serializable, M extends BotApiMethod<T>> void executeLater(final M method, final Render render) {
+    public <T extends Serializable, M extends BotApiMethod<T>> void executeLater(final M method, final TRender render) {
         scheduledExecutors.schedule(() -> execute(method, render), render.getDelay(), TimeUnit.SECONDS);
     }
 

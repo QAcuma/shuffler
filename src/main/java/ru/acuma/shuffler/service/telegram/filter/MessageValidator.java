@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.acuma.shuffler.exception.IdleException;
+import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class ChatFilter implements UpdateFilter {
-
-    public static final String PRIVATE_CHAT = "private";
+public class MessageValidator implements UpdateValidator {
 
     @Override
     public void accept(final CallbackQuery callbackQuery) {
@@ -22,10 +22,12 @@ public class ChatFilter implements UpdateFilter {
 
     @Override
     public void accept(final Message message) {
-        var chat = message.getChat();
+        if (Objects.isNull(message) || Objects.isNull(message.getFrom())) {
+            throw new DataException(ExceptionCause.CALLBACK_MESSAGE_MISSING);
+        }
 
-        if (PRIVATE_CHAT.equals(chat.getType())) {
-            throw new IdleException(ExceptionCause.CHAT_IS_PRIVATE);
+        if (Objects.isNull(message.getFrom())) {
+            throw new DataException(ExceptionCause.MESSAGE_FROM_MISSING);
         }
     }
 }

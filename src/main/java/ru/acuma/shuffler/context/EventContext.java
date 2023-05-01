@@ -9,7 +9,7 @@ import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.repository.EventRepository;
 import ru.acuma.shuffler.service.season.SeasonService;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.model.constant.Discipline;
 
 import java.util.Map;
 import java.util.Optional;

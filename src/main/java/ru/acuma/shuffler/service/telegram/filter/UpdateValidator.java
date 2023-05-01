@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.function.Consumer;
 
-public interface UpdateFilter extends Consumer<CallbackQuery> {
+public interface UpdateValidator extends Consumer<CallbackQuery> {
 
     void accept(CallbackQuery callbackQuery);
 

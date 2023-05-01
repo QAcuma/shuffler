@@ -9,8 +9,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
-import ru.acuma.shuffler.model.domain.Render;
-import ru.acuma.shuffler.model.domain.RenderEvent;
+import ru.acuma.shuffler.model.domain.TRender;
+import ru.acuma.shuffler.model.wrapper.RenderEvent;
 import ru.acuma.shuffler.util.AspectUtil;
 
 import java.util.Objects;
@@ -32,7 +32,7 @@ public class SweepMessageAspect {
         }
         var event = RenderEvent.builder()
             .chatId(message.getChatId())
-            .render(Render.forDelete(message.getMessageId()))
+            .render(TRender.forDelete(message.getMessageId()))
             .build();
 
         eventPublisher.publishEvent(event);

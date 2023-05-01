@@ -10,17 +10,26 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public void handle(Exception exception) {
+        if (exception instanceof IdleException idleException) {
+            handle(idleException);
+            return;
+        }
+
+        if (exception instanceof DataException dataException) {
+            handle(dataException);
+            return;
+        }
+
         log.error(exception.getMessage());
         exception.printStackTrace();
     }
 
-    @ExceptionHandler(IdleException.class)
-    public void handle(IdleException exception) {
+    private void handle(IdleException exception) {
         log.debug(exception.getMessage());
     }
 
-    @ExceptionHandler(DataException.class)
-    public void handle(DataException exception) {
-        log.debug(exception.getMessage());
+    private void handle(DataException exception) {
+        log.error(exception.getMessage());
+        exception.printStackTrace();
     }
 }

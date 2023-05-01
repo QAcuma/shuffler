@@ -12,7 +12,7 @@ import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.model.constant.Discipline;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -42,9 +42,9 @@ public class TEvent implements Serializable {
     private Discipline discipline;
     private final List<TGame> tgGames = new ArrayList<>();
     private final Map<Long, TEventPlayer> players = new HashMap<>();
-    private final List<Render> deletes = new ArrayList<>();
+    private final List<TRender> deletes = new ArrayList<>();
     @EqualsAndHashCode.Exclude
-    private final List<Render> messages = new ArrayList<>();
+    private final List<TRender> messages = new ArrayList<>();
     @EqualsAndHashCode.Exclude
     private final transient List<Future<?>> futures = new ArrayList<>();
     @EqualsAndHashCode.Exclude
@@ -56,14 +56,14 @@ public class TEvent implements Serializable {
         return this;
     }
 
-    public TEvent render(final Render render) {
+    public TEvent render(final TRender render) {
         messages.add(render);
 
         return this;
     }
 
     public TEvent delete(final Integer messageId) {
-        deletes.add(Render.forDelete(messageId));
+        deletes.add(TRender.forDelete(messageId));
 
         return this;
     }
@@ -73,7 +73,7 @@ public class TEvent implements Serializable {
             .filter(message -> Objects.equals(messageType, message.getMessageType()))
             .filter(message -> Objects.nonNull(message.getMessageId()))
             .findFirst()
-            .map(Render::getMessageId)
+            .map(TRender::getMessageId)
             .orElseThrow(() -> new DataException(ExceptionCause.MESSAGE_NOT_FOUND, messageType));
     }
 

@@ -17,7 +17,7 @@ import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.repository.RatingHistoryRepository;
 import ru.acuma.shuffler.repository.RatingRepository;
 import ru.acuma.shuffler.service.season.SeasonService;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.model.constant.Discipline;
 
 import javax.management.InstanceNotFoundException;
 import java.util.Arrays;

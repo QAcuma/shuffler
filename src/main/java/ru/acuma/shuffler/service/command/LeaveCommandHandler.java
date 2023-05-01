@@ -6,10 +6,10 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.LeaveCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
-import ru.acuma.shuffler.service.user.PlayerService;
+import ru.acuma.shuffler.service.telegram.PlayerService;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
             case CREATED, READY -> leaveLobby(user, event);
             case PLAYING, WAITING, WAITING_WITH_GAME -> leaveEvent(user, event);
         }
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 
     private void leaveLobby(final User user, final TEvent event) {

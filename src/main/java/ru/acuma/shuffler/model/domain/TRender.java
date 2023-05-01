@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 @Builder
 @Accessors(chain = true)
-public class Render implements Serializable {
+public class TRender implements Serializable {
 
     private Integer messageId;
     private MessageType messageType;
@@ -28,8 +28,8 @@ public class Render implements Serializable {
         return ExecuteStrategy.IDLE != executeStrategy;
     }
 
-    public static Render forSend(final MessageType messageType) {
-        return Render.builder()
+    public static TRender forSend(final MessageType messageType) {
+        return TRender.builder()
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.SEND)
@@ -37,8 +37,8 @@ public class Render implements Serializable {
             .build();
     }
 
-    public static Render forUpdate(final MessageType messageType, final Integer messageId) {
-        return Render.builder()
+    public static TRender forUpdate(final MessageType messageType, final Integer messageId) {
+        return TRender.builder()
             .messageId(messageId)
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
@@ -47,8 +47,8 @@ public class Render implements Serializable {
             .build();
     }
 
-    public static Render forMarkup(final MessageType messageType, final Integer messageId) {
-        return Render.builder()
+    public static TRender forMarkup(final MessageType messageType, final Integer messageId) {
+        return TRender.builder()
             .messageId(messageId)
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
@@ -57,8 +57,8 @@ public class Render implements Serializable {
             .build();
     }
 
-    public static Render forDelete(final Integer messageId) {
-        return Render.builder()
+    public static TRender forDelete(final Integer messageId) {
+        return TRender.builder()
             .messageId(messageId)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.DELETE)
@@ -66,18 +66,18 @@ public class Render implements Serializable {
             .build();
     }
 
-    public Render withAfterAction(final MessageAfterAction afterAction) {
+    public TRender withAfterAction(final MessageAfterAction afterAction) {
         afterActions.add(afterAction);
 
         return this;
     }
 
-    public Render withDelay(final Long delay) {
+    public TRender withDelay(final Long delay) {
         return setDelay(delay)
             .setExecuteStrategy(ExecuteStrategy.DELAYED);
     }
 
-    public Render withSchedule() {
+    public TRender withSchedule() {
         return setExecuteStrategy(ExecuteStrategy.SCHEDULED);
     }
 

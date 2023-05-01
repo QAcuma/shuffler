@@ -3,7 +3,7 @@ package ru.acuma.shuffler.service.message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import ru.acuma.shuffler.model.domain.RenderEvent;
+import ru.acuma.shuffler.model.wrapper.RenderEvent;
 
 @Component
 @RequiredArgsConstructor

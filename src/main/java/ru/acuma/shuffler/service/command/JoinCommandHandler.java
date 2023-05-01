@@ -6,10 +6,10 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.JoinCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
-import ru.acuma.shuffler.service.user.PlayerService;
+import ru.acuma.shuffler.service.telegram.PlayerService;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,13 +48,13 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
     private void onPreparing(final TEvent event) {
         eventStateService.prepare(event);
 
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 
     private void onPlaying(final TEvent event) {
         eventStateService.resume(event);
 
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 
     private void onWaiting(final TEvent event) {
@@ -62,7 +62,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
             .filter(PLAYING::equals)
             .ifPresent(status -> {
                 gameFacade.nextGameActions(event);
-                event.render(Render.forSend(MessageType.GAME));
+                event.render(TRender.forSend(MessageType.GAME));
             });
     }
 }

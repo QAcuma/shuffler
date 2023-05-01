@@ -2,7 +2,8 @@ package ru.acuma.shuffler.util;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
-import ru.acuma.shufflerlib.model.Discipline;
+import ru.acuma.shuffler.exception.DataException;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
 
 import java.util.Arrays;
 
@@ -14,7 +15,7 @@ public final class ArgumentUtil {
             .map(StringUtils::deleteWhitespace)
             .filter(arg -> StringUtils.startsWith(arg, param))
             .findFirst()
-            .orElse(Discipline.KICKER.toString());
+            .map(arg -> StringUtils.substringAfter(arg, "="))
+            .orElseThrow(() -> new DataException(ExceptionCause.CANNOT_EXTRACT_PARAM, param));
     }
-
 }

@@ -11,15 +11,18 @@ import ru.acuma.shuffler.model.entity.GroupInfo;
 @Mapper(
     config = MapperConfiguration.class
 )
-public abstract class GroupMapper {
+public abstract class ChatMapper {
+
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "isActive", constant = "true")
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "title", source = "title")
+    public abstract GroupInfo toGroupInfo(Chat chat);
 
     @Mapping(target = "isActive", ignore = true)
     @Mapping(target = "name", ignore = true)
-    public abstract GroupInfo toGroupInfo(Chat source);
-
+    @Mapping(target = "id", ignore = true)
     @Transactional(propagation = Propagation.MANDATORY)
-    @Mapping(target = "isActive", ignore = true)
-    @Mapping(target = "name", ignore = true)
     public abstract void mergeGroupInfo(@MappingTarget GroupInfo groupInfo, Chat chat);
 
 }

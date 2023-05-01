@@ -5,13 +5,12 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent;
-import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shuffler.controller.EvictCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.event.EventStatusService;
-import ru.acuma.shuffler.service.user.PlayerService;
+import ru.acuma.shuffler.service.telegram.PlayerService;
 
 import java.util.List;
 import java.util.function.BiConsumer;

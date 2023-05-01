@@ -26,7 +26,6 @@ public class TUserInfo implements Serializable {
     private OffsetDateTime lastMessageAt;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
-    private OffsetDateTime deletedAt;
     private Byte[] mediaBlob;
     private String mediaId;
 }

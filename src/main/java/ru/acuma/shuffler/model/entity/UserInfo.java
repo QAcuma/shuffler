@@ -4,6 +4,8 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Builder
 @AllArgsConstructor
@@ -68,8 +71,7 @@ public class UserInfo implements Serializable {
     @Column(name = "last_message_at")
     private OffsetDateTime lastMessageAt;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -84,4 +86,13 @@ public class UserInfo implements Serializable {
     @Column(name = "media_id", length = Integer.MAX_VALUE)
     private String mediaId;
 
+    @PrePersist
+    void prePersist() {
+        this.createdAt = OffsetDateTime.now(ZoneId.of("Europe/Moscow"));
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.updatedAt = OffsetDateTime.now(ZoneId.of("Europe/Moscow"));
+    }
 }
