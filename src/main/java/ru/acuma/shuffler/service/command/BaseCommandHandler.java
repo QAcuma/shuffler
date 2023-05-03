@@ -38,8 +38,8 @@ public abstract class BaseCommandHandler<T extends BaseBotCommand> {
         log.debug("Chat command not supported");
     }
 
-    protected final void idle() {
-        log.debug("Idle command %s".formatted(getClass().getSimpleName()));
+    protected final void idle(final EventStatus eventStatus) {
+        log.debug("Idle command %s in event status %s".formatted(getClass().getSimpleName(), eventStatus));
     }
 
     protected abstract void invokeEventCommand(final User user, final TEvent event, String[] args);

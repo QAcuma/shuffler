@@ -8,20 +8,23 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.model.constant.Constants;
+import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.constant.Discipline;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
@@ -42,9 +45,8 @@ public class TEvent implements Serializable {
     private Discipline discipline;
     private final List<TGame> tgGames = new ArrayList<>();
     private final Map<Long, TEventPlayer> players = new HashMap<>();
-    private final List<TRender> deletes = new ArrayList<>();
     @EqualsAndHashCode.Exclude
-    private final List<TRender> messages = new ArrayList<>();
+    private final Set<TRender> messages = new HashSet<>();
     @EqualsAndHashCode.Exclude
     private final transient List<Future<?>> futures = new ArrayList<>();
     @EqualsAndHashCode.Exclude
@@ -57,15 +59,21 @@ public class TEvent implements Serializable {
     }
 
     public TEvent render(final TRender render) {
-        messages.add(render);
+        Optional.ofNullable(render.getMessageId())
+            .ifPresentOrElse(
+                messageId -> replaceRender(render, messageId),
+                () -> messages.add(render)
+            );
 
         return this;
     }
 
-    public TEvent delete(final Integer messageId) {
-        deletes.add(TRender.forDelete(messageId));
-
-        return this;
+    private void replaceRender(final TRender render, final Integer messageId) {
+        messages.stream()
+            .filter(message -> Objects.equals(messageId, message.getMessageId()))
+            .findFirst()
+            .ifPresent(messages::remove);
+        messages.add(render);
     }
 
     public Integer getMessageId(final MessageType messageType) {
@@ -77,16 +85,14 @@ public class TEvent implements Serializable {
             .orElseThrow(() -> new DataException(ExceptionCause.MESSAGE_NOT_FOUND, messageType));
     }
 
-    public boolean playerNotParticipate(Long telegramId) {
-        var player = players.get(telegramId);
+    public boolean playerNotParticipate(Long userId) {
+        var player = players.get(userId);
         return null == player || player.getEventContext().getLeft();
     }
 
-    public TEvent joinPlayer(TEventPlayer eventPlayer) {
+    public void joinPlayer(TEventPlayer eventPlayer) {
         eventPlayer.getEventContext().setGameCount(getMaxGames());
-        this.players.put(eventPlayer.getUserInfo().getTelegramId(), eventPlayer);
-
-        return this;
+        this.players.put(eventPlayer.getUserInfo().getUserId(), eventPlayer);
     }
 
     private Integer getMaxGames() {
@@ -98,8 +104,14 @@ public class TEvent implements Serializable {
             .orElse(0);
     }
 
-    public void leaveLobby(final Long telegramId) {
-        this.players.remove(telegramId);
+    public void leaveLobby(final Long userId) {
+        players.remove(userId);
+    }
+
+    public void leaveEvent(final Long userId) {
+        players.get(userId)
+            .getEventContext()
+            .setLeft(true);
     }
 
     public List<TEventPlayer> getActivePlayers() {

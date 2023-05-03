@@ -19,7 +19,7 @@ import ru.acuma.shuffler.model.entity.UserInfo;
 )
 public abstract class UserMapper {
 
-    @Mapping(target = "telegramId", source = "id")
+    @Mapping(target = "userId", source = "id")
     public abstract TUserInfo toUserInfo(UserInfo source);
 
     @BeanMapping(ignoreByDefault = true)

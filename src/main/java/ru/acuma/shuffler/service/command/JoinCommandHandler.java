@@ -41,7 +41,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
             case CREATED, READY -> onPreparing(event);
             case PLAYING, WAITING_WITH_GAME -> onPlaying(event);
             case WAITING -> onWaiting(event);
-            default -> idle();
+            default -> idle(event.getEventStatus());
         }
     }
 
@@ -61,7 +61,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
         Optional.of(eventStateService.resume(event))
             .filter(PLAYING::equals)
             .ifPresent(status -> {
-                gameFacade.nextGameActions(event);
+                gameFacade.beginGame(event);
                 event.render(TRender.forSend(MessageType.GAME));
             });
     }

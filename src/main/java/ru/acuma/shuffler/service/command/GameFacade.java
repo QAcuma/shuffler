@@ -28,7 +28,7 @@ public class GameFacade {
     }
 
     @SneakyThrows
-    public void nextGameActions(TEvent event) {
+    public void beginGame(TEvent event) {
         if (event.getEventStatus() == EventStatus.WAITING) {
             return;
         }

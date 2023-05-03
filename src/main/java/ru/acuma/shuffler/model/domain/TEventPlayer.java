@@ -17,13 +17,17 @@ import java.util.Optional;
 public class TEventPlayer implements Serializable {
     private Long id;
     private Long chatId;
+    private TEventPlayer lastGamePlayer;
     private TRating ratingContext;
     private TEventContext eventContext;
-    private TEventPlayer lastGamePlayer;
     private TUserInfo userInfo;
 
     public void applyRating(Integer change) {
         ratingContext.applyScore(change);
+    }
+
+    public Long getUserId() {
+        return userInfo.getUserId();
     }
 
     public Integer getScoreSorting() {

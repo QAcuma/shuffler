@@ -6,15 +6,14 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.constant.Constants;
-import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +27,8 @@ public class RenderService {
     public void delete(final Long chatId) {
         Optional.ofNullable(eventContext.findEvent(chatId))
             .filter(event -> !Objects.equals(event.getHash(), event.hashCode()))
-            .ifPresent(event -> Stream.concat(
-                    event.getMessages().stream(),
-                    event.getDeletes().stream())
+            .ifPresent(event -> event.getMessages()
+                .stream()
                 .filter(TRender::requireChanges)
                 .forEach(render -> {
                     executeMethod(event, render);

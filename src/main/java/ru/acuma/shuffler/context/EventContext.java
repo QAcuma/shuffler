@@ -63,14 +63,4 @@ public class EventContext {
             .map(event -> eventStorage.put(chatId, event))
             .orElse(null);
     }
-
-    @Transactional
-    public void saveResults(Long chatId) {
-        Optional.ofNullable(findEvent(chatId))
-            .ifPresent(event -> {
-                    var eventEntity = eventMapper.toEvent(event, seasonService.getCurrentSeason().getId());
-                    eventRepository.save(eventEntity);
-                }
-            );
-    }
 }

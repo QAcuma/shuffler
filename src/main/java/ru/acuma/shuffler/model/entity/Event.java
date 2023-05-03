@@ -29,7 +29,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -61,9 +61,6 @@ public class Event implements Serializable {
     @JoinColumn(name = "chat_id", nullable = false, updatable = false, insertable = false)
     private GroupInfo chat;
 
-    @Column(name = "chat_id")
-    private Long chatId;
-
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "season_id", nullable = false, updatable = false, insertable = false)
@@ -86,9 +83,9 @@ public class Event implements Serializable {
 
     @NotNull
     @Column(name = "started_at", nullable = false)
-    private OffsetDateTime startedAt;
+    private LocalDateTime startedAt;
 
     @Column(name = "finished_at")
-    private OffsetDateTime finishedAt;
+    private LocalDateTime finishedAt;
 
 }

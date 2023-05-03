@@ -64,7 +64,7 @@ public class ProfilePictureService {
     }
 
     @SneakyThrows
-    private void saveProfilePhotos(Long telegramId, File photo) {
+    private void saveProfilePhotos(Long userId, File photo) {
         try {
             URL url = new URL(photo.getFileUrl(botProperties.getToken()));
             ByteArrayInputStream bis = new ByteArrayInputStream(url.openStream().readAllBytes());
@@ -72,10 +72,10 @@ public class ProfilePictureService {
             var extension = StringUtils.substringAfterLast(photo.getFilePath(), ".");
             var outputFile = new java.io.File(mediaLocation + photo.getFileUniqueId() + "." + extension);
             ImageIO.write(image, extension, outputFile);
-            var user = userService.getUser(telegramId);
+            var user = userService.getUser(userId);
             user.setMediaId(outputFile.getName());
         } catch (UnknownHostException e) {
-            log.info("Failed to save picture for user {}. Cause: {}", telegramId, e.getMessage());
+            log.info("Failed to save picture for user {}. Cause: {}", userId, e.getMessage());
         }
     }
 

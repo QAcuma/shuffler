@@ -39,7 +39,7 @@ public class ChatService implements Authenticatable<Long> {
     @Override
     @Transactional(readOnly = true)
     public AuthStatus authenticate(final Long chatId) {
-        return groupInfoRepository.findById(chatId)
+        return groupInfoRepository.findForAuthById(chatId)
             .map(info -> Boolean.TRUE.equals(info.getIsActive())
                          ? AuthStatus.SUCCESS
                          : AuthStatus.DENY)

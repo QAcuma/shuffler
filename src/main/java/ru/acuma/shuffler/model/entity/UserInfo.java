@@ -18,11 +18,12 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Builder
@@ -69,16 +70,16 @@ public class UserInfo implements Serializable {
     private Boolean isActive;
 
     @Column(name = "last_message_at")
-    private OffsetDateTime lastMessageAt;
+    private LocalDateTime lastMessageAt;
 
     @Column(name = "created_at")
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private OffsetDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
-    private OffsetDateTime deletedAt;
+    private LocalDateTime deletedAt;
 
     @Column(name = "media_blob")
     private byte[] mediaBlob;
@@ -88,11 +89,11 @@ public class UserInfo implements Serializable {
 
     @PrePersist
     void prePersist() {
-        this.createdAt = OffsetDateTime.now(ZoneId.of("Europe/Moscow"));
+        this.createdAt = TimeMachine.localDateTimeNow();
     }
 
     @PreUpdate
     void preUpdate() {
-        this.updatedAt = OffsetDateTime.now(ZoneId.of("Europe/Moscow"));
+        this.updatedAt = TimeMachine.localDateTimeNow();
     }
 }

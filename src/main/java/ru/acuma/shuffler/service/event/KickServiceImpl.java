@@ -24,7 +24,7 @@ public class KickServiceImpl implements KickService {
     public InlineKeyboardMarkup preparePlayersKeyboard(List<TEventPlayer> players) {
         var playersMap = players.stream()
                 .collect(Collectors.toMap(
-                        eventPlayer -> eventPlayer.getUserInfo().getTelegramId(),
+                        eventPlayer -> eventPlayer.getUserInfo().getUserId(),
                         TEventPlayer::getName)
                 );
         var cancelButton = keyboardService.getSingleButton(Command.CANCEL_EVICT, "Не исключать");

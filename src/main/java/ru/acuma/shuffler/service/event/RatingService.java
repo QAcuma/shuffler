@@ -5,19 +5,21 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.acuma.shuffler.mapper.RatingMapper;
+import ru.acuma.shuffler.model.constant.Constants;
+import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.domain.TGameBet;
+import ru.acuma.shuffler.model.domain.TRating;
 import ru.acuma.shuffler.model.domain.TTeam;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.model.entity.Rating;
 import ru.acuma.shuffler.model.entity.RatingHistory;
-import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.repository.RatingHistoryRepository;
 import ru.acuma.shuffler.repository.RatingRepository;
 import ru.acuma.shuffler.service.season.SeasonService;
-import ru.acuma.shuffler.model.constant.Discipline;
 
 import javax.management.InstanceNotFoundException;
 import java.util.Arrays;
@@ -31,6 +33,7 @@ public class RatingService {
     private final SeasonService seasonService;
     private final RatingHistoryRepository ratingHistoryRepository;
     private final RatingRepository ratingRepository;
+    private final RatingMapper ratingMapper;
     private final CalibrationService calibrationService;
 
     @Value("${rating.calibration.game-penalty}")
@@ -70,20 +73,21 @@ public class RatingService {
         return newDefaultRating(player, discipline);
     }
 
-    public Rating getRating(final Player player, final Discipline discipline) {
+    public TRating getRating(final Player player, final Discipline discipline) {
         return ratingRepository.findBySeasonAndPlayerAndDiscipline(
                 seasonService.getCurrentSeason(),
                 player,
                 discipline)
-            .orElse(defaultRating(player, discipline));
+            .map(ratingMapper::toRatingContext)
+            .orElseGet(ratingMapper::defaultRating);
     }
 
     public void saveResults(final TEvent event) {
         TGame game = event.getCurrentGame();
-        event.getCurrentGame().getPlayers()
-            .stream()
-            .peek(player -> saveRating(player, event.getDiscipline()))
-            .forEach(player -> saveHistory(player, game, event.getDiscipline()));
+//        event.getCurrentGame().getPlayers()
+//            .stream()
+//            .peek(player -> saveRating(player, event.getDiscipline()))
+//            .forEach(player -> saveHistory(player, game, event.getDiscipline()));
     }
 
     private int winCase(final TTeam team1, final TTeam team2) {
@@ -135,12 +139,12 @@ public class RatingService {
         List.of(game.getWinnerTeam(), game.getLoserTeam()).forEach(TTeam::applyRating);
     }
 
-    private void saveRating(TEventPlayer player, Discipline discipline) {
-        Rating rating = getRating(null, discipline);
-        rating.setScore(player.getRatingContext().getScore());
-        rating.setIsCalibrated(player.isCalibrated());
-
-        ratingRepository.save(rating);
+    private void saveRating(final TEventPlayer player, final Discipline discipline) {
+//        var rating = getRating(player, discipline);
+//        rating.setScore(player.getRatingContext().getScore());
+//        rating.setCalibrated(player.isCalibrated());
+//
+//        ratingRepository.save(rating);
     }
 
     private void saveHistory(TEventPlayer player, TGame game, Discipline discipline) {
@@ -156,5 +160,4 @@ public class RatingService {
 
         ratingHistoryRepository.save(ratingHistory);
     }
-
 }

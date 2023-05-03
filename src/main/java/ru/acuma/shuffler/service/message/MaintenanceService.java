@@ -25,15 +25,15 @@ public class MaintenanceService {
 //            .forEach(DeleteMessage::getMessageId);
     }
 
-    public void sweepMessage(final Message message) {
-        Optional.ofNullable(eventContext.findEvent(message.getChatId()))
-            .ifPresent(event -> event.delete(message.getMessageId()));
-    }
-
-    public void sweepMessage(final Long chatId, final Integer messageId) {
-        Optional.ofNullable(eventContext.findEvent(chatId))
-            .ifPresent(event -> event.delete(messageId));
-    }
+//    public void sweepMessage(final Message message) {
+//        Optional.ofNullable(eventContext.findEvent(message.getChatId()))
+//            .ifPresent(event -> event.delete(message.getMessageId()));
+//    }
+//
+//    public void sweepMessage(final Long chatId, final Integer messageId) {
+//        Optional.ofNullable(eventContext.findEvent(chatId))
+//            .ifPresent(event -> event.delete(messageId));
+//    }
 
     public void flushEvent(TEvent event) {
         eventContext.flushEvent(event.getChatId());

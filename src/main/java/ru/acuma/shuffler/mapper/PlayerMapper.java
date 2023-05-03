@@ -3,8 +3,11 @@ package ru.acuma.shuffler.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import ru.acuma.shuffler.model.domain.TEventContext;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
+import ru.acuma.shuffler.model.domain.TRating;
+import ru.acuma.shuffler.model.entity.GroupInfo;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.model.entity.Rating;
 import ru.acuma.shuffler.model.entity.UserInfo;
@@ -24,7 +27,7 @@ public abstract class PlayerMapper {
     @Mapping(target = "eventContext", constant = "", qualifiedByName = "defaultEventContext")
     @Mapping(target = "userInfo", source = "userInfo")
     @Mapping(target = "lastGamePlayer", ignore = true)
-    public abstract TEventPlayer toTgEventPlayer(Player player, UserInfo userInfo, Rating rating);
+    public abstract TEventPlayer toTgEventPlayer(Player player, UserInfo userInfo, TRating rating);
 
     @Named("defaultEventContext")
     protected TEventContext defaultEventContext(String empty) {
@@ -34,4 +37,10 @@ public abstract class PlayerMapper {
             .build();
     }
 
+    public Player defaultPlayer(final UserInfo user, final GroupInfo chat) {
+        return Player.builder()
+            .chat(chat)
+            .user(user)
+            .build();
+    }
 }

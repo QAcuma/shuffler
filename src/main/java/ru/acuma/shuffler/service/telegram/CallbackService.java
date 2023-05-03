@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.exception.GlobalExceptionHandler;
+import ru.acuma.shuffler.service.event.DataService;
 import ru.acuma.shuffler.service.message.RenderService;
 import ru.acuma.shuffler.service.telegram.filter.AuthFilter;
 import ru.acuma.shuffler.service.telegram.filter.UpdateValidator;
@@ -28,6 +29,7 @@ public class CallbackService {
     private final List<AuthFilter> authFilters;
     private final TelegramCommandRegistry commandRegistry;
     private final EventContext eventContext;
+    private final DataService dataService;
     private final RenderService renderService;
     private final GlobalExceptionHandler exceptionHandler;
 
@@ -65,7 +67,7 @@ public class CallbackService {
             eventContext.snapshotEvent(chatId);
             try {
                 commandRegistry.resolve(command).execute(message, args);
-                eventContext.saveResults(chatId);
+                dataService.saveData(chatId);
                 eventContext.snapshotEvent(chatId);
             } catch (final Exception exception) {
                 exceptionHandler.handle(exception);

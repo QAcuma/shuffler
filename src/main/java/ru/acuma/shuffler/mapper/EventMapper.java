@@ -23,7 +23,7 @@ public abstract class EventMapper {
             .build();
     }
 
-    @Mapping(target = "chatId", source = "event.chatId")
+//    @Mapping(target = "chatId", source = "event.chatId")
     @Mapping(target = "seasonId", source = "seasonId")
     @Mapping(target = "state", source = "event.eventStatus")
     @Mapping(target = "discipline", source = "event.discipline")

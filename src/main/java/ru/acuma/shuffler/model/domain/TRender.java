@@ -73,8 +73,8 @@ public class TRender implements Serializable {
     }
 
     public TRender withDelay(final Long delay) {
-        return setDelay(delay)
-            .setExecuteStrategy(ExecuteStrategy.DELAYED);
+        return setExecuteStrategy(ExecuteStrategy.DELAYED)
+            .setDelay(delay);
     }
 
     public TRender withSchedule() {
