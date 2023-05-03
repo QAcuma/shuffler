@@ -26,6 +26,10 @@ public class EventStatusService {
         return waiting(event);
     }
 
+    public void beginChecking(final TEvent event) {
+        event.setEventStatus(EventStatus.BEGIN_CHECKING);
+    }
+
     public void cancel(final TEvent event) {
         event.setEventStatus(EventStatus.CANCEL_CHECKING);
     }
@@ -53,10 +57,6 @@ public class EventStatusService {
     public void finished(final TEvent event) {
         event.setEventStatus(EventStatus.FINISHED);
         event.setFinishedAt(LocalDateTime.now());
-    }
-
-    private boolean isPreparingState(EventStatus state) {
-        return state.in(EventStatus.CREATED, EventStatus.READY, EventStatus.CANCEL_CHECKING, EventStatus.BEGIN_CHECKING);
     }
 
     private EventStatus created(final TEvent event) {

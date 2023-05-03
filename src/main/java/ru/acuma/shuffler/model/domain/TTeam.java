@@ -24,12 +24,6 @@ public class TTeam implements Serializable {
     private Boolean isWinner;
     private TGameBet bet;
 
-    @PostConstruct
-    public void init() {
-        isWinner = false;
-        score = (player1.getRatingContext().getScore() + player2.getRatingContext().getScore()) / 2;
-    }
-
     public void applyRating() {
         var change = getIsWinner() ? bet.getCaseWin() : bet.getCaseLose();
         getPlayers().forEach(player -> player.applyRating(change));

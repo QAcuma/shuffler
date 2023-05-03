@@ -19,8 +19,6 @@ import static ru.acuma.shuffler.model.constant.EventStatus.EVICTING;
 @RequiredArgsConstructor
 public class CancelEvictCommandHandler extends BaseCommandHandler<CancelEvictCommand> {
 
-    private final EventFacade eventFacade;
-
     @Override
     protected List<EventStatus> getSupportedStatuses() {
         return List.of(EVICTING);
@@ -31,9 +29,5 @@ public class CancelEvictCommandHandler extends BaseCommandHandler<CancelEvictCom
     @SweepMessage
     @CheckPlayerInEvent
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
-    }
-
-    private BiConsumer<Message, TEvent> getEvictingConsumer() {
-        return eventFacade.getCheckingConsumer();
     }
 }

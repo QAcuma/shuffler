@@ -131,7 +131,7 @@ public class MessageContentServiceImpl implements MessageContentService {
     }
 
     private String buildGameCheckingText(TGame game) {
-        return switch (game.getState()) {
+        return switch (game.getStatus()) {
             case RED_CHECKING -> EventConstant.RED_CHECKING_MESSAGE.getText();
             case BLUE_CHECKING -> EventConstant.BLUE_CHECKING_MESSAGE.getText();
             case CANCEL_CHECKING -> EventConstant.NEXT_CHECKING_MESSAGE.getText();

@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.GameMapper;
+import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
-import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.repository.GameRepository;
-import ru.acuma.shuffler.service.api.GameService;
 
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
@@ -18,7 +17,7 @@ import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
-public class GameServiceImpl implements GameService {
+public class GameService {
 
     private final TeamService teamService;
     private final ShuffleService shuffleService;
@@ -47,7 +46,7 @@ public class GameServiceImpl implements GameService {
             .blueTeam(blueTeam)
             .index(event.getTgGames().size() + 1)
             .startedAt(LocalDateTime.now())
-            .state(GameState.ACTIVE)
+            .status(GameState.ACTIVE)
             .build();
     }
 
@@ -60,23 +59,20 @@ public class GameServiceImpl implements GameService {
         return tgGame;
     }
 
-    @Override
-    public void nextGame(TEvent event) {
+    public void beginGame(TEvent event) {
         var game = buildGame(event);
-        save(game, event);
         event.applyGame(game);
     }
 
-    @Override
-    public void handleGameCheck(TEvent event) {
+    public void finishGame(TEvent event) {
         var game = event.getCurrentGame();
-        switch (game.getState()) {
+        switch (game.getStatus()) {
             case RED_CHECKING -> {
-                game.getRedTeam().setIsWinner(true);
+                game.getRedTeam().setIsWinner(Boolean.TRUE);
                 finishGameWithWinner(game);
             }
             case BLUE_CHECKING -> {
-                game.getBlueTeam().setIsWinner(true);
+                game.getBlueTeam().setIsWinner(Boolean.TRUE);
                 finishGameWithWinner(game);
             }
             case CANCEL_CHECKING -> finishCancelledGame(game);
@@ -86,20 +82,20 @@ public class GameServiceImpl implements GameService {
     }
 
     private void finishGameWithWinner(TGame game) {
-        game.setState(GameState.FINISHED)
+        game.setStatus(GameState.FINISHED)
             .setFinishedAt(LocalDateTime.now());
 //        teamService.fillLastGameMate(game.getWinnerTeam());
 //        teamService.fillLastGameMate(game.getLoserTeam());
     }
 
     private void finishCancelledGame(TGame game) {
-        game.setState(GameState.CANCELLED)
+        game.setStatus(GameState.CANCELLED)
             .setFinishedAt(LocalDateTime.now());
     }
 
     private void saveGameData(TEvent event) {
         var game = event.getCurrentGame();
-        switch (game.getState()) {
+        switch (game.getStatus()) {
             case CANCELLED:
                 break;
             case FINISHED:
@@ -107,7 +103,7 @@ public class GameServiceImpl implements GameService {
                 game.getPlayers().forEach(TEventPlayer::increaseGameCount);
 //                teamService(game.getWinnerTeam());
         }
-        gameRepository.save(gameMapper.toGame(game));
+//        gameRepository.save(gameMapper.toGame(game));
     }
 
 }

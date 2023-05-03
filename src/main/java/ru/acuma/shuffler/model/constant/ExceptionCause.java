@@ -21,6 +21,7 @@ public enum ExceptionCause {
     GAME_NOT_FOUND("Game nor found for chat %s"),
     DISCIPLINE_NOT_PRESENT("Discipline %s not present"),
     CANNOT_EXTRACT_PARAM("Can't extract param %s"),
+    EXTRACT_RESPONSE_MESSAGE("Can't extract response message"),
     EVENT_CONTEXT_IS_EMPTY("Event context game count is not present");
 
     private final String description;

@@ -46,7 +46,8 @@ public class ExecuteService {
         Optional.ofNullable(result)
             .filter(Message.class::isInstance)
             .map(Message.class::cast)
-            .ifPresent(message -> render.setMessageId(message.getMessageId()).success());
+            .ifPresent(message -> render.setMessageId(message.getMessageId()));
+        render.success();
 
         return result;
     }

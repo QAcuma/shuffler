@@ -30,7 +30,7 @@ public class ChatValidator implements UpdateValidator {
         }
 
         if (CHANNEL_CHAT.equals(chat.getType())) {
-            throw new IdleException(ExceptionCause.CHAT_IS_CHANNEL);
+//            throw new IdleException(ExceptionCause.CHAT_IS_CHANNEL);
         }
     }
 }

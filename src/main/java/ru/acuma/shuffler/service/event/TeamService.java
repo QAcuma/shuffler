@@ -55,10 +55,7 @@ public class TeamService {
 
     @SneakyThrows
     private TTeam build(List<TEventPlayer> players, int retries) {
-        var team = TTeam.builder()
-            .player1(players.get(0))
-            .player2(players.get(1))
-            .build();
+        var team = teamMapper.createTeam(players.get(0), players.get(1));
         if (retries == 0) {
             return team;
         }

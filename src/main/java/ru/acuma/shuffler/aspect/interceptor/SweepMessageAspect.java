@@ -26,7 +26,7 @@ public class SweepMessageAspect {
     @Before("@annotation(ru.acuma.shuffler.aspect.marker.SweepMessage)")
     public void sweepMessage(final JoinPoint joinPoint) {
         var message = AspectUtil.extractMessage(joinPoint)
-            .orElseThrow(() -> new DataException(ExceptionCause.MESSAGE_NOT_FOUND));
+            .orElseThrow(() -> new DataException(ExceptionCause.MESSAGE_NOT_FOUND, "?"));
         if (Objects.isNull(message)) {
             return;
         }

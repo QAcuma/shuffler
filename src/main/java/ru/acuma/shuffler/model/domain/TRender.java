@@ -20,7 +20,7 @@ public class TRender implements Serializable {
     private Integer messageId;
     private MessageType messageType;
     private ExecuteStrategy executeStrategy;
-    private Long delay;
+    private Integer delay;
     private MessageAction messageAction;
     private Set<MessageAfterAction> afterActions;
 
@@ -72,13 +72,13 @@ public class TRender implements Serializable {
         return this;
     }
 
-    public TRender withDelay(final Long delay) {
+    public TRender withDelay(final Integer delay) {
         return setExecuteStrategy(ExecuteStrategy.DELAYED)
             .setDelay(delay);
     }
 
-    public TRender withSchedule() {
-        return setExecuteStrategy(ExecuteStrategy.SCHEDULED);
+    public TRender withTimer() {
+        return setExecuteStrategy(ExecuteStrategy.TIMER);
     }
 
     public void success() {

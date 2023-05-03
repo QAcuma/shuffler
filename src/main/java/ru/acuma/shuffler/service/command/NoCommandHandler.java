@@ -25,7 +25,6 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING;
 public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
     private final EventStatusService eventStateService;
-    private final EventFacade eventFacade;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -34,7 +33,6 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
 
     @Override
-    @SweepMessage
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
     }
 
@@ -46,9 +44,4 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 //            executeService.execute(lobbyMessage);
         };
     }
-
-    private BiConsumer<Message, TEvent> getCheckingConsumer() {
-        return eventFacade.getCheckingConsumer();
-    }
-
 }

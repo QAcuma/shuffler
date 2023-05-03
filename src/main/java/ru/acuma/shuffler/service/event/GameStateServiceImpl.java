@@ -10,36 +10,36 @@ public class GameStateServiceImpl implements GameStateService {
 
     @Override
     public void active(TGame game) {
-        game.setState(GameState.ACTIVE);
+        game.setStatus(GameState.ACTIVE);
     }
 
     @Override
     public void cancel(TGame game) {
-        game.setState(GameState.CANCELLED);
+        game.setStatus(GameState.CANCELLED);
     }
 
     @Override
     public void cancelCheck(TGame game) {
-        game.setState(GameState.CANCEL_CHECKING);
+        game.setStatus(GameState.CANCEL_CHECKING);
     }
 
     @Override
     public void redCheck(TGame game) {
-        game.setState(GameState.RED_CHECKING);
+        game.setStatus(GameState.RED_CHECKING);
     }
 
     @Override
     public void blueCheck(TGame game) {
-        game.setState(GameState.BLUE_CHECKING);
+        game.setStatus(GameState.BLUE_CHECKING);
     }
 
     @Override
     public void finished(TGame game) {
-        game.setState(GameState.FINISHED);
+        game.setStatus(GameState.FINISHED);
     }
 
     @Override
     public void notExist(TGame game) {
-        game.setState(GameState.NOT_EXIST);
+        game.setStatus(GameState.NOT_EXIST);
     }
 }

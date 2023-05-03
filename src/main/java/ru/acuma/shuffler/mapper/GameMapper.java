@@ -11,6 +11,7 @@ import ru.acuma.shuffler.model.entity.Game;
 public abstract class GameMapper {
 
     @Mapping(target = "event", ignore = true)
-    public abstract Game toGame(TGame source);
+    @Mapping(target = "state", source = "status")
+    public abstract Game toGame(TGame game);
 
 }

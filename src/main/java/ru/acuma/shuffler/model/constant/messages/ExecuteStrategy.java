@@ -4,6 +4,6 @@ public enum ExecuteStrategy {
 
     IDLE,
     REGULAR,
-    SCHEDULED,
+    TIMER,
     DELAYED
 }

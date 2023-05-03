@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.BaseBotCommand;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class EventRouter {
             callbackService.filter(update.getCallbackQuery());
         } else if (Objects.nonNull(update.getMessage()) && isCommandMessage(update.getMessage())) {
             callbackService.filter(update.getMessage());
+        } else if (Objects.nonNull(update.getChannelPost()) && isCommandMessage(update.getChannelPost())) {
+            callbackService.filter(update.getChannelPost());
         }
     }
 

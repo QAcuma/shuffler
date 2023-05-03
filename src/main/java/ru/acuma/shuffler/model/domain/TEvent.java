@@ -11,7 +11,6 @@ import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
-import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 
 import java.io.Serializable;
@@ -46,7 +45,7 @@ public class TEvent implements Serializable {
     private final List<TGame> tgGames = new ArrayList<>();
     private final Map<Long, TEventPlayer> players = new HashMap<>();
     @EqualsAndHashCode.Exclude
-    private final Set<TRender> messages = new HashSet<>();
+    private final List<TRender> messages = new ArrayList<>();
     @EqualsAndHashCode.Exclude
     private final transient List<Future<?>> futures = new ArrayList<>();
     @EqualsAndHashCode.Exclude
@@ -139,14 +138,7 @@ public class TEvent implements Serializable {
     }
 
     public Boolean hasAnyGameFinished() {
-        return getTgGames().stream().anyMatch(game -> game.getState() == FINISHED);
-    }
-
-    public GameState getLatestGameState() {
-        var latestGame = getCurrentGame();
-        return latestGame != null
-               ? latestGame.getState()
-               : GameState.NOT_EXIST;
+        return getTgGames().stream().anyMatch(game -> game.getStatus() == FINISHED);
     }
 
     public void scheduleFuture(ScheduledFuture<?> futureExecutor) {

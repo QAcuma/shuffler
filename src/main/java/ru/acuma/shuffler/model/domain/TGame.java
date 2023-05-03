@@ -2,10 +2,7 @@ package ru.acuma.shuffler.model.domain;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 import ru.acuma.shuffler.model.constant.GameState;
 import ru.acuma.shuffler.util.Symbols;
 
@@ -24,7 +21,7 @@ public class TGame implements Serializable {
     private Long id;
     private Integer index;
     private Integer messageId;
-    private GameState state;
+    private GameState status;
     private TTeam redTeam;
     private TTeam blueTeam;
     private LocalDateTime startedAt;
@@ -39,7 +36,7 @@ public class TGame implements Serializable {
     }
 
     public TTeam getWinnerTeam() {
-        if (state == FINISHED) {
+        if (status == FINISHED) {
             return redTeam.getIsWinner() ? redTeam : blueTeam;
         }
 
@@ -47,7 +44,7 @@ public class TGame implements Serializable {
     }
 
     public TTeam getLoserTeam() {
-        if (state == FINISHED) {
+        if (status == FINISHED) {
             return redTeam.getIsWinner() ? blueTeam : redTeam;
         }
 
@@ -64,7 +61,7 @@ public class TGame implements Serializable {
             GameState.CANCEL_CHECKING,
             GameState.BLUE_CHECKING,
             GameState.RED_CHECKING
-        ).contains(getState());
+        ).contains(getStatus());
     }
 
     public String getGameResult() {

@@ -73,7 +73,7 @@ public class CallbackService {
                 exceptionHandler.handle(exception);
                 eventContext.rollbackEvent(chatId);
             } finally {
-                renderService.delete(chatId);
+                renderService.render(chatId);
                 chatIdLocks.remove(chatId);
             }
         }

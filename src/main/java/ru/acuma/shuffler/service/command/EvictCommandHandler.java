@@ -8,7 +8,6 @@ import ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent;
 import ru.acuma.shuffler.controller.EvictCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.service.api.GameService;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.telegram.PlayerService;
 
@@ -23,8 +22,6 @@ public class EvictCommandHandler extends BaseCommandHandler<EvictCommand> {
 
     private final EventStatusService eventStateService;
     private final PlayerService playerService;
-    private final GameService gameService;
-    private final GameFacade gameFacade;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {

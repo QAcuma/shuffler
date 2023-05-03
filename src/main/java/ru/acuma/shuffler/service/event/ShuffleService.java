@@ -22,8 +22,7 @@ public class ShuffleService {
 
     @SneakyThrows
     public List<TEventPlayer> shuffle(TEvent event) {
-
-        List<TEventPlayer> members = event.getActivePlayers();
+        var members = new ArrayList<>(event.getActivePlayers());
 
         if (members.size() < Constants.GAME_PLAYERS_COUNT) {
             throw new NoSuchElementException("Not enough players to start event");
@@ -61,7 +60,7 @@ public class ShuffleService {
     }
 
     @SneakyThrows
-    private List<TEventPlayer> shuffleEvenly(List<TEventPlayer> members) {
+    private List<TEventPlayer> shuffleEvenly(final List<TEventPlayer> members) {
         Collections.shuffle(members, SecureRandom.getInstance("SHA1PRNG", "SUN"));
         if (members.size() < Constants.GAME_PLAYERS_COUNT) {
             return members;

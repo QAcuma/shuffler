@@ -1,3 +1,7 @@
+logging:
+  level:
+    ru.acuma.shuffler: DEBUG
+    org.hibernate: ERROR
 telegram:
   bot:
     name: ${SHUFFLER_BOT_NAME}

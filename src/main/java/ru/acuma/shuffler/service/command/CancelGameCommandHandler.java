@@ -22,7 +22,6 @@ public class CancelGameCommandHandler extends BaseCommandHandler<CancelGameComma
 
     private final GameStateService gameStateService;
     private final EventStatusService eventStateService;
-    private final EventFacade eventFacade;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -38,7 +37,6 @@ public class CancelGameCommandHandler extends BaseCommandHandler<CancelGameComma
         return (message, event) -> {
             eventStateService.gameCheck(event);
             gameStateService.cancelCheck(event.getCurrentGame());
-            eventFacade.checkingStateActions(event);
         };
     }
 

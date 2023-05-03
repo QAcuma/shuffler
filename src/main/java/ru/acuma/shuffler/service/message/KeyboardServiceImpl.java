@@ -43,7 +43,7 @@ public class KeyboardServiceImpl implements KeyboardService {
 
     @Override
     public InlineKeyboardMarkup getGamingKeyboard(TEvent event) {
-        var gameState = event.getLatestGameState();
+        var gameState = event.getCurrentGame().getStatus();
         var gameButtons = buildGameButtons(gameState);
 
         return buildKeyboard(gameButtons);

@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.context.EventContext;
+import ru.acuma.shuffler.exception.TelegramApiException;
 import ru.acuma.shuffler.model.constant.Constants;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
@@ -24,16 +27,20 @@ public class RenderService {
     private final KeyboardService keyboardService;
     private final ExecuteService executeService;
 
-    public void delete(final Long chatId) {
+    public void render(final Long chatId) {
         Optional.ofNullable(eventContext.findEvent(chatId))
             .filter(event -> !Objects.equals(event.getHash(), event.hashCode()))
-            .ifPresent(event -> event.getMessages()
-                .stream()
-                .filter(TRender::requireChanges)
-                .forEach(render -> {
-                    executeMethod(event, render);
-                    executeAfterActions(chatId, render);
-                })
+            .ifPresent(event -> {
+                event.getMessages()
+                        .stream()
+                        .filter(TRender::requireChanges)
+                        .forEach(render -> {
+                            executeMethod(event, render);
+                            executeAfterActions(chatId, render);
+                        });
+                event.getMessages()
+                    .removeIf(message -> Objects.isNull(message.getMessageType()));
+                }
             );
     }
 
@@ -50,7 +57,7 @@ public class RenderService {
         switch (render.getExecuteStrategy()) {
             case REGULAR -> executeService.execute(method, render);
             case DELAYED -> executeService.executeLater(method, render);
-            case SCHEDULED -> executeTimedMarkup(method, event, render);
+            case TIMER -> executeTimedMarkup(method, event, render);
             case IDLE -> render.success();
         }
     }
@@ -85,14 +92,17 @@ public class RenderService {
         final TEvent event,
         final TRender render
     ) {
-        var message = Optional.of(executeService.execute(method, TRender.forSend(render.getMessageType())))
+        var message = Optional.of(executeService.execute(method, render))
             .filter(Message.class::isInstance)
             .map(Message.class::cast)
-            .orElseThrow();
+            .orElseThrow(() -> new TelegramApiException(ExceptionCause.EXTRACT_RESPONSE_MESSAGE));
 
         IntStream.rangeClosed(1, Constants.DISABLED_BUTTON_TIMEOUT)
-            .mapToObj(delay -> keyboardService.getTimedKeyboard(Constants.DISABLED_BUTTON_TIMEOUT - delay))
-            .map(keyboard -> messageService.buildReplyMarkupUpdate(event, message.getMessageId(), keyboard))
-            .forEach(keyboardMethod -> executeService.executeLater(keyboardMethod, render));
+            .forEach(delay -> {
+                var keyboard = keyboardService.getTimedKeyboard(Constants.DISABLED_BUTTON_TIMEOUT - delay);
+                executeService.executeLater(
+                    messageService.buildReplyMarkupUpdate(event, message.getMessageId(), keyboard),
+                    TRender.forMarkup(MessageType.CHECKING_TIMED, message.getMessageId()).withDelay(delay));
+            });
     }
 }

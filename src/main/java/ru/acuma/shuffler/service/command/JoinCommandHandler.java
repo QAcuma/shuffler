@@ -9,6 +9,7 @@ import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
+import ru.acuma.shuffler.service.event.GameService;
 import ru.acuma.shuffler.service.telegram.PlayerService;
 
 import java.util.List;
@@ -25,8 +26,8 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
 
     private final EventStatusService eventStateService;
-    private final GameFacade gameFacade;
     private final PlayerService playerService;
+    private final GameService gameService;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -61,7 +62,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
         Optional.of(eventStateService.resume(event))
             .filter(PLAYING::equals)
             .ifPresent(status -> {
-                gameFacade.beginGame(event);
+                gameService.beginGame(event);
                 event.render(TRender.forSend(MessageType.GAME));
             });
     }
