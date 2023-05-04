@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Service
 public class EventStatusService {
 
-    public EventStatus prepare(final TEvent event) {
+    public EventStatus praperation(final TEvent event) {
         if (event.isPlayersEnough()) {
             return ready(event);
         }
@@ -30,7 +30,7 @@ public class EventStatusService {
         event.setEventStatus(EventStatus.BEGIN_CHECKING);
     }
 
-    public void cancel(final TEvent event) {
+    public void cancelCheck(final TEvent event) {
         event.setEventStatus(EventStatus.CANCEL_CHECKING);
     }
 

@@ -30,12 +30,16 @@ public abstract class BaseCommandHandler<T extends BaseBotCommand> {
             );
     }
 
+    private boolean isActive(final TEvent event) {
+        return !List.of(EventStatus.FINISHED, EventStatus.CANCELLED).contains(event.getEventStatus());
+    }
+
     private boolean isCommandSupported(final TEvent event) {
         return getSupportedStatuses().contains(EventStatus.ANY) || getSupportedStatuses().contains(event.getEventStatus());
     }
 
     protected void invokeChatCommand(final Message message, final String[] args) {
-        log.debug("Chat command not supported");
+        log.debug("Event is missing or chat command not supported");
     }
 
     protected final void idle(final EventStatus eventStatus) {

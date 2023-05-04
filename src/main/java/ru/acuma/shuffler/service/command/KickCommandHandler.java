@@ -24,7 +24,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class KickCommandHandler extends BaseCommandHandler<KickCommand> {
 
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
     private final KickService kickService;
     private final GameStateService gameStateService;
 
@@ -42,7 +42,7 @@ public class KickCommandHandler extends BaseCommandHandler<KickCommand> {
 
     private BiConsumer<Message, TEvent> getPlayingWaitingWaitingWIthGameConsumer() {
         return (message, event) -> {
-            eventStateService.evicting(event);
+            eventStatusService.evicting(event);
             gameStateService.cancelCheck(event.getCurrentGame());
             var method = kickService.prepareKickMessage(event);
 

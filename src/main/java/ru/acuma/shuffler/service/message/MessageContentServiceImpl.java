@@ -26,7 +26,7 @@ public class MessageContentServiceImpl implements MessageContentService {
         return switch (type) {
             case LOBBY -> buildLobbyContent(event);
             case GAME -> buildGameContent(event);
-            case CHECKING, CHECKING_TIMED -> buildCheckingContent(event);
+            case CHECKING -> buildCheckingContent(event);
             case CANCELLED -> buildCancelledContent(event);
             default -> EventConstant.BLANK_MESSAGE.getText();
         };

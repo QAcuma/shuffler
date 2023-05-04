@@ -24,7 +24,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class FinishCommandHandler extends BaseCommandHandler<FinishCommand> {
 
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
     private final GameStateService gameStateService;
     private final ExecuteService executeService;
     private final MessageService messageService;
@@ -42,12 +42,12 @@ public class FinishCommandHandler extends BaseCommandHandler<FinishCommand> {
 
     private BiConsumer<Message, TEvent> getPlayingWaitingWithGameConsumer() {
         return (message, event) -> {
-            eventStateService.finishCheck(event);
+            eventStatusService.finishCheck(event);
             gameStateService.cancelCheck(event.getCurrentGame());
 
             var lobbyMessage = messageService.buildReplyMarkupUpdate(event, event.getMessageId(MessageType.LOBBY), MessageType.LOBBY);
             var gameMessage = messageService.buildReplyMarkupUpdate(event, event.getCurrentGame().getMessageId(), MessageType.GAME);
-            var checkingMessage = messageService.buildMessage(event, MessageType.CHECKING_TIMED);
+            var checkingMessage = messageService.sendMessage(event, MessageType.CHECKING);
 
 //            executeService.execute(lobbyMessage);
 //            executeService.execute(gameMessage);

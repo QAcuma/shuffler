@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.YesCommand;
+import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TRender;
-import ru.acuma.shuffler.service.event.ChampionshipService;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameService;
 
@@ -35,18 +35,30 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         switch (event.getEventStatus()) {
+            case CANCEL_CHECKING -> cancelEvent(event);
             case BEGIN_CHECKING -> beginGame(event);
             case GAME_CHECKING -> nextGame(event);
+            case WAITING_WITH_GAME -> finishGame(event);
+            case FINISH_CHECKING -> finishEvent(event);
         }
+    }
 
+    private void cancelEvent(final TEvent event) {
+        eventStatusService.cancelled(event);
+        event.render(TRender.forDelete(event.getMessageId(MessageType.LOBBY)))
+            .render(TRender.forDelete(event.getMessageId(MessageType.CHECKING)))
+            .render(TRender.forSend(MessageType.CANCELLED).withAfterAction(
+                () -> TRender.forDelete(event.getMessageId(MessageType.CANCELLED)).withDelay(Constants.CANCELLED_MESSAGE_TTL_BEFORE_DELETE)
+            ));
+        eventContext.flushEvent(event.getChatId());
     }
 
     private void beginGame(final TEvent event) {
         gameService.beginGame(event);
         eventStatusService.resume(event);
-        event.render(TRender.forDelete(event.getMessageId(MessageType.CHECKING)));
-        event.render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
-        event.render(TRender.forSend(MessageType.GAME));
+        event.render(TRender.forDelete(event.getMessageId(MessageType.CHECKING)))
+            .render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
+            .render(TRender.forSend(MessageType.GAME));
     }
 
     private void nextGame(TEvent event) {
@@ -57,35 +69,21 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         event.render(TRender.forDelete(event.getMessageId(MessageType.GAME)));
     }
 
-//
-//    private BiConsumer<Message, TEvent> getCancelCheckingConsumer() {
-//        return (message, event) -> championshipService.finishEvent(event);
-//    }
-//
-//    private BiConsumer<Message, TEvent> getBeginCheckingConsumer() {
-//        return (message, event) -> {
-//            gameFacade.nextGameActions(event, message);
-////            executeService.execute(messageService.buildLobbyMessageUpdate(event));
-//        };
-//    }
-//
-//    private BiConsumer<Message, TEvent> getCheckingConsumer() {
-//        return (message, event) -> {
-//            gameService.handleGameCheck(event);
-//            gameFacade.finishGameActions(event, message);
-//            gameFacade.nextGameActions(event, message);
-//        };
-//    }
-//
-//    private BiConsumer<Message, TEvent> getWaitingWithGameConsumer() {
-//        return (message, event) -> {
-//            gameService.handleGameCheck(event);
-//            gameFacade.finishGameActions(event, message);
-//        };
-//    }
-//
-//    private BiConsumer<Message, TEvent> getFinishCheckingConsumer() {
-//        return (message, event) -> eventFacade.finishEventActions(event, message);
-//    }
+    private void finishGame(TEvent event) {
+        gameService.finishGame(event);
+        eventStatusService.resume(event);
 
+        event.render(TRender.forDelete(event.getMessageId(MessageType.GAME)))
+            .render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+    }
+
+    private void finishEvent(TEvent event) {
+        gameService.finishGame(event);
+        eventStatusService.finished(event);
+        eventContext.flushEvent(event.getChatId());
+
+        event.render(TRender.forDelete(event.getMessageId(MessageType.GAME)))
+            .render(TRender.forDelete(event.getMessageId(MessageType.CHECKING)))
+            .render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+    }
 }

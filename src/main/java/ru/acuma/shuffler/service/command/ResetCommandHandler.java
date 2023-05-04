@@ -22,7 +22,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.EVICTING;
 @RequiredArgsConstructor
 public class ResetCommandHandler extends BaseCommandHandler<ResetCommand> {
 
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
     private final MaintenanceService maintenanceService;
 
     @Override
@@ -39,7 +39,7 @@ public class ResetCommandHandler extends BaseCommandHandler<ResetCommand> {
 
     private BiConsumer<Message, TEvent> getEvictingConsumer() {
         return (message, event) -> {
-            eventStateService.cancelled(event);
+            eventStatusService.cancelled(event);
             event.setFinishedAt(LocalDateTime.now());
 //            eventContext.update(event);
             maintenanceService.sweepChat(event);

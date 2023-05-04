@@ -45,6 +45,7 @@ public class EventContext {
 
     public void flushEvent(final Long chatId) {
         eventStorage.remove(chatId);
+        eventSnapshotStorage.remove(chatId);
     }
 
     /**

@@ -5,5 +5,6 @@ public enum MessageAction {
     SEND,
     UPDATE,
     UPDATE_MARKUP,
-    DELETE
+    DELETE,
+    PIN
 }

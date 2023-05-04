@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageRe
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
 
@@ -24,7 +23,7 @@ public class MessageService {
     private final KeyboardService keyboardService;
     private final MessageContentService messageContentService;
 
-    public BotApiMethod<Message> buildMessage(TEvent event, MessageType type) {
+    public BotApiMethod<Message> sendMessage(final TEvent event, final MessageType type) {
         return SendMessage.builder()
             .chatId(String.valueOf(event.getChatId()))
             .text(messageContentService.buildContent(event, type))
@@ -33,7 +32,16 @@ public class MessageService {
             .build();
     }
 
-    public EditMessageText buildMessageUpdate(TEvent event, Integer messageId, MessageType type) {
+    public BotApiMethod<Message> sendMessage(final TEvent event, final MessageType type, final InlineKeyboardMarkup keyboard) {
+        return SendMessage.builder()
+            .chatId(String.valueOf(event.getChatId()))
+            .text(messageContentService.buildContent(event, type))
+            .replyMarkup(keyboard)
+            .parseMode(ParseMode.HTML)
+            .build();
+    }
+
+    public EditMessageText buildMessageUpdate(final TEvent event, final Integer messageId, final MessageType type) {
         return EditMessageText.builder()
             .chatId(String.valueOf(event.getChatId()))
             .messageId(messageId)
@@ -59,10 +67,6 @@ public class MessageService {
             .build();
     }
 
-    public EditMessageText buildLobbyMessageUpdate(TEvent event) {
-        return buildMessageUpdate(event, event.getMessageId(MessageType.LOBBY), MessageType.LOBBY);
-    }
-
     public PinChatMessage pinMessage(final Long chatId, final Integer messageId) {
         return PinChatMessage.builder()
             .chatId(String.valueOf(chatId))
@@ -77,13 +81,12 @@ public class MessageService {
             .build();
     }
 
-    private InlineKeyboardMarkup getKeyboard(TEvent event, MessageType type) {
+    private InlineKeyboardMarkup getKeyboard(final TEvent event, final MessageType type) {
         return switch (type) {
             case LOBBY -> keyboardService.getLobbyKeyboard(event);
-            case CHECKING -> keyboardService.getCheckingKeyboard(event);
+            case CHECKING -> keyboardService.getCheckingKeyboard(0);
             case GAME -> keyboardService.getGamingKeyboard(event);
-            case CHECKING_TIMED -> keyboardService.getTimedKeyboard(Constants.DISABLED_BUTTON_TIMEOUT);
-            case CANCELLED, STAT, OTHER -> keyboardService.getEmptyKeyboard();
+            case CANCELLED, STAT -> keyboardService.getEmptyKeyboard();
         };
     }
 }

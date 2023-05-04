@@ -20,7 +20,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.EVICTING;
 @RequiredArgsConstructor
 public class EvictCommandHandler extends BaseCommandHandler<EvictCommand> {
 
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
     private final PlayerService playerService;
 
     @Override
@@ -36,13 +36,13 @@ public class EvictCommandHandler extends BaseCommandHandler<EvictCommand> {
     private BiConsumer<Message, TEvent> getEvictingConsumer() {
         return (message, event) -> {
 //            playerService.leaveLobby(event, Long.valueOf(message.getText()));
-//            eventStateService.resume(event);
+//            eventStatusService.resume(event);
 //
 ////            executeService.execute(messageService.buildMessageUpdate(event, event.getLobbyMessageId(), MessageType.LOBBY));
 //            gameService.handleGameCheck(event);
 //            gameFacade.finishGameActions(event, message);
 //
-//            eventStateService.resume(event);
+//            eventStatusService.resume(event);
 //            gameFacade.nextGameActions(event, message);
         };
     }

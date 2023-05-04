@@ -18,7 +18,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.READY;
 @RequiredArgsConstructor
 public class BeginCommandHandler extends BaseCommandHandler<BeginCommand> {
 
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -27,8 +27,8 @@ public class BeginCommandHandler extends BaseCommandHandler<BeginCommand> {
 
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
-        eventStateService.beginChecking(event);
-        event.render(TRender.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
-        event.render(TRender.forSend(MessageType.CHECKING));
+        eventStatusService.beginChecking(event);
+        event.render(TRender.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
+            .render(TRender.forSend(MessageType.CHECKING));
     }
 }

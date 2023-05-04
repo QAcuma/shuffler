@@ -36,7 +36,7 @@ public class RenderService {
                         .filter(TRender::requireChanges)
                         .forEach(render -> {
                             executeMethod(event, render);
-                            executeAfterActions(chatId, render);
+                            executeAfterActions(event, render);
                         });
                 event.getMessages()
                     .removeIf(message -> Objects.isNull(message.getMessageType()));
@@ -57,7 +57,7 @@ public class RenderService {
         switch (render.getExecuteStrategy()) {
             case REGULAR -> executeService.execute(method, render);
             case DELAYED -> executeService.executeLater(method, render);
-            case TIMER -> executeTimedMarkup(method, event, render);
+            case TIMER -> executeTimedMarkup(event, render);
             case IDLE -> render.success();
         }
     }
@@ -69,40 +69,38 @@ public class RenderService {
         var messageType = render.getMessageType();
 
         return switch (render.getMessageAction()) {
-            case SEND -> messageService.buildMessage(event, messageType);
+            case SEND -> messageService.sendMessage(event, messageType);
             case UPDATE -> messageService.buildMessageUpdate(event, render.getMessageId(), messageType);
             case UPDATE_MARKUP -> messageService.buildReplyMarkupUpdate(event, render.getMessageId(), messageType);
             case DELETE -> messageService.deleteMessage(event.getChatId(), render.getMessageId());
+            case PIN -> messageService.pinMessage(event.getChatId(), render.getMessageId());
         };
     }
 
-    private void executeAfterActions(final Long chatId, final TRender render) {
+    private void executeAfterActions(final TEvent event, final TRender render) {
         render.getAfterActions().forEach(
             afterAction -> {
-                var method = switch (afterAction) {
-                    case PIN -> messageService.pinMessage(chatId, render.getMessageId());
-                };
-                executeService.execute(method, render);
+                var afterRender = afterAction.get();
+                executeMethod(event, afterRender);
             }
         );
     }
 
     public <T extends Serializable, M extends BotApiMethod<T>> void executeTimedMarkup(
-        final M method,
         final TEvent event,
         final TRender render
     ) {
-        var message = Optional.of(executeService.execute(method, render))
-            .filter(Message.class::isInstance)
-            .map(Message.class::cast)
+        var disabledKeyboard = keyboardService.getCheckingKeyboard(Constants.DISABLED_BUTTON_TIMEOUT);
+        var checkingMessage = messageService.sendMessage(event, MessageType.CHECKING, disabledKeyboard);
+        var message = Optional.of(executeService.execute(checkingMessage, render))
             .orElseThrow(() -> new TelegramApiException(ExceptionCause.EXTRACT_RESPONSE_MESSAGE));
 
         IntStream.rangeClosed(1, Constants.DISABLED_BUTTON_TIMEOUT)
             .forEach(delay -> {
-                var keyboard = keyboardService.getTimedKeyboard(Constants.DISABLED_BUTTON_TIMEOUT - delay);
+                var keyboard = keyboardService.getCheckingKeyboard(Constants.DISABLED_BUTTON_TIMEOUT - delay);
                 executeService.executeLater(
                     messageService.buildReplyMarkupUpdate(event, message.getMessageId(), keyboard),
-                    TRender.forMarkup(MessageType.CHECKING_TIMED, message.getMessageId()).withDelay(delay));
+                    TRender.forMarkup(MessageType.CHECKING, message.getMessageId()).withDelay(delay));
             });
     }
 }

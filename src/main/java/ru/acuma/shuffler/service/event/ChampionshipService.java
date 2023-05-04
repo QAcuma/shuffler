@@ -16,14 +16,14 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ChampionshipService {
 
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
     private final EventContext eventContext;
     private final MaintenanceService maintenanceService;
     private final MessageService messageService;
 
     @SneakyThrows
     public void finishEvent(TEvent event) {
-        eventStateService.cancelled(event);
+        eventStatusService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
 
         event.render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
@@ -31,7 +31,7 @@ public class ChampionshipService {
 
     @SneakyThrows
     public void finishChampionship(TEvent event) {
-        eventStateService.finished(event);
+        eventStatusService.finished(event);
         maintenanceService.flushEvent(event);
 //        eventContext.update(event);
     }

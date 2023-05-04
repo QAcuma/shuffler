@@ -21,7 +21,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 public class BlueCommandHandler extends BaseCommandHandler<BlueCommand> {
 
     private final GameStateService gameStateService;
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -30,11 +30,11 @@ public class BlueCommandHandler extends BaseCommandHandler<BlueCommand> {
 
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
-        eventStateService.gameCheck(event);
+        eventStatusService.gameCheck(event);
         gameStateService.blueCheck(event.getCurrentGame());
 
-        event.render(TRender.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
-        event.render(TRender.forMarkup(MessageType.GAME, event.getMessageId(MessageType.GAME)));
-        event.render(TRender.forSend(MessageType.CHECKING_TIMED));
+        event.render(TRender.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
+            .render(TRender.forMarkup(MessageType.GAME, event.getMessageId(MessageType.GAME)))
+            .render(TRender.forSend(MessageType.CHECKING).withTimer());
     }
 }

@@ -23,7 +23,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
 
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
     private final PlayerService playerService;
 
     @Override
@@ -42,11 +42,11 @@ public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
 
     private void leaveLobby(final User user, final TEvent event) {
         playerService.leaveLobby(user, event);
-        eventStateService.prepare(event);
+        eventStatusService.praperation(event);
     }
 
     private void leaveEvent(final User user, final TEvent event) {
         playerService.leaveEvent(user, event);
-        eventStateService.resume(event);
+        eventStatusService.resume(event);
     }
 }

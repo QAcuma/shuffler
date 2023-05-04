@@ -25,7 +25,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 @RequiredArgsConstructor
 public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
 
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
     private final PlayerService playerService;
     private final GameService gameService;
 
@@ -47,19 +47,19 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
     }
 
     private void onPreparing(final TEvent event) {
-        eventStateService.prepare(event);
+        eventStatusService.praperation(event);
 
         event.render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 
     private void onPlaying(final TEvent event) {
-        eventStateService.resume(event);
+        eventStatusService.resume(event);
 
         event.render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 
     private void onWaiting(final TEvent event) {
-        Optional.of(eventStateService.resume(event))
+        Optional.of(eventStatusService.resume(event))
             .filter(PLAYING::equals)
             .ifPresent(status -> {
                 gameService.beginGame(event);

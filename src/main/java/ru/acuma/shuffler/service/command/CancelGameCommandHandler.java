@@ -21,7 +21,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 public class CancelGameCommandHandler extends BaseCommandHandler<CancelGameCommand> {
 
     private final GameStateService gameStateService;
-    private final EventStatusService eventStateService;
+    private final EventStatusService eventStatusService;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -35,7 +35,7 @@ public class CancelGameCommandHandler extends BaseCommandHandler<CancelGameComma
 
     private BiConsumer<Message, TEvent> getCancelConsumer() {
         return (message, event) -> {
-            eventStateService.gameCheck(event);
+            eventStatusService.gameCheck(event);
             gameStateService.cancelCheck(event.getCurrentGame());
         };
     }

@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.constant.messages.ExecuteStrategy;
 import ru.acuma.shuffler.model.constant.messages.MessageAction;
-import ru.acuma.shuffler.model.constant.messages.MessageAfterAction;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 @Data
 @Builder
@@ -22,7 +22,7 @@ public class TRender implements Serializable {
     private ExecuteStrategy executeStrategy;
     private Integer delay;
     private MessageAction messageAction;
-    private Set<MessageAfterAction> afterActions;
+    private transient List<Supplier<TRender>> afterActions;
 
     public boolean requireChanges() {
         return ExecuteStrategy.IDLE != executeStrategy;
@@ -33,7 +33,7 @@ public class TRender implements Serializable {
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.SEND)
-            .afterActions(new HashSet<>())
+            .afterActions(new ArrayList<>())
             .build();
     }
 
@@ -43,7 +43,7 @@ public class TRender implements Serializable {
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.UPDATE)
-            .afterActions(new HashSet<>())
+            .afterActions(new ArrayList<>())
             .build();
     }
 
@@ -53,7 +53,7 @@ public class TRender implements Serializable {
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.UPDATE_MARKUP)
-            .afterActions(new HashSet<>())
+            .afterActions(new ArrayList<>())
             .build();
     }
 
@@ -62,11 +62,20 @@ public class TRender implements Serializable {
             .messageId(messageId)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.DELETE)
-            .afterActions(new HashSet<>())
+            .afterActions(new ArrayList<>())
             .build();
     }
 
-    public TRender withAfterAction(final MessageAfterAction afterAction) {
+    public static TRender forPin(final Integer messageId) {
+        return TRender.builder()
+            .messageId(messageId)
+            .executeStrategy(ExecuteStrategy.REGULAR)
+            .messageAction(MessageAction.PIN)
+            .afterActions(new ArrayList<>())
+            .build();
+    }
+
+    public TRender withAfterAction(final Supplier<TRender> afterAction) {
         afterActions.add(afterAction);
 
         return this;
