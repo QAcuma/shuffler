@@ -57,7 +57,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     private void beginGame(final TEvent event) {
         gameService.beginGame(event);
         eventStatusService.resume(event);
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
+        event.render(Render.forUpdate(MessageType.LOBBY))
             .render(Render.forSend(MessageType.GAME));
     }
 
@@ -66,10 +66,10 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         switch (eventStatusService.resume(event)) {
             case PLAYING -> {
                 gameService.beginGame(event);
-                event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
-                    .render(Render.forUpdate(MessageType.GAME, event.getMessageId(MessageType.GAME)));
+                event.render(Render.forUpdate(MessageType.LOBBY))
+                    .render(Render.forUpdate(MessageType.GAME));
             }
-            case WAITING -> event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
+            case WAITING -> event.render(Render.forUpdate(MessageType.LOBBY))
                 .render(Render.forDelete(event.getMessageId(MessageType.GAME)));
         }
     }
@@ -79,7 +79,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         eventStatusService.resume(event);
 
         event.render(Render.forDelete(event.getMessageId(MessageType.GAME)))
-            .render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+            .render(Render.forUpdate(MessageType.LOBBY));
     }
 
     private void finishEvent(TEvent event) {
@@ -88,6 +88,6 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         eventContext.flushInactiveEvent(event.getChatId());
 
         event.render(Render.forDelete(event.getMessageId(MessageType.GAME)))
-            .render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+            .render(Render.forUpdate(MessageType.LOBBY));
     }
 }

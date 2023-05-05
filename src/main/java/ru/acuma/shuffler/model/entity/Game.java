@@ -23,7 +23,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import ru.acuma.shuffler.model.constant.GameState;
+import ru.acuma.shuffler.model.constant.GameStatus;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -65,7 +65,7 @@ public class Game implements Serializable {
     @NotNull
     @Column(name = "state", nullable = false, length = 32)
     @Enumerated(EnumType.STRING)
-    private GameState state;
+    private GameStatus state;
 
     @NotNull
     @Column(name = "started_at", nullable = false)

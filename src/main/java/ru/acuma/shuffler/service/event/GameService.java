@@ -3,12 +3,10 @@ package ru.acuma.shuffler.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.mapper.GameMapper;
-import ru.acuma.shuffler.model.constant.GameState;
+import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
-import ru.acuma.shuffler.repository.GameRepository;
 import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.management.InstanceNotFoundException;
@@ -44,8 +42,9 @@ public class GameService {
             .redTeam(redTeam)
             .blueTeam(blueTeam)
             .index(event.getTgGames().size() + 1)
+            .order(event.getFinishedGames().size() + 1)
             .startedAt(LocalDateTime.now())
-            .status(GameState.ACTIVE)
+            .status(GameStatus.ACTIVE)
             .build();
     }
 
@@ -79,14 +78,14 @@ public class GameService {
     }
 
     private void finishGameWithWinner(TGame game) {
-        game.setStatus(GameState.FINISHED)
+        game.setStatus(GameStatus.FINISHED)
             .setFinishedAt(LocalDateTime.now());
         teamService.fillLastGameMate(game.getWinnerTeam());
         teamService.fillLastGameMate(game.getLoserTeam());
     }
 
     private void finishCancelledGame(TGame game) {
-        game.setStatus(GameState.CANCELLED)
+        game.setStatus(GameStatus.CANCELLED)
             .setFinishedAt(TimeMachine.localDateTimeNow());
     }
 

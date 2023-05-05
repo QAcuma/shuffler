@@ -32,13 +32,13 @@ public class TEventPlayer implements Serializable {
     }
 
     public Integer getScoreSorting() {
-        return ratingContext.getCalibrated()
+        return Boolean.TRUE.equals(ratingContext.getCalibrated())
                ? ratingContext.getScore()
                : 0;
     }
 
     public String getScoreString() {
-        return ratingContext.getCalibrated()
+        return Boolean.TRUE.equals(ratingContext.getCalibrated())
                ? String.valueOf(ratingContext.getScore())
                : "calibrating";
     }
@@ -84,15 +84,15 @@ public class TEventPlayer implements Serializable {
             strikethroughEnd() +
             " " +
             getScoreString() +
-            (ratingContext.getCalibrated() ? getSessionRatingToString() : "");
+            (Boolean.TRUE.equals(ratingContext.getCalibrated()) ? getSessionRatingToString() : "");
     }
 
     private String strikethroughBegin() {
-        return eventContext.getLeft() ? "<s>" : "";
+        return Boolean.TRUE.equals(eventContext.getLeft()) ? "<s>" : "";
     }
 
     private String strikethroughEnd() {
-        return eventContext.getLeft() ? "</s>" : "";
+        return Boolean.TRUE.equals(eventContext.getLeft()) ? "</s>" : "";
     }
 
     String getSessionRatingToString() {

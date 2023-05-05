@@ -26,7 +26,7 @@ public class ChampionshipService {
         eventStatusService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
 
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(Render.forUpdate(MessageType.LOBBY));
     }
 
     @SneakyThrows

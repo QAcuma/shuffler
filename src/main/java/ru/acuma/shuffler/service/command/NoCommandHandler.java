@@ -9,6 +9,7 @@ import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
+import ru.acuma.shuffler.service.event.GameStatusService;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING;
 public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
     private final EventStatusService eventStatusService;
+    private final GameStatusService gameStatusService;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -34,20 +36,21 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         event.flushFutures();
         switch (event.getEventStatus()) {
-            case CANCEL_CHECKING, BEGIN_CHECKING -> returnLobby(event);
-            case GAME_CHECKING -> {
-            }
-            case WAITING -> {
-            }
-            case FINISH_CHECKING -> {
-            }
-            case EVICTING -> {
-            }
+            case CANCEL_CHECKING, BEGIN_CHECKING, WAITING -> returnLobby(event);
+            case GAME_CHECKING, FINISH_CHECKING, EVICTING -> returnGame(event);
         }
     }
 
     private void returnLobby(final TEvent event) {
         eventStatusService.praperation(event);
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(Render.forUpdate(MessageType.LOBBY));
+    }
+
+    private void returnGame(final TEvent event) {
+        eventStatusService.resume(event);
+        gameStatusService.active(event.getCurrentGame());
+
+        event.render(Render.forUpdate(MessageType.LOBBY))
+            .render(Render.forUpdate(MessageType.GAME));
     }
 }

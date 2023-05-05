@@ -28,6 +28,6 @@ public class BeginCommandHandler extends BaseCommandHandler<BeginCommand> {
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         eventStatusService.beginChecking(event);
-        event.render(Render.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(Render.forUpdate(MessageType.LOBBY));
     }
 }

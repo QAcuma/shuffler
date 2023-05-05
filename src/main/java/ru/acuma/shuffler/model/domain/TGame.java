@@ -3,7 +3,7 @@ package ru.acuma.shuffler.model.domain;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.acuma.shuffler.model.constant.GameState;
+import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.util.Symbols;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.acuma.shuffler.model.constant.GameState.FINISHED;
+import static ru.acuma.shuffler.model.constant.GameStatus.FINISHED;
 
 @Data
 @Builder
@@ -20,8 +20,9 @@ public class TGame implements Serializable {
 
     private Long id;
     private Integer index;
+    private Integer order;
     private Integer messageId;
-    private GameState status;
+    private GameStatus status;
     private TTeam redTeam;
     private TTeam blueTeam;
     private LocalDateTime startedAt;
@@ -57,16 +58,16 @@ public class TGame implements Serializable {
 
     public boolean isActive() {
         return List.of(
-            GameState.ACTIVE,
-            GameState.CANCEL_CHECKING,
-            GameState.BLUE_CHECKING,
-            GameState.RED_CHECKING
+            GameStatus.ACTIVE,
+            GameStatus.CANCEL_CHECKING,
+            GameStatus.BLUE_CHECKING,
+            GameStatus.RED_CHECKING
         ).contains(getStatus());
     }
 
     public String getGameResult() {
         if (getWinnerTeam() != null) {
-            return index +
+            return order +
                     ". " +
                     String.format(getWinnerTeam().toString(), "&") +
                     " (+" +

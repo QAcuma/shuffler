@@ -11,10 +11,10 @@ import ru.acuma.shuffler.model.domain.TGame;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-import static ru.acuma.shuffler.model.constant.EventStatus.WAITING;
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.LET_JOIN_TEXT;
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.MEMBERS_TEXT;
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.SHUFFLER_LINK;
+import static ru.acuma.shuffler.model.constant.messages.EventConstant.SINGLE_SPACE;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
@@ -22,7 +22,7 @@ import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
 @Service
 public class MessageContentService {
 
-    public String buildContent(TEvent event, MessageType type) {
+    public String buildContent(final TEvent event, final MessageType type) {
         return switch (type) {
             case LOBBY -> buildLobbyContent(event);
             case GAME -> buildGameContent(event);
@@ -33,16 +33,13 @@ public class MessageContentService {
     }
 
     private String buildLobbyContent(final TEvent event) {
-        var builder = new StringBuilder();
-        return builder
-            .append(applyEventHeader(event, builder))
-            .append(event.getPlayers().isEmpty() ? LET_JOIN_TEXT.getText() : MEMBERS_TEXT.getText())
-            .append(!event.getPlayers().isEmpty() ? getMembersText(event) : "")
-            .append(Boolean.TRUE.equals(event.hasAnyGameFinished()) ? EventConstant.WINNERS_MESSAGE.getText() : "")
-            .append(Boolean.TRUE.equals(event.hasAnyGameFinished()) ? buildWinnersText(event) : "")
-            .append(Boolean.TRUE.equals(event.isCalibrating()) ? EventConstant.CALIBRATING_MESSAGE.getText() : "")
-            .append(getEventFooterText(event))
-            .toString();
+        return getEventHeader(event)
+            + (event.getPlayers().isEmpty() ? LET_JOIN_TEXT.getText() : MEMBERS_TEXT.getText())
+            + (!event.getPlayers().isEmpty() ? getMembersText(event) : "")
+            + (Boolean.TRUE.equals(event.hasAnyGameFinished()) ? EventConstant.WINNERS_MESSAGE.getText() : "")
+            + (Boolean.TRUE.equals(event.hasAnyGameFinished()) ? getWinnersText(event) : "")
+            + (Boolean.TRUE.equals(event.isCalibrating()) ? EventConstant.CALIBRATING_MESSAGE.getText() : "")
+            + getEventFooterText(event);
     }
 
     private String getEventFooterText(final TEvent event) {
@@ -54,9 +51,9 @@ public class MessageContentService {
         };
     }
 
-    private String applyEventHeader(final TEvent event, final StringBuilder builder) {
+    private String getEventHeader(final TEvent event) {
         return switch (event.getEventStatus()) {
-            case CREATED, READY, GAME_CHECKING, CANCEL_CHECKING, BEGIN_CHECKING -> getDisciplineHeader(event, builder);
+            case CREATED, READY, GAME_CHECKING, CANCEL_CHECKING, BEGIN_CHECKING -> getDisciplineHeader(event);
             case WAITING -> EventConstant.LOBBY_WAITING_MESSAGE.getText();
             case CANCELLED -> EventConstant.LOBBY_CANCELED_MESSAGE.getText();
             case PLAYING -> EventConstant.LOBBY_PLAYING_MESSAGE.getText();
@@ -74,7 +71,7 @@ public class MessageContentService {
             System.lineSeparator();
     }
 
-    private String buildWinnersText(final TEvent event) {
+    private String getWinnersText(final TEvent event) {
         return event.getTgGames()
             .stream()
             .filter(game -> game.getWinnerTeam() != null)
@@ -84,7 +81,7 @@ public class MessageContentService {
     }
 
     @SuppressWarnings("UnnecessaryDefault")
-    private String getDisciplineHeader(TEvent event, StringBuilder builder) {
+    private String getDisciplineHeader(final TEvent event) {
         return switch (event.getDiscipline()) {
             case KICKER -> EventConstant.LOBBY_MESSAGE_KICKER.getText();
             case PING_PONG -> EventConstant.LOBBY_MESSAGE_PING_PONG.getText();
@@ -98,7 +95,7 @@ public class MessageContentService {
         var builder = new StringBuilder();
 
         return builder.append(EventConstant.GAME_MESSAGE.getText())
-            .append(game.getIndex())
+            .append(game.getOrder())
             .append(EventConstant.SPACE_MESSAGE.getText())
             .append(System.lineSeparator())
             .append(buildGameText(game))
@@ -106,30 +103,24 @@ public class MessageContentService {
     }
 
     private String buildGameText(final TGame game) {
-        return getSpaces(game)
-            + System.lineSeparator()
-            + getGameBodyText(game)
-            + EventConstant.SINGLE_SPACE_MESSAGE.getText()
+        return getGameBodyText(game)
+            + EventConstant.SINGLE_SPACE.getText()
             + getGameFooterText(game);
     }
 
     private String getGameBodyText(final TGame game) {
         return switch (game.getStatus()) {
-            case RED_CHECKING -> getRedWinnersBody(game);
-            case BLUE_CHECKING -> getBlueWinnersBody(game);
+            case RED_CHECKING -> RED_CIRCLE_EMOJI + SINGLE_SPACE.getText() + getRedWinnersBody(game);
+            case BLUE_CHECKING -> BLUE_CIRCLE_EMOJI + SINGLE_SPACE.getText() + getBlueWinnersBody(game);
             case ACTIVE, CANCEL_CHECKING -> getDefaultGameBody(game);
             default -> EventConstant.BLANK_MESSAGE.getText();
         };
     }
 
     private String getDefaultGameBody(final TGame game) {
-        return String.format(game.getRedTeam().toString(), RED_CIRCLE_EMOJI)
-            + System.lineSeparator()
-            + getSpaces(game)
-            + VS_EMOJI
-            + System.lineSeparator()
-            + String.format(game.getBlueTeam().toString(), BLUE_CIRCLE_EMOJI)
-            + System.lineSeparator();
+        return String.format(game.getRedTeam().toString(), RED_CIRCLE_EMOJI) + System.lineSeparator()
+            + getSpaces(game) + VS_EMOJI + System.lineSeparator()
+            + String.format(game.getBlueTeam().toString(), BLUE_CIRCLE_EMOJI) + System.lineSeparator();
     }
 
     private String getRedWinnersBody(final TGame game) {

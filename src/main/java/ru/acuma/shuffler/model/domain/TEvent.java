@@ -11,6 +11,8 @@ import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
+import ru.acuma.shuffler.model.constant.GameStatus;
+import ru.acuma.shuffler.model.constant.messages.MessageAction;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 
 import java.io.Serializable;
@@ -23,9 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledFuture;
-
-import static ru.acuma.shuffler.model.constant.GameState.FINISHED;
 
 @Data
 @Builder
@@ -56,18 +55,22 @@ public class TEvent implements Serializable {
     }
 
     public TEvent render(final Render render) {
-        Optional.ofNullable(render.getMessageId())
+        Optional.ofNullable(render)
+            .filter(renderInfo -> Objects.nonNull(renderInfo.getMessageType()))
+            .filter(renderInfo -> !Objects.equals(MessageAction.SEND, renderInfo.getMessageAction()))
+            .map(renderInfo -> renderInfo.setMessageId(getMessageId(renderInfo.getMessageType())))
+            .filter(mappedRender -> Objects.nonNull(mappedRender.getMessageId()))
             .ifPresentOrElse(
-                messageId -> replaceRender(render, messageId),
+                this::replaceRender,
                 () -> messages.add(render)
             );
 
         return this;
     }
 
-    private void replaceRender(final Render render, final Integer messageId) {
+    private void replaceRender(final Render render) {
         messages.stream()
-            .filter(message -> Objects.equals(messageId, message.getMessageId()))
+            .filter(message -> Objects.equals(render.getMessageId(), message.getMessageId()))
             .findFirst()
             .ifPresent(messages::remove);
         messages.add(render);
@@ -141,6 +144,12 @@ public class TEvent implements Serializable {
     }
 
     public Boolean hasAnyGameFinished() {
-        return getTgGames().stream().anyMatch(game -> game.getStatus() == FINISHED);
+        return getTgGames().stream().anyMatch(game -> game.getStatus() == GameStatus.FINISHED);
+    }
+
+    public List<TGame> getFinishedGames() {
+        return getTgGames().stream()
+            .filter(game -> GameStatus.FINISHED.equals(game.getStatus()))
+            .toList();
     }
 }

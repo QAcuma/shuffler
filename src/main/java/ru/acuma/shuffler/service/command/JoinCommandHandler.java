@@ -39,32 +39,32 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
         playerService.join(user, event);
 
         switch (event.getEventStatus()) {
-            case CREATED, READY -> onPreparing(event);
-            case PLAYING, WAITING_WITH_GAME -> onPlaying(event);
-            case WAITING -> onWaiting(event);
+            case CREATED, READY -> joinLobby(event);
+            case PLAYING, WAITING_WITH_GAME -> joinEvent(event);
+            case WAITING -> joinWaitingEvent(event);
             default -> idle(event.getEventStatus());
         }
     }
 
-    private void onPreparing(final TEvent event) {
+    private void joinLobby(final TEvent event) {
         eventStatusService.praperation(event);
 
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(Render.forUpdate(MessageType.LOBBY));
     }
 
-    private void onPlaying(final TEvent event) {
+    private void joinEvent(final TEvent event) {
         eventStatusService.resume(event);
 
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(Render.forUpdate(MessageType.LOBBY));
     }
 
-    private void onWaiting(final TEvent event) {
+    private void joinWaitingEvent(final TEvent event) {
         Optional.of(eventStatusService.resume(event))
             .filter(PLAYING::equals)
             .ifPresent(status -> {
                 gameService.beginGame(event);
                 event.render(Render.forSend(MessageType.GAME))
-                    .render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+                    .render(Render.forUpdate(MessageType.LOBBY));
             });
     }
 }

@@ -37,7 +37,7 @@ public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
             case CREATED, READY -> leaveLobby(user, event);
             case PLAYING, WAITING, WAITING_WITH_GAME -> leaveEvent(user, event);
         }
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(Render.forUpdate(MessageType.LOBBY));
     }
 
     private void leaveLobby(final User user, final TEvent event) {

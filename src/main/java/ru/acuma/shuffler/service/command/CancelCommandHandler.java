@@ -29,6 +29,6 @@ public class CancelCommandHandler extends BaseCommandHandler<CancelCommand> {
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         eventStatusService.cancelCheck(event);
-        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)).withTimer());
+        event.render(Render.forUpdate(MessageType.LOBBY).withTimer());
     }
 }

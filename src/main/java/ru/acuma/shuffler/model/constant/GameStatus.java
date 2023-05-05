@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum GameState {
+public enum GameStatus {
 
     ACTIVE(1),
     CANCEL_CHECKING(1),

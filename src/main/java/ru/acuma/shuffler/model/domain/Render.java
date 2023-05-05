@@ -42,9 +42,8 @@ public class Render implements Serializable {
             .build();
     }
 
-    public static Render forUpdate(final MessageType messageType, final Integer messageId) {
+    public static Render forUpdate(final MessageType messageType) {
         return Render.builder()
-            .messageId(messageId)
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.UPDATE)
@@ -52,9 +51,8 @@ public class Render implements Serializable {
             .build();
     }
 
-    public static Render forMarkup(final MessageType messageType, final Integer messageId) {
+    public static Render forMarkup(final MessageType messageType) {
         return Render.builder()
-            .messageId(messageId)
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.UPDATE_MARKUP)

@@ -33,7 +33,7 @@ public class BlueCommandHandler extends BaseCommandHandler<BlueCommand> {
         eventStatusService.gameCheck(event);
         gameStatusService.blueCheck(event.getCurrentGame());
 
-        event.render(Render.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
-            .render(Render.forUpdate(MessageType.GAME, event.getMessageId(MessageType.GAME)).withTimer());
+        event.render(Render.forMarkup(MessageType.LOBBY))
+            .render(Render.forUpdate(MessageType.GAME).withTimer());
     }
 }

@@ -117,7 +117,7 @@ public class RenderService {
 
         scheduleMarkupUpdate(
             editMarkup,
-            Render.forMarkup(render.getMessageType(), render.getMessageId()).withDelay(Constants.DISABLED_BUTTON_TIMEOUT)
+            Render.forMarkup(render.getMessageType()).withDelay(Constants.DISABLED_BUTTON_TIMEOUT)
         );
     }
 
@@ -137,7 +137,7 @@ public class RenderService {
 
         scheduleMarkupUpdate(
             editMarkup,
-            Render.forMarkup(render.getMessageType(), render.getMessageId()).withDelay(Constants.DISABLED_BUTTON_TIMEOUT)
+            Render.forMarkup(render.getMessageType()).withDelay(Constants.DISABLED_BUTTON_TIMEOUT)
         );
     }
 

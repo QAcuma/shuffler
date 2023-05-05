@@ -33,7 +33,7 @@ public class RedCommandHandler extends BaseCommandHandler<RedCommand> {
         eventStatusService.gameCheck(event);
         gameStatusService.redCheck(event.getCurrentGame());
 
-        event.render(Render.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
-            .render(Render.forUpdate(MessageType.GAME, event.getMessageId(MessageType.GAME)).withTimer());
+        event.render(Render.forMarkup(MessageType.LOBBY))
+            .render(Render.forUpdate(MessageType.GAME).withTimer());
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.shuffler.model.constant.Command;
-import ru.acuma.shuffler.model.constant.GameState;
+import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.constant.keyboards.Keyboards;
 import ru.acuma.shuffler.model.constant.keyboards.ShufflerButton;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -137,8 +137,8 @@ public class KeyboardService {
     }
 
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
-    private List<ShufflerButton> buildGameButtons(final GameState gameState) {
-        return switch (gameState) {
+    private List<ShufflerButton> buildGameButtons(final GameStatus gameStatus) {
+        return switch (gameStatus) {
             case ACTIVE -> Keyboards.GAME_BUTTONS;
             case RED_CHECKING, BLUE_CHECKING, CANCEL_CHECKING -> Keyboards.CHECKING_BUTTONS;
             default -> Collections.emptyList();
