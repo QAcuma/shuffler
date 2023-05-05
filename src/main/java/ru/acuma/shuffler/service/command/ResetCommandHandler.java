@@ -30,7 +30,6 @@ public class ResetCommandHandler extends BaseCommandHandler<ResetCommand> {
         return List.of(EVICTING);
     }
 
-
     @Override
     @SweepMessage
     @CheckUserIsAdmin
@@ -43,7 +42,6 @@ public class ResetCommandHandler extends BaseCommandHandler<ResetCommand> {
             event.setFinishedAt(LocalDateTime.now());
 //            eventContext.update(event);
             maintenanceService.sweepChat(event);
-            maintenanceService.flushEvent(event);
         };
     }
 }

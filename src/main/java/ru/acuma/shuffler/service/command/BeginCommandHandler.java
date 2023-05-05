@@ -6,8 +6,8 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.BeginCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
+import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.service.event.EventStatusService;
 
 import java.util.List;
@@ -28,7 +28,6 @@ public class BeginCommandHandler extends BaseCommandHandler<BeginCommand> {
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         eventStatusService.beginChecking(event);
-        event.render(TRender.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)))
-            .render(TRender.forSend(MessageType.CHECKING));
+        event.render(Render.forMarkup(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 }

@@ -2,7 +2,6 @@ package ru.acuma.shuffler.service.command;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent;
 import ru.acuma.shuffler.aspect.marker.SweepMessage;
@@ -11,7 +10,6 @@ import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import static ru.acuma.shuffler.model.constant.EventStatus.EVICTING;
 
@@ -23,7 +21,6 @@ public class CancelEvictCommandHandler extends BaseCommandHandler<CancelEvictCom
     protected List<EventStatus> getSupportedStatuses() {
         return List.of(EVICTING);
     }
-
 
     @Override
     @SweepMessage

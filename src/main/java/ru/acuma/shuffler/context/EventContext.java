@@ -4,13 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.mapper.EventMapper;
-import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.repository.EventRepository;
-import ru.acuma.shuffler.service.season.SeasonService;
 import ru.acuma.shuffler.model.constant.Discipline;
+import ru.acuma.shuffler.model.constant.EventStatus;
+import ru.acuma.shuffler.model.domain.TEvent;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,8 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EventContext {
 
     private final EventMapper eventMapper;
-    private final EventRepository eventRepository;
-    private final SeasonService seasonService;
     private final Map<Long, TEvent> eventStorage = new ConcurrentHashMap<>();
     @Qualifier("redisEventSnapshotStorage")
     private final Map<Long, TEvent> eventSnapshotStorage;
@@ -40,12 +37,19 @@ public class EventContext {
     }
 
     public boolean isActive(final Long chatId) {
-        return eventStorage.containsKey(chatId);
+        return Optional.ofNullable(findEvent(chatId))
+            .map(TEvent::getEventStatus)
+            .filter(EventStatus::isActive)
+            .isPresent();
     }
 
-    public void flushEvent(final Long chatId) {
-        eventStorage.remove(chatId);
-        eventSnapshotStorage.remove(chatId);
+    public void flushInactiveEvent(final Long chatId) {
+        Optional.ofNullable(findEvent(chatId))
+            .filter(event -> !isActive(chatId))
+            .ifPresent(event -> {
+                eventStorage.remove(chatId);
+                eventSnapshotStorage.remove(chatId);
+            });
     }
 
     /**

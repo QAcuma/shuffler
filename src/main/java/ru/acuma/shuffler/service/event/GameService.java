@@ -9,6 +9,7 @@ import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.repository.GameRepository;
+import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
@@ -22,8 +23,6 @@ public class GameService {
     private final TeamService teamService;
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
-    private final GameMapper gameMapper;
-    private final GameRepository gameRepository;
 
     @SneakyThrows
     private TGame buildGame(TEvent event) {
@@ -51,8 +50,6 @@ public class GameService {
     }
 
     private TGame save(TGame tgGame, TEvent event) {
-//        var mappedGame = gameMapper.toGame(tgGame).setEvent(event);
-//        tgGame.setId(gameRepository.save(mappedGame).getId());
         teamService.save(tgGame.getBlueTeam(), tgGame);
         teamService.save(tgGame.getRedTeam(), tgGame);
 
@@ -84,26 +81,22 @@ public class GameService {
     private void finishGameWithWinner(TGame game) {
         game.setStatus(GameState.FINISHED)
             .setFinishedAt(LocalDateTime.now());
-//        teamService.fillLastGameMate(game.getWinnerTeam());
-//        teamService.fillLastGameMate(game.getLoserTeam());
+        teamService.fillLastGameMate(game.getWinnerTeam());
+        teamService.fillLastGameMate(game.getLoserTeam());
     }
 
     private void finishCancelledGame(TGame game) {
         game.setStatus(GameState.CANCELLED)
-            .setFinishedAt(LocalDateTime.now());
+            .setFinishedAt(TimeMachine.localDateTimeNow());
     }
 
     private void saveGameData(TEvent event) {
         var game = event.getCurrentGame();
         switch (game.getStatus()) {
-            case CANCELLED:
-                break;
-            case FINISHED:
+            case FINISHED -> {
                 ratingService.update(event);
                 game.getPlayers().forEach(TEventPlayer::increaseGameCount);
-//                teamService(game.getWinnerTeam());
+            }
         }
-//        gameRepository.save(gameMapper.toGame(game));
     }
-
 }

@@ -67,4 +67,9 @@ public class TeamService {
 
         return team;
     }
+
+    public void fillLastGameMate(final TTeam team) {
+        team.getPlayer1().setLastGamePlayer(team.getPlayer2());
+        team.getPlayer2().setLastGamePlayer(team.getPlayer1());
+    }
 }

@@ -18,12 +18,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
@@ -45,7 +43,7 @@ public class TEvent implements Serializable {
     private final List<TGame> tgGames = new ArrayList<>();
     private final Map<Long, TEventPlayer> players = new HashMap<>();
     @EqualsAndHashCode.Exclude
-    private final List<TRender> messages = new ArrayList<>();
+    private final List<Render> messages = new ArrayList<>();
     @EqualsAndHashCode.Exclude
     private final transient List<Future<?>> futures = new ArrayList<>();
     @EqualsAndHashCode.Exclude
@@ -57,7 +55,7 @@ public class TEvent implements Serializable {
         return this;
     }
 
-    public TEvent render(final TRender render) {
+    public TEvent render(final Render render) {
         Optional.ofNullable(render.getMessageId())
             .ifPresentOrElse(
                 messageId -> replaceRender(render, messageId),
@@ -67,7 +65,7 @@ public class TEvent implements Serializable {
         return this;
     }
 
-    private void replaceRender(final TRender render, final Integer messageId) {
+    private void replaceRender(final Render render, final Integer messageId) {
         messages.stream()
             .filter(message -> Objects.equals(messageId, message.getMessageId()))
             .findFirst()
@@ -80,7 +78,7 @@ public class TEvent implements Serializable {
             .filter(message -> Objects.equals(messageType, message.getMessageType()))
             .filter(message -> Objects.nonNull(message.getMessageId()))
             .findFirst()
-            .map(TRender::getMessageId)
+            .map(Render::getMessageId)
             .orElseThrow(() -> new DataException(ExceptionCause.MESSAGE_NOT_FOUND, messageType));
     }
 
@@ -137,15 +135,12 @@ public class TEvent implements Serializable {
         return getTgGames().stream().anyMatch(TGame::isCalibrating);
     }
 
+    public void flushFutures() {
+        futures.forEach(future -> future.cancel(true));
+        futures.clear();
+    }
+
     public Boolean hasAnyGameFinished() {
         return getTgGames().stream().anyMatch(game -> game.getStatus() == FINISHED);
-    }
-
-    public void scheduleFuture(ScheduledFuture<?> futureExecutor) {
-        futures.add(futureExecutor);
-    }
-
-    public void cancelFutures() {
-        futures.forEach(future -> future.cancel(true));
     }
 }

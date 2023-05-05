@@ -13,6 +13,7 @@ public final class Symbols {
     public static final String GOBLET_EMOJI = "\uD83C\uDFC6";
     public static final String SAND_CLOCK_EMOJI = "⏳";
     public static final String WARNING_EMOJI = "⚠";
+    public static final String CLOCK_EMOJI = "\uD83D\uDD53";
     public static final String DRUM_EMOJI = "\uD83E\uDD41";
     public static final String NICE_MOON_EMOJI = "\uD83C\uDF1A";
     public static final String VS_EMOJI = "\uD83C\uDD85\uD83C\uDD82";

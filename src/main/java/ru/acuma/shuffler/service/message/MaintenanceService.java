@@ -3,11 +3,8 @@ package ru.acuma.shuffler.service.message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.domain.TEvent;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -35,7 +32,4 @@ public class MaintenanceService {
 //            .ifPresent(event -> event.delete(messageId));
 //    }
 
-    public void flushEvent(TEvent event) {
-        eventContext.flushEvent(event.getChatId());
-    }
 }

@@ -32,15 +32,6 @@ public class MessageService {
             .build();
     }
 
-    public BotApiMethod<Message> sendMessage(final TEvent event, final MessageType type, final InlineKeyboardMarkup keyboard) {
-        return SendMessage.builder()
-            .chatId(String.valueOf(event.getChatId()))
-            .text(messageContentService.buildContent(event, type))
-            .replyMarkup(keyboard)
-            .parseMode(ParseMode.HTML)
-            .build();
-    }
-
     public EditMessageText buildMessageUpdate(final TEvent event, final Integer messageId, final MessageType type) {
         return EditMessageText.builder()
             .chatId(String.valueOf(event.getChatId()))
@@ -59,9 +50,9 @@ public class MessageService {
             .build();
     }
 
-    public EditMessageReplyMarkup buildReplyMarkupUpdate(final TEvent event, final Integer messageId, final InlineKeyboardMarkup keyboard) {
+    public EditMessageReplyMarkup buildReplyMarkupUpdate(final Long chatId, final Integer messageId, final InlineKeyboardMarkup keyboard) {
         return EditMessageReplyMarkup.builder()
-            .chatId(String.valueOf(event.getChatId()))
+            .chatId(String.valueOf(chatId))
             .messageId(messageId)
             .replyMarkup(keyboard)
             .build();

@@ -2,7 +2,9 @@ package ru.acuma.shuffler.model.domain;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.messages.ExecuteStrategy;
 import ru.acuma.shuffler.model.constant.messages.MessageAction;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
@@ -10,26 +12,29 @@ import ru.acuma.shuffler.model.constant.messages.MessageType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @Data
 @Builder
 @Accessors(chain = true)
-public class TRender implements Serializable {
+public class Render implements Serializable {
 
     private Integer messageId;
     private MessageType messageType;
     private ExecuteStrategy executeStrategy;
     private Integer delay;
     private MessageAction messageAction;
-    private transient List<Supplier<TRender>> afterActions;
+    @EqualsAndHashCode.Exclude
+    private transient List<Supplier<Render>> afterActions;
 
     public boolean requireChanges() {
         return ExecuteStrategy.IDLE != executeStrategy;
     }
 
-    public static TRender forSend(final MessageType messageType) {
-        return TRender.builder()
+    public static Render forSend(final MessageType messageType) {
+        return Render.builder()
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.SEND)
@@ -37,8 +42,8 @@ public class TRender implements Serializable {
             .build();
     }
 
-    public static TRender forUpdate(final MessageType messageType, final Integer messageId) {
-        return TRender.builder()
+    public static Render forUpdate(final MessageType messageType, final Integer messageId) {
+        return Render.builder()
             .messageId(messageId)
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
@@ -47,8 +52,8 @@ public class TRender implements Serializable {
             .build();
     }
 
-    public static TRender forMarkup(final MessageType messageType, final Integer messageId) {
-        return TRender.builder()
+    public static Render forMarkup(final MessageType messageType, final Integer messageId) {
+        return Render.builder()
             .messageId(messageId)
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
@@ -57,8 +62,8 @@ public class TRender implements Serializable {
             .build();
     }
 
-    public static TRender forDelete(final Integer messageId) {
-        return TRender.builder()
+    public static Render forDelete(final Integer messageId) {
+        return Render.builder()
             .messageId(messageId)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.DELETE)
@@ -66,8 +71,8 @@ public class TRender implements Serializable {
             .build();
     }
 
-    public static TRender forPin(final Integer messageId) {
-        return TRender.builder()
+    public static Render forPin(final Integer messageId) {
+        return Render.builder()
             .messageId(messageId)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.PIN)
@@ -75,22 +80,26 @@ public class TRender implements Serializable {
             .build();
     }
 
-    public TRender withAfterAction(final Supplier<TRender> afterAction) {
+    public Render withAfterAction(final Supplier<Render> afterAction) {
         afterActions.add(afterAction);
 
         return this;
     }
 
-    public TRender withDelay(final Integer delay) {
+    public Render withDelay(final Integer delay) {
         return setExecuteStrategy(ExecuteStrategy.DELAYED)
             .setDelay(delay);
     }
 
-    public TRender withTimer() {
+    public Render withTimer() {
         return setExecuteStrategy(ExecuteStrategy.TIMER);
     }
 
     public void success() {
         setExecuteStrategy(ExecuteStrategy.IDLE);
+    }
+
+    public Integer getDelay() {
+        return Objects.isNull(delay) ? Constants.DISABLED_BUTTON_TIMEOUT : delay;
     }
 }

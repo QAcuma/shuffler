@@ -5,16 +5,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.shuffler.model.constant.Command;
-import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.GameState;
-import ru.acuma.shuffler.model.constant.keyboards.Created;
-import ru.acuma.shuffler.model.constant.keyboards.Game;
-import ru.acuma.shuffler.model.constant.keyboards.Playing;
-import ru.acuma.shuffler.model.constant.keyboards.Ready;
-import ru.acuma.shuffler.model.constant.keyboards.checking.Checking;
-import ru.acuma.shuffler.model.constant.keyboards.checking.Checking1;
-import ru.acuma.shuffler.model.constant.keyboards.checking.Checking2;
-import ru.acuma.shuffler.model.constant.keyboards.checking.Checking3;
+import ru.acuma.shuffler.model.constant.keyboards.Keyboards;
+import ru.acuma.shuffler.model.constant.keyboards.ShufflerButton;
 import ru.acuma.shuffler.model.domain.TEvent;
 
 import java.math.BigDecimal;
@@ -38,9 +31,17 @@ public class KeyboardService {
     public InlineKeyboardMarkup getCheckingKeyboard(final Integer timer) {
         var buttons = timer > BigDecimal.ZERO.intValue()
                       ? buildTimerButtons(timer)
-                      : List.<EventStatusButton>of(Checking.values());
+                      : Keyboards.CHECKING_BUTTONS;
 
         return buildKeyboard(buttons);
+    }
+
+    public InlineKeyboardMarkup getCheckingKeyboard() {
+        return getCheckingKeyboard(0);
+    }
+
+    public InlineKeyboardMarkup getWaitingKeyboard() {
+        return buildKeyboard(Keyboards.IDLE_BUTTONS);
     }
 
     public InlineKeyboardMarkup getGamingKeyboard(TEvent event) {
@@ -88,13 +89,13 @@ public class KeyboardService {
             .build();
     }
 
-    private InlineKeyboardMarkup buildKeyboard(List<EventStatusButton> buttons) {
+    private InlineKeyboardMarkup buildKeyboard(List<ShufflerButton> buttons) {
         return buttons.isEmpty()
                ? new InlineKeyboardMarkup(Collections.emptyList())
                : buildKeyboardStructure(buttons);
     }
 
-    private InlineKeyboardMarkup buildKeyboardStructure(List<EventStatusButton> names) {
+    private InlineKeyboardMarkup buildKeyboardStructure(List<ShufflerButton> names) {
         var buttons = IntStream.rangeClosed(1, 3)
             .mapToObj(rowNum -> getInlineKeyboardButtons(names, rowNum))
             .toList();
@@ -104,7 +105,7 @@ public class KeyboardService {
             .build();
     }
 
-    private List<InlineKeyboardButton> getInlineKeyboardButtons(List<EventStatusButton> names, int row) {
+    private List<InlineKeyboardButton> getInlineKeyboardButtons(List<ShufflerButton> names, int row) {
         return names.stream()
             .filter(button -> button.getRow() == row)
             .map(button -> InlineKeyboardButton.builder()
@@ -114,32 +115,33 @@ public class KeyboardService {
             .toList();
     }
 
-    private List<EventStatusButton> buildTimerButtons(Integer time) {
+    private List<ShufflerButton> buildTimerButtons(Integer time) {
         return switch (time) {
-            case 3 -> List.of(Checking3.values());
-            case 2 -> List.of(Checking2.values());
-            case 1 -> List.of(Checking1.values());
-            default -> List.of(Checking.values());
+            case 3 -> Keyboards.IDLE_3_BUTTONS;
+            case 2 -> Keyboards.IDLE_2_BUTTONS;
+            case 1 -> Keyboards.IDLE_1_BUTTONS;
+            default -> Keyboards.CHECKING_BUTTONS;
         };
     }
 
-    private List<EventStatusButton> buildLobbyButtons(TEvent event) {
+    private List<ShufflerButton> buildLobbyButtons(TEvent event) {
         var eventState = event.getEventStatus();
 
         return switch (eventState) {
-            case CREATED -> List.of(Created.values());
-            case READY -> List.of(Ready.values());
-            case GAME_CHECKING, CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING, EVICTING, ANY, CANCELLED, FINISHED -> Collections.emptyList();
-            case PLAYING, WAITING_WITH_GAME, WAITING -> List.of(Playing.values());
+            case CREATED -> Keyboards.LOBBY_BUTTONS;
+            case READY -> Keyboards.LOBBY_READY_BUTTONS;
+            case CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING, EVICTING -> Keyboards.CHECKING_BUTTONS;
+            case GAME_CHECKING, ANY, CANCELLED, FINISHED -> Collections.emptyList();
+            case PLAYING, WAITING_WITH_GAME, WAITING -> Keyboards.LOBBY_PLAYING_BUTTONS;
         };
     }
 
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
-    private List<EventStatusButton> buildGameButtons(GameState gameState) {
+    private List<ShufflerButton> buildGameButtons(final GameState gameState) {
         return switch (gameState) {
-            case ACTIVE -> List.of(Game.values());
+            case ACTIVE -> Keyboards.GAME_BUTTONS;
+            case RED_CHECKING, BLUE_CHECKING, CANCEL_CHECKING -> Keyboards.CHECKING_BUTTONS;
             default -> Collections.emptyList();
         };
     }
-
 }

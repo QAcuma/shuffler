@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.acuma.shuffler.bot.ShufflerBot;
-import ru.acuma.shuffler.model.domain.TRender;
+import ru.acuma.shuffler.model.domain.Render;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 public class ExecuteService {
 
     private static final int TOO_MANY_REQUESTS_CODE = 429;
-    private static final int BAD_REQUEST_COE = 400;
+    private static final int BAD_REQUEST_CODE = 400;
     private static final String TIMEOUT_REGEX = "(?<=after )\\d+$";
     private static final Pattern pattern = Pattern.compile(TIMEOUT_REGEX);
 
@@ -40,7 +41,7 @@ public class ExecuteService {
     }
 
     @SneakyThrows
-    public <T extends Serializable, M extends BotApiMethod<T>> T execute(final M method, final TRender render) {
+    public <T extends Serializable, M extends BotApiMethod<T>> T execute(final M method, final Render render) {
         var result = syncExecutors.submit(() -> doExecute(method)).get();
 
         Optional.ofNullable(result)
@@ -52,8 +53,8 @@ public class ExecuteService {
         return result;
     }
 
-    public <T extends Serializable, M extends BotApiMethod<T>> void executeLater(final M method, final TRender render) {
-        scheduledExecutors.schedule(() -> execute(method, render), render.getDelay(), TimeUnit.SECONDS);
+    public <T extends Serializable, M extends BotApiMethod<T>> ScheduledFuture<T> executeLater(final M method, final Render render) {
+        return scheduledExecutors.schedule(() -> execute(method, render), render.getDelay(), TimeUnit.SECONDS);
     }
 
     @SneakyThrows
@@ -61,12 +62,17 @@ public class ExecuteService {
         try {
             return shufflerBot.execute(method);
         } catch (TelegramApiRequestException e) {
-            log.warn(e.getMessage());
-
             return switch (e.getErrorCode()) {
-                case TOO_MANY_REQUESTS_CODE, BAD_REQUEST_COE -> repeatLater(method, e);
+                case TOO_MANY_REQUESTS_CODE -> repeatLater(method, e);
+                case BAD_REQUEST_CODE -> {
+                    log.error(e.getMessage());
+                    yield null;
+                }
                 default -> syncExecutors.submit(() -> shufflerBot.execute(method)).get();
             };
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
         }
     }
 
@@ -74,6 +80,7 @@ public class ExecuteService {
         final M method,
         final TelegramApiRequestException e
     ) throws InterruptedException, ExecutionException {
+        log.warn(e.getMessage());
         var matcher = pattern.matcher(e.getMessage());
         var delay = matcher.find() ? Long.parseLong(matcher.group(0)) : 30_000L;
 

@@ -3,7 +3,7 @@ package ru.acuma.shuffler.model.wrapper;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.acuma.shuffler.model.domain.TRender;
+import ru.acuma.shuffler.model.domain.Render;
 
 @Data
 @Builder
@@ -12,6 +12,6 @@ public class RenderEvent {
 
     private Long chatId;
 
-    private TRender render;
+    private Render render;
 
 }

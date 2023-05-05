@@ -17,6 +17,7 @@ import java.util.Optional;
 public class TEventPlayer implements Serializable {
     private Long id;
     private Long chatId;
+    @EqualsAndHashCode.Exclude
     private TEventPlayer lastGamePlayer;
     private TRating ratingContext;
     private TEventContext eventContext;

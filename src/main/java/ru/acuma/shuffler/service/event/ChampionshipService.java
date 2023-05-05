@@ -5,8 +5,8 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.service.message.MaintenanceService;
 import ru.acuma.shuffler.service.message.MessageService;
 
@@ -26,13 +26,12 @@ public class ChampionshipService {
         eventStatusService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
 
-        event.render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 
     @SneakyThrows
     public void finishChampionship(TEvent event) {
         eventStatusService.finished(event);
-        maintenanceService.flushEvent(event);
 //        eventContext.update(event);
     }
 

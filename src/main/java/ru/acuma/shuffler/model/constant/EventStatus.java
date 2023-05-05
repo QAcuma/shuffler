@@ -9,21 +9,22 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum EventStatus {
 
-    CREATED(2),
-    READY(3),
-    CANCEL_CHECKING(1),
-    CANCELLED(0),
-    BEGIN_CHECKING(1),
-    PLAYING(2),
-    WAITING(0),
-    GAME_CHECKING(0),
-    WAITING_WITH_GAME(0),
-    FINISH_CHECKING(1),
-    FINISHED(2),
-    EVICTING(0),
-    ANY(0);
+    ANY(0, true),
+    CREATED(2, true),
+    READY(3, true),
+    BEGIN_CHECKING(1, true),
+    PLAYING(2, true),
+    WAITING_WITH_GAME(0, true),
+    WAITING(0, true),
+    GAME_CHECKING(0, true),
+    FINISH_CHECKING(1, true),
+    CANCEL_CHECKING(1, true),
+    EVICTING(0, true),
+    CANCELLED(0, false),
+    FINISHED(2, false);
 
-    private final int rows;
+    private final int markupRows;
+    private final boolean isActive;
 
     public boolean in(EventStatus... states) {
         return Arrays.asList(states).contains(this);

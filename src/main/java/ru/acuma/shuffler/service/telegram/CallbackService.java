@@ -74,6 +74,7 @@ public class CallbackService {
                 eventContext.rollbackEvent(chatId);
             } finally {
                 renderService.render(chatId);
+                eventContext.flushInactiveEvent(chatId);
                 chatIdLocks.remove(chatId);
             }
         }

@@ -46,7 +46,7 @@ public class CalibrationService {
             playerId,
             discipline
         );
-        int distinctEnemies = getDistinctEnemiesCount(playerId, discipline);
+        var distinctEnemies = getDistinctEnemiesCount(playerId, discipline);
 
         return games.size() > requiredGames && distinctEnemies >= requiredEnemies;
     }

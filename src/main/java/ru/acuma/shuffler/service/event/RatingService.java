@@ -57,12 +57,12 @@ public class RatingService {
     }
 
     @SneakyThrows
-    @Transactional
+    @Transactional(readOnly = true)
     public void update(TEvent event) {
         var game = event.getCurrentGame();
-        Optional.ofNullable(game.getWinnerTeam()).orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
+        Optional.ofNullable(game.getWinnerTeam())
+            .orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
         applyChanges(event);
-        saveResults(event);
     }
 
     public void defaultRating(final Player player) {
@@ -80,14 +80,6 @@ public class RatingService {
                 discipline)
             .map(ratingMapper::toRatingContext)
             .orElseGet(ratingMapper::defaultRating);
-    }
-
-    public void saveResults(final TEvent event) {
-        TGame game = event.getCurrentGame();
-//        event.getCurrentGame().getPlayers()
-//            .stream()
-//            .peek(player -> saveRating(player, event.getDiscipline()))
-//            .forEach(player -> saveHistory(player, game, event.getDiscipline()));
     }
 
     private int winCase(final TTeam team1, final TTeam team2) {

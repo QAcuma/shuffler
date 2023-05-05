@@ -6,8 +6,8 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.NoCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
+import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.model.domain.TRender;
 import ru.acuma.shuffler.service.event.EventStatusService;
 
 import java.util.List;
@@ -32,18 +32,22 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
+        event.flushFutures();
         switch (event.getEventStatus()) {
             case CANCEL_CHECKING, BEGIN_CHECKING -> returnLobby(event);
-            case GAME_CHECKING -> {}
-            case WAITING -> {}
-            case FINISH_CHECKING -> {}
-            case EVICTING -> {}
+            case GAME_CHECKING -> {
+            }
+            case WAITING -> {
+            }
+            case FINISH_CHECKING -> {
+            }
+            case EVICTING -> {
+            }
         }
     }
 
     private void returnLobby(final TEvent event) {
         eventStatusService.praperation(event);
-        event.render(TRender.forDelete(event.getMessageId(MessageType.CHECKING)))
-            .render(TRender.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
+        event.render(Render.forUpdate(MessageType.LOBBY, event.getMessageId(MessageType.LOBBY)));
     }
 }
