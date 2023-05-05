@@ -71,8 +71,7 @@ public class GameService {
                 game.getBlueTeam().setIsWinner(Boolean.TRUE);
                 finishGameWithWinner(game);
             }
-            case CANCEL_CHECKING -> finishCancelledGame(game);
-
+            case CANCELLED, CANCEL_CHECKING, EVENT_CHECKING -> finishCancelledGame(game);
         }
         saveGameData(event);
     }

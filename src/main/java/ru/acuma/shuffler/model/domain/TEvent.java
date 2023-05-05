@@ -12,7 +12,6 @@ import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameStatus;
-import ru.acuma.shuffler.model.constant.messages.MessageAction;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 
 import java.io.Serializable;
@@ -22,7 +21,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Future;
 
@@ -42,7 +40,7 @@ public class TEvent implements Serializable {
     private final List<TGame> tgGames = new ArrayList<>();
     private final Map<Long, TEventPlayer> players = new HashMap<>();
     @EqualsAndHashCode.Exclude
-    private final List<Render> messages = new ArrayList<>();
+    private final Map<MessageType, Render> messages = new HashMap<>();
     @EqualsAndHashCode.Exclude
     private final transient List<Future<?>> futures = new ArrayList<>();
     @EqualsAndHashCode.Exclude
@@ -55,32 +53,15 @@ public class TEvent implements Serializable {
     }
 
     public TEvent render(final Render render) {
-        Optional.ofNullable(render)
-            .filter(renderInfo -> Objects.nonNull(renderInfo.getMessageType()))
-            .filter(renderInfo -> !Objects.equals(MessageAction.SEND, renderInfo.getMessageAction()))
-            .map(renderInfo -> renderInfo.setMessageId(getMessageId(renderInfo.getMessageType())))
-            .filter(mappedRender -> Objects.nonNull(mappedRender.getMessageId()))
-            .ifPresentOrElse(
-                this::replaceRender,
-                () -> messages.add(render)
-            );
+        Optional.ofNullable(messages.get(render.getMessageType()))
+                .ifPresent(oldRender -> render.setMessageId(oldRender.getMessageId()));
+        messages.put(render.getMessageType(), render);
 
         return this;
     }
 
-    private void replaceRender(final Render render) {
-        messages.stream()
-            .filter(message -> Objects.equals(render.getMessageId(), message.getMessageId()))
-            .findFirst()
-            .ifPresent(messages::remove);
-        messages.add(render);
-    }
-
     public Integer getMessageId(final MessageType messageType) {
-        return messages.stream()
-            .filter(message -> Objects.equals(messageType, message.getMessageType()))
-            .filter(message -> Objects.nonNull(message.getMessageId()))
-            .findFirst()
+        return Optional.ofNullable(messages.get(messageType))
             .map(Render::getMessageId)
             .orElseThrow(() -> new DataException(ExceptionCause.MESSAGE_NOT_FOUND, messageType));
     }

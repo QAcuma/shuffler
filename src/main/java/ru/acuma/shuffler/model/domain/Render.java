@@ -69,6 +69,15 @@ public class Render implements Serializable {
             .build();
     }
 
+    public static Render forDelete(MessageType messageType) {
+        return Render.builder()
+            .messageType(messageType)
+            .executeStrategy(ExecuteStrategy.REGULAR)
+            .messageAction(MessageAction.DELETE)
+            .afterActions(new ArrayList<>())
+            .build();
+    }
+
     public static Render forPin(final Integer messageId) {
         return Render.builder()
             .messageId(messageId)

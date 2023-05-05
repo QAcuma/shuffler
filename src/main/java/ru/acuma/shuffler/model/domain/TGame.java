@@ -60,6 +60,7 @@ public class TGame implements Serializable {
         return List.of(
             GameStatus.ACTIVE,
             GameStatus.CANCEL_CHECKING,
+            GameStatus.EVENT_CHECKING,
             GameStatus.BLUE_CHECKING,
             GameStatus.RED_CHECKING
         ).contains(getStatus());

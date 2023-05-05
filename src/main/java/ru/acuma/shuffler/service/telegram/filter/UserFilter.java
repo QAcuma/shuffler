@@ -45,7 +45,7 @@ public class UserFilter implements AuthFilter {
         var playerStatus = playerService.authenticate(searchPlayerParams);
         switch (playerStatus) {
             case UNREGISTERED -> playerService.signUp(searchPlayerParams.getChatId(), searchPlayerParams.getUserId());
-            case SUCCESS -> log.debug("Player {} authenticated for chat {}", searchPlayerParams.getChatId(), searchPlayerParams.getUserId());
+            case SUCCESS -> log.trace("Player {} authenticated for chat {}", searchPlayerParams.getChatId(), searchPlayerParams.getUserId());
             case DENY -> throw new IdleException(ExceptionCause.PLAYER_NOT_FOUND);
         }
     }

@@ -12,6 +12,7 @@ import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameService;
+import ru.acuma.shuffler.service.event.GameStatusService;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
 
     private final GameService gameService;
     private final EventStatusService eventStatusService;
+    private final GameStatusService gameStatusService;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -61,7 +63,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
             .render(Render.forSend(MessageType.GAME));
     }
 
-    private void nextGame(TEvent event) {
+    private void nextGame(final TEvent event) {
         gameService.finishGame(event);
         switch (eventStatusService.resume(event)) {
             case PLAYING -> {
@@ -74,7 +76,8 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         }
     }
 
-    private void finishGame(TEvent event) {
+    private void finishGame(final TEvent event) {
+        gameStatusService.finished(event.getCurrentGame());
         gameService.finishGame(event);
         eventStatusService.resume(event);
 
@@ -82,10 +85,10 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
             .render(Render.forUpdate(MessageType.LOBBY));
     }
 
-    private void finishEvent(TEvent event) {
+    private void finishEvent(final TEvent event) {
+        gameStatusService.finished(event.getCurrentGame());
         gameService.finishGame(event);
         eventStatusService.finished(event);
-        eventContext.flushInactiveEvent(event.getChatId());
 
         event.render(Render.forDelete(event.getMessageId(MessageType.GAME)))
             .render(Render.forUpdate(MessageType.LOBBY));

@@ -75,7 +75,7 @@ public class MessageService {
     private InlineKeyboardMarkup getKeyboard(final TEvent event, final MessageType type) {
         return switch (type) {
             case LOBBY -> keyboardService.getLobbyKeyboard(event);
-            case CHECKING -> keyboardService.getCheckingKeyboard(0);
+            case CHECKING -> keyboardService.getCheckingKeyboard();
             case GAME -> keyboardService.getGamingKeyboard(event);
             case CANCELLED, STAT -> keyboardService.getEmptyKeyboard();
         };

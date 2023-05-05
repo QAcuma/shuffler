@@ -19,6 +19,10 @@ public class GameStatusService {
         game.setStatus(GameStatus.CANCEL_CHECKING);
     }
 
+    public void eventCheck(TGame game) {
+        game.setStatus(GameStatus.EVENT_CHECKING);
+    }
+
     public void redCheck(TGame game) {
         game.setStatus(GameStatus.RED_CHECKING);
     }

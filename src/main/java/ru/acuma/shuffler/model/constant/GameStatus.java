@@ -11,8 +11,9 @@ public enum GameStatus {
     CANCEL_CHECKING(1),
     RED_CHECKING(1),
     BLUE_CHECKING(1),
-    CANCELLED(1),
-    FINISHED(1);
+    EVENT_CHECKING(0),
+    CANCELLED(0),
+    FINISHED(0);
 
     private final int rows;
 

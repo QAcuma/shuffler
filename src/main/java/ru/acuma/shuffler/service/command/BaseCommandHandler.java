@@ -21,6 +21,7 @@ public abstract class BaseCommandHandler<T extends BaseBotCommand> {
     protected abstract List<EventStatus> getSupportedStatuses();
 
     public final void handle(final Message message, final String... args) {
+        log.debug("Command {} called", getClass().getSimpleName());
         Optional.ofNullable(eventContext.findEvent(message.getChatId()))
             .ifPresentOrElse(
                 event -> Optional.of(event.snapshotHash())

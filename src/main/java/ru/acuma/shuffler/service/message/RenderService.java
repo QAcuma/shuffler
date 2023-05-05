@@ -1,6 +1,7 @@
 package ru.acuma.shuffler.service.message;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -10,6 +11,7 @@ import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.exception.TelegramApiException;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
+import ru.acuma.shuffler.model.constant.messages.MessageAction;
 import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
@@ -18,6 +20,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RenderService {
@@ -31,15 +34,17 @@ public class RenderService {
         Optional.ofNullable(eventContext.findEvent(chatId))
             .filter(event -> !Objects.equals(event.getHash(), event.hashCode()))
             .ifPresent(event -> {
-                    event.getMessages()
+                    log.info("eventstatus: {}, gamestatus: {}", event.getEventStatus(),
+                        event.getTgGames().isEmpty() ? "" : event.getCurrentGame().getStatus());
+                    event.getMessages().values()
                         .stream()
                         .filter(Render::requireChanges)
                         .forEach(render -> {
                             executeMethod(event, render);
                             executeAfterActions(event, render);
                         });
-                    event.getMessages()
-                        .removeIf(message -> Objects.isNull(message.getMessageType()));
+                    event.getMessages().entrySet()
+                        .removeIf(entry -> entry.getValue().getMessageAction().equals(MessageAction.DELETE));
                 }
             );
     }
