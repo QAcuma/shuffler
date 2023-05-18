@@ -6,6 +6,7 @@ import ru.acuma.shuffler.model.constant.messages.EventConstant;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
+import ru.acuma.shuffler.model.domain.TMenu;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -20,6 +21,16 @@ import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
 
 @Service
 public class MessageTextService {
+
+    public String buildMenuMessage(final TMenu menu) {
+        return switch (menu.getCurrentScreen()) {
+            case MAIN -> getMainMessage();
+        };
+    }
+
+    private String getMainMessage() {
+        return EventConstant.MENU_MAIN_MESSAGE.getText();
+    }
 
     public String buildLobbyContent(final TEvent event) {
         return getEventHeader(event)

@@ -1,8 +1,11 @@
 package ru.acuma.shuffler.context;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.acuma.shuffler.model.constant.Constants;
@@ -26,7 +29,9 @@ public class Render implements Serializable {
     private ExecuteStrategy executeStrategy;
     private Integer delay;
     private MessageAction messageAction;
+    @Setter(AccessLevel.PRIVATE)
     private String messageText;
+    @Setter(AccessLevel.PRIVATE)
     private InlineKeyboardMarkup keyboard;
     @EqualsAndHashCode.Exclude
     private transient List<Supplier<Render>> afterActions;

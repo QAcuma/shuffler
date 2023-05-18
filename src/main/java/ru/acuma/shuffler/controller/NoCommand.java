@@ -19,7 +19,7 @@ public class NoCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.NO.getCommand();
+        return Command.NO.getName();
     }
 }
 

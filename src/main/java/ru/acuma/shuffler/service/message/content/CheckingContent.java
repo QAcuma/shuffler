@@ -10,7 +10,7 @@ import ru.acuma.shuffler.model.domain.TEvent;
 public class CheckingContent implements Fillable, WithText<TEvent>, WithKeyboard<TEvent> {
 
     @Override
-    public void fill(Render render, Long chatId) {
+    public void fill(final Render render, final Long chatId) {
 
     }
 

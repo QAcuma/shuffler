@@ -9,6 +9,7 @@ import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.constant.keyboards.Keyboards;
 import ru.acuma.shuffler.model.constant.keyboards.ShufflerButton;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.model.domain.TMenu;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -22,7 +23,12 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class KeyboardService {
 
-    public InlineKeyboardMarkup getLobbyKeyboard(TEvent event) {
+    public InlineKeyboardMarkup getMenuKeyboard(final TMenu menu) {
+        var menuButtons = buildMenuButtons(menu);
+        return buildKeyboard(menuButtons);
+    }
+
+    public InlineKeyboardMarkup getLobbyKeyboard(final TEvent event) {
         var lobbyButtons = buildLobbyButtons(event);
 
         return buildKeyboard(lobbyButtons);
@@ -44,7 +50,7 @@ public class KeyboardService {
         return buildKeyboard(Keyboards.IDLE_BUTTONS);
     }
 
-    public InlineKeyboardMarkup getGamingKeyboard(TEvent event) {
+    public InlineKeyboardMarkup getGamingKeyboard(final TEvent event) {
         var gameState = event.getCurrentGame().getStatus();
         var gameButtons = buildGameButtons(gameState);
 
@@ -73,7 +79,7 @@ public class KeyboardService {
 
     public InlineKeyboardButton getSingleButton(Command command, String text) {
         return InlineKeyboardButton.builder()
-            .callbackData(command.getCommand())
+            .callbackData(command.getName())
             .text(text)
             .build();
     }
@@ -85,7 +91,7 @@ public class KeyboardService {
     private InlineKeyboardButton buildButtonWithParam(Command command, Long identifier, String text) {
         return InlineKeyboardButton.builder()
             .text(text)
-            .callbackData(command.getCommand() + "?" + identifier)
+            .callbackData(command.getName() + "?" + identifier)
             .build();
     }
 
@@ -113,6 +119,12 @@ public class KeyboardService {
                 .callbackData(button.getAction())
                 .build())
             .toList();
+    }
+
+    private List<ShufflerButton> buildMenuButtons(final TMenu menu) {
+        return switch (menu.getCurrentScreen()) {
+            case MAIN -> Keyboards.MENU_DISCIPLINE_BUTTONS;
+        };
     }
 
     private List<ShufflerButton> buildTimerButtons(Integer time) {

@@ -19,7 +19,7 @@ public class EvictCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.EVICT.getCommand();
+        return Command.EVICT.getName();
     }
 }
 

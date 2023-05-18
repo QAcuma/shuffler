@@ -19,7 +19,7 @@ public class JoinCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.JOIN.getCommand();
+        return Command.JOIN.getName();
     }
 }
 

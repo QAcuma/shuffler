@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.service.telegram;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.acuma.shuffler.controller.BaseBotCommand;
 import ru.acuma.shuffler.model.constant.Command;
@@ -21,11 +22,12 @@ public class TelegramCommandRegistry {
     }
 
     public BaseBotCommand resolve(final String commandIdentifier) {
-        var pureCommand = commandIdentifier.replace("/", "");
+        var unnamedCommand = StringUtils.substringBefore(commandIdentifier, "@");
+        var pureCommand = unnamedCommand.replace("/", "");
 
         return commandRegistry.getOrDefault(
             pureCommand,
-            commandRegistry.get(Command.IDLE.getCommand())
+            commandRegistry.get(Command.IDLE.getName())
         );
     }
 }

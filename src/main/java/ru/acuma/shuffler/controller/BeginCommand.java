@@ -19,7 +19,7 @@ public class BeginCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.BEGIN.getCommand();
+        return Command.BEGIN.getName();
     }
 }
 

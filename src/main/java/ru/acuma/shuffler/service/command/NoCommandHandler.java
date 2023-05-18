@@ -3,10 +3,10 @@ package ru.acuma.shuffler.service.command;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
+import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.controller.NoCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameStatusService;
@@ -36,13 +36,19 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         renderContext.forEvent(event).flushFutures();
         switch (event.getEventStatus()) {
-            case CANCEL_CHECKING, BEGIN_CHECKING, WAITING -> returnLobby(event);
+            case CANCEL_CHECKING, BEGIN_CHECKING -> returnLobby(event);
+            case WAITING -> returnWaitingLobby(event);
             case GAME_CHECKING, FINISH_CHECKING, EVICTING -> returnGame(event);
         }
     }
 
     private void returnLobby(final TEvent event) {
         eventStatusService.praperation(event);
+        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY));
+    }
+
+    private void returnWaitingLobby(final TEvent event) {
+        eventStatusService.resume(event);
         renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY));
     }
 

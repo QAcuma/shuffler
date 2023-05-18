@@ -19,6 +19,6 @@ public class EventCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.EVENT.getCommand();
+        return Command.EVENT.getName();
     }
 }

@@ -12,20 +12,22 @@ import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 @AllArgsConstructor
 public enum ShufflerButton {
 
-    BUTTON_JOIN(Command.JOIN.getCommand(), "Присоединиться", 1),
-    BUTTON_LEAVE(Command.LEAVE.getCommand(), "Покинуть", 2),
-    BUTTON_CANCEL(Command.CANCEL.getCommand(), "Отменить", 2),
-    BUTTON_BEGIN(Command.BEGIN.getCommand(), "Начать", 3),
-    BUTTON_RED(Command.RED.getCommand(), RED_CIRCLE_EMOJI, 1),
-    BUTTON_BLUE(Command.BLUE.getCommand(), BLUE_CIRCLE_EMOJI, 1),
-    BUTTON_CANCEL_GAME(Command.CANCEL_GAME.getCommand(), "Отменить", 2),
-    BUTTON_IDLE_3(Command.IDLE.getCommand(), "3️⃣", 1),
-    BUTTON_IDLE_2(Command.IDLE.getCommand(), "2️⃣", 1),
-    BUTTON_IDLE_1(Command.IDLE.getCommand(), "1️⃣", 1),
-    BUTTON_IDLE(Command.IDLE.getCommand(), CLOCK_EMOJI, 1),
-    BUTTON_YES(Command.YES.getCommand(), "Да", 1),
-    BUTTON_NO(Command.NO.getCommand(), "Нет", 1),
-    BUTTON_FINISH(Command.FINISH.getCommand(), "Завершить", 2);
+    BUTTON_KICKER(Command.EVENT.getName() + "?discipline=kicker", "Кикер", 1),
+    BUTTON_PING_PONG(Command.EVENT.getName() + "?discipline=pong", "Пинг-понг", 2),
+    BUTTON_JOIN(Command.JOIN.getName(), "Присоединиться", 1),
+    BUTTON_LEAVE(Command.LEAVE.getName(), "Покинуть", 2),
+    BUTTON_CANCEL(Command.CANCEL.getName(), "Отменить", 2),
+    BUTTON_BEGIN(Command.BEGIN.getName(), "Начать", 3),
+    BUTTON_RED(Command.RED.getName(), RED_CIRCLE_EMOJI, 1),
+    BUTTON_BLUE(Command.BLUE.getName(), BLUE_CIRCLE_EMOJI, 1),
+    BUTTON_CANCEL_GAME(Command.CANCEL_GAME.getName(), "Отменить", 2),
+    BUTTON_IDLE_3(Command.IDLE.getName(), "3️⃣", 1),
+    BUTTON_IDLE_2(Command.IDLE.getName(), "2️⃣", 1),
+    BUTTON_IDLE_1(Command.IDLE.getName(), "1️⃣", 1),
+    BUTTON_IDLE(Command.IDLE.getName(), CLOCK_EMOJI, 1),
+    BUTTON_YES(Command.YES.getName(), "Да", 1),
+    BUTTON_NO(Command.NO.getName(), "Нет", 1),
+    BUTTON_FINISH(Command.FINISH.getName(), "Завершить", 2);
 
     public final String action;
     public final String alias;

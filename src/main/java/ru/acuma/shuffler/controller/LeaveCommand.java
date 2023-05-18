@@ -19,7 +19,7 @@ public class LeaveCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.LEAVE.getCommand();
+        return Command.LEAVE.getName();
     }
 }
 

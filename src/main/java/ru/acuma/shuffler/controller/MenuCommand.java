@@ -19,6 +19,6 @@ public class MenuCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.LOBBY.getCommand();
+        return Command.MENU.getName();
     }
 }

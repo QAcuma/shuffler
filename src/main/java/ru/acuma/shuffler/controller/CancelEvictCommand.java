@@ -19,7 +19,7 @@ public class CancelEvictCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.CANCEL_EVICT.getCommand();
+        return Command.CANCEL_EVICT.getName();
     }
 }
 

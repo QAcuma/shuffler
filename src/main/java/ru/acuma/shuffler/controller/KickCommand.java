@@ -19,7 +19,7 @@ public class KickCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.KICK.getCommand();
+        return Command.KICK.getName();
     }
 }
 

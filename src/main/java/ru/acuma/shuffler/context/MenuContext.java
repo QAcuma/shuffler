@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MenuContext {
     private final Map<Long, TMenu> menuStorage = new ConcurrentHashMap<>();
 
-    public TMenu chatMenu(final Long chatId) {
+    public TMenu newMenu(final Long chatId) {
         var menu = TMenu.builder().currentScreen(MenuScreen.MAIN).build();
         menuStorage.put(chatId, menu);
 
@@ -25,6 +25,6 @@ public class MenuContext {
 
     public TMenu findMenu(final Long chatId) {
         return Optional.ofNullable(menuStorage.get(chatId))
-            .orElseGet(() -> chatMenu(chatId));
+            .orElseGet(() -> findMenu(chatId));
     }
 }

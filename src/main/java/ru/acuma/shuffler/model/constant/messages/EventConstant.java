@@ -22,6 +22,7 @@ public enum EventConstant implements EventConstantButton {
     BLANK_MESSAGE(""),
     SPACE_MESSAGE("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"),
     SINGLE_SPACE(" "),
+    MENU_MAIN_MESSAGE("Выберите дисциплину"),
     LOBBY_MESSAGE_KICKER(SUMMER_EMOJI + " Готовимся к игре! " + SUMMER_EMOJI + "\n"),
     LOBBY_MESSAGE_PING_PONG(PONG_EMOJI + " Время бить мяч! " + PONG_EMOJI + "\n"),
     LOBBY_MESSAGE_DEFAULT(DICE_EMOJI + " Время распределяться по командам! " + DICE_EMOJI + "\n"),

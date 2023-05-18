@@ -19,7 +19,7 @@ public class BlueCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.BLUE.getCommand();
+        return Command.BLUE.getName();
     }
 }
 

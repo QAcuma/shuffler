@@ -19,7 +19,7 @@ public class RedCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.RED.getCommand();
+        return Command.RED.getName();
     }
 }
 

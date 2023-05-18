@@ -19,7 +19,7 @@ public class ResetCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.RESET.getCommand();
+        return Command.RESET.getName();
     }
 }
 

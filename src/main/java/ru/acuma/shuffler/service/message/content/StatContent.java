@@ -9,7 +9,7 @@ import ru.acuma.shuffler.context.Render;
 public class StatContent implements Fillable {
 
     @Override
-    public void fill(Render render, Long chatId) {
+    public void fill(final Render render, final Long chatId) {
 
     }
 }

@@ -42,5 +42,6 @@ public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
             .render(Render.forSend(MessageType.LOBBY).withAfterAction(
                 () -> Render.forPin(renderContext.forChat(chatId).getMessageId(MessageType.LOBBY))
             ));
+        renderContext.forChat(chatId).render(Render.forDelete(MessageType.MENU));
     }
 }

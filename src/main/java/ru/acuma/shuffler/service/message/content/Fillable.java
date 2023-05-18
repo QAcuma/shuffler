@@ -5,5 +5,5 @@ import ru.acuma.shuffler.context.Render;
 @FunctionalInterface
 public interface Fillable {
 
-    void fill(Render render, Long chatId);
+    void fill(final Render render, final Long chatId);
 }

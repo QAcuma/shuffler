@@ -18,7 +18,7 @@ public class IdleCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.IDLE.getCommand();
+        return Command.IDLE.getName();
     }
 }
 

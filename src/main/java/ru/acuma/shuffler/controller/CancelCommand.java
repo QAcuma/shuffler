@@ -19,7 +19,7 @@ public class CancelCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.CANCEL.getCommand();
+        return Command.CANCEL.getName();
     }
 }
 

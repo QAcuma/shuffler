@@ -19,7 +19,7 @@ public class YesCommand implements BaseBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return Command.YES.getCommand();
+        return Command.YES.getName();
     }
 }
 
