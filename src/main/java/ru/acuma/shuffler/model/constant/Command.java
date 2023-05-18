@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Command {
 
+    LOBBY("lobby"),
     EVENT("event"),
     JOIN("join"),
     LEAVE("leave"),

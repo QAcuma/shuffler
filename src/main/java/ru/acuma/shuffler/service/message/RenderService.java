@@ -7,17 +7,15 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import ru.acuma.shuffler.context.EventContext;
+import ru.acuma.shuffler.context.Render;
+import ru.acuma.shuffler.context.RenderContext;
 import ru.acuma.shuffler.exception.TelegramApiException;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.messages.MessageAction;
-import ru.acuma.shuffler.model.domain.Render;
-import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.telegram.ExecuteService;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -25,40 +23,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RenderService {
 
-    private final EventContext eventContext;
-    private final MessageService messageService;
+    private final RenderContext renderContext;
+    private final TelegramMethodService telegramMethodService;
     private final KeyboardService keyboardService;
     private final ExecuteService executeService;
 
     public void render(final Long chatId) {
-        Optional.ofNullable(eventContext.findEvent(chatId))
-            .filter(event -> !Objects.equals(event.getHash(), event.hashCode()))
-            .ifPresent(event -> {
-                    log.info("eventstatus: {}, gamestatus: {}", event.getEventStatus(),
-                        event.getTgGames().isEmpty() ? "" : event.getCurrentGame().getStatus());
-                    event.getMessages().values()
-                        .stream()
-                        .filter(Render::requireChanges)
-                        .forEach(render -> {
-                            executeMethod(event, render);
-                            executeAfterActions(event, render);
-                        });
-                    event.getMessages().entrySet()
-                        .removeIf(entry -> entry.getValue().getMessageAction().equals(MessageAction.DELETE));
-                }
-            );
+        var chatRender = renderContext.forChat(chatId);
+        chatRender.getRenders().values()
+            .stream()
+            .filter(Render::requireUpdate)
+            .forEach(render -> {
+                var method = resolveApiMethod(render, chatId);
+                executeMethod(method, render);
+                executeAfterActions(render, chatId);
+            });
+        chatRender.getRenders().entrySet()
+            .removeIf(entry -> entry.getValue().getMessageAction().equals(MessageAction.DELETE));
     }
 
-    public void delete(final Long chatId, final Render render) {
-        var method = messageService.deleteMessage(chatId, render.getMessageId());
+    public void delete(final Render render, final Long chatId) {
+        var method = telegramMethodService.deleteMessage(render, chatId);
         executeService.execute(method, render);
     }
 
     private void executeMethod(
-        final TEvent event,
+        final BotApiMethod<?> method,
         final Render render
     ) {
-        var method = resolveApiMethod(render, event);
         switch (render.getExecuteStrategy()) {
             case REGULAR -> executeService.execute(method, render);
             case DELAYED -> executeService.executeLater(method, render);
@@ -69,24 +61,23 @@ public class RenderService {
 
     private BotApiMethod<?> resolveApiMethod(
         final Render render,
-        final TEvent event
+        final Long chatId
     ) {
-        var messageType = render.getMessageType();
-
         return switch (render.getMessageAction()) {
-            case SEND -> messageService.sendMessage(event, messageType);
-            case UPDATE -> messageService.buildMessageUpdate(event, render.getMessageId(), messageType);
-            case UPDATE_MARKUP -> messageService.buildReplyMarkupUpdate(event, render.getMessageId(), messageType);
-            case DELETE -> messageService.deleteMessage(event.getChatId(), render.getMessageId());
-            case PIN -> messageService.pinMessage(event.getChatId(), render.getMessageId());
+            case SEND -> telegramMethodService.sendMessage(render, chatId);
+            case UPDATE -> telegramMethodService.buildMessageUpdate(render, chatId);
+            case UPDATE_MARKUP -> telegramMethodService.buildReplyMarkupUpdate(render, chatId);
+            case DELETE -> telegramMethodService.deleteMessage(render, chatId);
+            case PIN -> telegramMethodService.pinMessage(render, chatId);
         };
     }
 
-    private void executeAfterActions(final TEvent event, final Render render) {
+    private void executeAfterActions(final Render render, final Long chatId) {
         render.getAfterActions().forEach(
             afterAction -> {
                 var afterRender = afterAction.get();
-                executeMethod(event, afterRender);
+                var method = resolveApiMethod(afterRender, chatId);
+                executeMethod(method, afterRender);
             }
         );
     }
@@ -106,17 +97,17 @@ public class RenderService {
         }
     }
 
-    private void sendMessageWithTimedKeyboard(
-        final SendMessage sendMessage,
+    private void editMessageWithTimedKeyboard(
+        final EditMessageText editMessage,
         final Render render
     ) {
         var disabledKeyboard = keyboardService.getWaitingKeyboard();
-        sendMessage.setReplyMarkup(disabledKeyboard);
-        var message = Optional.of(executeService.execute(sendMessage, render))
-            .orElseThrow(() -> new TelegramApiException(ExceptionCause.EXTRACT_RESPONSE_MESSAGE));
-        var editMarkup = messageService.buildReplyMarkupUpdate(
-            message.getChatId(),
-            render.getMessageId(),
+        editMessage.setReplyMarkup(disabledKeyboard);
+        executeService.execute(editMessage, render);
+
+        var editMarkup = telegramMethodService.buildReplyMarkupUpdate(
+            Long.valueOf(editMessage.getChatId()),
+            editMessage.getMessageId(),
             keyboardService.getCheckingKeyboard()
         );
 
@@ -126,17 +117,17 @@ public class RenderService {
         );
     }
 
-    private void editMessageWithTimedKeyboard(
-        final EditMessageText editMessage,
+    private void sendMessageWithTimedKeyboard(
+        final SendMessage sendMessage,
         final Render render
     ) {
         var disabledKeyboard = keyboardService.getWaitingKeyboard();
-        editMessage.setReplyMarkup(disabledKeyboard);
-        executeService.execute(editMessage, render);
-
-        var editMarkup = messageService.buildReplyMarkupUpdate(
-            Long.valueOf(editMessage.getChatId()),
-            editMessage.getMessageId(),
+        sendMessage.setReplyMarkup(disabledKeyboard);
+        var message = Optional.of(executeService.execute(sendMessage, render))
+            .orElseThrow(() -> new TelegramApiException(ExceptionCause.EXTRACT_RESPONSE_MESSAGE));
+        var editMarkup = telegramMethodService.buildReplyMarkupUpdate(
+            message.getChatId(),
+            render.getMessageId(),
             keyboardService.getCheckingKeyboard()
         );
 
@@ -155,18 +146,17 @@ public class RenderService {
         executeService.execute(editMarkup, render);
         editMarkup.setReplyMarkup(keyboardService.getCheckingKeyboard());
 
-        var event = eventContext.findEvent(Long.valueOf(editMarkup.getChatId()));
+        var chatRender = renderContext.forChat(Long.valueOf(editMarkup.getChatId()));
         Optional.ofNullable(executeService.executeLater(editMarkup, render))
-            .ifPresent(future -> event.getFutures().add(future));
+            .ifPresent(future -> chatRender.getFutures().add(future));
     }
 
     private void scheduleMarkupUpdate(
         final EditMessageReplyMarkup editMarkup,
         final Render render
     ) {
-        // TODO: chat context
-        var event = eventContext.findEvent(Long.valueOf(editMarkup.getChatId()));
+        var chatRender = renderContext.forChat(Long.valueOf(editMarkup.getChatId()));
         Optional.ofNullable(executeService.executeLater(editMarkup, render))
-            .ifPresent(future -> event.getFutures().add(future));
+            .ifPresent(chatRender::schedule);
     }
 }

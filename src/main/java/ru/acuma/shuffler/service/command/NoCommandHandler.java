@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.NoCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameStatusService;
@@ -34,7 +34,7 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
-        event.flushFutures();
+        renderContext.forEvent(event).flushFutures();
         switch (event.getEventStatus()) {
             case CANCEL_CHECKING, BEGIN_CHECKING, WAITING -> returnLobby(event);
             case GAME_CHECKING, FINISH_CHECKING, EVICTING -> returnGame(event);
@@ -43,14 +43,13 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
     private void returnLobby(final TEvent event) {
         eventStatusService.praperation(event);
-        event.render(Render.forUpdate(MessageType.LOBBY));
+        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY));
     }
 
     private void returnGame(final TEvent event) {
         eventStatusService.resume(event);
         gameStatusService.active(event.getCurrentGame());
-
-        event.render(Render.forUpdate(MessageType.LOBBY))
+        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY))
             .render(Render.forUpdate(MessageType.GAME));
     }
 }

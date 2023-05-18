@@ -1,9 +1,10 @@
-package ru.acuma.shuffler.model.domain;
+package ru.acuma.shuffler.context;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.messages.ExecuteStrategy;
 import ru.acuma.shuffler.model.constant.messages.MessageAction;
@@ -13,7 +14,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 @Data
@@ -26,10 +26,12 @@ public class Render implements Serializable {
     private ExecuteStrategy executeStrategy;
     private Integer delay;
     private MessageAction messageAction;
+    private String messageText;
+    private InlineKeyboardMarkup keyboard;
     @EqualsAndHashCode.Exclude
     private transient List<Supplier<Render>> afterActions;
 
-    public boolean requireChanges() {
+    public boolean requireUpdate() {
         return ExecuteStrategy.IDLE != executeStrategy;
     }
 
@@ -69,7 +71,7 @@ public class Render implements Serializable {
             .build();
     }
 
-    public static Render forDelete(MessageType messageType) {
+    public static Render forDelete(final MessageType messageType) {
         return Render.builder()
             .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
@@ -87,6 +89,15 @@ public class Render implements Serializable {
             .build();
     }
 
+    public static Render forPin(final MessageType messageType) {
+        return Render.builder()
+            .messageType(messageType)
+            .executeStrategy(ExecuteStrategy.REGULAR)
+            .messageAction(MessageAction.PIN)
+            .afterActions(new ArrayList<>())
+            .build();
+    }
+
     public Render withAfterAction(final Supplier<Render> afterAction) {
         afterActions.add(afterAction);
 
@@ -96,6 +107,14 @@ public class Render implements Serializable {
     public Render withDelay(final Integer delay) {
         return setExecuteStrategy(ExecuteStrategy.DELAYED)
             .setDelay(delay);
+    }
+
+    public Render withKeyboard(final InlineKeyboardMarkup keyboard) {
+        return setKeyboard(keyboard);
+    }
+
+    public Render withText(final String text) {
+        return setMessageText(text);
     }
 
     public Render withTimer() {

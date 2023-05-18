@@ -3,7 +3,6 @@ package ru.acuma.shuffler.service.message;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.constant.messages.EventConstant;
-import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
@@ -22,17 +21,7 @@ import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
 @Service
 public class MessageContentService {
 
-    public String buildContent(final TEvent event, final MessageType type) {
-        return switch (type) {
-            case LOBBY -> buildLobbyContent(event);
-            case GAME -> buildGameContent(event);
-            case CHECKING -> buildCheckingContent(event);
-            case CANCELLED -> buildCancelledContent();
-            default -> EventConstant.BLANK_MESSAGE.getText();
-        };
-    }
-
-    private String buildLobbyContent(final TEvent event) {
+    public String buildLobbyContent(final TEvent event) {
         return getEventHeader(event)
             + (event.getPlayers().isEmpty() ? LET_JOIN_TEXT.getText() : MEMBERS_TEXT.getText())
             + (!event.getPlayers().isEmpty() ? getMembersText(event) : "")
@@ -40,6 +29,34 @@ public class MessageContentService {
             + (Boolean.TRUE.equals(event.hasAnyGameFinished()) ? getWinnersText(event) : "")
             + (Boolean.TRUE.equals(event.isCalibrating()) ? EventConstant.CALIBRATING_MESSAGE.getText() : "")
             + getEventFooterText(event);
+    }
+
+    @SuppressWarnings("StringBufferReplaceableByString")
+    public String buildGameContent(final TEvent event) {
+        var game = event.getCurrentGame();
+        var builder = new StringBuilder();
+
+        return builder.append(EventConstant.GAME_MESSAGE.getText())
+            .append(game.getOrder())
+            .append(EventConstant.SPACE_MESSAGE.getText())
+            .append(System.lineSeparator())
+            .append(buildGameText(game))
+            .toString();
+    }
+
+    public String buildCheckingContent(final TEvent event) {
+        return switch (event.getEventStatus()) {
+            case EVICTING -> EventConstant.EVICT_PLAYER_CHECKING.getText();
+            default -> buildBlankContent();
+        };
+    }
+
+    public String buildCancelledContent() {
+        return EventConstant.LOBBY_CANCELED_MESSAGE.getText();
+    }
+
+    public String buildBlankContent() {
+        return EventConstant.BLANK_MESSAGE.getText();
     }
 
     private String getEventFooterText(final TEvent event) {
@@ -58,7 +75,7 @@ public class MessageContentService {
             case CANCELLED -> EventConstant.LOBBY_CANCELED_MESSAGE.getText();
             case PLAYING -> EventConstant.LOBBY_PLAYING_MESSAGE.getText();
             case FINISHED -> EventConstant.LOBBY_FINISHED_MESSAGE.getText();
-            default -> EventConstant.BLANK_MESSAGE.getText();
+            default -> buildBlankContent();
         };
     }
 
@@ -89,19 +106,6 @@ public class MessageContentService {
         };
     }
 
-    @SuppressWarnings("StringBufferReplaceableByString")
-    private String buildGameContent(final TEvent event) {
-        var game = event.getCurrentGame();
-        var builder = new StringBuilder();
-
-        return builder.append(EventConstant.GAME_MESSAGE.getText())
-            .append(game.getOrder())
-            .append(EventConstant.SPACE_MESSAGE.getText())
-            .append(System.lineSeparator())
-            .append(buildGameText(game))
-            .toString();
-    }
-
     private String buildGameText(final TGame game) {
         return getGameBodyText(game)
             + EventConstant.SINGLE_SPACE.getText()
@@ -113,7 +117,7 @@ public class MessageContentService {
             case RED_CHECKING -> RED_CIRCLE_EMOJI + SINGLE_SPACE.getText() + getRedWinnersBody(game);
             case BLUE_CHECKING -> BLUE_CIRCLE_EMOJI + SINGLE_SPACE.getText() + getBlueWinnersBody(game);
             case ACTIVE, CANCEL_CHECKING -> getDefaultGameBody(game);
-            default -> EventConstant.BLANK_MESSAGE.getText();
+            default -> buildBlankContent();
         };
     }
 
@@ -142,16 +146,5 @@ public class MessageContentService {
     private String getSpaces(final TGame tgGame) {
         String spaces = tgGame.getRedTeam().getPlayer1().getName();
         return StringUtils.repeat(" ", spaces.length() * 2);
-    }
-
-    private String buildCheckingContent(final TEvent event) {
-        return switch (event.getEventStatus()) {
-            case EVICTING -> EventConstant.EVICT_PLAYER_CHECKING.getText();
-            default -> EventConstant.BLANK_MESSAGE.getText();
-        };
-    }
-
-    private String buildCancelledContent() {
-        return EventConstant.LOBBY_CANCELED_MESSAGE.getText();
     }
 }

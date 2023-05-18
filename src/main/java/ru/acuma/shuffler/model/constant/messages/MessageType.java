@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MessageType {
 
+    MENU,
     LOBBY,
     GAME,
     CHECKING,

@@ -9,7 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.wrapper.RenderEvent;
 import ru.acuma.shuffler.util.AspectUtil;
 

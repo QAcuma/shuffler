@@ -21,14 +21,9 @@ public class RedisConfig {
 
         return template;
     }
-//
-//    @Bean("redisEventStorage")
-//    public Map<Long, TEvent> redisEventStorage(final RedisTemplate<String, Object> redisTemplate) {
-//        return redisTemplate.<Long, TEvent>boundHashOps(EVENT_STORAGE).entries();
-//    }
 
     @Bean("redisEventSnapshotStorage")
     public Map<Long, TEvent> redisEventSnapshotStorage(final RedisTemplate<String, Object> redisTemplate) {
-        return  redisTemplate.<Long, TEvent>boundHashOps(EVENT_SNAPSHOT_STORAGE).entries();
+        return redisTemplate.<Long, TEvent>boundHashOps(EVENT_SNAPSHOT_STORAGE).entries();
     }
 }

@@ -3,7 +3,6 @@ package ru.acuma.shuffler.model.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.exception.DataException;
@@ -12,7 +11,6 @@ import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameStatus;
-import ru.acuma.shuffler.model.constant.messages.MessageType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,8 +19,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.Future;
 
 @Data
 @Builder
@@ -39,32 +35,6 @@ public class TEvent implements Serializable {
     private Discipline discipline;
     private final List<TGame> tgGames = new ArrayList<>();
     private final Map<Long, TEventPlayer> players = new HashMap<>();
-    @EqualsAndHashCode.Exclude
-    private final Map<MessageType, Render> messages = new HashMap<>();
-    @EqualsAndHashCode.Exclude
-    private final transient List<Future<?>> futures = new ArrayList<>();
-    @EqualsAndHashCode.Exclude
-    private int hash;
-
-    public TEvent snapshotHash() {
-        hash = hashCode();
-
-        return this;
-    }
-
-    public TEvent render(final Render render) {
-        Optional.ofNullable(messages.get(render.getMessageType()))
-                .ifPresent(oldRender -> render.setMessageId(oldRender.getMessageId()));
-        messages.put(render.getMessageType(), render);
-
-        return this;
-    }
-
-    public Integer getMessageId(final MessageType messageType) {
-        return Optional.ofNullable(messages.get(messageType))
-            .map(Render::getMessageId)
-            .orElseThrow(() -> new DataException(ExceptionCause.MESSAGE_NOT_FOUND, messageType));
-    }
 
     public boolean playerNotParticipate(Long userId) {
         var player = players.get(userId);
@@ -117,11 +87,6 @@ public class TEvent implements Serializable {
 
     public Boolean isCalibrating() {
         return getTgGames().stream().anyMatch(TGame::isCalibrating);
-    }
-
-    public void flushFutures() {
-        futures.forEach(future -> future.cancel(true));
-        futures.clear();
     }
 
     public Boolean hasAnyGameFinished() {

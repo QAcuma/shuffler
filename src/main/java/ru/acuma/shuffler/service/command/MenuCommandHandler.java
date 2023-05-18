@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.controller.EventCommand;
+import ru.acuma.shuffler.controller.MenuCommand;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
+public class MenuCommandHandler extends BaseCommandHandler<MenuCommand> {
 
     private static final String DISCIPLINE_PARAM = "discipline";
 
@@ -37,10 +38,10 @@ public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
     }
 
     private void beginEvent(final Long chatId, final Discipline discipline) {
+        var chatRender = renderContext.forChat(chatId);
         eventContext.createEvent(chatId, discipline);
-        renderContext.forChat(chatId)
-            .render(Render.forSend(MessageType.LOBBY).withAfterAction(
-                () -> Render.forPin(renderContext.forChat(chatId).getMessageId(MessageType.LOBBY))
-            ));
+        chatRender.render(Render.forSend(MessageType.LOBBY).withAfterAction(
+            () -> Render.forPin(chatRender.getMessageId(MessageType.LOBBY))
+        ));
     }
 }

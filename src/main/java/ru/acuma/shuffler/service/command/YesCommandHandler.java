@@ -8,7 +8,7 @@ import ru.acuma.shuffler.controller.YesCommand;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameService;
@@ -49,9 +49,10 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
 
     private void cancelEvent(final TEvent event) {
         eventStatusService.cancelled(event);
-        event.render(Render.forDelete(event.getMessageId(MessageType.LOBBY)))
+        var chatRender = renderContext.forEvent(event);
+        chatRender.render(Render.forDelete(MessageType.LOBBY))
             .render(Render.forSend(MessageType.CANCELLED).withAfterAction(
-                () -> Render.forDelete(event.getMessageId(MessageType.CANCELLED))
+                () -> Render.forDelete(chatRender.getMessageId(MessageType.CANCELLED))
                     .withDelay(Constants.CANCELLED_MESSAGE_TTL_BEFORE_DELETE)
             ));
     }
@@ -59,20 +60,21 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     private void beginGame(final TEvent event) {
         gameService.beginGame(event);
         eventStatusService.resume(event);
-        event.render(Render.forUpdate(MessageType.LOBBY))
+        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY))
             .render(Render.forSend(MessageType.GAME));
     }
 
     private void nextGame(final TEvent event) {
         gameService.finishGame(event);
+        var chatRender = renderContext.forEvent(event);
         switch (eventStatusService.resume(event)) {
             case PLAYING -> {
                 gameService.beginGame(event);
-                event.render(Render.forUpdate(MessageType.LOBBY))
+                chatRender.render(Render.forUpdate(MessageType.LOBBY))
                     .render(Render.forUpdate(MessageType.GAME));
             }
-            case WAITING -> event.render(Render.forUpdate(MessageType.LOBBY))
-                .render(Render.forDelete(event.getMessageId(MessageType.GAME)));
+            case WAITING -> chatRender.render(Render.forUpdate(MessageType.LOBBY))
+                .render(Render.forDelete(MessageType.GAME));
         }
     }
 
@@ -81,7 +83,8 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         gameService.finishGame(event);
         eventStatusService.resume(event);
 
-        event.render(Render.forDelete(event.getMessageId(MessageType.GAME)))
+        var chatRender = renderContext.forEvent(event);
+        chatRender.render(Render.forDelete(MessageType.GAME))
             .render(Render.forUpdate(MessageType.LOBBY));
     }
 
@@ -90,7 +93,8 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         gameService.finishGame(event);
         eventStatusService.finished(event);
 
-        event.render(Render.forDelete(event.getMessageId(MessageType.GAME)))
+        var chatRender = renderContext.forEvent(event);
+        chatRender.render(Render.forDelete(MessageType.GAME))
             .render(Render.forUpdate(MessageType.LOBBY));
     }
 }

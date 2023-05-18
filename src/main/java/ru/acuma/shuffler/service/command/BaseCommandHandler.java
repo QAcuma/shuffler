@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.context.EventContext;
+import ru.acuma.shuffler.context.RenderContext;
 import ru.acuma.shuffler.controller.BaseBotCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -18,21 +19,20 @@ public abstract class BaseCommandHandler<T extends BaseBotCommand> {
     @Autowired
     protected EventContext eventContext;
 
+    @Autowired
+    protected RenderContext renderContext;
+
     protected abstract List<EventStatus> getSupportedStatuses();
 
     public final void handle(final Message message, final String... args) {
         log.debug("Command {} called", getClass().getSimpleName());
         Optional.ofNullable(eventContext.findEvent(message.getChatId()))
             .ifPresentOrElse(
-                event -> Optional.of(event.snapshotHash())
+                event -> Optional.of(event)
                     .filter(this::isCommandSupported)
                     .ifPresent(status -> invokeEventCommand(message.getFrom(), event, args)),
                 () -> invokeChatCommand(message, args)
             );
-    }
-
-    private boolean isActive(final TEvent event) {
-        return !List.of(EventStatus.FINISHED, EventStatus.CANCELLED).contains(event.getEventStatus());
     }
 
     private boolean isCommandSupported(final TEvent event) {

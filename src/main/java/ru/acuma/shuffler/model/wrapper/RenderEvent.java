@@ -3,7 +3,7 @@ package ru.acuma.shuffler.model.wrapper;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.context.Render;
 
 @Data
 @Builder

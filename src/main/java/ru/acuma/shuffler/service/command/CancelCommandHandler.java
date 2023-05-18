@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.controller.CancelCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
 
@@ -29,6 +29,6 @@ public class CancelCommandHandler extends BaseCommandHandler<CancelCommand> {
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         eventStatusService.cancelCheck(event);
-        event.render(Render.forUpdate(MessageType.LOBBY).withTimer());
+        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY).withTimer());
     }
 }

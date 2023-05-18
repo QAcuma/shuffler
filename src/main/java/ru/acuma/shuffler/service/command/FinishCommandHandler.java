@@ -3,10 +3,10 @@ package ru.acuma.shuffler.service.command;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
+import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.controller.FinishCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameStatusService;
@@ -34,8 +34,7 @@ public class FinishCommandHandler extends BaseCommandHandler<FinishCommand> {
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         eventStatusService.finishCheck(event);
         gameStatusService.eventCheck(event.getCurrentGame());
-
-        event.render(Render.forMarkup(MessageType.GAME))
+        renderContext.forEvent(event).render(Render.forMarkup(MessageType.GAME))
             .render(Render.forUpdate(MessageType.LOBBY).withTimer());
     }
 }

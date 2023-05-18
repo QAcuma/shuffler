@@ -10,6 +10,7 @@ import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.exception.GlobalExceptionHandler;
 import ru.acuma.shuffler.service.event.DataService;
+import ru.acuma.shuffler.service.message.ContentService;
 import ru.acuma.shuffler.service.message.RenderService;
 import ru.acuma.shuffler.service.telegram.filter.AuthFilter;
 import ru.acuma.shuffler.service.telegram.filter.UpdateValidator;
@@ -29,6 +30,7 @@ public class CallbackService {
     private final List<AuthFilter> authFilters;
     private final TelegramCommandRegistry commandRegistry;
     private final EventContext eventContext;
+    private final ContentService contentService;
     private final DataService dataService;
     private final RenderService renderService;
     private final GlobalExceptionHandler exceptionHandler;
@@ -68,12 +70,12 @@ public class CallbackService {
             try {
                 commandRegistry.resolve(command).execute(message, args);
                 dataService.saveData(chatId);
-                eventContext.snapshotEvent(chatId);
+                contentService.fillRenderContent(chatId);
+                renderService.render(chatId);
             } catch (final Exception exception) {
                 exceptionHandler.handle(exception);
                 eventContext.rollbackEvent(chatId);
             } finally {
-                renderService.render(chatId);
                 eventContext.flushInactiveEvent(chatId);
                 chatIdLocks.remove(chatId);
             }

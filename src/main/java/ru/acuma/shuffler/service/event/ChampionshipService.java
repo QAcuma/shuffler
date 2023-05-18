@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.EventContext;
+import ru.acuma.shuffler.context.RenderContext;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
-import ru.acuma.shuffler.model.domain.Render;
+import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.service.message.MaintenanceService;
-import ru.acuma.shuffler.service.message.MessageService;
+import ru.acuma.shuffler.service.message.TelegramMethodService;
 
 import java.time.LocalDateTime;
 
@@ -17,16 +18,16 @@ import java.time.LocalDateTime;
 public class ChampionshipService {
 
     private final EventStatusService eventStatusService;
-    private final EventContext eventContext;
+    private final RenderContext renderContext;
     private final MaintenanceService maintenanceService;
-    private final MessageService messageService;
+    private final TelegramMethodService telegramMethodService;
 
     @SneakyThrows
     public void finishEvent(TEvent event) {
         eventStatusService.cancelled(event);
         event.setFinishedAt(LocalDateTime.now());
 
-        event.render(Render.forUpdate(MessageType.LOBBY));
+        renderContext.forChat(event.getChatId()).render(Render.forUpdate(MessageType.LOBBY));
     }
 
     @SneakyThrows
