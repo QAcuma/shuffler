@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.message.type;
+package ru.acuma.shuffler.service.message.content;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

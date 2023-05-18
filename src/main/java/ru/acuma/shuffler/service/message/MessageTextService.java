@@ -19,7 +19,7 @@ import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
 
 @Service
-public class MessageContentService {
+public class MessageTextService {
 
     public String buildLobbyContent(final TEvent event) {
         return getEventHeader(event)

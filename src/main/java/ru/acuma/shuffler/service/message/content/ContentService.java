@@ -1,15 +1,15 @@
-package ru.acuma.shuffler.service.message;
+package ru.acuma.shuffler.service.message.content;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.context.RenderContext;
-import ru.acuma.shuffler.service.message.type.CancelledContent;
-import ru.acuma.shuffler.service.message.type.CheckingContent;
-import ru.acuma.shuffler.service.message.type.GameContent;
-import ru.acuma.shuffler.service.message.type.LobbyContent;
-import ru.acuma.shuffler.service.message.type.MenuContent;
-import ru.acuma.shuffler.service.message.type.StatContent;
+import ru.acuma.shuffler.service.message.content.CancelledContent;
+import ru.acuma.shuffler.service.message.content.CheckingContent;
+import ru.acuma.shuffler.service.message.content.GameContent;
+import ru.acuma.shuffler.service.message.content.LobbyContent;
+import ru.acuma.shuffler.service.message.content.MenuContent;
+import ru.acuma.shuffler.service.message.content.StatContent;
 
 @Service
 @RequiredArgsConstructor
