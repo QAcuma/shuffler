@@ -53,9 +53,11 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
     }
 
     private void returnGame(final TEvent event) {
-        eventStatusService.resume(event);
-        gameStatusService.active(event.getCurrentGame());
-        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY))
-            .render(Render.forUpdate(MessageType.GAME));
+        var chatRender = renderContext.forEvent(event);
+        if (eventStatusService.resume(event) != WAITING) {
+            gameStatusService.active(event.getCurrentGame());
+            chatRender.render(Render.forUpdate(MessageType.GAME));
+        }
+        chatRender.render(Render.forUpdate(MessageType.LOBBY));
     }
 }
