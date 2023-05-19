@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.acuma.shuffler.aspect.marker.CheckPlayerInEvent;
 import ru.acuma.shuffler.controller.EvictCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -29,7 +28,6 @@ public class EvictCommandHandler extends BaseCommandHandler<EvictCommand> {
     }
 
     @Override
-    @CheckPlayerInEvent
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
     }
 

@@ -4,12 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.context.RenderContext;
-import ru.acuma.shuffler.service.message.content.CancelledContent;
-import ru.acuma.shuffler.service.message.content.CheckingContent;
-import ru.acuma.shuffler.service.message.content.GameContent;
-import ru.acuma.shuffler.service.message.content.LobbyContent;
-import ru.acuma.shuffler.service.message.content.MenuContent;
-import ru.acuma.shuffler.service.message.content.StatContent;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +14,6 @@ public class ContentService {
     private final LobbyContent lobbyContent;
     private final GameContent gameContent;
     private final CancelledContent cancelledContent;
-    private final CheckingContent checkingContent;
     private final StatContent statContent;
 
     public void fillRenderContent(final Long chatId) {
@@ -36,7 +29,6 @@ public class ContentService {
             case MENU -> menuContent.fill(render, chatId);
             case LOBBY -> lobbyContent.fill(render, chatId);
             case GAME -> gameContent.fill(render, chatId);
-            case CHECKING -> checkingContent.fill(render, chatId);
             case CANCELLED -> cancelledContent.fill(render, chatId);
             case STAT -> statContent.fill(render, chatId);
         }

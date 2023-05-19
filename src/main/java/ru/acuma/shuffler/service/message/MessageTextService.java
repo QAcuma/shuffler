@@ -11,6 +11,7 @@ import ru.acuma.shuffler.model.domain.TMenu;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+import static ru.acuma.shuffler.model.constant.messages.EventConstant.EVICT_MESSAGE_TEXT;
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.LET_JOIN_TEXT;
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.MEMBERS_TEXT;
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.SHUFFLER_LINK;
@@ -42,17 +43,13 @@ public class MessageTextService {
             + getEventFooterText(event);
     }
 
-    @SuppressWarnings("StringBufferReplaceableByString")
     public String buildGameContent(final TEvent event) {
         var game = event.getCurrentGame();
-        var builder = new StringBuilder();
-
-        return builder.append(EventConstant.GAME_MESSAGE.getText())
-            .append(game.getOrder())
-            .append(EventConstant.SPACE_MESSAGE.getText())
-            .append(System.lineSeparator())
-            .append(buildGameText(game))
-            .toString();
+        return EventConstant.GAME_MESSAGE.getText()
+            + game.getOrder()
+            + EventConstant.SPACE_MESSAGE.getText()
+            + System.lineSeparator()
+            + buildGameText(game);
     }
 
     public String buildCheckingContent(final TEvent event) {
@@ -127,6 +124,7 @@ public class MessageTextService {
         return switch (game.getStatus()) {
             case RED_CHECKING -> RED_CIRCLE_EMOJI + SINGLE_SPACE.getText() + getRedWinnersBody(game);
             case BLUE_CHECKING -> BLUE_CIRCLE_EMOJI + SINGLE_SPACE.getText() + getBlueWinnersBody(game);
+            case EVICT_CHECKING -> EVICT_MESSAGE_TEXT.getText();
             case ACTIVE, CANCEL_CHECKING -> getDefaultGameBody(game);
             default -> buildBlankContent();
         };

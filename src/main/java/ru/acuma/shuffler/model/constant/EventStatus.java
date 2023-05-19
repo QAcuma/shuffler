@@ -19,7 +19,7 @@ public enum EventStatus {
     WAITING(0, true),
     GAME_CHECKING(0, true),
     FINISH_CHECKING(1, true),
-    EVICTING(0, true),
+    EVICTING(5, true),
     CANCELLED(0, false),
     FINISHED(2, false);
 

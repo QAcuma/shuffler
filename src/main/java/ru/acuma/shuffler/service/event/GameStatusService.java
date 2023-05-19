@@ -19,6 +19,10 @@ public class GameStatusService {
         game.setStatus(GameStatus.CANCEL_CHECKING);
     }
 
+    public void evictCheck(TGame game) {
+        game.setStatus(GameStatus.EVICT_CHECKING);
+    }
+
     public void eventCheck(TGame game) {
         game.setStatus(GameStatus.EVENT_CHECKING);
     }

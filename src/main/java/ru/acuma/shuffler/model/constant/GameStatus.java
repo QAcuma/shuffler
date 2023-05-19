@@ -9,6 +9,7 @@ public enum GameStatus {
 
     ACTIVE(1),
     CANCEL_CHECKING(1),
+    EVICT_CHECKING(1),
     RED_CHECKING(1),
     BLUE_CHECKING(1),
     EVENT_CHECKING(0),

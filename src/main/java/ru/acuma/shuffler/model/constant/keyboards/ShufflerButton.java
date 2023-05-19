@@ -10,7 +10,7 @@ import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 
 @Getter
 @AllArgsConstructor
-public enum ShufflerButton {
+public enum ShufflerButton implements KeyboardButton {
 
     BUTTON_KICKER(Command.EVENT.getName() + "?discipline=kicker", "Кикер", 1),
     BUTTON_PING_PONG(Command.EVENT.getName() + "?discipline=pong", "Пинг-понг", 2),
@@ -29,7 +29,7 @@ public enum ShufflerButton {
     BUTTON_NO(Command.NO.getName(), "Нет", 1),
     BUTTON_FINISH(Command.FINISH.getName(), "Завершить", 2);
 
-    public final String action;
-    public final String alias;
+    public final String callback;
+    public final String text;
     public final int row;
 }
