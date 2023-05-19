@@ -2,9 +2,9 @@ package ru.acuma.shuffler.service.message;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.acuma.shuffler.model.constant.Command;
+import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.keyboards.CallbackParam;
 import ru.acuma.shuffler.model.constant.keyboards.CustomButton;
 import ru.acuma.shuffler.model.constant.keyboards.KeyboardButton;
@@ -13,10 +13,10 @@ import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.domain.TMenu;
 
-import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 @Service
@@ -32,8 +32,20 @@ public class ButtonService {
 
     public List<KeyboardButton> buildMenuButtons(final TMenu menu) {
         return switch (menu.getCurrentScreen()) {
-            case MAIN -> Keyboards.MENU_DISCIPLINE_BUTTONS;
+            case MAIN -> getMenuButtons();
         };
+    }
+
+    private List<KeyboardButton> getMenuButtons() {
+        var sequence = new AtomicInteger(1);
+        return Arrays.stream(Discipline.values())
+            .map(discipline -> CustomButton.builder()
+                .text(discipline.getLabel())
+                .callback(buildCommandCallback(Command.EVENT, CallbackParam.DISCIPLINE, discipline.getName()))
+                .row(sequence.getAndIncrement())
+                .build())
+            .map(KeyboardButton.class::cast)
+            .toList();
     }
 
     public List<KeyboardButton> buildTimerButtons(final Integer time) {
@@ -51,7 +63,7 @@ public class ButtonService {
         return switch (eventState) {
             case CREATED -> Keyboards.LOBBY_BUTTONS;
             case READY -> Keyboards.LOBBY_READY_BUTTONS;
-            case CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING, EVICTING -> Keyboards.CHECKING_BUTTONS;
+            case CANCEL_CHECKING, FINISH_CHECKING, BEGIN_CHECKING -> Keyboards.CHECKING_BUTTONS;
             case GAME_CHECKING, ANY, CANCELLED, FINISHED -> Collections.emptyList();
             case PLAYING, WAITING_WITH_GAME, WAITING -> Keyboards.LOBBY_PLAYING_BUTTONS;
         };
@@ -93,6 +105,6 @@ public class ButtonService {
         final String param,
         final String identifier
     ) {
-        return command.getName() + "?" + param + "=" + identifier;
+        return command.getName().toLowerCase() + "?" + param + "=" + identifier;
     }
 }

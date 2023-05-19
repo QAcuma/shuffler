@@ -54,13 +54,6 @@ public class KeyboardService {
         return buildKeyboard(gameButtons);
     }
 
-    public InlineKeyboardButton getSingleButton(final Command command, final String text) {
-        return InlineKeyboardButton.builder()
-            .callbackData(command.getName())
-            .text(text)
-            .build();
-    }
-
     private InlineKeyboardMarkup buildKeyboard(final List<KeyboardButton> buttons) {
         return buttons.isEmpty()
                ? new InlineKeyboardMarkup(Collections.emptyList())
@@ -85,5 +78,12 @@ public class KeyboardService {
                 .callbackData(button.getCallback())
                 .build())
             .toList();
+    }
+
+    public InlineKeyboardButton getSingleButton(final Command command, final String text) {
+        return InlineKeyboardButton.builder()
+            .callbackData(command.getName())
+            .text(text)
+            .build();
     }
 }

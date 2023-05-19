@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.menu;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,17 +8,18 @@ import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.controller.EventCommand;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
+import ru.acuma.shuffler.model.constant.keyboards.CallbackParam;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
 import ru.acuma.shuffler.util.ArgumentUtil;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Slf4j
 @Service
 public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
-
-    private static final String DISCIPLINE_PARAM = "discipline";
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -32,8 +33,8 @@ public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
 
     @Override
     protected void invokeChatCommand(final Message message, final String... args) {
-        var discipline = ArgumentUtil.extractParam(DISCIPLINE_PARAM, args);
-        beginEvent(message.getChatId(), Discipline.getByWebName(discipline));
+        var discipline = ArgumentUtil.extractParam(CallbackParam.DISCIPLINE, Function.identity(), args);
+        beginEvent(message.getChatId(), Discipline.getByName(discipline));
     }
 
     private void beginEvent(final Long chatId, final Discipline discipline) {

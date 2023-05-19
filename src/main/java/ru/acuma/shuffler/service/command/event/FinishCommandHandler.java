@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,6 +8,7 @@ import ru.acuma.shuffler.controller.FinishCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameStatusService;
 

@@ -1,13 +1,14 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.game;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.acuma.shuffler.context.Render;
-import ru.acuma.shuffler.controller.KickCommand;
+import ru.acuma.shuffler.controller.RedCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
+import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameStatusService;
 
@@ -18,10 +19,10 @@ import static ru.acuma.shuffler.model.constant.EventStatus.WAITING_WITH_GAME;
 
 @Service
 @RequiredArgsConstructor
-public class KickCommandHandler extends BaseCommandHandler<KickCommand> {
+public class RedCommandHandler extends BaseCommandHandler<RedCommand> {
 
-    private final EventStatusService eventStatusService;
     private final GameStatusService gameStatusService;
+    private final EventStatusService eventStatusService;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -31,9 +32,8 @@ public class KickCommandHandler extends BaseCommandHandler<KickCommand> {
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
         eventStatusService.gameCheck(event);
-        gameStatusService.evictCheck(event.getCurrentGame());
-
-        renderContext.forEvent(event).render(Render.forUpdate(MessageType.GAME))
-            .render(Render.forMarkup(MessageType.LOBBY));
+        gameStatusService.redCheck(event.getCurrentGame());
+        renderContext.forEvent(event).render(Render.forMarkup(MessageType.LOBBY))
+            .render(Render.forUpdate(MessageType.GAME).withTimer());
     }
 }

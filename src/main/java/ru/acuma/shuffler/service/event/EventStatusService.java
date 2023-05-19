@@ -46,10 +46,6 @@ public class EventStatusService {
         event.setEventStatus(EventStatus.BEGIN_CHECKING);
     }
 
-    public void evicting(final TEvent event) {
-        event.setEventStatus(EventStatus.EVICTING);
-    }
-
     public void finishCheck(final TEvent event) {
         event.setEventStatus(EventStatus.FINISH_CHECKING);
     }

@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.common;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,8 @@ import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
+import ru.acuma.shuffler.service.command.helper.ReusableActions;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameService;
 import ru.acuma.shuffler.service.event.GameStatusService;
@@ -30,6 +32,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     private final GameService gameService;
     private final EventStatusService eventStatusService;
     private final GameStatusService gameStatusService;
+    private final ReusableActions reusableActions;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -41,8 +44,8 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         switch (event.getEventStatus()) {
             case CANCEL_CHECKING -> cancelEvent(event);
             case BEGIN_CHECKING -> beginGame(event);
-            case GAME_CHECKING -> nextGame(event);
-            case WAITING_WITH_GAME -> finishGame(event);
+            case GAME_CHECKING -> reusableActions.nextGame(event);
+            case WAITING_WITH_GAME -> finishCancelledGame(event);
             case FINISH_CHECKING -> finishEvent(event);
         }
     }
@@ -64,21 +67,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
             .render(Render.forSend(MessageType.GAME));
     }
 
-    private void nextGame(final TEvent event) {
-        gameService.finishGame(event);
-        var chatRender = renderContext.forEvent(event);
-        switch (eventStatusService.resume(event)) {
-            case PLAYING -> {
-                gameService.beginGame(event);
-                chatRender.render(Render.forUpdate(MessageType.LOBBY))
-                    .render(Render.forUpdate(MessageType.GAME));
-            }
-            case WAITING -> chatRender.render(Render.forUpdate(MessageType.LOBBY))
-                .render(Render.forDelete(MessageType.GAME));
-        }
-    }
-
-    private void finishGame(final TEvent event) {
+    private void finishCancelledGame(final TEvent event) {
         gameStatusService.finished(event.getCurrentGame());
         gameService.finishGame(event);
         eventStatusService.resume(event);

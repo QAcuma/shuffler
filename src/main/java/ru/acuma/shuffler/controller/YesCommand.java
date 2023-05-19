@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.model.constant.Command;
-import ru.acuma.shuffler.service.command.BaseCommandHandler;
+import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
 
 @Component
 @RequiredArgsConstructor

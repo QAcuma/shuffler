@@ -53,9 +53,4 @@ public class Keyboards {
         ShufflerButton.BUTTON_BLUE,
         ShufflerButton.BUTTON_CANCEL_GAME
     );
-
-    public static final List<KeyboardButton> MENU_DISCIPLINE_BUTTONS = List.of(
-        ShufflerButton.BUTTON_KICKER,
-        ShufflerButton.BUTTON_PING_PONG
-    );
 }

@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.menu;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import ru.acuma.shuffler.controller.MenuCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
 
 import java.util.List;
 

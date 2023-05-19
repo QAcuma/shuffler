@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -12,8 +12,6 @@ import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 @AllArgsConstructor
 public enum ShufflerButton implements KeyboardButton {
 
-    BUTTON_KICKER(Command.EVENT.getName() + "?discipline=kicker", "Кикер", 1),
-    BUTTON_PING_PONG(Command.EVENT.getName() + "?discipline=pong", "Пинг-понг", 2),
     BUTTON_JOIN(Command.JOIN.getName(), "Присоединиться", 1),
     BUTTON_LEAVE(Command.LEAVE.getName(), "Покинуть", 2),
     BUTTON_CANCEL(Command.CANCEL.getName(), "Отменить", 2),

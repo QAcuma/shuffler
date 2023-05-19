@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static ru.acuma.shuffler.model.constant.EventStatus.EVICTING;
+import static ru.acuma.shuffler.model.constant.EventStatus.ANY;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class ResetCommandHandler extends BaseCommandHandler<ResetCommand> {
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
-        return List.of(EVICTING);
+        return List.of(ANY);
     }
 
     @Override

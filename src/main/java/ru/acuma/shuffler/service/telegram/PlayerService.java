@@ -40,12 +40,12 @@ public class PlayerService implements Authenticatable<SearchPlayerParams> {
             .orElseThrow(() -> new DataException(ExceptionCause.PLAYER_NOT_FOUND, userId, chatId));
     }
 
-    public void leaveLobby(final User user, final TEvent event) {
-        event.leaveLobby(user.getId());
+    public void leaveLobby(final Long userId, final TEvent event) {
+        event.leaveLobby(userId);
     }
 
-    public void leaveEvent(final User user, final TEvent event) {
-        event.leaveEvent(user.getId());
+    public void leaveEvent(final Long userId, final TEvent event) {
+        event.leaveEvent(userId);
     }
 
     @Transactional(readOnly = true)

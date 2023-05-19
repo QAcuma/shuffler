@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,6 +8,7 @@ import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.telegram.PlayerService;
 
@@ -41,12 +42,12 @@ public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
     }
 
     private void leaveLobby(final User user, final TEvent event) {
-        playerService.leaveLobby(user, event);
+        playerService.leaveLobby(user.getId(), event);
         eventStatusService.praperation(event);
     }
 
     private void leaveEvent(final User user, final TEvent event) {
-        playerService.leaveEvent(user, event);
+        playerService.leaveEvent(user.getId(), event);
         eventStatusService.resume(event);
     }
 }

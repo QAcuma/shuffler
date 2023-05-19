@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.command;
+package ru.acuma.shuffler.service.command.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,6 @@ import java.util.List;
 
 import static ru.acuma.shuffler.model.constant.EventStatus.BEGIN_CHECKING;
 import static ru.acuma.shuffler.model.constant.EventStatus.CANCEL_CHECKING;
-import static ru.acuma.shuffler.model.constant.EventStatus.EVICTING;
 import static ru.acuma.shuffler.model.constant.EventStatus.FINISH_CHECKING;
 import static ru.acuma.shuffler.model.constant.EventStatus.GAME_CHECKING;
 import static ru.acuma.shuffler.model.constant.EventStatus.WAITING;
@@ -29,7 +28,7 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
-        return List.of(CANCEL_CHECKING, BEGIN_CHECKING, GAME_CHECKING, EVICTING, WAITING, FINISH_CHECKING);
+        return List.of(CANCEL_CHECKING, BEGIN_CHECKING, GAME_CHECKING, WAITING, FINISH_CHECKING);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
         switch (event.getEventStatus()) {
             case CANCEL_CHECKING, BEGIN_CHECKING -> returnLobby(event);
             case WAITING -> returnWaitingLobby(event);
-            case GAME_CHECKING, FINISH_CHECKING, EVICTING -> returnGame(event);
+            case GAME_CHECKING, FINISH_CHECKING -> returnGame(event);
         }
     }
 

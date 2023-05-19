@@ -52,13 +52,6 @@ public class MessageTextService {
             + buildGameText(game);
     }
 
-    public String buildCheckingContent(final TEvent event) {
-        return switch (event.getEventStatus()) {
-            case EVICTING -> EventConstant.EVICT_PLAYER_CHECKING.getText();
-            default -> buildBlankContent();
-        };
-    }
-
     public String buildCancelledContent() {
         return EventConstant.LOBBY_CANCELED_MESSAGE.getText();
     }

@@ -10,15 +10,16 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum Discipline {
 
-    KICKER("kicker"),
-    PING_PONG("pong");
+    KICKER("kicker", "Кикер"),
+    PING_PONG("pong", "Пинг-понг");
 
-    private final String webName;
+    private final String name;
+    private final String label;
 
-    public static Discipline getByWebName(final String webName) {
+    public static Discipline getByName(final String name) {
         return Arrays.stream(Discipline.values())
-            .filter(discipline -> discipline.getWebName().equals(webName))
+            .filter(discipline -> discipline.getName().equals(name))
             .findFirst()
-            .orElseThrow(() -> new DataException(ExceptionCause.DISCIPLINE_NOT_PRESENT, webName, webName));
+            .orElseThrow(() -> new DataException(ExceptionCause.DISCIPLINE_NOT_PRESENT, name, name));
     }
 }
