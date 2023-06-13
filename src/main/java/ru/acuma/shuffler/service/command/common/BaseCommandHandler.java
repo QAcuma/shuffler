@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.context.RenderContext;
+import ru.acuma.shuffler.context.StorageContext;
 import ru.acuma.shuffler.controller.BaseBotCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -21,6 +22,9 @@ public abstract class BaseCommandHandler<T extends BaseBotCommand> {
 
     @Autowired
     protected RenderContext renderContext;
+
+    @Autowired
+    protected StorageContext storageContext;
 
     protected abstract List<EventStatus> getSupportedStatuses();
 

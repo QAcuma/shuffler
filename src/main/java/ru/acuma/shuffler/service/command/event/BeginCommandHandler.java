@@ -3,7 +3,7 @@ package ru.acuma.shuffler.service.command.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.acuma.shuffler.context.Render;
+import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.controller.BeginCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;

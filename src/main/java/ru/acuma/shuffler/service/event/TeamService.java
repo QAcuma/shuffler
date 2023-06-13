@@ -24,7 +24,6 @@ public class TeamService {
 
     private final TeamMapper teamMapper;
     private final TeamPlayerMapper teamPlayerMapper;
-    private final TeamRepository teamRepository;
     private final TeamPlayerRepository teamPlayerRepository;
 
     public TTeam buildTeam(List<TEventPlayer> players) {

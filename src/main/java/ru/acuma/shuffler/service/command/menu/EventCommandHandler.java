@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.acuma.shuffler.context.Render;
+import ru.acuma.shuffler.context.cotainer.Render;
+import ru.acuma.shuffler.context.cotainer.StorageTask;
 import ru.acuma.shuffler.controller.EventCommand;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
+import ru.acuma.shuffler.model.constant.StorageTaskType;
 import ru.acuma.shuffler.model.constant.keyboards.CallbackParam;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -43,6 +45,8 @@ public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
             .render(Render.forSend(MessageType.LOBBY).withAfterAction(
                 () -> Render.forPin(renderContext.forChat(chatId).getMessageId(MessageType.LOBBY))
             ));
+
+        storageContext.forChat(chatId).store(StorageTask.of(StorageTaskType.EVENT_BEGIN));
         renderContext.forChat(chatId).render(Render.forDelete(MessageType.MENU));
     }
 }

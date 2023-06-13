@@ -22,7 +22,8 @@ public enum ExceptionCause {
     DISCIPLINE_NOT_PRESENT("Discipline %s not present"),
     CANNOT_EXTRACT_PARAM("Can't extract param %s"),
     EXTRACT_RESPONSE_MESSAGE("Can't extract response message"),
-    EVENT_CONTEXT_IS_EMPTY("Event context game count is not present");
+    EVENT_CONTEXT_IS_EMPTY("Event context game count is not present"),
+    STORABLE_TASK_NOT_IMPLEMENTED("No implementation for task with type %s");
 
     private final String description;
 

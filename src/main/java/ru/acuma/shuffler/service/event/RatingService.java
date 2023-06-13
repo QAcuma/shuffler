@@ -64,15 +64,6 @@ public class RatingService {
             .orElseThrow(() -> new InstanceNotFoundException("Отсутствует победившая команда"));
         applyChanges(event);
     }
-
-    public void defaultRating(final Player player) {
-        Arrays.stream(Discipline.values()).forEach(discipline -> defaultRating(player, discipline));
-    }
-
-    public Rating defaultRating(final Player player, final Discipline discipline) {
-        return newDefaultRating(player, discipline);
-    }
-
     public TRating getRating(final Player player, final Discipline discipline) {
         return ratingRepository.findBySeasonAndPlayerAndDiscipline(
                 seasonService.getCurrentSeason(),
@@ -129,27 +120,5 @@ public class RatingService {
         var game = event.getCurrentGame();
         game.getPlayers().forEach(player -> applyCalibratingStatus(player, event.getDiscipline()));
         List.of(game.getWinnerTeam(), game.getLoserTeam()).forEach(TTeam::applyRating);
-    }
-
-    private void saveRating(final TEventPlayer player, final Discipline discipline) {
-//        var rating = getRating(player, discipline);
-//        rating.setScore(player.getRatingContext().getScore());
-//        rating.setCalibrated(player.isCalibrated());
-//
-//        ratingRepository.save(rating);
-    }
-
-    private void saveHistory(TEventPlayer player, TGame game, Discipline discipline) {
-        RatingHistory ratingHistory = RatingHistory.builder()
-            .game(null)
-            .player(null)
-            .isCalibrated(player.isCalibrated())
-            .change(player.getRatingContext().getLastScoreChange())
-            .discipline(discipline)
-            .season(seasonService.getCurrentSeason())
-            .score(player.getRatingContext().getScore())
-            .build();
-
-        ratingHistoryRepository.save(ratingHistory);
     }
 }

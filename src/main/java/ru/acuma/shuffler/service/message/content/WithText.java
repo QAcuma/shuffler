@@ -1,6 +1,6 @@
 package ru.acuma.shuffler.service.message.content;
 
-import ru.acuma.shuffler.context.Render;
+import ru.acuma.shuffler.context.cotainer.Render;
 
 public interface WithText<T> {
 

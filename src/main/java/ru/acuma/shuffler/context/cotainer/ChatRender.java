@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.context;
+package ru.acuma.shuffler.context.cotainer;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

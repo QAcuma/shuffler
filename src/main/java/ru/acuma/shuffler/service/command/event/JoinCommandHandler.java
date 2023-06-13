@@ -3,10 +3,10 @@ package ru.acuma.shuffler.service.command.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
+import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.controller.JoinCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.context.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
 import ru.acuma.shuffler.service.event.EventStatusService;
@@ -60,10 +60,13 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
     private void joinWaitingEvent(final TEvent event) {
         Optional.of(eventStatusService.resume(event))
             .filter(PLAYING::equals)
-            .ifPresent(status -> {
-                gameService.beginGame(event);
-                renderContext.forEvent(event).render(Render.forSend(MessageType.GAME))
-                    .render(Render.forUpdate(MessageType.LOBBY));
-            });
+            .ifPresentOrElse(
+                status -> {
+                    gameService.beginGame(event);
+                    renderContext.forEvent(event).render(Render.forSend(MessageType.GAME))
+                        .render(Render.forUpdate(MessageType.LOBBY));
+                },
+                () -> renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY))
+            );
     }
 }

@@ -10,9 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageRe
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.acuma.shuffler.context.Render;
-import ru.acuma.shuffler.model.constant.messages.MessageType;
-import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.context.cotainer.Render;
 
 @Service
 public class TelegramMethodService {

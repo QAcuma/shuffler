@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import ru.acuma.shuffler.context.Render;
+import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.context.RenderContext;
 import ru.acuma.shuffler.exception.TelegramApiException;
 import ru.acuma.shuffler.model.constant.Constants;

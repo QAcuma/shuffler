@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.context.MenuContext;
-import ru.acuma.shuffler.context.Render;
+import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.controller.MenuCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.messages.MessageType;

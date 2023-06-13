@@ -2,6 +2,7 @@ package ru.acuma.shuffler.context;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.acuma.shuffler.context.cotainer.ChatRender;
 import ru.acuma.shuffler.model.domain.TEvent;
 
 import java.util.Map;
@@ -24,5 +25,4 @@ public class RenderContext {
     public ChatRender forEvent(final TEvent event) {
         return forChat(event.getChatId());
     }
-
 }

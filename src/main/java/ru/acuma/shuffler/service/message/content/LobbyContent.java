@@ -3,7 +3,7 @@ package ru.acuma.shuffler.service.message.content;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.EventContext;
-import ru.acuma.shuffler.context.Render;
+import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.message.KeyboardService;
 import ru.acuma.shuffler.service.message.MessageTextService;

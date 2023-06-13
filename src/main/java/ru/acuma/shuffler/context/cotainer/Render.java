@@ -1,10 +1,9 @@
-package ru.acuma.shuffler.context;
+package ru.acuma.shuffler.context.cotainer;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -35,6 +34,7 @@ public class Render implements Serializable {
     private InlineKeyboardMarkup keyboard;
     @EqualsAndHashCode.Exclude
     private transient List<Supplier<Render>> afterActions;
+    private int hashCode;
 
     public boolean requireUpdate() {
         return ExecuteStrategy.IDLE != executeStrategy;
@@ -88,15 +88,6 @@ public class Render implements Serializable {
     public static Render forPin(final Integer messageId) {
         return Render.builder()
             .messageId(messageId)
-            .executeStrategy(ExecuteStrategy.REGULAR)
-            .messageAction(MessageAction.PIN)
-            .afterActions(new ArrayList<>())
-            .build();
-    }
-
-    public static Render forPin(final MessageType messageType) {
-        return Render.builder()
-            .messageType(messageType)
             .executeStrategy(ExecuteStrategy.REGULAR)
             .messageAction(MessageAction.PIN)
             .afterActions(new ArrayList<>())
