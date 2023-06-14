@@ -4,35 +4,30 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serial;
-import java.io.Serializable;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)
 @ToString
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "team")
@@ -41,14 +36,7 @@ import java.io.Serializable;
 
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Team implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 6820555952257866576L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Team extends BaseEntity {
 
     @NotNull
     @ToString.Exclude
@@ -58,5 +46,4 @@ public class Team implements Serializable {
 
     @Column(name = "is_winner")
     private Boolean isWinner;
-
 }

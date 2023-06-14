@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class StorageTask implements Serializable {
 
+    private Long chatId;
     private Long entityId;
     private StorageTaskType taskType;
     private ExecutionStatus executionStatus;

@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -31,13 +32,13 @@ import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)
 @ToString
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "rating_history")
@@ -46,14 +47,7 @@ import java.io.Serializable;
 
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class RatingHistory implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -7120320525887086913L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class RatingHistory extends BaseEntity {
 
     @NotNull
     @ToString.Exclude

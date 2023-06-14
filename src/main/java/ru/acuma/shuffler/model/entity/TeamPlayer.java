@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -26,13 +27,13 @@ import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)
 @ToString
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "team_player")
@@ -41,14 +42,7 @@ import java.io.Serializable;
 
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class TeamPlayer implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -3550085252870971294L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class TeamPlayer extends BaseEntity {
 
     @NotNull
     @ToString.Exclude
@@ -61,5 +55,4 @@ public class TeamPlayer implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
-
 }

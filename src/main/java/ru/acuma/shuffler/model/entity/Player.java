@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -29,13 +30,13 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)
 @ToString
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "player")
@@ -44,14 +45,7 @@ import java.util.List;
 
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Player implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -3901172463786438576L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Player extends BaseEntity {
 
     @NotNull
     @ToString.Exclude
@@ -69,5 +63,4 @@ public class Player implements Serializable {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Rating> ratings;
-
 }

@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -30,13 +31,13 @@ import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)
 @ToString
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "rating")
@@ -45,14 +46,7 @@ import java.io.Serializable;
 
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Rating implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 8091347493915861458L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Rating extends BaseEntity {
 
     @NotNull
     @ToString.Exclude
@@ -63,7 +57,7 @@ public class Rating implements Serializable {
     @NotNull
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "season_id", nullable = false)
+    @JoinColumn(name = "season_id", nullable = false, updatable = false, insertable = false)
     private Season season;
 
     @Size(max = 32)
@@ -77,5 +71,4 @@ public class Rating implements Serializable {
 
     @Column(name = "is_calibrated")
     private Boolean isCalibrated;
-
 }

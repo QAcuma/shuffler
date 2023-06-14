@@ -1,11 +1,14 @@
 package ru.acuma.shuffler.mapper;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.entity.Event;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.Discipline;
+import ru.acuma.shuffler.model.entity.GroupInfo;
+import ru.acuma.shuffler.model.entity.Season;
 
 import java.time.LocalDateTime;
 
@@ -23,12 +26,10 @@ public abstract class EventMapper {
             .build();
     }
 
-//    @Mapping(target = "chatId", source = "event.chatId")
-    @Mapping(target = "seasonId", source = "seasonId")
-    @Mapping(target = "state", source = "event.eventStatus")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "chat", source = "groupInfo")
+    @Mapping(target = "season", source = "season")
+    @Mapping(target = "status", source = "event.eventStatus")
     @Mapping(target = "discipline", source = "event.discipline")
-    @Mapping(target = "season", ignore = true)
-    @Mapping(target = "chat", ignore = true)
-    public abstract Event toEvent(TEvent event, Long seasonId);
-
+    public abstract Event toEvent(TEvent event, GroupInfo groupInfo, Season season);
 }

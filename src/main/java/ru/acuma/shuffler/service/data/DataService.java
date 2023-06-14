@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.context.StorageContext;
-import ru.acuma.shuffler.context.cotainer.StorageTask;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.ExecutionStatus;
@@ -25,11 +24,8 @@ public class DataService {
         eventStorage.getTasks().values()
             .stream()
             .filter(task -> ExecutionStatus.PENDING.equals(task.getExecutionStatus()))
-            .forEach(this::store);
-    }
-
-    private void store(final StorageTask task) {
-        getStore(task.getTaskType()).store(task);
+            .map(task -> task.setChatId(chatId))
+            .forEach(task -> getStore(task.getTaskType()).store(task));
     }
 
     private Storable getStore(StorageTaskType taskType) {

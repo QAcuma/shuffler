@@ -24,7 +24,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("ru.acuma:shuffler-catalog:2.0.4")
+            from("ru.acuma:shuffler-catalog:2.0.5")
         }
     }
 }

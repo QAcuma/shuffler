@@ -2,8 +2,11 @@ package ru.acuma.shuffler.service.season;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.acuma.shuffler.model.constant.YearSeason;
 import ru.acuma.shuffler.model.entity.Season;
 import ru.acuma.shuffler.repository.SeasonRepository;
+import ru.acuma.shuffler.util.TimeMachine;
 
 @Service
 @RequiredArgsConstructor
@@ -11,29 +14,19 @@ public class SeasonService {
 
     private final SeasonRepository seasonRepository;
 
-    private Season season;
-
+    @Transactional
     public Season getCurrentSeason() {
-        return season == null
-               ? setSeason()
-               : season;
-    }
-
-    public Season evictSeason() {
-        return season = null;
-    }
-
-    public void invalidateSeason() {
-        season = null;
-    }
-
-    private Season setSeason() {
-        season = seasonRepository.findByFinishedAtIsNull()
-            .orElseGet(() -> startNewSeason());
-        return season;
+        return seasonRepository.findByFinishedAtIsNull()
+            .orElseGet(this::startNewSeason);
     }
 
     public Season startNewSeason() {
-        return new Season();
+        var date = TimeMachine.localDateNow();
+        var season =  Season.builder()
+            .startedAt(TimeMachine.localDateTimeNow())
+            .name(YearSeason.getByMonthNumber(date.getMonthValue()).toString() + date.getYear())
+            .build();
+
+        return seasonRepository.save(season);
     }
 }

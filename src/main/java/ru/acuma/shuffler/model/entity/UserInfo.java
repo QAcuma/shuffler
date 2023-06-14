@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -26,13 +27,13 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)
 @ToString
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "user_info")
@@ -41,19 +42,10 @@ import java.time.ZoneId;
 
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class UserInfo implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 5629283560177967494L;
-
-    @Id
-    @Column(name = "telegram_id", nullable = false)
-    private Long id;
+public class UserInfo extends BaseEntity {
 
     @Column(name = "language_code", length = Integer.MAX_VALUE)
     private String languageCode;
-
-    @Column(name = "is_bot")
-    private Boolean isBot;
 
     @Column(name = "first_name", length = Integer.MAX_VALUE)
     private String firstName;
@@ -69,9 +61,6 @@ public class UserInfo implements Serializable {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @Column(name = "last_message_at")
-    private LocalDateTime lastMessageAt;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -80,9 +69,6 @@ public class UserInfo implements Serializable {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    @Column(name = "media_blob")
-    private byte[] mediaBlob;
 
     @Column(name = "media_id", length = Integer.MAX_VALUE)
     private String mediaId;
