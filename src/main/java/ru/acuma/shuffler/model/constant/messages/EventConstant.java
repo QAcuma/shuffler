@@ -12,8 +12,8 @@ import static ru.acuma.shuffler.util.Symbols.NICE_MOON_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.PONG_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.SAND_CLOCK_EMOJI;
-import static ru.acuma.shuffler.util.Symbols.WARNING_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.SUMMER_EMOJI;
+import static ru.acuma.shuffler.util.Symbols.WARNING_EMOJI;
 
 @Getter
 @AllArgsConstructor

@@ -4,12 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.mapper.TeamMapper;
-import ru.acuma.shuffler.mapper.TeamPlayerMapper;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
-import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.domain.TTeam;
-import ru.acuma.shuffler.repository.TeamPlayerRepository;
-import ru.acuma.shuffler.repository.TeamRepository;
 import ru.acuma.shuffler.util.TeamServiceUtil;
 
 import java.security.SecureRandom;
@@ -23,8 +19,6 @@ import static ru.acuma.shuffler.model.constant.Constants.GAME_PLAYERS_COUNT;
 public class TeamService {
 
     private final TeamMapper teamMapper;
-    private final TeamPlayerMapper teamPlayerMapper;
-    private final TeamPlayerRepository teamPlayerRepository;
 
     public TTeam buildTeam(List<TEventPlayer> players) {
         if (players.size() < GAME_PLAYERS_COUNT / 2) {
@@ -32,24 +26,6 @@ public class TeamService {
         }
 
         return build(players, 20);
-    }
-
-    public TTeam save(TTeam team, TGame game) {
-        var mappedTeam = teamMapper.toTeam(team, game);
-        team.getPlayers().forEach(player -> saveTeamPlayer(player, team.getId()));
-
-        return team;
-    }
-
-    public TTeam update(TTeam team) {
-        var mappedTeam = teamMapper.toTeam(team);
-
-        return team;
-    }
-
-    public void saveTeamPlayer(TEventPlayer player, Long teamId) {
-        var mappedTeamPlayer = teamPlayerMapper.toTeamPlayer(player, teamId);
-        teamPlayerRepository.save(mappedTeamPlayer);
     }
 
     @SneakyThrows

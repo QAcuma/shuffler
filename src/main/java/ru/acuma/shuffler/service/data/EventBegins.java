@@ -30,6 +30,7 @@ public class EventBegins extends Storable {
         var season = seasonService.getCurrentSeason();
         var mappedEvent = eventMapper.toEvent(event, chat, season);
 
-        eventRepository.save(mappedEvent);
+        var savedEvent = eventRepository.save(mappedEvent);
+        event.setId(savedEvent.getId());
     }
 }

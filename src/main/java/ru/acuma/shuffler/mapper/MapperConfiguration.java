@@ -7,12 +7,11 @@ import org.mapstruct.MapperConfig;
 @MapperConfig(
     componentModel = "spring",
     builder = @Builder(
-        disableBuilder = false
+        disableBuilder = true
     ),
     uses = OffsetDateTimeMapper.class,
     injectionStrategy = InjectionStrategy.FIELD,
-    implementationPackage = "<PACKAGE_NAME>.impl",
-    implementationName = "<CLASS_NAME>Impl"
+    implementationPackage = "<PACKAGE_NAME>.impl"
 )
 public interface MapperConfiguration {
 }

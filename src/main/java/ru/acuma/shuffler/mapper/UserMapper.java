@@ -33,7 +33,6 @@ public abstract class UserMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "languageCode", source = "languageCode")
-    @Mapping(target = "isBot", source = "isBot")
     @Mapping(target = "userName", source = "userName")
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")

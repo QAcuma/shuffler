@@ -1,17 +1,16 @@
 package ru.acuma.shuffler.model.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
 @Data
 @Builder
 @Accessors(chain = true)
+@AllArgsConstructor
 public class TRating implements Serializable {
 
     private Boolean calibrated;

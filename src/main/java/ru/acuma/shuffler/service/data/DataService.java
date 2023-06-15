@@ -25,7 +25,8 @@ public class DataService {
             .stream()
             .filter(task -> ExecutionStatus.PENDING.equals(task.getExecutionStatus()))
             .map(task -> task.setChatId(chatId))
-            .forEach(task -> getStore(task.getTaskType()).store(task));
+            .peek(task -> getStore(task.getTaskType()).store(task))
+            .forEach(task -> task.setExecutionStatus(ExecutionStatus.EXECUTED));
     }
 
     private Storable getStore(StorageTaskType taskType) {

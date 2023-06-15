@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -48,12 +47,12 @@ public class Event extends BaseEntityC {
     @NotNull
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "chat_id", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "chat_id", nullable = false)
     private GroupInfo chat;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "season_id", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "season_id", nullable = false)
     private Season season;
 
     @Size(max = 32)

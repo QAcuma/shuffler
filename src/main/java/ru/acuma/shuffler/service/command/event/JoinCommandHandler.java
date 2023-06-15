@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.context.cotainer.Render;
+import ru.acuma.shuffler.context.cotainer.StorageTask;
 import ru.acuma.shuffler.controller.JoinCommand;
 import ru.acuma.shuffler.model.constant.EventStatus;
+import ru.acuma.shuffler.model.constant.StorageTaskType;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
@@ -63,6 +65,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
             .ifPresentOrElse(
                 status -> {
                     gameService.beginGame(event);
+                    storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.GAME_BEGINS));
                     renderContext.forEvent(event).render(Render.forSend(MessageType.GAME))
                         .render(Render.forUpdate(MessageType.LOBBY));
                 },

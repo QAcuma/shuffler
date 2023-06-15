@@ -38,7 +38,6 @@ public class ProfilePictureService {
     @Transactional
     public void updateProfilePicture() {
         userService.getActiveUsers().stream()
-            .filter(Predicate.not(UserInfo::getIsBot))
             .filter(userInfo -> Objects.isNull(userInfo.getDeletedAt()))
             .map(UserInfo::getId)
             .forEach(this::saveUserAvatar);

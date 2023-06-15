@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.model.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -16,6 +17,7 @@ import static ru.acuma.shuffler.model.constant.GameStatus.FINISHED;
 @Data
 @Builder
 @Accessors(chain = true)
+@AllArgsConstructor
 public class TGame implements Serializable {
 
     private Long id;
@@ -69,12 +71,12 @@ public class TGame implements Serializable {
     public String getGameResult() {
         if (getWinnerTeam() != null) {
             return order +
-                    ". " +
-                    String.format(getWinnerTeam().toString(), "&") +
-                    " (+" +
-                    getWinnerTeam().getBet().getCaseWin() +
-                    ") " +
-                    (isCalibrating() ? Symbols.FOOTNOTE_SYMBOL : "");
+                ". " +
+                String.format(getWinnerTeam().toString(), "&") +
+                " (+" +
+                getWinnerTeam().getBet().getCaseWin() +
+                ") " +
+                (isCalibrating() ? Symbols.FOOTNOTE_SYMBOL : "");
         }
         return "";
     }

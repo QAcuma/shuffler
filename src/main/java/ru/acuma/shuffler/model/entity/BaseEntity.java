@@ -12,7 +12,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 
-
 import java.util.Objects;
 
 @Getter

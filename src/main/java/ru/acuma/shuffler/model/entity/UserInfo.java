@@ -8,7 +8,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,10 +21,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -42,7 +38,11 @@ import java.time.ZoneId;
 
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class UserInfo extends BaseEntity {
+public class UserInfo {
+
+    @Id
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Column(name = "language_code", length = Integer.MAX_VALUE)
     private String languageCode;

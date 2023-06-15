@@ -2,9 +2,9 @@ package ru.acuma.shuffler.service.command.helper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.context.cotainer.EventStorage;
-import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.context.RenderContext;
+import ru.acuma.shuffler.context.StorageContext;
+import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.context.cotainer.StorageTask;
 import ru.acuma.shuffler.model.constant.StorageTaskType;
 import ru.acuma.shuffler.model.constant.messages.MessageType;
@@ -23,14 +23,15 @@ public class ReusableActions {
     private final EventStatusService eventStatusService;
     private final GameStatusService gameStatusService;
     private final RenderContext renderContext;
-    private final EventStorage eventStorage;
+    private final StorageContext storageContext;
 
     public void nextGame(final TEvent event) {
         gameService.finishGame(event);
-        eventStorage.store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame().getId()));
+        storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame().getId()));
         var chatRender = renderContext.forEvent(event);
         switch (eventStatusService.resume(event)) {
             case PLAYING -> {
+                storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.GAME_BEGINS));
                 gameService.beginGame(event);
                 chatRender.render(Render.forUpdate(MessageType.LOBBY))
                     .render(Render.forUpdate(MessageType.GAME));

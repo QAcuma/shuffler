@@ -10,6 +10,7 @@ public enum ExceptionCause {
     USER_NOT_FOUND("User with id %s not found in database"),
     PLAYER_NOT_FOUND("Player with userId %s, chatId %s not found in database"),
     GROUP_NOT_FOUND("Group with id %s not found in database"),
+    EVENT_NOT_FOUND("Event with id %s not found in database"),
     CHAT_IS_PRIVATE("Chat is private"),
     CHAT_IS_CHANNEL("Chat is channel"),
     USER_IS_NOT_ACTIVE("User with id %s not active"),

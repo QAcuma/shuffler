@@ -1,9 +1,8 @@
 package ru.acuma.shuffler.model.domain;
 
-import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -15,6 +14,7 @@ import static ru.acuma.shuffler.util.Symbols.MEDAL_EMOJI;
 @Data
 @Builder
 @Accessors(chain = true)
+@AllArgsConstructor
 public class TTeam implements Serializable {
 
     private Long id;

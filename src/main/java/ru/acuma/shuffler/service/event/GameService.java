@@ -48,13 +48,6 @@ public class GameService {
             .build();
     }
 
-    private TGame save(TGame tgGame, TEvent event) {
-        teamService.save(tgGame.getBlueTeam(), tgGame);
-        teamService.save(tgGame.getRedTeam(), tgGame);
-
-        return tgGame;
-    }
-
     public void beginGame(TEvent event) {
         var game = buildGame(event);
         event.applyGame(game);

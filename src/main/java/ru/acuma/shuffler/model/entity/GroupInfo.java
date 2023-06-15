@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,8 +18,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.validation.constraints.Size;
-import java.io.Serial;
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -37,7 +34,11 @@ import java.io.Serializable;
 
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class GroupInfo extends BaseEntity {
+public class GroupInfo {
+
+    @Id
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Column(name = "title", length = Integer.MAX_VALUE)
     private String title;
