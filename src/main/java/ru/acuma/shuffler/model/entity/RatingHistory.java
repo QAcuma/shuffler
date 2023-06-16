@@ -20,6 +20,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.acuma.shuffler.model.constant.Discipline;
 
 import javax.validation.constraints.NotNull;
@@ -44,13 +46,15 @@ public class RatingHistory extends BaseEntity {
 
     @NotNull
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Fetch(FetchMode.JOIN)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
     @NotNull
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Fetch(FetchMode.JOIN)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
@@ -63,7 +67,8 @@ public class RatingHistory extends BaseEntity {
 
     @NotNull
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Fetch(FetchMode.JOIN)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "season_id", nullable = false)
     private Season season;
 

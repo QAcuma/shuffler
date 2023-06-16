@@ -3,10 +3,16 @@ package ru.acuma.shuffler.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import ru.acuma.shuffler.exception.DataException;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
+import ru.acuma.shuffler.model.entity.Game;
+import ru.acuma.shuffler.repository.GameRepository;
 import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.management.InstanceNotFoundException;
@@ -21,6 +27,7 @@ public class GameService {
     private final TeamService teamService;
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
+    private final GameRepository gameRepository;
 
     @SneakyThrows
     private TGame buildGame(TEvent event) {
@@ -59,14 +66,20 @@ public class GameService {
             case RED_CHECKING -> {
                 game.getRedTeam().setIsWinner(Boolean.TRUE);
                 finishGameWithWinner(game);
+                increasePlayersGameCount(game);
             }
             case BLUE_CHECKING -> {
                 game.getBlueTeam().setIsWinner(Boolean.TRUE);
                 finishGameWithWinner(game);
+                increasePlayersGameCount(game);
             }
             case CANCELLED, CANCEL_CHECKING, EVENT_CHECKING -> finishCancelledGame(game);
         }
-        saveGameData(event);
+        game.getPlayers().forEach(TEventPlayer::increaseGameCount);
+    }
+
+    private void increasePlayersGameCount(final TGame game) {
+        game.getPlayers().forEach(TEventPlayer::increaseGameCount);
     }
 
     private void finishGameWithWinner(TGame game) {
@@ -81,13 +94,9 @@ public class GameService {
             .setFinishedAt(TimeMachine.localDateTimeNow());
     }
 
-    private void saveGameData(TEvent event) {
-        var game = event.getCurrentGame();
-        switch (game.getStatus()) {
-            case FINISHED -> {
-                ratingService.update(event);
-                game.getPlayers().forEach(TEventPlayer::increaseGameCount);
-            }
-        }
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Game findGame(final Long id) {
+        return gameRepository.findById(id)
+            .orElseThrow(() -> new DataException(ExceptionCause.GAME_NOT_FOUND, id));
     }
 }

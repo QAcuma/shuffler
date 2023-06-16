@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.context.cotainer.StorageTask;
 import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.constant.StorageTaskType;
+import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.repository.EventRepository;
 import ru.acuma.shuffler.service.season.SeasonService;
 import ru.acuma.shuffler.service.telegram.ChatService;
 
 @Service
 @RequiredArgsConstructor
-public class EventBegins extends Storable {
+public class EventBegins extends Storable<TEvent> {
 
     private final EventMapper eventMapper;
     private final SeasonService seasonService;
@@ -24,13 +25,13 @@ public class EventBegins extends Storable {
     }
 
     @Override
-    public void store(final StorageTask storageTask) {
-        var event = eventContext.findEvent(storageTask.getChatId());
-        var chat = chatService.getGroupInfo(event.getChatId());
+    public void store(final StorageTask<TEvent> storageTask) {
+        var chatEvent = storageTask.getSubject();
+        var chat = chatService.getGroupInfo(chatEvent.getChatId());
         var season = seasonService.getCurrentSeason();
-        var mappedEvent = eventMapper.toEvent(event, chat, season);
+        var event = eventMapper.toEvent(chatEvent, chat, season);
 
-        var savedEvent = eventRepository.save(mappedEvent);
-        event.setId(savedEvent.getId());
+        eventRepository.save(event);
+        chatEvent.setId(event.getId());
     }
 }

@@ -46,12 +46,12 @@ public class Event extends BaseEntityC {
 
     @NotNull
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "chat_id", nullable = false)
     private GroupInfo chat;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "season_id", nullable = false)
     private Season season;
 

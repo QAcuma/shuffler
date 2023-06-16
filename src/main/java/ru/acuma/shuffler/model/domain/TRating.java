@@ -13,6 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TRating implements Serializable {
 
+    private Long id;
     private Boolean calibrated;
     private Integer score;
     private Integer eventScoreChange;

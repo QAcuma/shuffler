@@ -1,15 +1,16 @@
 package ru.acuma.shuffler.mapper;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.telegram.telegrambots.meta.api.objects.Chat;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.model.domain.TEventContext;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TRating;
 import ru.acuma.shuffler.model.entity.GroupInfo;
 import ru.acuma.shuffler.model.entity.Player;
-import ru.acuma.shuffler.model.entity.Rating;
 import ru.acuma.shuffler.model.entity.UserInfo;
 
 @Mapper(
@@ -21,26 +22,23 @@ import ru.acuma.shuffler.model.entity.UserInfo;
 )
 public abstract class PlayerMapper {
 
+    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "player.id")
     @Mapping(target = "chatId", source = "player.chat.id")
     @Mapping(target = "ratingContext", source = "rating")
     @Mapping(target = "eventContext", constant = "", qualifiedByName = "defaultEventContext")
-    @Mapping(target = "userInfo", source = "userInfo")
+    @Mapping(target = "userInfo", source = "player.user")
     @Mapping(target = "lastGamePlayer", ignore = true)
-    public abstract TEventPlayer toTgEventPlayer(Player player, UserInfo userInfo, TRating rating);
+    public abstract TEventPlayer toTgEventPlayer(Player player, TRating rating);
 
     @Named("defaultEventContext")
-    protected TEventContext defaultEventContext(String empty) {
-        return TEventContext.builder()
-            .left(Boolean.FALSE)
-            .gameCount(0)
-            .build();
-    }
+    @Mapping(target = "left", constant = "false")
+    @Mapping(target = "gameCount", constant = "0")
+    protected abstract TEventContext defaultEventContext(String empty);
 
-    public Player defaultPlayer(final UserInfo user, final GroupInfo chat) {
-        return Player.builder()
-            .chat(chat)
-            .user(user)
-            .build();
-    }
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "chat", source = "chat")
+    @Mapping(target = "user", source = "user")
+    @Transactional(propagation = Propagation.MANDATORY)
+    public abstract Player defaultPlayer(UserInfo user, GroupInfo chat);
 }

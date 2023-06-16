@@ -32,20 +32,20 @@ public class BroadcastService {
     }
 
     public void seasonResultBroadcast(Long seasonId, GroupInfo groupInfo, Discipline discipline) {
-        var ladderResult = playerRepository.findAllActiveBySeasonIdAndChatIdAndDiscipline(
-            seasonId,
-            groupInfo.getId(),
-            discipline
-        );
+//        var ladderResult = playerRepository.findAllActiveBySeasonIdAndChatIdAndDiscipline(
+//            seasonId,
+//            groupInfo.getId(),
+//            discipline
+//        );
 //        ladderResult.stream()
 //            .map(user)
 //            .filter(this::filterNonCalibratedPlayers)
 //            .sorted(Comparator.comparingLong(WebPlayer::getScore).reversed())
 //            .toList();
 
-        if (ladderResult.isEmpty()) {
-            return;
-        }
+//        if (ladderResult.isEmpty()) {
+        return;
+    }
 
 //        var message = SendMessage.builder()
 //            .chatId(String.valueOf(groupInfo.getId()))
@@ -54,6 +54,6 @@ public class BroadcastService {
 //            .build();
 
 //        executeService.execute(message);
-    }
+//}
 
 }

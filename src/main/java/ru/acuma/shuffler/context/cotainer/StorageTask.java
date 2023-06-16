@@ -11,25 +11,18 @@ import java.io.Serializable;
 @Data
 @Builder
 @Accessors(chain = true)
-public class StorageTask implements Serializable {
+public class StorageTask<T> implements Serializable {
 
     private Long chatId;
-    private Long entityId;
+    private transient T subject;
     private StorageTaskType taskType;
     private ExecutionStatus executionStatus;
 
-    public static StorageTask of(final StorageTaskType taskType) {
-        return StorageTask.builder()
+    public static <T> StorageTask<T> of(final StorageTaskType taskType, final T entity) {
+        return StorageTask.<T>builder()
             .executionStatus(ExecutionStatus.PENDING)
             .taskType(taskType)
-            .build();
-    }
-
-    public static StorageTask of(final StorageTaskType taskType, final Long entityId) {
-        return StorageTask.builder()
-            .executionStatus(ExecutionStatus.PENDING)
-            .taskType(taskType)
-            .entityId(entityId)
+            .subject(entity)
             .build();
     }
 }

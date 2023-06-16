@@ -41,12 +41,13 @@ public class EventCommandHandler extends BaseCommandHandler<EventCommand> {
 
     private void beginEvent(final Long chatId, final Discipline discipline) {
         eventContext.createEvent(chatId, discipline);
+
+        storageContext.forChat(chatId)
+            .store(StorageTask.of(StorageTaskType.EVENT_BEGIN, eventContext.findEvent(chatId)));
         renderContext.forChat(chatId)
+            .render(Render.forDelete(MessageType.MENU))
             .render(Render.forSend(MessageType.LOBBY).withAfterAction(
                 () -> Render.forPin(renderContext.forChat(chatId).getMessageId(MessageType.LOBBY))
             ));
-
-        storageContext.forChat(chatId).store(StorageTask.of(StorageTaskType.EVENT_BEGIN));
-        renderContext.forChat(chatId).render(Render.forDelete(MessageType.MENU));
     }
 }

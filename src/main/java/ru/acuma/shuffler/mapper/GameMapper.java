@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.entity.Event;
 import ru.acuma.shuffler.model.entity.Game;
@@ -32,4 +34,10 @@ public abstract class GameMapper {
             .toList();
         game.withTeams(teams);
     }
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "finishedAt", source = "finishedAt")
+    @Transactional(propagation = Propagation.MANDATORY)
+    public abstract void updateGame(@MappingTarget Game game, TGame finishedGame);
 }

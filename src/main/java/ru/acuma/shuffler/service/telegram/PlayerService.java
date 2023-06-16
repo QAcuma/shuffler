@@ -10,9 +10,12 @@ import ru.acuma.shuffler.model.constant.AuthStatus;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
+import ru.acuma.shuffler.model.entity.GroupInfo;
 import ru.acuma.shuffler.model.entity.Player;
+import ru.acuma.shuffler.model.entity.UserInfo;
 import ru.acuma.shuffler.model.wrapper.SearchPlayerParams;
 import ru.acuma.shuffler.repository.PlayerRepository;
+import ru.acuma.shuffler.repository.ReferenceService;
 import ru.acuma.shuffler.service.event.RatingService;
 
 import java.util.Optional;
@@ -22,17 +25,16 @@ import java.util.Optional;
 public class PlayerService implements Authenticatable<SearchPlayerParams> {
     private final RatingService ratingService;
     private final UserService userService;
-    private final ChatService chatService;
     private final PlayerMapper playerMapper;
     private final PlayerRepository playerRepository;
+    private final ReferenceService referenceService;
 
     @Transactional(readOnly = true)
     public TEventPlayer getEventPlayer(final User user, final TEvent event) {
-        var userInfo = userService.getUser(user.getId());
         var player = getPlayer(event.getChatId(), user.getId());
-        var rating = ratingService.getRating(player, event.getDiscipline());
+        var rating = ratingService.getRatingOrDefault(player, event.getDiscipline());
 
-        return playerMapper.toTgEventPlayer(player, userInfo, rating);
+        return playerMapper.toTgEventPlayer(player, rating);
     }
 
     private Player getPlayer(final Long chatId, final Long userId) {
@@ -49,21 +51,26 @@ public class PlayerService implements Authenticatable<SearchPlayerParams> {
     }
 
     @Transactional(readOnly = true)
-    public void join(final User user, final TEvent event) {
-        Optional.ofNullable(event.getPlayers().get(user.getId()))
-            .ifPresentOrElse(
-                eventPlayer -> eventPlayer.getEventContext().setLeft(Boolean.FALSE),
-                () -> {
+    public TEventPlayer join(final User user, final TEvent event) {
+        return Optional.ofNullable(event.getPlayers().get(user.getId()))
+            .map(eventPlayer -> {
+                eventPlayer.getEventContext().setLeft(Boolean.FALSE);
+
+                return eventPlayer;
+            })
+            .orElseGet(() -> {
                     var eventPlayer = getEventPlayer(user, event);
                     event.joinPlayer(eventPlayer);
+
+                    return eventPlayer;
                 }
             );
     }
 
     @Transactional
     public void signUp(final Long chatId, final Long userId) {
-        var user = userService.getUser(userId);
-        var group = chatService.getGroupInfo(chatId);
+        var user = referenceService.getReference(UserInfo.class, userId);
+        var group = referenceService.getReference(GroupInfo.class, chatId);
         var player = playerMapper.defaultPlayer(user, group);
 
         playerRepository.save(player);

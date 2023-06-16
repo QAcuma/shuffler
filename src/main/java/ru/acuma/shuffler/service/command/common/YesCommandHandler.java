@@ -54,7 +54,8 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     private void cancelEvent(final TEvent event) {
         eventStatusService.cancelled(event);
 
-        storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.EVENT_FINISHED));
+        storageContext.forEvent(event)
+            .store(StorageTask.of(StorageTaskType.EVENT_FINISHED, event));
         var chatRender = renderContext.forEvent(event);
         chatRender.render(Render.forDelete(MessageType.LOBBY))
             .render(Render.forSend(MessageType.CANCELLED).withAfterAction(
@@ -67,8 +68,10 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         gameService.beginGame(event);
         eventStatusService.resume(event);
 
-        storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.GAME_BEGINS));
-        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY))
+        storageContext.forEvent(event)
+            .store(StorageTask.of(StorageTaskType.GAME_BEGINS, event.getCurrentGame()));
+        renderContext.forEvent(event)
+            .render(Render.forUpdate(MessageType.LOBBY))
             .render(Render.forSend(MessageType.GAME));
     }
 
@@ -78,9 +81,9 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         eventStatusService.resume(event);
 
         storageContext.forEvent(event)
-            .store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame().getId()));
-        var chatRender = renderContext.forEvent(event);
-        chatRender.render(Render.forDelete(MessageType.GAME))
+            .store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame()));
+        renderContext.forEvent(event)
+            .render(Render.forDelete(MessageType.GAME))
             .render(Render.forUpdate(MessageType.LOBBY));
     }
 
@@ -90,10 +93,10 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         eventStatusService.finished(event);
 
         storageContext.forEvent(event)
-            .store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame().getId()))
-            .store(StorageTask.of(StorageTaskType.EVENT_FINISHED, event.getId()));
-        var chatRender = renderContext.forEvent(event);
-        chatRender.render(Render.forDelete(MessageType.GAME))
+            .store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame()))
+            .store(StorageTask.of(StorageTaskType.EVENT_FINISHED, event));
+        renderContext.forEvent(event)
+            .render(Render.forDelete(MessageType.GAME))
             .render(Render.forUpdate(MessageType.LOBBY));
     }
 }

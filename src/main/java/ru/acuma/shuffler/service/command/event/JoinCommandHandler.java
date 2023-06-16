@@ -39,7 +39,8 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
 
     @Override
     protected void invokeEventCommand(final User user, final TEvent event, final String... args) {
-        playerService.join(user, event);
+        var player = playerService.join(user, event);
+        storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.PLAYER_JOINED, player));
 
         switch (event.getEventStatus()) {
             case CREATED, READY -> joinLobby(event);
@@ -51,12 +52,14 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
 
     private void joinLobby(final TEvent event) {
         eventStatusService.praperation(event);
-        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY));
+        renderContext.forEvent(event)
+            .render(Render.forUpdate(MessageType.LOBBY));
     }
 
     private void joinEvent(final TEvent event) {
         eventStatusService.resume(event);
-        renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY));
+        renderContext.forEvent(event)
+            .render(Render.forUpdate(MessageType.LOBBY));
     }
 
     private void joinWaitingEvent(final TEvent event) {
@@ -65,11 +68,14 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
             .ifPresentOrElse(
                 status -> {
                     gameService.beginGame(event);
-                    storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.GAME_BEGINS));
-                    renderContext.forEvent(event).render(Render.forSend(MessageType.GAME))
+                    storageContext.forEvent(event)
+                        .store(StorageTask.of(StorageTaskType.GAME_BEGINS, event.getCurrentGame()));
+                    renderContext.forEvent(event)
+                        .render(Render.forSend(MessageType.GAME))
                         .render(Render.forUpdate(MessageType.LOBBY));
                 },
-                () -> renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY))
+                () -> renderContext.forEvent(event)
+                    .render(Render.forUpdate(MessageType.LOBBY))
             );
     }
 }

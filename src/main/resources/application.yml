@@ -10,10 +10,12 @@ spring:
   main:
     web-application-type: none
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
+        format_sql: true
         default_schema: public
         cache:
           use_second_level_cache: false

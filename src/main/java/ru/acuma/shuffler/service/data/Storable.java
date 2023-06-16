@@ -5,11 +5,11 @@ import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.context.cotainer.StorageTask;
 import ru.acuma.shuffler.model.constant.StorageTaskType;
 
-public abstract class Storable {
+public abstract class Storable<T> {
 
     @Autowired
     protected EventContext eventContext;
 
     abstract StorageTaskType getTaskType();
-    abstract void store(StorageTask storageTask);
+    abstract void store(StorageTask<T> storageTask);
 }

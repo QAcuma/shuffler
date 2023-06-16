@@ -19,6 +19,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -42,13 +44,15 @@ public class Player extends BaseEntity {
 
     @NotNull
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Fetch(FetchMode.JOIN)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "chat_id", nullable = false)
     private GroupInfo chat;
 
     @NotNull
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Fetch(FetchMode.JOIN)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private UserInfo user;
 

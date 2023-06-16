@@ -5,5 +5,6 @@ public enum StorageTaskType {
     GAME_BEGINS,
     GAME_FINISHED,
     EVENT_BEGIN,
-    EVENT_FINISHED
+    EVENT_FINISHED,
+    PLAYER_JOINED
 }

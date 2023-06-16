@@ -27,16 +27,20 @@ public class ReusableActions {
 
     public void nextGame(final TEvent event) {
         gameService.finishGame(event);
-        storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame().getId()));
+        storageContext.forEvent(event)
+            .store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame()));
         var chatRender = renderContext.forEvent(event);
         switch (eventStatusService.resume(event)) {
             case PLAYING -> {
-                storageContext.forEvent(event).store(StorageTask.of(StorageTaskType.GAME_BEGINS));
                 gameService.beginGame(event);
-                chatRender.render(Render.forUpdate(MessageType.LOBBY))
+                storageContext.forEvent(event)
+                    .store(StorageTask.of(StorageTaskType.GAME_BEGINS, event.getCurrentGame()));
+                chatRender
+                    .render(Render.forUpdate(MessageType.LOBBY))
                     .render(Render.forUpdate(MessageType.GAME));
             }
-            case WAITING -> chatRender.render(Render.forUpdate(MessageType.LOBBY))
+            case WAITING -> chatRender
+                .render(Render.forUpdate(MessageType.LOBBY))
                 .render(Render.forDelete(MessageType.GAME));
         }
     }
