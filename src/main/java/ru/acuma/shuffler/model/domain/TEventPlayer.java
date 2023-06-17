@@ -31,20 +31,8 @@ public class TEventPlayer implements Serializable {
         return userInfo.getUserId();
     }
 
-    public Integer getScoreSorting() {
-        return Boolean.TRUE.equals(ratingContext.getCalibrated())
-               ? ratingContext.getScore()
-               : 0;
-    }
-
-    public String getScoreString() {
-        return Boolean.TRUE.equals(ratingContext.getCalibrated())
-               ? String.valueOf(ratingContext.getScore())
-               : "calibrating";
-    }
-
-    public Boolean isCalibrated() {
-        return ratingContext.getCalibrated();
+    public Integer getScore() {
+        return ratingContext.getScore();
     }
 
     public Boolean isLeft() {
@@ -54,8 +42,8 @@ public class TEventPlayer implements Serializable {
     public String getNameWithRating() {
         return userInfo.getFirstName() +
             " " +
-            Optional.ofNullable(userInfo.getLastName()).orElse("Doe") +
-            this.getScoreString();
+            Optional.ofNullable(userInfo.getLastName()).orElse("") +
+            getScore();
     }
 
     public void increaseGameCount() {
@@ -83,8 +71,8 @@ public class TEventPlayer implements Serializable {
             getName() +
             strikethroughEnd() +
             " " +
-            getScoreString() +
-            (Boolean.TRUE.equals(ratingContext.getCalibrated()) ? getSessionRatingToString() : "");
+            getScore() +
+            (ratingContext.getEventScoreChange() != 0 ? getSessionRatingToString() : "");
     }
 
     private String strikethroughBegin() {

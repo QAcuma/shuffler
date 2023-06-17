@@ -19,6 +19,7 @@ import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,11 +38,10 @@ public class GameService {
         var redTeam = Optional
             .ofNullable(teamService.buildTeam(players))
             .orElseThrow(() -> new IllegalArgumentException("Red team is null"));
-
-        var secondTeamPlayers = players.stream()
+        var blueTeamPlayers = players.stream()
             .filter(Predicate.not(redTeam.getPlayers()::contains))
-            .toList();
-        var blueTeam = teamService.buildTeam(secondTeamPlayers);
+            .collect(Collectors.toList());
+        var blueTeam = teamService.buildTeam(blueTeamPlayers);
 
         ratingService.applyBet(redTeam, blueTeam);
 
@@ -84,7 +84,9 @@ public class GameService {
 
     private void finishGameWithWinner(TGame game) {
         game.setStatus(GameStatus.FINISHED)
-            .setFinishedAt(LocalDateTime.now());
+            .setFinishedAt(TimeMachine.localDateTimeNow());
+        game.getWinnerTeam().applyRating();
+        game.getLoserTeam().applyRating();
         teamService.fillLastGameMate(game.getWinnerTeam());
         teamService.fillLastGameMate(game.getLoserTeam());
     }

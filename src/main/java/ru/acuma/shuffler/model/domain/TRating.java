@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @Builder
@@ -14,19 +15,18 @@ import java.io.Serializable;
 public class TRating implements Serializable {
 
     private Long id;
-    private Boolean calibrated;
     private Integer score;
     private Integer eventScoreChange;
     private Integer lastScoreChange;
-    private Integer calibrationMultiplier;
+    private BigDecimal multiplier;
 
-    public void applyScore(Integer change) {
-        var scoreChange = change * calibrationMultiplier;
+    public void applyScore(final Integer change) {
+        var scoreChange = multiplier.multiply(BigDecimal.valueOf(change)).intValue();
+        if (multiplier.compareTo(BigDecimal.ONE) > 0) {
+            multiplier = multiplier.subtract(BigDecimal.valueOf(0.5d));
+        }
         score += scoreChange;
-
-        eventScoreChange = getCalibrated()
-                           ? eventScoreChange + scoreChange
-                           : 0;
+        eventScoreChange = eventScoreChange + scoreChange;
         lastScoreChange = scoreChange;
     }
 }

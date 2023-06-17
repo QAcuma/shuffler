@@ -19,30 +19,18 @@ import java.util.Objects;
 )
 public abstract class RatingMapper {
 
-    @Value("${rating.calibration.multiplier}")
-    protected Integer calibrationMultiplier;
-
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "calibrated", source = "isCalibrated", defaultValue = "false")
     @Mapping(target = "id", source = "id")
     @Mapping(target = "score", source = "score")
     @Mapping(target = "eventScoreChange", constant = "0")
     @Mapping(target = "lastScoreChange", constant = "0")
-    @Mapping(target = "calibrationMultiplier", constant = "1000", qualifiedByName = "mapCalibrationMultiplier")
+    @Mapping(target = "multiplier", source = "multiplier")
     public abstract TRating toRating(Rating rating);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "calibrated", constant = "false")
     @Mapping(target = "score", expression = "java(Constants.BASE_RATING)")
     @Mapping(target = "eventScoreChange", constant = "0")
     @Mapping(target = "lastScoreChange", constant = "0")
-    @Mapping(target = "calibrationMultiplier", constant = "1000", qualifiedByName = "mapCalibrationMultiplier")
+    @Mapping(target = "multiplier", constant = "6")
     public abstract TRating defaultRating(Player player, Discipline discipline);
-
-    @Named("mapCalibrationMultiplier")
-    protected Integer mapCalibrationMultiplier(Integer mock) {
-        return Objects.nonNull(calibrationMultiplier)
-               ? calibrationMultiplier
-               : mock;
-    }
 }

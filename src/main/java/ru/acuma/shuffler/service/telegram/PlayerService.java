@@ -1,6 +1,7 @@
 package ru.acuma.shuffler.service.telegram;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -23,21 +24,23 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PlayerService implements Authenticatable<SearchPlayerParams> {
+
     private final RatingService ratingService;
-    private final UserService userService;
     private final PlayerMapper playerMapper;
     private final PlayerRepository playerRepository;
     private final ReferenceService referenceService;
+    @Lazy
+    private final PlayerService self;
 
     @Transactional(readOnly = true)
     public TEventPlayer getEventPlayer(final User user, final TEvent event) {
-        var player = getPlayer(event.getChatId(), user.getId());
+        var player = self.getPlayer(event.getChatId(), user.getId());
         var rating = ratingService.getRatingOrDefault(player, event.getDiscipline());
 
         return playerMapper.toTgEventPlayer(player, rating);
     }
 
-    private Player getPlayer(final Long chatId, final Long userId) {
+    public Player getPlayer(final Long chatId, final Long userId) {
         return playerRepository.findByUserIdAndChatId(userId, chatId)
             .orElseThrow(() -> new DataException(ExceptionCause.PLAYER_NOT_FOUND, userId, chatId));
     }
@@ -77,8 +80,8 @@ public class PlayerService implements Authenticatable<SearchPlayerParams> {
     }
 
     @Override
-    public AuthStatus authenticate(SearchPlayerParams findParams) {
-        return playerRepository.findByUserIdAndChatId(findParams.getUserId(), findParams.getChatId())
+    public AuthStatus authenticate(final SearchPlayerParams findParams) {
+        return playerRepository.findByUserIdAndChatId(findParams.userId(), findParams.chatId())
             .map(player -> AuthStatus.SUCCESS)
             .orElse(AuthStatus.UNREGISTERED);
     }

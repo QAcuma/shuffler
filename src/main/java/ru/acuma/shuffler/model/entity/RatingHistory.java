@@ -72,10 +72,6 @@ public class RatingHistory extends BaseEntity {
     @JoinColumn(name = "season_id", nullable = false)
     private Season season;
 
-    @NotNull
-    @Column(name = "is_calibrated", nullable = false)
-    private Boolean isCalibrated;
-
     @Size(max = 32)
     @Enumerated(EnumType.STRING)
     @Column(name = "discipline", length = 32)

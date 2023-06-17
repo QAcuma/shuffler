@@ -37,15 +37,11 @@ public class UserFilter implements AuthFilter {
             case SUCCESS -> userService.update(message.getFrom());
             case DENY -> throw new IdleException(ExceptionCause.USER_IS_NOT_ACTIVE);
         }
-
-        var searchPlayerParams = SearchPlayerParams.builder()
-            .userId(message.getFrom().getId())
-            .chatId(message.getChatId())
-            .build();
+        var searchPlayerParams = new SearchPlayerParams(message.getFrom().getId(), message.getChatId());
         var playerStatus = playerService.authenticate(searchPlayerParams);
         switch (playerStatus) {
-            case UNREGISTERED -> playerService.signUp(searchPlayerParams.getChatId(), searchPlayerParams.getUserId());
-            case SUCCESS -> log.trace("Player {} authenticated for chat {}", searchPlayerParams.getChatId(), searchPlayerParams.getUserId());
+            case UNREGISTERED -> playerService.signUp(searchPlayerParams.chatId(), searchPlayerParams.userId());
+            case SUCCESS -> log.trace("Player {} authenticated for chat {}", searchPlayerParams.chatId(), searchPlayerParams.userId());
             case DENY -> throw new IdleException(ExceptionCause.PLAYER_NOT_FOUND);
         }
     }

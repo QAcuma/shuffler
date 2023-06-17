@@ -1,8 +1,9 @@
 package ru.acuma.shuffler.service.event;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.mapper.RatingMapper;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.Discipline;
@@ -21,15 +22,10 @@ public class RatingService {
     private final RatingRepository ratingRepository;
     private final RatingMapper ratingMapper;
 
-    @Value("${rating.calibration.game-penalty}")
-    private float calibrationPenaltyMultiplier;
-
     public void applyBet(TTeam redTeam, TTeam blueTeam) {
-        boolean isCalibrating = redTeam.containsCalibrating() || blueTeam.containsCalibrating();
-
-        var redWinCase = winCase(redTeam, blueTeam);
-        var limitedRedWinCase = limitAndRoundChange(redWinCase, isCalibrating);
-        var blueWinCase = getBasePool(isCalibrating) - limitedRedWinCase;
+        var redWinCase = caseVictory(redTeam, blueTeam);
+        var limitedRedWinCase = limitAndRoundChange(redWinCase);
+        var blueWinCase = Constants.BASE_GAME_RATING_POOL - limitedRedWinCase;
 
         var redLoseCase = -1 * blueWinCase;
         var blueLoseCase = -1 * limitedRedWinCase;
@@ -37,20 +33,21 @@ public class RatingService {
         var redBet = TGameBet.builder().caseWin(limitedRedWinCase).caseLose(redLoseCase).build();
         var blueBet = TGameBet.builder().caseWin(blueWinCase).caseLose(blueLoseCase).build();
 
-        redTeam.setBet(redBet);
-        blueTeam.setBet(blueBet);
+        redTeam.setBaseBet(redBet);
+        blueTeam.setBaseBet(blueBet);
     }
 
+    @Transactional(propagation = Propagation.MANDATORY)
     public TRating getRatingOrDefault(final Player player, final Discipline discipline) {
-        return ratingRepository.findBySeasonAndPlayerAndDiscipline(
-                seasonService.getCurrentSeason(),
+        return ratingRepository.findBySeasonIdAndPlayerAndDiscipline(
+                seasonService.getSeasonId(),
                 player,
                 discipline)
             .map(ratingMapper::toRating)
             .orElseGet(() -> ratingMapper.defaultRating(player, discipline));
     }
 
-    private int winCase(final TTeam team1, final TTeam team2) {
+    private int caseVictory(final TTeam team1, final TTeam team2) {
         var diff = team1.getScore() - team2.getScore();
         var limitedDiff = Math.min(diff, Constants.RATING_REFERENCE);
         var change = diff >= 0
@@ -60,20 +57,11 @@ public class RatingService {
         return Math.round(change);
     }
 
-    private int limitAndRoundChange(float change, boolean isCalibrating) {
-        var value = isCalibrating
-                    ? change * calibrationPenaltyMultiplier
-                    : change;
-
-        if (Math.abs(value) >= getBasePool(isCalibrating)) {
-            return getBasePool(isCalibrating) - 1;
+    private int limitAndRoundChange(float change) {
+        if (Math.abs(change) >= Constants.BASE_RATING_CHANGE) {
+            return Constants.BASE_RATING_CHANGE - 1;
         }
 
-        return Math.max(Math.abs(Math.round(value)), 1);
+        return Math.max(Math.abs(Math.round(change)), 1);
     }
-
-    private int getBasePool(boolean isCalibrating) {
-        return isCalibrating ? Constants.BASE_RATING_CHANGE : Constants.BASE_RATING_CHANGE * 2;
-    }
-
 }

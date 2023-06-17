@@ -42,8 +42,7 @@ public enum EventConstant implements EventConstantButton {
     WIN_CHECKING_MESSAGE("Победили?"),
     RED_CHECKING_MESSAGE(RED_CIRCLE_EMOJI + WIN_CHECKING_MESSAGE),
     BLUE_CHECKING_MESSAGE(BLUE_CIRCLE_EMOJI + WIN_CHECKING_MESSAGE),
-    CALIBRATING_MESSAGE("\n" + "<i>* - Ставка некоторых игр была понижена из-за участия неоткалиброванных игроков </i>\n"),
-    SHUFFLER_LINK("\n" + "<i>Статистика игр: shuffler.fun</i>"),
+    SHUFFLER_LINK("\n" + "<i>Статистика игр: shuffler.host</i>"),
     LOBBY_CANCELED_MESSAGE("Чемпионат был отменен " + NICE_MOON_EMOJI);
 
     private final String text;

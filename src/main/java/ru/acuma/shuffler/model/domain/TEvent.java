@@ -94,10 +94,6 @@ public class TEvent implements Serializable {
         tgGames.add(tgGame);
     }
 
-    public Boolean isCalibrating() {
-        return getTgGames().stream().anyMatch(TGame::isCalibrating);
-    }
-
     public Boolean hasAnyGameFinished() {
         return getTgGames().stream().anyMatch(game -> game.getStatus() == GameStatus.FINISHED);
     }

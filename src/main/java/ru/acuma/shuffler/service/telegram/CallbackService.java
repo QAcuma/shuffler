@@ -35,7 +35,7 @@ public class CallbackService {
     private final RenderService renderService;
     private final GlobalExceptionHandler exceptionHandler;
 
-    public void filter(final CallbackQuery callbackQuery) {
+    public void route(final CallbackQuery callbackQuery) {
         callbackQuery.getMessage().setFrom(callbackQuery.getFrom());
         updateValidators.forEach(filter -> filter.accept(callbackQuery));
         authFilters.forEach(filter -> filter.accept(callbackQuery));
@@ -46,7 +46,7 @@ public class CallbackService {
     }
 
     @SweepMessage
-    public void filter(final Message message) {
+    public void route(final Message message) {
         updateValidators.forEach(filter -> filter.accept(message));
         authFilters.forEach(filter -> filter.accept(message));
         var commandText = message.getText();

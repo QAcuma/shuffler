@@ -27,7 +27,7 @@ public class ChatService implements Authenticatable<Long> {
     @Transactional
     public void update(final Chat chat) {
         var groupInfo = getGroupInfo(chat.getId());
-        chatMapper.mergeGroupInfo(groupInfo, chat);
+        chatMapper.updateGroupInfo(groupInfo, chat);
     }
 
     @Transactional
@@ -39,7 +39,7 @@ public class ChatService implements Authenticatable<Long> {
     @Override
     @Transactional(readOnly = true)
     public AuthStatus authenticate(final Long chatId) {
-        return groupInfoRepository.findForAuthById(chatId)
+        return groupInfoRepository.findById(chatId)
             .map(info -> Boolean.TRUE.equals(info.getIsActive())
                          ? AuthStatus.SUCCESS
                          : AuthStatus.DENY)

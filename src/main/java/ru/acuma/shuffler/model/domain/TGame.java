@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.constant.GameStatus;
-import ru.acuma.shuffler.util.Symbols;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.acuma.shuffler.model.constant.GameStatus.FINISHED;
 
@@ -48,14 +49,17 @@ public class TGame implements Serializable {
 
     public TTeam getLoserTeam() {
         if (status == FINISHED) {
-            return redTeam.getIsWinner() ? blueTeam : redTeam;
+            return Boolean.TRUE.equals(redTeam.getIsWinner()) ? blueTeam : redTeam;
         }
 
         return null;
     }
 
-    public boolean isCalibrating() {
-        return getRedTeam().containsCalibrating() || getBlueTeam().containsCalibrating();
+    public boolean hasSameMultiplier() {
+        return Objects.equals(
+            getWinnerTeam().getPlayer1().getRatingContext().getMultiplier(),
+            getWinnerTeam().getPlayer2().getRatingContext().getMultiplier()
+        );
     }
 
     public boolean isActive() {
@@ -69,16 +73,33 @@ public class TGame implements Serializable {
     }
 
     public String getGameResult() {
-        if (getWinnerTeam() != null) {
-            return order +
-                ". " +
-                String.format(getWinnerTeam().toString(), "&") +
-                " (+" +
-                getWinnerTeam().getBet().getCaseWin() +
-                ") " +
-                (isCalibrating() ? Symbols.FOOTNOTE_SYMBOL : "");
-        }
-        return "";
+        return hasSameMultiplier()
+               ? getBasicGameResult()
+               : getPersonalGameResult();
     }
 
+    private String getPersonalGameResult() {
+        var winBet = getWinnerTeam().getBaseBet().getCaseWin();
+        return order +
+            ". " +
+            String.format(getWinnerTeam().toString(), "&") +
+            wrapBrackets(
+                "+" + getWinnerTeam().getPlayer1().getRatingContext().getMultiplier().multiply(BigDecimal.valueOf(winBet)).intValue() +
+                    " / " +
+                    "+" + getWinnerTeam().getPlayer2().getRatingContext().getMultiplier().multiply(BigDecimal.valueOf(winBet)).intValue()
+            );
+    }
+
+    private <T> String wrapBrackets(final T content) {
+        return " (" + content + ")";
+    }
+
+    private String getBasicGameResult() {
+        return order +
+            ". " +
+            String.format(getWinnerTeam().toString(), "&") +
+            " (+" +
+            getWinnerTeam().getBaseBet().getCaseWin() +
+            ")";
+    }
 }

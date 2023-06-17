@@ -26,6 +26,7 @@ import ru.acuma.shuffler.model.constant.Discipline;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -67,6 +68,7 @@ public class Rating extends BaseEntity {
     @Column(name = "score", nullable = false)
     private Integer score;
 
-    @Column(name = "is_calibrated")
-    private Boolean isCalibrated;
+    @NotNull
+    @Column(name = "multiplier", nullable = false)
+    private BigDecimal multiplier;
 }

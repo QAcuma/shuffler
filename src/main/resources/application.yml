@@ -9,18 +9,22 @@ telegram:
 spring:
   main:
     web-application-type: none
+#  cache:
+#    type: jcache
+#    jcache.provider: com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider
+#    cache-names: user-auth, chat-auth
+#    caffeine.spec: maximumSize=500,expireAfterAccess=600s
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
-        format_sql: true
         default_schema: public
         cache:
-          use_second_level_cache: false
-          region:
-            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+          region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+          use_second_level_cache: true
+          use_query_cache: true
   datasource:
     hikari:
       schema: public
@@ -50,5 +54,5 @@ rating:
   calibration:
     games: ${SHUFFLER_CALIBRATION_GAMES:9}
     enemies: ${SHUFFLER_CALIBRATION_ENEMIES:3}
-    multiplier: ${SHUFFLER_CALIBRATION_MULTIPLIER:5}
+    multiplier: ${SHUFFLER_CALIBRATION_MULTIPLIER:8}
     game-penalty: ${SHUFFLER_CALIBRATION_PENALTY_MULTIPLIER:0.5}

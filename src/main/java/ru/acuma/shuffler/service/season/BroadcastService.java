@@ -18,9 +18,6 @@ public class BroadcastService {
     private final PlayerRepository playerRepository;
     private final TextBuilderService textBuilderService;
 
-    @Value("${rating.calibration.games}")
-    private int requiredGames;
-
     public void seasonResultBroadcast(Long seasonId) {
         groupInfoRepository.findAllByIsActiveTrue()
             .forEach(groupInfo -> seasonResultBroadcast(seasonId, groupInfo));
@@ -39,7 +36,6 @@ public class BroadcastService {
 //        );
 //        ladderResult.stream()
 //            .map(user)
-//            .filter(this::filterNonCalibratedPlayers)
 //            .sorted(Comparator.comparingLong(WebPlayer::getScore).reversed())
 //            .toList();
 

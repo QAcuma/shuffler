@@ -39,7 +39,6 @@ public class MessageTextService {
             + (!event.getPlayers().isEmpty() ? getMembersText(event) : "")
             + (Boolean.TRUE.equals(event.hasAnyGameFinished()) ? EventConstant.WINNERS_MESSAGE.getText() : "")
             + (Boolean.TRUE.equals(event.hasAnyGameFinished()) ? getWinnersText(event) : "")
-            + (Boolean.TRUE.equals(event.isCalibrating()) ? EventConstant.CALIBRATING_MESSAGE.getText() : "")
             + getEventFooterText(event);
     }
 
@@ -83,7 +82,7 @@ public class MessageTextService {
     private String getMembersText(final TEvent event) {
         return event.getPlayers().values()
             .stream()
-            .sorted(Comparator.comparingLong(TEventPlayer::getScoreSorting).reversed())
+            .sorted(Comparator.comparingLong(TEventPlayer::getScore).reversed())
             .map(TEventPlayer::getLobbyName)
             .collect(Collectors.joining(System.lineSeparator())) +
             System.lineSeparator();

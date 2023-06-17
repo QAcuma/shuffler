@@ -35,6 +35,9 @@ dependencies {
     implementation(libs.bundles.telegram)
     implementation(libs.bundles.data)
     implementation(libs.mapstruct)
+    implementation(libs.caffeine)
+    implementation(libs.caffeine.jcache)
+    implementation(libs.hibernate.jcache)
     implementation(libs.bundles.util)
 
     compileOnly(libs.lombok)

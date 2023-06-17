@@ -23,7 +23,6 @@ public class ShuffleService {
     @SneakyThrows
     public List<TEventPlayer> shuffle(TEvent event) {
         var members = new ArrayList<>(event.getActivePlayers());
-
         if (members.size() < Constants.GAME_PLAYERS_COUNT) {
             throw new NoSuchElementException("Not enough players to start event");
         }
