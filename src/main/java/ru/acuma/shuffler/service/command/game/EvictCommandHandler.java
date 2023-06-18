@@ -35,7 +35,7 @@ public class EvictCommandHandler extends BaseCommandHandler<EvictCommand> {
         var userId = ArgumentUtil.extractParam(CallbackParam.USER_ID, Long::valueOf, args);
 
         playerService.leaveEvent(userId, event);
-        gameStatusService.cancel(event.getCurrentGame());
+        gameStatusService.cancelled(event.getCurrentGame());
         reusableActions.nextGame(event);
     }
 }

@@ -58,8 +58,8 @@ public class RatingService {
     }
 
     private int limitAndRoundChange(float change) {
-        if (Math.abs(change) >= Constants.BASE_RATING_CHANGE) {
-            return Constants.BASE_RATING_CHANGE - 1;
+        if (Math.abs(change) >= Constants.BASE_GAME_RATING_POOL) {
+            return Constants.BASE_GAME_RATING_POOL - 1;
         }
 
         return Math.max(Math.abs(Math.round(change)), 1);

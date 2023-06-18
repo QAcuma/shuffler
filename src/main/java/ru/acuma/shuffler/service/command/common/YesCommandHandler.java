@@ -76,7 +76,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     }
 
     private void finishCancelledGame(final TEvent event) {
-        gameStatusService.finished(event.getCurrentGame());
+        gameStatusService.cancelled(event.getCurrentGame());
         gameService.finishGame(event);
         eventStatusService.resume(event);
 
@@ -88,15 +88,18 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     }
 
     private void finishEvent(final TEvent event) {
-        gameStatusService.finished(event.getCurrentGame());
-        gameService.finishGame(event);
+        if (event.getCurrentGame().isActive()) {
+            gameStatusService.cancelled(event.getCurrentGame());
+            gameService.finishGame(event);
+            renderContext.forEvent(event)
+                .render(Render.forDelete(MessageType.GAME));
+        }
         eventStatusService.finished(event);
 
         storageContext.forEvent(event)
             .store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame()))
             .store(StorageTask.of(StorageTaskType.EVENT_FINISHED, event));
         renderContext.forEvent(event)
-            .render(Render.forDelete(MessageType.GAME))
             .render(Render.forUpdate(MessageType.LOBBY));
     }
 }

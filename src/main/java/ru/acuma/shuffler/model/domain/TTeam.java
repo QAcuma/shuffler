@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Data
 @Builder
@@ -22,9 +21,12 @@ public class TTeam implements Serializable {
     private Boolean isWinner;
     private TGameBet baseBet;
 
-    public void applyRating() {
+    public void applyRating(final Long gameId) {
         var change = getIsWinner() ? baseBet.getCaseWin() : baseBet.getCaseLose();
-        getPlayers().forEach(player -> player.applyRating(change));
+        getPlayers()
+            .stream()
+            .peek(player -> player.putGame(gameId, change))
+            .forEach(player -> player.applyRating(change));
     }
 
     public List<TEventPlayer> getPlayers() {

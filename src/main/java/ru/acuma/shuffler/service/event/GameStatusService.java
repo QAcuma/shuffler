@@ -11,7 +11,7 @@ public class GameStatusService {
         game.setStatus(GameStatus.ACTIVE);
     }
 
-    public void cancel(TGame game) {
+    public void cancelled(TGame game) {
         game.setStatus(GameStatus.CANCELLED);
     }
 

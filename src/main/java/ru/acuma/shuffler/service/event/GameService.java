@@ -82,18 +82,17 @@ public class GameService {
         game.getPlayers().forEach(TEventPlayer::increaseGameCount);
     }
 
-    private void finishGameWithWinner(TGame game) {
+    private void finishGameWithWinner(final TGame game) {
         game.setStatus(GameStatus.FINISHED)
             .setFinishedAt(TimeMachine.localDateTimeNow());
-        game.getWinnerTeam().applyRating();
-        game.getLoserTeam().applyRating();
+        game.getWinnerTeam().applyRating(game.getId());
+        game.getLoserTeam().applyRating(game.getId());
         teamService.fillLastGameMate(game.getWinnerTeam());
         teamService.fillLastGameMate(game.getLoserTeam());
     }
 
-    private void finishCancelledGame(TGame game) {
-        game.setStatus(GameStatus.CANCELLED)
-            .setFinishedAt(TimeMachine.localDateTimeNow());
+    private void finishCancelledGame(final TGame game) {
+        game.setFinishedAt(TimeMachine.localDateTimeNow());
     }
 
     @Transactional(propagation = Propagation.MANDATORY)

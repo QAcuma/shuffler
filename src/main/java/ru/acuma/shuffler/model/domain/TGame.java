@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.constant.GameStatus;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +54,10 @@ public class TGame implements Serializable {
         return null;
     }
 
-    public boolean hasSameMultiplier() {
+    public boolean hasSameBonus() {
         return Objects.equals(
-            getWinnerTeam().getPlayer1().getRatingContext().getMultiplier(),
-            getWinnerTeam().getPlayer2().getRatingContext().getMultiplier()
+            getWinnerTeam().getPlayer1().getRatingContext().getGameHistory().get(id),
+            getWinnerTeam().getPlayer2().getRatingContext().getGameHistory().get(id)
         );
     }
 
@@ -73,7 +72,7 @@ public class TGame implements Serializable {
     }
 
     public String getGameResult() {
-        return hasSameMultiplier()
+        return hasSameBonus()
                ? getBasicGameResult()
                : getPersonalGameResult();
     }
@@ -84,9 +83,9 @@ public class TGame implements Serializable {
             ". " +
             String.format(getWinnerTeam().toString(), "&") +
             wrapBrackets(
-                "+" + getWinnerTeam().getPlayer1().getRatingContext().getMultiplier().multiply(BigDecimal.valueOf(winBet)).intValue() +
+                "+" + getWinnerTeam().getPlayer1().getRatingContext().getGameHistory().get(id) +
                     " / " +
-                    "+" + getWinnerTeam().getPlayer2().getRatingContext().getMultiplier().multiply(BigDecimal.valueOf(winBet)).intValue()
+                    "+" + getWinnerTeam().getPlayer2().getRatingContext().getGameHistory().get(id)
             );
     }
 
@@ -95,11 +94,12 @@ public class TGame implements Serializable {
     }
 
     private String getBasicGameResult() {
+        var winBet = getWinnerTeam().getBaseBet().getCaseWin();
         return order +
             ". " +
             String.format(getWinnerTeam().toString(), "&") +
             " (+" +
-            getWinnerTeam().getBaseBet().getCaseWin() +
+            getWinnerTeam().getPlayer1().getRatingContext().getGameHistory().get(id) +
             ")";
     }
 }
