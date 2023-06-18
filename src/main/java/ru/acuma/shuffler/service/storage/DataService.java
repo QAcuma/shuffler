@@ -4,19 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.context.StorageContext;
-import ru.acuma.shuffler.exception.DataException;
-import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.ExecutionStatus;
-import ru.acuma.shuffler.model.constant.StorageTaskType;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class DataService {
 
     private final StorageContext storageContext;
-    private final List<StorageExecutor<Storable>> storables;
+    private final StorageExecutorStrategy<Storable> storageExecutorStrategy;
 
     @Transactional
     public void saveData(final Long chatId) {
@@ -25,14 +20,7 @@ public class DataService {
             .stream()
             .filter(task -> ExecutionStatus.PENDING.equals(task.getExecutionStatus()))
             .map(task -> task.setChatId(chatId))
-            .peek(task -> getStore(task.getTaskType()).store(task))
+            .peek(task -> storageExecutorStrategy.getStore(task.getTaskType()).store(task))
             .forEach(task -> task.setExecutionStatus(ExecutionStatus.EXECUTED));
-    }
-
-    private StorageExecutor<Storable> getStore(final StorageTaskType taskType) {
-        return storables.stream()
-            .filter(storable -> storable.getTaskType().equals(taskType))
-            .findFirst()
-            .orElseThrow(() -> new DataException(ExceptionCause.STORABLE_TASK_NOT_IMPLEMENTED, taskType));
     }
 }
