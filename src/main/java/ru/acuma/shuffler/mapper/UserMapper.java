@@ -17,10 +17,10 @@ import ru.acuma.shuffler.model.entity.UserInfo;
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
-public abstract class UserMapper {
+public interface UserMapper {
 
     @Mapping(target = "userId", source = "id")
-    public abstract TUserInfo toUserInfo(UserInfo source);
+    TUserInfo toUserInfo(UserInfo source);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "firstName", source = "firstName")
@@ -28,7 +28,7 @@ public abstract class UserMapper {
     @Mapping(target = "userName", source = "userName")
     @Mapping(target = "languageCode", source = "languageCode")
     @Transactional(propagation = Propagation.MANDATORY)
-    public abstract void mergeUserInfo(@MappingTarget UserInfo userInfo, User user);
+    void mergeUserInfo(@MappingTarget UserInfo userInfo, User user);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
@@ -37,5 +37,5 @@ public abstract class UserMapper {
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")
     @Mapping(target = "isActive", constant = "true")
-    public abstract UserInfo toUserInfo(User user);
+    UserInfo toUserInfo(User user);
 }

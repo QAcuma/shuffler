@@ -1,4 +1,4 @@
-package ru.acuma.shuffler.service.data;
+package ru.acuma.shuffler.service.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
 public class DataService {
 
     private final StorageContext storageContext;
-    private final List<Storable> storables;
+    private final List<StorageExecutor<Storable>> storables;
 
     @Transactional
     public void saveData(final Long chatId) {
@@ -29,7 +29,7 @@ public class DataService {
             .forEach(task -> task.setExecutionStatus(ExecutionStatus.EXECUTED));
     }
 
-    private Storable getStore(StorageTaskType taskType) {
+    private StorageExecutor<Storable> getStore(final StorageTaskType taskType) {
         return storables.stream()
             .filter(storable -> storable.getTaskType().equals(taskType))
             .findFirst()

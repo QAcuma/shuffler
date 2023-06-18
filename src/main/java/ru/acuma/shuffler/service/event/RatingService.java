@@ -4,13 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.RatingMapper;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.Discipline;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.domain.TGameBet;
 import ru.acuma.shuffler.model.domain.TRating;
 import ru.acuma.shuffler.model.domain.TTeam;
 import ru.acuma.shuffler.model.entity.Player;
+import ru.acuma.shuffler.model.entity.Rating;
 import ru.acuma.shuffler.repository.RatingRepository;
 import ru.acuma.shuffler.service.season.SeasonService;
 
@@ -45,6 +48,19 @@ public class RatingService {
                 discipline)
             .map(ratingMapper::toRating)
             .orElseGet(() -> ratingMapper.defaultRating(player, discipline));
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Rating findRating(final Long id) {
+        return ratingRepository.findById(id)
+            .orElseThrow(() -> new DataException(ExceptionCause.RATING_NOT_FOUND, id));
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void updateRating(final TRating ratingContext) {
+        var rating = findRating(ratingContext.getId());
+
+        ratingMapper.update(rating, ratingContext);
     }
 
     private int caseVictory(final TTeam team1, final TTeam team2) {

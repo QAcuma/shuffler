@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.exception.DataException;
+import ru.acuma.shuffler.mapper.GameMapper;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -28,6 +29,7 @@ public class GameService {
     private final TeamService teamService;
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
+    private final GameMapper gameMapper;
     private final GameRepository gameRepository;
 
     @SneakyThrows
@@ -96,8 +98,20 @@ public class GameService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
+    public void save(final Game game, final TGame currentGame) {
+        gameRepository.save(game);
+        currentGame.setId(game.getId());
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
     public Game findGame(final Long id) {
         return gameRepository.findById(id)
             .orElseThrow(() -> new DataException(ExceptionCause.GAME_NOT_FOUND, id));
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void updateGame(final TGame game) {
+        var savedGame = findGame(game.getId());
+        gameMapper.updateGame(savedGame, game);
     }
 }

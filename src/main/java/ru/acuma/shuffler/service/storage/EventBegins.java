@@ -1,7 +1,9 @@
-package ru.acuma.shuffler.service.data;
+package ru.acuma.shuffler.service.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.context.cotainer.StorageTask;
 import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.constant.StorageTaskType;
@@ -14,7 +16,7 @@ import ru.acuma.shuffler.service.season.SeasonService;
 
 @Service
 @RequiredArgsConstructor
-public class EventBegins extends Storable<TEvent> {
+public class EventBegins extends StorageExecutor<TEvent> {
 
     private final EventMapper eventMapper;
     private final SeasonService seasonService;
@@ -27,6 +29,7 @@ public class EventBegins extends Storable<TEvent> {
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public void store(final StorageTask<TEvent> storageTask) {
         var chatEvent = storageTask.getSubject();
         var chat = referenceService.getReference(GroupInfo.class, chatEvent.getChatId());

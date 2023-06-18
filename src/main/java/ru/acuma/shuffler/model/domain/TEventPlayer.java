@@ -7,10 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import ru.acuma.shuffler.service.storage.Storable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Builder
 @Accessors(chain = true)
 @AllArgsConstructor
-public class TEventPlayer implements Serializable {
+public class TEventPlayer implements Serializable, Storable {
     private Long id;
     private Long chatId;
     @EqualsAndHashCode.Exclude
@@ -30,6 +30,7 @@ public class TEventPlayer implements Serializable {
     public void putGame(final Long gameId, final Integer scoreChange) {
         ratingContext.getGameHistory().put(gameId, ratingContext.getMultiplier().multiply(BigDecimal.valueOf(scoreChange)).intValue());
     }
+
     public void applyRating(Integer change) {
         log.info("Score change for player {}", getFormatName());
         ratingContext.applyScore(change);

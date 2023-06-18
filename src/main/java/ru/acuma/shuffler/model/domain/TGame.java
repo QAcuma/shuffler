@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.acuma.shuffler.model.constant.GameStatus;
+import ru.acuma.shuffler.service.storage.Storable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import static ru.acuma.shuffler.model.constant.GameStatus.FINISHED;
 @Builder
 @Accessors(chain = true)
 @AllArgsConstructor
-public class TGame implements Serializable {
+public class TGame implements Serializable, Storable {
 
     private Long id;
     private Integer index;

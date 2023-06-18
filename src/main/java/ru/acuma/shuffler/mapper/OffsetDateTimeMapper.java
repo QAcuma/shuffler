@@ -7,9 +7,9 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 
 @Mapper(componentModel = "spring")
-public abstract class OffsetDateTimeMapper {
+public interface OffsetDateTimeMapper {
 
-    public OffsetDateTime map(LocalDateTime source) {
+    default OffsetDateTime map(LocalDateTime source) {
         return source == null
                 ? null
                 : source.atZone(ZoneId.systemDefault()).toOffsetDateTime();

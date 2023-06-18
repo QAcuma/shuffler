@@ -11,6 +11,7 @@ import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameStatus;
+import ru.acuma.shuffler.service.storage.Storable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class TEvent implements Serializable {
+public class TEvent implements Serializable, Storable {
 
     private Long id;
     private Long chatId;
