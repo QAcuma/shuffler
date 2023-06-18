@@ -27,6 +27,6 @@ public abstract class RatingMapper {
     @Mapping(target = "score", expression = "java(Constants.BASE_RATING)")
     @Mapping(target = "eventScoreChange", constant = "0")
     @Mapping(target = "lastScoreChange", constant = "0")
-    @Mapping(target = "multiplier", constant = "4")
+    @Mapping(target = "multiplier", constant = "3")
     public abstract TRating defaultRating(Player player, Discipline discipline);
 }
