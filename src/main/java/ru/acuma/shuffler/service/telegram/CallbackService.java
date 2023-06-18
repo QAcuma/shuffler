@@ -9,9 +9,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.aspect.marker.SweepMessage;
 import ru.acuma.shuffler.context.EventContext;
 import ru.acuma.shuffler.exception.GlobalExceptionHandler;
-import ru.acuma.shuffler.service.storage.DataService;
-import ru.acuma.shuffler.service.message.content.ContentService;
 import ru.acuma.shuffler.service.message.RenderService;
+import ru.acuma.shuffler.service.message.content.ContentService;
+import ru.acuma.shuffler.service.storage.DataService;
 import ru.acuma.shuffler.service.telegram.filter.AuthFilter;
 import ru.acuma.shuffler.service.telegram.filter.UpdateValidator;
 

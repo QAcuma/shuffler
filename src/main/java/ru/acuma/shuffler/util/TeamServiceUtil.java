@@ -9,7 +9,7 @@ public final class TeamServiceUtil {
             return false;
         }
         return team.getPlayer1().getLastGamePlayer().equals(team.getPlayer2())
-                || team.getPlayer2().getLastGamePlayer().equals(team.getPlayer1());
+            || team.getPlayer2().getLastGamePlayer().equals(team.getPlayer1());
     }
 
 }

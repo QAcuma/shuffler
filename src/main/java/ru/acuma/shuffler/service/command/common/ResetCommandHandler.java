@@ -11,8 +11,8 @@ import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.message.MaintenanceService;
+import ru.acuma.shuffler.util.TimeMachine;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -39,7 +39,7 @@ public class ResetCommandHandler extends BaseCommandHandler<ResetCommand> {
     private BiConsumer<Message, TEvent> getEvictingConsumer() {
         return (message, event) -> {
             eventStatusService.cancelled(event);
-            event.setFinishedAt(LocalDateTime.now());
+            event.setFinishedAt(TimeMachine.localDateTimeNow());
 //            eventContext.update(event);
             maintenanceService.sweepChat(event);
         };

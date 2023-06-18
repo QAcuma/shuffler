@@ -12,7 +12,7 @@ public class CaffeineProperty implements Serializable {
     @Override
     public String toString() {
         return "ValueObject{" +
-                "value='" + value + '\'' +
-                '}';
+            "value='" + value + '\'' +
+            '}';
     }
 }

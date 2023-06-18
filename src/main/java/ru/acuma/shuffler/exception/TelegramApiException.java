@@ -3,7 +3,6 @@ package ru.acuma.shuffler.exception;
 import lombok.Getter;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 
-
 public class TelegramApiException extends RuntimeException {
 
     private final String message;

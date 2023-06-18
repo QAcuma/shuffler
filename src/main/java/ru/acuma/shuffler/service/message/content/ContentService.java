@@ -2,8 +2,8 @@ package ru.acuma.shuffler.service.message.content;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.context.RenderContext;
+import ru.acuma.shuffler.context.cotainer.Render;
 
 @Service
 @RequiredArgsConstructor

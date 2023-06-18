@@ -17,7 +17,6 @@ import ru.acuma.shuffler.repository.GameRepository;
 import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.management.InstanceNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -52,7 +51,7 @@ public class GameService {
             .blueTeam(blueTeam)
             .index(event.getTgGames().size() + 1)
             .order(event.getFinishedGames().size() + 1)
-            .startedAt(LocalDateTime.now())
+            .startedAt(TimeMachine.localDateTimeNow())
             .status(GameStatus.ACTIVE)
             .build();
     }

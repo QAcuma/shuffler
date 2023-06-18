@@ -1,7 +1,6 @@
 package ru.acuma.shuffler.service.season;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.entity.GroupInfo;

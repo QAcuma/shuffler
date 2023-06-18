@@ -11,8 +11,8 @@ public interface OffsetDateTimeMapper {
 
     default OffsetDateTime map(LocalDateTime source) {
         return source == null
-                ? null
-                : source.atZone(ZoneId.systemDefault()).toOffsetDateTime();
+               ? null
+               : source.atZone(ZoneId.systemDefault()).toOffsetDateTime();
     }
 
 }

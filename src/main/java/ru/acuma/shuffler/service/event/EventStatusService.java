@@ -3,8 +3,7 @@ package ru.acuma.shuffler.service.event;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
-
-import java.time.LocalDateTime;
+import ru.acuma.shuffler.util.TimeMachine;
 
 @Service
 public class EventStatusService {
@@ -52,7 +51,7 @@ public class EventStatusService {
 
     public void finished(final TEvent event) {
         event.setEventStatus(EventStatus.FINISHED);
-        event.setFinishedAt(LocalDateTime.now());
+        event.setFinishedAt(TimeMachine.localDateTimeNow());
     }
 
     private EventStatus created(final TEvent event) {

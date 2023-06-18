@@ -9,8 +9,7 @@ import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.domain.TRating;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.model.entity.Rating;
-
-import java.util.Optional;
+import ru.acuma.shuffler.model.entity.Season;
 
 @Mapper(
     config = MapperConfiguration.class,
@@ -30,9 +29,10 @@ public interface RatingMapper {
     @Mapping(target = "id", source = "rating.id")
     @Mapping(target = "score", source = "rating.score")
     @Mapping(target = "multiplier", source = "rating.multiplier")
+    @Mapping(target = "season", source = "season")
     @Mapping(target = "player", source = "player")
     @Mapping(target = "discipline", source = "discipline")
-    Rating toRating(TRating rating, Player player, Discipline discipline);
+    Rating toRating(TRating rating, Season season, Player player, Discipline discipline);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "score", expression = "java(Constants.BASE_RATING)")

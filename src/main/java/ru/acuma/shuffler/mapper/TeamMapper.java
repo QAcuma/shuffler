@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TTeam;
 import ru.acuma.shuffler.model.entity.Team;
-import ru.acuma.shuffler.model.entity.TeamPlayer;
-
-import java.util.List;
 
 @Mapper(
     config = MapperConfiguration.class,

@@ -3,10 +3,10 @@ package ru.acuma.shuffler.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventContext;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
-import ru.acuma.shuffler.model.constant.Constants;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;

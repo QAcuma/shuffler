@@ -56,7 +56,7 @@ public class Rating extends BaseEntity {
     @ToString.Exclude
     @Fetch(FetchMode.JOIN)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "season_id", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "season_id", nullable = false)
     private Season season;
 
     @Size(max = 32)

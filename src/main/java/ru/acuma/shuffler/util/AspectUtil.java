@@ -14,10 +14,9 @@ public class AspectUtil {
         var args = joinPoint.getArgs();
 
         return Arrays.stream(args)
-                .filter(Message.class::isInstance)
-                .map(Message.class::cast)
-                .findFirst();
+            .filter(Message.class::isInstance)
+            .map(Message.class::cast)
+            .findFirst();
     }
-
 
 }
