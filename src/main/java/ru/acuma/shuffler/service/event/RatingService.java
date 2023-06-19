@@ -9,6 +9,7 @@ import ru.acuma.shuffler.mapper.RatingMapper;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
+import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGameBet;
 import ru.acuma.shuffler.model.domain.TRating;
 import ru.acuma.shuffler.model.domain.TTeam;
@@ -23,6 +24,7 @@ public class RatingService {
 
     private final SeasonService seasonService;
     private final RatingRepository ratingRepository;
+    private final PlayerService playerService;
     private final RatingMapper ratingMapper;
 
     public void applyBet(TTeam redTeam, TTeam blueTeam) {
@@ -50,19 +52,6 @@ public class RatingService {
             .orElseGet(() -> ratingMapper.defaultRating(player, discipline));
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
-    public Rating findRating(final Long id) {
-        return ratingRepository.findById(id)
-            .orElseThrow(() -> new DataException(ExceptionCause.RATING_NOT_FOUND, id));
-    }
-
-    @Transactional(propagation = Propagation.MANDATORY)
-    public void updateRating(final TRating ratingContext) {
-        var rating = findRating(ratingContext.getId());
-
-        ratingMapper.update(rating, ratingContext);
-    }
-
     private int caseVictory(final TTeam team1, final TTeam team2) {
         var diff = team1.getScore() - team2.getScore();
         var limitedDiff = Math.min(diff, Constants.RATING_REFERENCE);
@@ -79,5 +68,31 @@ public class RatingService {
         }
 
         return Math.max(Math.abs(Math.round(change)), 1);
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Rating find(final Long id) {
+        return ratingRepository.findById(id)
+            .orElseThrow(() -> new DataException(ExceptionCause.RATING_NOT_FOUND, id));
+    }
+
+    @Transactional
+    public void save(final TEventPlayer player, final Discipline discipline) {
+        var rating = player.getRatingContext();
+        var mappedRating = ratingMapper.toRating(
+            rating,
+            seasonService.getReference(),
+            playerService.getReference(player.getId()),
+            discipline
+        );
+        ratingRepository.save(mappedRating);
+        rating.setId(mappedRating.getId());
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void update(final TRating ratingContext) {
+        var rating = find(ratingContext.getId());
+
+        ratingMapper.update(rating, ratingContext);
     }
 }

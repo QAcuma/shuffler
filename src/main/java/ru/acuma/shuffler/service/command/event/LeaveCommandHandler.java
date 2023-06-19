@@ -10,7 +10,7 @@ import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.command.common.BaseCommandHandler;
 import ru.acuma.shuffler.service.event.EventStatusService;
-import ru.acuma.shuffler.service.telegram.PlayerService;
+import ru.acuma.shuffler.service.event.PlayerService;
 
 import java.util.List;
 

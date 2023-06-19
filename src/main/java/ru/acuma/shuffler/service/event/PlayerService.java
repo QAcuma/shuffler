@@ -1,8 +1,9 @@
-package ru.acuma.shuffler.service.telegram;
+package ru.acuma.shuffler.service.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.acuma.shuffler.exception.DataException;
@@ -17,7 +18,7 @@ import ru.acuma.shuffler.model.entity.UserInfo;
 import ru.acuma.shuffler.model.wrapper.SearchPlayerParams;
 import ru.acuma.shuffler.repository.PlayerRepository;
 import ru.acuma.shuffler.repository.ReferenceService;
-import ru.acuma.shuffler.service.event.RatingService;
+import ru.acuma.shuffler.service.telegram.Authenticatable;
 
 import java.util.Optional;
 
@@ -34,15 +35,10 @@ public class PlayerService implements Authenticatable<SearchPlayerParams> {
 
     @Transactional(readOnly = true)
     public TEventPlayer getEventPlayer(final User user, final TEvent event) {
-        var player = self.getPlayer(event.getChatId(), user.getId());
+        var player = self.find(event.getChatId(), user.getId());
         var rating = ratingService.getRatingOrDefault(player, event.getDiscipline());
 
         return playerMapper.toTgEventPlayer(player, rating);
-    }
-
-    public Player getPlayer(final Long chatId, final Long userId) {
-        return playerRepository.findByUserIdAndChatId(userId, chatId)
-            .orElseThrow(() -> new DataException(ExceptionCause.PLAYER_NOT_FOUND, userId, chatId));
     }
 
     public void leaveLobby(final Long userId, final TEvent event) {
@@ -68,6 +64,17 @@ public class PlayerService implements Authenticatable<SearchPlayerParams> {
                     return eventPlayer;
                 }
             );
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Player find(final Long chatId, final Long userId) {
+        return playerRepository.findByUserIdAndChatId(userId, chatId)
+            .orElseThrow(() -> new DataException(ExceptionCause.PLAYER_NOT_FOUND, userId, chatId));
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Player getReference(Long id) {
+        return referenceService.getReference(Player.class, id);
     }
 
     @Transactional

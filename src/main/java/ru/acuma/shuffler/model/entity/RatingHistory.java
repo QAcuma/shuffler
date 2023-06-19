@@ -76,5 +76,4 @@ public class RatingHistory extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "discipline", length = 32)
     private Discipline discipline;
-
 }

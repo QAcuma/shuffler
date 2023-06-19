@@ -3,6 +3,7 @@ package ru.acuma.shuffler.mapper;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.entity.Event;
@@ -29,4 +30,9 @@ public interface EventMapper {
     @Mapping(target = "status", source = "event.eventStatus")
     @Mapping(target = "discipline", source = "event.discipline")
     Event toEvent(TEvent event, GroupInfo groupInfo, Season season);
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "status", source = "eventStatus")
+    @Mapping(target = "finishedAt", source = "finishedAt")
+    void update(@MappingTarget Event savedEvent, TEvent event);
 }

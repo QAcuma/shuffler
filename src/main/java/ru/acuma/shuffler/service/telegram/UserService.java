@@ -39,7 +39,7 @@ public class UserService implements Authenticatable<Long> {
     @Transactional
     public void update(final User user) {
         var userInfo = getUser(user.getId());
-        userMapper.mergeUserInfo(userInfo, user);
+        userMapper.update(userInfo, user);
     }
 
     @Transactional(readOnly = true)

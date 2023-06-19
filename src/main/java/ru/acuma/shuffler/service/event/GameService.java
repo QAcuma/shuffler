@@ -13,10 +13,14 @@ import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.entity.Game;
+import ru.acuma.shuffler.model.entity.Player;
+import ru.acuma.shuffler.model.entity.Team;
+import ru.acuma.shuffler.model.entity.TeamPlayer;
 import ru.acuma.shuffler.repository.GameRepository;
 import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.management.InstanceNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -28,6 +32,7 @@ public class GameService {
     private final TeamService teamService;
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
+    private final EventService eventService;
     private final GameMapper gameMapper;
     private final GameRepository gameRepository;
 
@@ -97,20 +102,46 @@ public class GameService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public void save(final Game game, final TGame currentGame) {
-        gameRepository.save(game);
-        currentGame.setId(game.getId());
-    }
-
-    @Transactional(propagation = Propagation.MANDATORY)
-    public Game findGame(final Long id) {
+    public Game find(final Long id) {
         return gameRepository.findById(id)
             .orElseThrow(() -> new DataException(ExceptionCause.GAME_NOT_FOUND, id));
     }
 
+    @Transactional
+    public void save(final TGame game, Long eventId) {
+        var event = eventService.getReference(eventId);
+        var mappedGame = gameMapper.toGame(game, event);
+        gameRepository.save(mappedGame);
+        game.setId(mappedGame.getId());
+
+        var redTeam = getTeamBySide(mappedGame, game.getRedTeam().getPlayers());
+        var blueTeam = getTeamBySide(mappedGame, game.getBlueTeam().getPlayers());
+
+        game.getRedTeam().setId(redTeam.getId());
+        game.getBlueTeam().setId(blueTeam.getId());
+    }
+
+    private Team getTeamBySide(final Game mappedGame, final List<TEventPlayer> players) {
+        return mappedGame.getTeams().stream()
+            .filter(team -> hasAnyPlayer(team, players))
+            .findFirst()
+            .orElseThrow(() -> new DataException(ExceptionCause.MISSING_WINNER_TEAM));
+    }
+
+    private boolean hasAnyPlayer(final Team team, final List<TEventPlayer> players) {
+        var playersId = players.stream()
+            .map(TEventPlayer::getId)
+            .toList();
+
+        return team.getTeamPlayers().stream()
+            .map(TeamPlayer::getPlayer)
+            .map(Player::getId)
+            .anyMatch(playersId::contains);
+    }
+
     @Transactional(propagation = Propagation.MANDATORY)
-    public void updateGame(final TGame game) {
-        var savedGame = findGame(game.getId());
+    public void update(final TGame game) {
+        var savedGame = find(game.getId());
         gameMapper.updateGame(savedGame, game);
     }
 }

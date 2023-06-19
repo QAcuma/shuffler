@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.acuma.shuffler.exception.IdleException;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.wrapper.SearchPlayerParams;
-import ru.acuma.shuffler.service.telegram.PlayerService;
+import ru.acuma.shuffler.service.event.PlayerService;
 import ru.acuma.shuffler.service.telegram.UserService;
 
 @Slf4j

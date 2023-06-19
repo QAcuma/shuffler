@@ -28,7 +28,7 @@ public interface UserMapper {
     @Mapping(target = "userName", source = "userName")
     @Mapping(target = "languageCode", source = "languageCode")
     @Transactional(propagation = Propagation.MANDATORY)
-    void mergeUserInfo(@MappingTarget UserInfo userInfo, User user);
+    void update(@MappingTarget UserInfo userInfo, User user);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")

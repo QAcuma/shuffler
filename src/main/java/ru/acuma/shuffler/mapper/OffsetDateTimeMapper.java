@@ -14,5 +14,4 @@ public interface OffsetDateTimeMapper {
                ? null
                : source.atZone(ZoneId.systemDefault()).toOffsetDateTime();
     }
-
 }
