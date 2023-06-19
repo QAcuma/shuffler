@@ -9,7 +9,8 @@ import ru.acuma.shuffler.model.entity.RatingHistory;
 import ru.acuma.shuffler.model.entity.Season;
 
 @Mapper(
-    config = MapperConfiguration.class
+    config = MapperConfiguration.class,
+    imports = PlayerMapper.class
 )
 public interface RatingHistoryMapper {
 

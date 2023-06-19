@@ -13,14 +13,10 @@ import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.entity.Game;
-import ru.acuma.shuffler.model.entity.Player;
-import ru.acuma.shuffler.model.entity.Team;
-import ru.acuma.shuffler.model.entity.TeamPlayer;
 import ru.acuma.shuffler.repository.GameRepository;
 import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.management.InstanceNotFoundException;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -35,6 +31,7 @@ public class GameService {
     private final EventService eventService;
     private final GameMapper gameMapper;
     private final GameRepository gameRepository;
+    private final GameStatusService gameStatusService;
 
     @SneakyThrows
     private TGame buildGame(TEvent event) {
@@ -89,8 +86,7 @@ public class GameService {
     }
 
     private void finishGameWithWinner(final TGame game) {
-        game.setStatus(GameStatus.FINISHED)
-            .setFinishedAt(TimeMachine.localDateTimeNow());
+        gameStatusService.finished(game);
         game.getWinnerTeam().applyRating(game.getId());
         game.getLoserTeam().applyRating(game.getId());
         teamService.fillLastGameMate(game.getWinnerTeam());
@@ -98,7 +94,7 @@ public class GameService {
     }
 
     private void finishCancelledGame(final TGame game) {
-        game.setFinishedAt(TimeMachine.localDateTimeNow());
+        gameStatusService.cancelled(game);
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
@@ -114,34 +110,17 @@ public class GameService {
         gameRepository.save(mappedGame);
         game.setId(mappedGame.getId());
 
-        var redTeam = getTeamBySide(mappedGame, game.getRedTeam().getPlayers());
-        var blueTeam = getTeamBySide(mappedGame, game.getBlueTeam().getPlayers());
+        var redTeam = teamService.getTeamBySide(mappedGame, game.getRedTeam().getPlayers());
+        var blueTeam = teamService.getTeamBySide(mappedGame, game.getBlueTeam().getPlayers());
 
         game.getRedTeam().setId(redTeam.getId());
         game.getBlueTeam().setId(blueTeam.getId());
     }
 
-    private Team getTeamBySide(final Game mappedGame, final List<TEventPlayer> players) {
-        return mappedGame.getTeams().stream()
-            .filter(team -> hasAnyPlayer(team, players))
-            .findFirst()
-            .orElseThrow(() -> new DataException(ExceptionCause.MISSING_WINNER_TEAM));
-    }
-
-    private boolean hasAnyPlayer(final Team team, final List<TEventPlayer> players) {
-        var playersId = players.stream()
-            .map(TEventPlayer::getId)
-            .toList();
-
-        return team.getTeamPlayers().stream()
-            .map(TeamPlayer::getPlayer)
-            .map(Player::getId)
-            .anyMatch(playersId::contains);
-    }
-
     @Transactional(propagation = Propagation.MANDATORY)
     public void update(final TGame game) {
         var savedGame = find(game.getId());
+        teamService.updateTeam(savedGame.getTeams(), game.getWinnerTeam());
         gameMapper.updateGame(savedGame, game);
     }
 }

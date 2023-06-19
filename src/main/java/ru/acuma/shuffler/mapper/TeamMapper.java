@@ -42,4 +42,8 @@ public abstract class TeamMapper {
         var players = playerMapper.mapTeamPlayers(eventTeam.getPlayers());
         team.withPlayers(players);
     }
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "isWinner", source = "isWinner")
+    public abstract void update(@MappingTarget Team savedWinner, TTeam winnerTeam);
 }

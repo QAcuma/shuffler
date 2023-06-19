@@ -3,14 +3,23 @@ package ru.acuma.shuffler.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.TeamMapper;
+import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TTeam;
+import ru.acuma.shuffler.model.entity.Game;
+import ru.acuma.shuffler.model.entity.Player;
+import ru.acuma.shuffler.model.entity.Team;
+import ru.acuma.shuffler.model.entity.TeamPlayer;
 import ru.acuma.shuffler.util.TeamServiceUtil;
 
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.acuma.shuffler.model.constant.Constants.GAME_PLAYERS_COUNT;
 
@@ -46,5 +55,33 @@ public class TeamService {
     public void fillLastGameMate(final TTeam team) {
         team.getPlayer1().setLastGamePlayer(team.getPlayer2());
         team.getPlayer2().setLastGamePlayer(team.getPlayer1());
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Team getTeamBySide(final Game mappedGame, final List<TEventPlayer> players) {
+        return mappedGame.getTeams().stream()
+            .filter(team -> hasAnyPlayer(team, players))
+            .findFirst()
+            .orElseThrow(() -> new DataException(ExceptionCause.MISSING_WINNER_TEAM));
+    }
+
+    private boolean hasAnyPlayer(final Team team, final List<TEventPlayer> players) {
+        var playersId = players.stream()
+            .map(TEventPlayer::getId)
+            .toList();
+
+        return team.getTeamPlayers().stream()
+            .map(TeamPlayer::getPlayer)
+            .map(Player::getId)
+            .anyMatch(playersId::contains);
+    }
+
+    public void updateTeam(final List<Team> teams, final TTeam winnerTeam) {
+        Optional.ofNullable(winnerTeam)
+            .flatMap(winner -> teams.stream()
+                .filter(savedTeam -> savedTeam.getId().equals(winner.getId()))
+                .findFirst()
+            )
+            .ifPresent(savedWinner -> teamMapper.update(savedWinner, winnerTeam));
     }
 }

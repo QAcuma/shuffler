@@ -41,7 +41,7 @@ public class TGame implements Serializable, Storable {
 
     public TTeam getWinnerTeam() {
         if (status == FINISHED) {
-            return redTeam.getIsWinner() ? redTeam : blueTeam;
+            return Boolean.TRUE.equals(redTeam.getIsWinner()) ? redTeam : blueTeam;
         }
 
         return null;

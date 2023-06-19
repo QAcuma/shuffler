@@ -3,6 +3,7 @@ package ru.acuma.shuffler.service.event;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.domain.TGame;
+import ru.acuma.shuffler.util.TimeMachine;
 
 @Service
 public class GameStatusService {
@@ -12,7 +13,8 @@ public class GameStatusService {
     }
 
     public void cancelled(TGame game) {
-        game.setStatus(GameStatus.CANCELLED);
+        game.setStatus(GameStatus.CANCELLED)
+            .setFinishedAt(TimeMachine.localDateTimeNow());
     }
 
     public void cancelCheck(TGame game) {
@@ -36,6 +38,7 @@ public class GameStatusService {
     }
 
     public void finished(TGame game) {
-        game.setStatus(GameStatus.FINISHED);
+        game.setStatus(GameStatus.FINISHED)
+            .setFinishedAt(TimeMachine.localDateTimeNow());
     }
 }

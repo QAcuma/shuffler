@@ -1,6 +1,7 @@
 package ru.acuma.shuffler.service.event;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class RatingService {
 
     private final SeasonService seasonService;
     private final RatingRepository ratingRepository;
+    @Lazy
     private final PlayerService playerService;
     private final RatingMapper ratingMapper;
 
