@@ -12,6 +12,7 @@ import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.entity.GroupInfo;
 import ru.acuma.shuffler.repository.GroupInfoRepository;
 import ru.acuma.shuffler.repository.ReferenceService;
+import ru.acuma.shuffler.service.extentions.NamingService;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class ChatService implements Authenticatable<Long> {
     private final ChatMapper chatMapper;
     private final ReferenceService referenceService;
     private final GroupInfoRepository groupInfoRepository;
+    private final NamingService namingService;
 
     @Transactional(readOnly = true)
     public GroupInfo getGroupInfo(final Long chatId) {
@@ -35,7 +37,8 @@ public class ChatService implements Authenticatable<Long> {
 
     @Transactional
     public void signUp(final Chat chat) {
-        var groupInfo = chatMapper.toGroupInfo(chat);
+        var chatName = namingService.getWord();
+        var groupInfo = chatMapper.toGroupInfo(chat, chatName);
         groupInfoRepository.save(groupInfo);
     }
 

@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.mapper.EventMapper;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.EventStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
+import ru.acuma.shuffler.service.telegram.ChatService;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,15 +21,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EventContext {
 
     private final EventMapper eventMapper;
+    private final ChatService chatService;
     private final Map<Long, TEvent> eventStorage = new ConcurrentHashMap<>();
     @Qualifier("redisEventSnapshotStorage")
     private final Map<Long, TEvent> eventSnapshotStorage;
 
-    public TEvent createEvent(final Long chatId, final Discipline discipline) {
-        var event = eventMapper.initEvent(chatId, discipline);
+    @Transactional(readOnly = true)
+    public void createEvent(final Long chatId, final Discipline discipline) {
+        var chat = chatService.getGroupInfo(chatId);
+        var event = eventMapper.initEvent(chat, discipline);
         eventStorage.put(chatId, event);
-
-        return event;
     }
 
     public TEvent findEvent(final Long chatId) {

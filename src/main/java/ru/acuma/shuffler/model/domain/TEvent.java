@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Data
 @Builder
@@ -31,6 +30,7 @@ public class TEvent implements Serializable, Storable {
 
     private Long id;
     private Long chatId;
+    private String chatName;
     private EventStatus eventStatus;
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
@@ -83,15 +83,7 @@ public class TEvent implements Serializable, Storable {
             .orElseThrow(() -> new DataException(ExceptionCause.GAME_NOT_EXISTS, chatId));
     }
 
-    public TGame getGameById(final Long id) {
-        return tgGames.stream()
-            .filter(game -> Objects.nonNull(game.getId()))
-            .filter(game -> id.equals(game.getId()))
-            .findFirst()
-            .orElseThrow(() -> new DataException(ExceptionCause.GAME_NOT_EXISTS, chatId));
-    }
-
-    public void applyGame(TGame tgGame) {
+    public void addGame(TGame tgGame) {
         tgGames.add(tgGame);
     }
 

@@ -2,6 +2,7 @@ package ru.acuma.shuffler.service.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ru.acuma.shuffler.context.cotainer.StorageTask;
 import ru.acuma.shuffler.model.constant.StorageTaskType;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -23,7 +24,9 @@ public class EventFinished extends StorageExecutor<TEvent> {
     @Override
     public void store(final StorageTask<TEvent> storageTask) {
         var event = storageTask.getSubject();
-        gameService.update(event.getCurrentGame());
+        if (!CollectionUtils.isEmpty(event.getTgGames())) {
+            gameService.update(event.getCurrentGame());
+        }
         eventService.update(event);
     }
 }

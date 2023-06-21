@@ -20,11 +20,12 @@ import ru.acuma.shuffler.util.TimeMachine;
 public interface EventMapper {
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "chatId", source = "chatId")
+    @Mapping(target = "chatId", source = "chat.id")
+    @Mapping(target = "chatName", source = "chat.name")
     @Mapping(target = "startedAt", expression = "java(TimeMachine.localDateTimeNow())")
     @Mapping(target = "eventStatus", constant = "CREATED")
     @Mapping(target = "discipline", source = "discipline")
-    TEvent initEvent(final Long chatId, final Discipline discipline);
+    TEvent initEvent(final GroupInfo chat, final Discipline discipline);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "chat", source = "groupInfo")

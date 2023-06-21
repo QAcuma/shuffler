@@ -11,8 +11,10 @@ import java.util.List;
 public enum YearSeason {
     WINTER(List.of(12, 1, 2)),
     SPRING(List.of(3, 4, 5)),
-    SUMMER(List.of(6, 7, 8)),
-    AUTUMN(List.of(9, 10, 11));
+    //    SUMMER(List.of(6, 7, 8)),
+    SUMMER(List.of(3, 4, 5)),
+    //    AUTUMN(List.of(9, 10, 11));
+    AUTUMN(List.of(6, 7, 8));
 
     private final List<Integer> months;
 

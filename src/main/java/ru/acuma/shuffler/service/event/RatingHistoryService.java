@@ -7,7 +7,6 @@ import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
-import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.repository.RatingHistoryRepository;
 import ru.acuma.shuffler.service.season.SeasonService;
 

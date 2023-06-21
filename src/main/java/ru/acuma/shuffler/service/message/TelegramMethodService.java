@@ -17,6 +17,7 @@ public class TelegramMethodService {
 
     public BotApiMethod<Message> sendMessage(final Render render, final Long chatId) {
         return SendMessage.builder()
+            .disableWebPagePreview(Boolean.TRUE)
             .chatId(chatId)
             .text(render.getMessageText())
             .replyMarkup(render.getKeyboard())
@@ -27,6 +28,7 @@ public class TelegramMethodService {
     public EditMessageText buildMessageUpdate(final Render render, final Long chatId) {
         return EditMessageText.builder()
             .chatId(chatId)
+            .disableWebPagePreview(Boolean.TRUE)
             .messageId(render.getMessageId())
             .text(render.getMessageText())
             .replyMarkup(render.getKeyboard())

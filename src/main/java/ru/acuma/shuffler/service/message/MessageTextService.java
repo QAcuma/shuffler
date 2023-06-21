@@ -1,6 +1,7 @@
 package ru.acuma.shuffler.service.message;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.acuma.shuffler.model.constant.messages.EventConstant;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -12,9 +13,8 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.EVICT_MESSAGE_TEXT;
-import static ru.acuma.shuffler.model.constant.messages.EventConstant.LET_JOIN_TEXT;
-import static ru.acuma.shuffler.model.constant.messages.EventConstant.MEMBERS_TEXT;
-import static ru.acuma.shuffler.model.constant.messages.EventConstant.SHUFFLER_LINK;
+import static ru.acuma.shuffler.model.constant.messages.EventConstant.LOBBY_MEMBERS_TEXT;
+import static ru.acuma.shuffler.model.constant.messages.EventConstant.LOBBY_NO_MEMBERS_TEXT;
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.SINGLE_SPACE;
 import static ru.acuma.shuffler.util.Symbols.BLUE_CIRCLE_EMOJI;
 import static ru.acuma.shuffler.util.Symbols.RED_CIRCLE_EMOJI;
@@ -22,6 +22,9 @@ import static ru.acuma.shuffler.util.Symbols.VS_EMOJI;
 
 @Service
 public class MessageTextService {
+
+    @Value("${application.statistics.url}")
+    private String shufflerHost;
 
     public String buildMenuMessage(final TMenu menu) {
         return switch (menu.getCurrentScreen()) {
@@ -35,16 +38,16 @@ public class MessageTextService {
 
     public String buildLobbyContent(final TEvent event) {
         return getEventHeader(event)
-            + (event.getPlayers().isEmpty() ? LET_JOIN_TEXT.getText() : MEMBERS_TEXT.getText())
+            + (event.getPlayers().isEmpty() ? LOBBY_NO_MEMBERS_TEXT.getText() : LOBBY_MEMBERS_TEXT.getText())
             + (!event.getPlayers().isEmpty() ? getMembersText(event) : "")
-            + (Boolean.TRUE.equals(event.hasAnyGameFinished()) ? EventConstant.WINNERS_MESSAGE.getText() : "")
+            + (Boolean.TRUE.equals(event.hasAnyGameFinished()) ? EventConstant.LOBBY_WINNERS_MESSAGE.getText() : "")
             + (Boolean.TRUE.equals(event.hasAnyGameFinished()) ? getWinnersText(event) : "")
             + getEventFooterText(event);
     }
 
     public String buildGameContent(final TEvent event) {
         var game = event.getCurrentGame();
-        return EventConstant.GAME_MESSAGE.getText()
+        return EventConstant.GAME_TITLE_MESSAGE.getText()
             + game.getOrder()
             + EventConstant.SPACE_MESSAGE.getText()
             + System.lineSeparator()
@@ -61,21 +64,25 @@ public class MessageTextService {
 
     private String getEventFooterText(final TEvent event) {
         return switch (event.getEventStatus()) {
-            case CANCEL_CHECKING -> EventConstant.CANCEL_CHECKING_MESSAGE.getText();
-            case BEGIN_CHECKING -> EventConstant.BEGIN_CHECKING_MESSAGE.getText();
-            case FINISH_CHECKING -> EventConstant.FINISH_CHECKING_MESSAGE.getText();
-            default -> SHUFFLER_LINK.getText();
+            case CANCEL_CHECKING -> EventConstant.LOBBY_CANCEL_CHECKING_MESSAGE.getText();
+            case BEGIN_CHECKING -> EventConstant.GAME_BEGIN_CHECKING_MESSAGE.getText();
+            case FINISH_CHECKING -> EventConstant.LOBBY_FINISH_CHECKING_MESSAGE.getText();
+            default -> getStatisticsLink(event);
         };
+    }
+
+    private String getStatisticsLink(TEvent event) {
+        return "\n <i>" + shufflerHost + "/" + event.getChatName() + "</i>";
     }
 
     private String getEventHeader(final TEvent event) {
         return switch (event.getEventStatus()) {
-            case CREATED, READY, GAME_CHECKING, CANCEL_CHECKING, BEGIN_CHECKING -> getDisciplineHeader(event);
+            case CREATED, READY, CANCEL_CHECKING, BEGIN_CHECKING -> getDisciplineHeader(event);
             case WAITING -> EventConstant.LOBBY_WAITING_MESSAGE.getText();
             case CANCELLED -> EventConstant.LOBBY_CANCELED_MESSAGE.getText();
-            case PLAYING -> EventConstant.LOBBY_PLAYING_MESSAGE.getText();
+            case PLAYING, WAITING_WITH_GAME, GAME_CHECKING, FINISH_CHECKING -> EventConstant.LOBBY_PLAYING_MESSAGE.getText();
             case FINISHED -> EventConstant.LOBBY_FINISHED_MESSAGE.getText();
-            default -> buildBlankContent();
+            case ANY -> buildBlankContent();
         };
     }
 
@@ -97,12 +104,10 @@ public class MessageTextService {
             System.lineSeparator();
     }
 
-    @SuppressWarnings("UnnecessaryDefault")
     private String getDisciplineHeader(final TEvent event) {
         return switch (event.getDiscipline()) {
             case KICKER -> EventConstant.LOBBY_MESSAGE_KICKER.getText();
             case PING_PONG -> EventConstant.LOBBY_MESSAGE_PING_PONG.getText();
-            default -> EventConstant.LOBBY_MESSAGE_DEFAULT.getText();
         };
     }
 
@@ -138,8 +143,9 @@ public class MessageTextService {
 
     private String getGameFooterText(final TGame game) {
         return switch (game.getStatus()) {
-            case RED_CHECKING, BLUE_CHECKING -> EventConstant.WIN_CHECKING_MESSAGE.getText();
-            case CANCEL_CHECKING -> EventConstant.NEXT_CHECKING_MESSAGE.getText();
+            case RED_CHECKING -> EventConstant.GAME_RED_CHECKING_MESSAGE.getText();
+            case BLUE_CHECKING -> EventConstant.GAME_BLUE_CHECKING_MESSAGE.getText();
+            case CANCEL_CHECKING -> EventConstant.GAME_CANCEL_CHECKING_MESSAGE.getText();
             default -> getSpaces(game);
         };
     }

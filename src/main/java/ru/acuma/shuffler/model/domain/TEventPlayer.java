@@ -11,7 +11,6 @@ import ru.acuma.shuffler.service.storage.Storable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @Slf4j
 @Data
@@ -42,17 +41,6 @@ public class TEventPlayer implements Serializable, Storable {
 
     public Integer getScore() {
         return ratingContext.getScore();
-    }
-
-    public Boolean isLeft() {
-        return eventContext.getLeft();
-    }
-
-    public String getNameWithRating() {
-        return userInfo.getFirstName() +
-            " " +
-            Optional.ofNullable(userInfo.getLastName()).orElse("") +
-            getScore();
     }
 
     public void increaseGameCount() {

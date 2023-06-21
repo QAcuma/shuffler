@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.GameMapper;
-import ru.acuma.shuffler.mapper.PlayerMapper;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -65,7 +64,7 @@ public class GameService {
 
     public void beginGame(TEvent event) {
         var game = buildGame(event);
-        event.applyGame(game);
+        event.addGame(game);
     }
 
     public void finishGame(final TGame game) {

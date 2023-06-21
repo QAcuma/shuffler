@@ -14,11 +14,11 @@ import ru.acuma.shuffler.model.entity.GroupInfo;
 )
 public interface ChatMapper {
 
-    @Mapping(target = "id", source = "id")
+    @Mapping(target = "id", source = "chat.id")
     @Mapping(target = "isActive", constant = "true")
-    @Mapping(target = "name", ignore = true)
-    @Mapping(target = "title", source = "title")
-    GroupInfo toGroupInfo(Chat chat);
+    @Mapping(target = "name", source = "chatName")
+    @Mapping(target = "title", source = "chat.title")
+    GroupInfo toGroupInfo(Chat chat, String chatName);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "title", source = "title")

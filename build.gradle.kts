@@ -54,13 +54,6 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-application {
-    applicationDefaultJvmArgs = listOf(
-            "--add-opens=java.base/java.lang=ALL-UNNAMED",
-            "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
-    )
-}
-
 flyway {
     driver = "org.postgresql.Driver"
     url = "jdbc:postgresql://$dbHost:$dbPort/$dbName"

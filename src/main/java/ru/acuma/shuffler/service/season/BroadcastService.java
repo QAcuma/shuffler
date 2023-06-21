@@ -2,53 +2,58 @@ package ru.acuma.shuffler.service.season;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.acuma.shuffler.context.cotainer.Render;
 import ru.acuma.shuffler.model.constant.Discipline;
+import ru.acuma.shuffler.model.constant.messages.MessageType;
 import ru.acuma.shuffler.model.entity.GroupInfo;
+import ru.acuma.shuffler.model.entity.Rating;
+import ru.acuma.shuffler.model.entity.Season;
 import ru.acuma.shuffler.repository.GroupInfoRepository;
-import ru.acuma.shuffler.repository.PlayerRepository;
+import ru.acuma.shuffler.repository.RatingRepository;
+import ru.acuma.shuffler.service.telegram.ExecuteService;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
 public class BroadcastService {
 
     private final GroupInfoRepository groupInfoRepository;
-    private final PlayerRepository playerRepository;
     private final TextBuilderService textBuilderService;
+    private final RatingRepository ratingRepository;
+    private final ExecuteService executeService;
 
-    public void seasonResultBroadcast(Long seasonId) {
+    @Transactional
+    public void seasonResultBroadcast(final Season season) {
         groupInfoRepository.findAllByIsActiveTrue()
-            .forEach(groupInfo -> seasonResultBroadcast(seasonId, groupInfo));
+            .forEach(groupInfo -> seasonResultBroadcast(season, groupInfo));
     }
 
-    public void seasonResultBroadcast(Long seasonId, GroupInfo groupInfo) {
+    private void seasonResultBroadcast(final Season season, final GroupInfo groupInfo) {
         Arrays.stream(Discipline.values())
-            .forEach(discipline -> seasonResultBroadcast(seasonId, groupInfo, discipline));
+            .forEach(discipline -> seasonResultBroadcast(season, groupInfo, discipline));
     }
 
-    public void seasonResultBroadcast(Long seasonId, GroupInfo groupInfo, Discipline discipline) {
-//        var ladderResult = playerRepository.findAllActiveBySeasonIdAndChatIdAndDiscipline(
-//            seasonId,
-//            groupInfo.getId(),
-//            discipline
-//        );
-//        ladderResult.stream()
-//            .map(user)
-//            .sorted(Comparator.comparingLong(WebPlayer::getScore).reversed())
-//            .toList();
+    private void seasonResultBroadcast(final Season season, final GroupInfo groupInfo, final Discipline discipline) {
+        var seasonPlayers = ratingRepository.findALlSeasonRatings(season, groupInfo, discipline)
+            .stream()
+            .sorted(Comparator.comparingLong(Rating::getScore).reversed())
+            .toList();
 
-//        if (ladderResult.isEmpty()) {
-        return;
+        if (seasonPlayers.isEmpty()) {
+            return;
+        }
+
+        var message = SendMessage.builder()
+            .chatId(String.valueOf(groupInfo.getId()))
+            .parseMode(ParseMode.MARKDOWNV2)
+            .text(textBuilderService.buildSeasonReport(seasonPlayers))
+            .build();
+
+        executeService.execute(message, Render.forSend(MessageType.STAT));
     }
-
-//        var message = SendMessage.builder()
-//            .chatId(String.valueOf(groupInfo.getId()))
-//            .parseMode(ParseMode.MARKDOWNV2)
-//            .text(textBuilderService.buildSeasonReport(null))
-//            .build();
-
-//        executeService.execute(message);
-//}
-
 }
