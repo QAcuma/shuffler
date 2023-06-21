@@ -23,8 +23,7 @@ public enum Command {
     RESULT("result"),
     FINISH("finish"),
     RED("red"),
-    BLUE("blue"),
-    RESET("reset");
+    BLUE("blue");
 
     private final String name;
 }
