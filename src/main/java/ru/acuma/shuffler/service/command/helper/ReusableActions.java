@@ -26,8 +26,6 @@ public class ReusableActions {
     private final StorageContext storageContext;
 
     public void nextGame(final TEvent event) {
-        gameService.finishGame(event);
-
         storageContext.forEvent(event)
             .store(StorageTask.of(StorageTaskType.GAME_FINISHED, event.getCurrentGame()));
         switch (eventStatusService.resume(event)) {

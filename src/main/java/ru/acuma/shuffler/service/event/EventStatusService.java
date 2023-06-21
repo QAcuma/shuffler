@@ -8,11 +8,12 @@ import ru.acuma.shuffler.util.TimeMachine;
 @Service
 public class EventStatusService {
 
-    public EventStatus praperation(final TEvent event) {
+    public void prepare(final TEvent event) {
         if (event.isPlayersEnough()) {
-            return ready(event);
+            ready(event);
+            return;
         }
-        return created(event);
+        created(event);
     }
 
     public EventStatus resume(final TEvent event) {
@@ -33,7 +34,7 @@ public class EventStatusService {
         event.setEventStatus(EventStatus.CANCEL_CHECKING);
     }
 
-    public void gameCheck(final TEvent event) {
+    public void gameChecking(final TEvent event) {
         event.setEventStatus(EventStatus.GAME_CHECKING);
     }
 
@@ -45,7 +46,7 @@ public class EventStatusService {
         event.setEventStatus(EventStatus.BEGIN_CHECKING);
     }
 
-    public void finishCheck(final TEvent event) {
+    public void finishChecking(final TEvent event) {
         event.setEventStatus(EventStatus.FINISH_CHECKING);
     }
 

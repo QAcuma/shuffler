@@ -31,8 +31,8 @@ public class KickCommandHandler extends BaseCommandHandler<KickCommand> {
 
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
-        eventStatusService.gameCheck(event);
-        gameStatusService.evictCheck(event.getCurrentGame());
+        eventStatusService.gameChecking(event);
+        gameStatusService.evictChecking(event.getCurrentGame());
 
         renderContext.forEvent(event).render(Render.forUpdate(MessageType.GAME))
             .render(Render.forMarkup(MessageType.LOBBY));

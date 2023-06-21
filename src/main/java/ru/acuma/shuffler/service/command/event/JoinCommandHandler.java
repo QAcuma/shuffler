@@ -51,7 +51,7 @@ public class JoinCommandHandler extends BaseCommandHandler<JoinCommand> {
     }
 
     private void joinLobby(final TEvent event) {
-        eventStatusService.praperation(event);
+        eventStatusService.prepare(event);
         renderContext.forEvent(event)
             .render(Render.forUpdate(MessageType.LOBBY));
     }

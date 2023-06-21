@@ -17,23 +17,23 @@ public class GameStatusService {
             .setFinishedAt(TimeMachine.localDateTimeNow());
     }
 
-    public void cancelCheck(TGame game) {
+    public void cancelChecking(TGame game) {
         game.setStatus(GameStatus.CANCEL_CHECKING);
     }
 
-    public void evictCheck(TGame game) {
+    public void evictChecking(TGame game) {
         game.setStatus(GameStatus.EVICT_CHECKING);
     }
 
-    public void eventCheck(TGame game) {
+    public void eventChecking(TGame game) {
         game.setStatus(GameStatus.EVENT_CHECKING);
     }
 
-    public void redCheck(TGame game) {
+    public void redChecking(TGame game) {
         game.setStatus(GameStatus.RED_CHECKING);
     }
 
-    public void blueCheck(TGame game) {
+    public void blueChecking(TGame game) {
         game.setStatus(GameStatus.BLUE_CHECKING);
     }
 

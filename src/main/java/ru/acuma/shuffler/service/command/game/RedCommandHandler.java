@@ -31,8 +31,8 @@ public class RedCommandHandler extends BaseCommandHandler<RedCommand> {
 
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
-        eventStatusService.gameCheck(event);
-        gameStatusService.redCheck(event.getCurrentGame());
+        eventStatusService.gameChecking(event);
+        gameStatusService.redChecking(event.getCurrentGame());
         renderContext.forEvent(event).render(Render.forMarkup(MessageType.LOBBY))
             .render(Render.forUpdate(MessageType.GAME).withTimer());
     }

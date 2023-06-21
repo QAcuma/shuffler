@@ -10,7 +10,6 @@ import ru.acuma.shuffler.mapper.TeamMapper;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TTeam;
-import ru.acuma.shuffler.model.entity.Game;
 import ru.acuma.shuffler.model.entity.Player;
 import ru.acuma.shuffler.model.entity.Team;
 import ru.acuma.shuffler.model.entity.TeamPlayer;
@@ -58,8 +57,8 @@ public class TeamService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public Team getTeamBySide(final Game mappedGame, final List<TEventPlayer> players) {
-        return mappedGame.getTeams().stream()
+    public Team getTeamBySide(final List<Team> teams, final List<TEventPlayer> players) {
+        return teams.stream()
             .filter(team -> hasAnyPlayer(team, players))
             .findFirst()
             .orElseThrow(() -> new DataException(ExceptionCause.MISSING_WINNER_TEAM));
@@ -83,5 +82,10 @@ public class TeamService {
                 .findFirst()
             )
             .ifPresent(savedWinner -> teamMapper.update(savedWinner, winnerTeam));
+    }
+
+    public Team mapTeam(TTeam team, final List<TeamPlayer> teamPlayers) {
+        return teamMapper.mapTeam(team)
+            .withPlayers(teamPlayers);
     }
 }

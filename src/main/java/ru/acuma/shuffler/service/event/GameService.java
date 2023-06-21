@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.exception.DataException;
 import ru.acuma.shuffler.mapper.GameMapper;
+import ru.acuma.shuffler.mapper.PlayerMapper;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 import ru.acuma.shuffler.model.constant.GameStatus;
 import ru.acuma.shuffler.model.domain.TEvent;
@@ -14,9 +15,11 @@ import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.entity.Game;
 import ru.acuma.shuffler.repository.GameRepository;
+import ru.acuma.shuffler.repository.ReferenceService;
 import ru.acuma.shuffler.util.TimeMachine;
 
 import javax.management.InstanceNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -28,6 +31,8 @@ public class GameService {
     private final TeamService teamService;
     private final ShuffleService shuffleService;
     private final RatingService ratingService;
+    private final PlayerService playerService;
+    private final ReferenceService referenceService;
     private final EventService eventService;
     private final GameMapper gameMapper;
     private final GameRepository gameRepository;
@@ -63,8 +68,7 @@ public class GameService {
         event.applyGame(game);
     }
 
-    public void finishGame(TEvent event) {
-        var game = event.getCurrentGame();
+    public void finishGame(final TGame game) {
         switch (game.getStatus()) {
             case RED_CHECKING -> {
                 game.getRedTeam().setIsWinner(Boolean.TRUE);
@@ -76,9 +80,12 @@ public class GameService {
                 finishGameWithWinner(game);
                 increasePlayersGameCount(game);
             }
-            case CANCELLED, CANCEL_CHECKING, EVENT_CHECKING -> finishCancelledGame(game);
+            case CANCEL_CHECKING, EVENT_CHECKING, EVICT_CHECKING -> cancelGame(game);
         }
-        game.getPlayers().forEach(TEventPlayer::increaseGameCount);
+    }
+
+    public void cancelGame(final TGame game) {
+        gameStatusService.cancelled(game);
     }
 
     private void increasePlayersGameCount(final TGame game) {
@@ -93,10 +100,6 @@ public class GameService {
         teamService.fillLastGameMate(game.getLoserTeam());
     }
 
-    private void finishCancelledGame(final TGame game) {
-        gameStatusService.cancelled(game);
-    }
-
     @Transactional(propagation = Propagation.MANDATORY)
     public Game find(final Long id) {
         return gameRepository.findById(id)
@@ -107,12 +110,15 @@ public class GameService {
     public void save(final TGame game, Long eventId) {
         var event = eventService.getReference(eventId);
         var mappedGame = gameMapper.toGame(game, event);
+        var redTeamPlayers = playerService.mapTeamPlayers(game.getRedTeam().getPlayers());
+        var blueTeamPlayers = playerService.mapTeamPlayers(game.getBlueTeam().getPlayers());
+        var redTeam = teamService.mapTeam(game.getRedTeam(), redTeamPlayers);
+        var blueTeam = teamService.mapTeam(game.getBlueTeam(), blueTeamPlayers);
+
+        mappedGame.withTeams(List.of(redTeam, blueTeam));
         gameRepository.save(mappedGame);
+
         game.setId(mappedGame.getId());
-
-        var redTeam = teamService.getTeamBySide(mappedGame, game.getRedTeam().getPlayers());
-        var blueTeam = teamService.getTeamBySide(mappedGame, game.getBlueTeam().getPlayers());
-
         game.getRedTeam().setId(redTeam.getId());
         game.getBlueTeam().setId(blueTeam.getId());
     }
@@ -122,5 +128,10 @@ public class GameService {
         var savedGame = find(game.getId());
         teamService.updateTeam(savedGame.getTeams(), game.getWinnerTeam());
         gameMapper.updateGame(savedGame, game);
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Game getReference(Long gameId) {
+        return referenceService.getReference(Game.class, gameId);
     }
 }

@@ -43,7 +43,7 @@ public class LeaveCommandHandler extends BaseCommandHandler<LeaveCommand> {
 
     private void leaveLobby(final User user, final TEvent event) {
         playerService.leaveLobby(user.getId(), event);
-        eventStatusService.praperation(event);
+        eventStatusService.prepare(event);
     }
 
     private void leaveEvent(final User user, final TEvent event) {

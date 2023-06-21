@@ -94,7 +94,6 @@ public class RatingService {
     @Transactional(propagation = Propagation.MANDATORY)
     public void update(final TRating ratingContext) {
         var rating = find(ratingContext.getId());
-
         ratingMapper.update(rating, ratingContext);
     }
 }

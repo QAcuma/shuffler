@@ -1,20 +1,26 @@
 package ru.acuma.shuffler.mapper;
 
 import org.mapstruct.BeanMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.model.domain.TEventContext;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
+import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.domain.TRating;
 import ru.acuma.shuffler.model.entity.GroupInfo;
 import ru.acuma.shuffler.model.entity.Player;
+import ru.acuma.shuffler.model.entity.Team;
 import ru.acuma.shuffler.model.entity.TeamPlayer;
 import ru.acuma.shuffler.model.entity.UserInfo;
+import ru.acuma.shuffler.service.event.PlayerService;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Mapper(
     config = MapperConfiguration.class,
@@ -32,6 +38,7 @@ public interface PlayerMapper {
     @Mapping(target = "eventContext", constant = "", qualifiedByName = "defaultEventContext")
     @Mapping(target = "userInfo", source = "player.user")
     @Mapping(target = "lastGamePlayer", ignore = true)
+    @Transactional(propagation = Propagation.MANDATORY)
     TEventPlayer toTgEventPlayer(Player player, TRating rating);
 
     @Named("defaultEventContext")
@@ -45,13 +52,15 @@ public interface PlayerMapper {
     @Transactional(propagation = Propagation.MANDATORY)
     Player defaultPlayer(UserInfo user, GroupInfo chat);
 
-    default List<TeamPlayer> mapTeamPlayers(List<TEventPlayer> players) {
+    default List<TeamPlayer> mapTeamPlayers(List<TEventPlayer> players, @Context Function<Long, Player> referenceResolver) {
         return players.stream()
+            .map(TEventPlayer::getId)
+            .map(referenceResolver)
             .map(this::toTeamPlayer)
             .toList();
     }
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "player", source = "player")
-    TeamPlayer toTeamPlayer(TEventPlayer player);
+    TeamPlayer toTeamPlayer(Player player);
 }

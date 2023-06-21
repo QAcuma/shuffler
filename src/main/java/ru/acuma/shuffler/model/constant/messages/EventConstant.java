@@ -36,7 +36,7 @@ public enum EventConstant implements EventConstantButton {
     EVICT_MESSAGE_TEXT("Выберите игрока для исключения"),
     EVICT_PLAYER_CHECKING("\n" + "Исключить игрока?!\n"),
     CANCEL_CHECKING_MESSAGE("\n" + WARNING_EMOJI + "️ Отменить событие?\n"),
-    NEXT_CHECKING_MESSAGE("Начать следующую игру?"),
+    NEXT_CHECKING_MESSAGE("\n" + "Отменить игру?"),
     FINISH_CHECKING_MESSAGE("\n" + WARNING_EMOJI + "️ Завершить событие?\n"),
     BEGIN_CHECKING_MESSAGE("\n" + " Начать игру?\n"),
     WIN_CHECKING_MESSAGE("Победили?"),

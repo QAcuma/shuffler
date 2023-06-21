@@ -73,6 +73,7 @@ public class Game extends BaseEntityC {
     @ToString.Exclude
     private List<Team> teams;
 
+    @SuppressWarnings("UnusedReturnValue")
     public Game withTeam(final Team team) {
         if (nonNull(team)) {
             if (this.teams == null) {
@@ -83,6 +84,7 @@ public class Game extends BaseEntityC {
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public Game withTeams(final List<Team> teams) {
         if (!CollectionUtils.isEmpty(teams)) {
             teams.forEach(this::withTeam);

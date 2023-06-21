@@ -1,11 +1,12 @@
 package ru.acuma.shuffler.mapper;
 
-import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TTeam;
 import ru.acuma.shuffler.model.entity.Team;
@@ -31,19 +32,15 @@ public abstract class TeamMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "isWinner", source = "team.isWinner")
-    public abstract Team toTeam(TTeam team);
+    public abstract Team mapTeam(TTeam team);
 
     protected Integer mapScore(final TEventPlayer player1, final TEventPlayer player2) {
         return (player1.getRatingContext().getScore() + player2.getRatingContext().getScore()) / 2;
     }
 
-    @AfterMapping
-    protected void fillTeamPlayers(@MappingTarget Team team, TTeam eventTeam) {
-        var players = playerMapper.mapTeamPlayers(eventTeam.getPlayers());
-        team.withPlayers(players);
-    }
-
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "isWinner", source = "isWinner")
+    @Transactional(propagation = Propagation.MANDATORY)
     public abstract void update(@MappingTarget Team savedWinner, TTeam winnerTeam);
+
 }

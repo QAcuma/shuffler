@@ -4,6 +4,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.acuma.shuffler.model.constant.Constants;
 import ru.acuma.shuffler.model.constant.Discipline;
 import ru.acuma.shuffler.model.domain.TRating;
@@ -23,6 +25,7 @@ public interface RatingMapper {
     @Mapping(target = "eventScoreChange", constant = "0")
     @Mapping(target = "lastScoreChange", constant = "0")
     @Mapping(target = "multiplier", source = "multiplier")
+    @Transactional(propagation = Propagation.MANDATORY)
     TRating toRating(Rating rating);
 
     @BeanMapping(ignoreByDefault = true)
@@ -32,6 +35,7 @@ public interface RatingMapper {
     @Mapping(target = "season", source = "season")
     @Mapping(target = "player", source = "player")
     @Mapping(target = "discipline", source = "discipline")
+    @Transactional(propagation = Propagation.MANDATORY)
     Rating toRating(TRating rating, Season season, Player player, Discipline discipline);
 
     @BeanMapping(ignoreByDefault = true)
@@ -39,10 +43,12 @@ public interface RatingMapper {
     @Mapping(target = "eventScoreChange", constant = "0")
     @Mapping(target = "lastScoreChange", constant = "0")
     @Mapping(target = "multiplier", constant = "3")
+    @Transactional(propagation = Propagation.MANDATORY)
     TRating defaultRating(Player player, Discipline discipline);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "score", source = "score")
     @Mapping(target = "multiplier", source = "multiplier")
+    @Transactional(propagation = Propagation.MANDATORY)
     void update(@MappingTarget Rating rating, TRating ratingContext);
 }

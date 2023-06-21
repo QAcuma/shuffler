@@ -14,12 +14,14 @@ import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.entity.GroupInfo;
 import ru.acuma.shuffler.model.entity.Player;
+import ru.acuma.shuffler.model.entity.TeamPlayer;
 import ru.acuma.shuffler.model.entity.UserInfo;
 import ru.acuma.shuffler.model.wrapper.SearchPlayerParams;
 import ru.acuma.shuffler.repository.PlayerRepository;
 import ru.acuma.shuffler.repository.ReferenceService;
 import ru.acuma.shuffler.service.telegram.Authenticatable;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -91,5 +93,10 @@ public class PlayerService implements Authenticatable<SearchPlayerParams> {
         return playerRepository.findByUserIdAndChatId(findParams.userId(), findParams.chatId())
             .map(player -> AuthStatus.SUCCESS)
             .orElse(AuthStatus.UNREGISTERED);
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public List<TeamPlayer> mapTeamPlayers(List<TEventPlayer> players) {
+        return playerMapper.mapTeamPlayers(players, this::getReference);
     }
 }

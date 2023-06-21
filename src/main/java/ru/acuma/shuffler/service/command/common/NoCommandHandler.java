@@ -42,7 +42,7 @@ public class NoCommandHandler extends BaseCommandHandler<NoCommand> {
     }
 
     private void returnLobby(final TEvent event) {
-        eventStatusService.praperation(event);
+        eventStatusService.prepare(event);
         renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY));
     }
 

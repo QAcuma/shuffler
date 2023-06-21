@@ -68,6 +68,7 @@ public class TGame implements Serializable, Storable {
             GameStatus.CANCEL_CHECKING,
             GameStatus.EVENT_CHECKING,
             GameStatus.BLUE_CHECKING,
+            GameStatus.EVICT_CHECKING,
             GameStatus.RED_CHECKING
         ).contains(getStatus());
     }

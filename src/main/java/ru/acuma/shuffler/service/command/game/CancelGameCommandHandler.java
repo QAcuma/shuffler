@@ -31,8 +31,8 @@ public class CancelGameCommandHandler extends BaseCommandHandler<CancelGameComma
 
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
-        eventStatusService.gameCheck(event);
-        gameStatusService.cancelCheck(event.getCurrentGame());
+        eventStatusService.gameChecking(event);
+        gameStatusService.cancelChecking(event.getCurrentGame());
         renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY))
             .render(Render.forUpdate(MessageType.GAME).withTimer());
     }

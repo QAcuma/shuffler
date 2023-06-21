@@ -39,14 +39,14 @@ public class FinishCommandHandler extends BaseCommandHandler<FinishCommand> {
     }
 
     private void finishWithActiveGame(final TEvent event) {
-        eventStatusService.finishCheck(event);
-        gameStatusService.eventCheck(event.getCurrentGame());
+        eventStatusService.finishChecking(event);
+        gameStatusService.eventChecking(event.getCurrentGame());
         renderContext.forEvent(event).render(Render.forMarkup(MessageType.GAME))
             .render(Render.forUpdate(MessageType.LOBBY).withTimer());
     }
 
     private void finishWithoutGame(final TEvent event) {
-        eventStatusService.finishCheck(event);
+        eventStatusService.finishChecking(event);
         renderContext.forEvent(event).render(Render.forUpdate(MessageType.LOBBY).withTimer());
     }
 }

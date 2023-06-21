@@ -62,6 +62,7 @@ public class Team extends BaseEntity {
     @ToString.Exclude
     private List<TeamPlayer> teamPlayers;
 
+    @SuppressWarnings("UnusedReturnValue")
     public Team withPlayer(final TeamPlayer teamPlayer) {
         if (nonNull(teamPlayer)) {
             if (this.teamPlayers == null) {
@@ -72,6 +73,7 @@ public class Team extends BaseEntity {
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public Team withPlayers(final List<TeamPlayer> players) {
         if (!CollectionUtils.isEmpty(players)) {
             players.forEach(this::withPlayer);

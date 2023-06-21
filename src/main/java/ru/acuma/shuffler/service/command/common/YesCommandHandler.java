@@ -15,7 +15,6 @@ import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.service.command.helper.ReusableActions;
 import ru.acuma.shuffler.service.event.EventStatusService;
 import ru.acuma.shuffler.service.event.GameService;
-import ru.acuma.shuffler.service.event.GameStatusService;
 
 import java.util.List;
 
@@ -32,8 +31,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
 
     private final GameService gameService;
     private final EventStatusService eventStatusService;
-    private final GameStatusService gameStatusService;
-    private final ReusableActions reusableActions;
+    private final ReusableActions gameActions;
 
     @Override
     protected List<EventStatus> getSupportedStatuses() {
@@ -45,7 +43,10 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
         switch (event.getEventStatus()) {
             case CANCEL_CHECKING -> cancelEvent(event);
             case BEGIN_CHECKING -> beginGame(event);
-            case GAME_CHECKING -> reusableActions.nextGame(event);
+            case GAME_CHECKING -> {
+                gameService.finishGame(event.getCurrentGame());
+                gameActions.nextGame(event);
+            }
             case WAITING_WITH_GAME -> finishCancelledGame(event);
             case FINISH_CHECKING -> finishEvent(event);
         }
@@ -76,8 +77,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
     }
 
     private void finishCancelledGame(final TEvent event) {
-        gameStatusService.cancelled(event.getCurrentGame());
-        gameService.finishGame(event);
+        gameService.cancelGame(event.getCurrentGame());
         eventStatusService.resume(event);
 
         storageContext.forEvent(event)
@@ -89,8 +89,7 @@ public class YesCommandHandler extends BaseCommandHandler<YesCommand> {
 
     private void finishEvent(final TEvent event) {
         if (event.getCurrentGame().isActive()) {
-            gameStatusService.cancelled(event.getCurrentGame());
-            gameService.finishGame(event);
+            gameService.cancelGame(event.getCurrentGame());
             renderContext.forEvent(event)
                 .render(Render.forDelete(MessageType.GAME));
         }

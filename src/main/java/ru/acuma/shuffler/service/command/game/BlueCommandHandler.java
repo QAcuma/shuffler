@@ -31,8 +31,8 @@ public class BlueCommandHandler extends BaseCommandHandler<BlueCommand> {
 
     @Override
     public void invokeEventCommand(final User user, final TEvent event, final String... args) {
-        eventStatusService.gameCheck(event);
-        gameStatusService.blueCheck(event.getCurrentGame());
+        eventStatusService.gameChecking(event);
+        gameStatusService.blueChecking(event.getCurrentGame());
         renderContext.forEvent(event).render(Render.forMarkup(MessageType.LOBBY))
             .render(Render.forUpdate(MessageType.GAME).withTimer());
     }
