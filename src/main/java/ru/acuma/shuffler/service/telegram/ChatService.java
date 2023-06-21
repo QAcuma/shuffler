@@ -14,6 +14,8 @@ import ru.acuma.shuffler.repository.GroupInfoRepository;
 import ru.acuma.shuffler.repository.ReferenceService;
 import ru.acuma.shuffler.service.extentions.NamingService;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class ChatService implements Authenticatable<Long> {
@@ -32,7 +34,10 @@ public class ChatService implements Authenticatable<Long> {
     @Transactional
     public void update(final Chat chat) {
         var groupInfo = getGroupInfo(chat.getId());
-        chatMapper.updateGroupInfo(groupInfo, chat);
+        var name = Objects.isNull(groupInfo.getName())
+                   ? namingService.getWord()
+                   : groupInfo.getName();
+        chatMapper.updateGroupInfo(groupInfo, chat, name);
     }
 
     @Transactional

@@ -9,11 +9,6 @@ telegram:
 spring:
   main:
     web-application-type: none
-#  cache:
-#    type: jcache
-#    jcache.provider: com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider
-#    cache-names: user-auth, chat-auth
-#    caffeine.spec: maximumSize=500,expireAfterAccess=600s
   jpa:
     show-sql: true
     hibernate:
@@ -53,4 +48,3 @@ application:
     root: ${SHUFFLER_ROOT_USERS}
   media:
     location: ${SHUFFLER_MEDIA_LOCATION:/media/avatar/}
-    link: ${SHUFFLER_AVATAR_PATH:https://shuffler.host/avatar/}

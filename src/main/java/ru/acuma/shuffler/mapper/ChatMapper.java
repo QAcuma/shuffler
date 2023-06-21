@@ -21,8 +21,9 @@ public interface ChatMapper {
     GroupInfo toGroupInfo(Chat chat, String chatName);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "title", source = "title")
+    @Mapping(target = "title", source = "chat.title")
+    @Mapping(target = "name", source = "name")
     @Transactional(propagation = Propagation.MANDATORY)
-    void updateGroupInfo(@MappingTarget GroupInfo groupInfo, Chat chat);
+    void updateGroupInfo(@MappingTarget GroupInfo groupInfo, Chat chat, String name);
 
 }
