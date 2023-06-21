@@ -31,7 +31,7 @@ public class TRating implements Serializable {
             multiplier = multiplier.subtract(BigDecimal.valueOf(0.2d));
         }
 
-        log.info("baseChange {}, change {}, multiplier {}", change, scoreChange, multiplier);
+        log.debug("baseChange {}, change {}, multiplier {}", change, scoreChange, multiplier);
         score += scoreChange;
         eventScoreChange = eventScoreChange + scoreChange;
         lastScoreChange = scoreChange;

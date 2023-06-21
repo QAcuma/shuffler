@@ -31,7 +31,7 @@ public class TEventPlayer implements Serializable, Storable {
     }
 
     public void applyRating(Integer change) {
-        log.info("Score change for player {}", getFormatName());
+        log.debug("Score change for player {}", getFormatName());
         ratingContext.applyScore(change);
     }
 

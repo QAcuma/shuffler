@@ -1,6 +1,6 @@
 logging:
   level:
-    ru.acuma.shuffler: DEBUG
+    ru.acuma.shuffler: ${SHUFFLER_LOG_LEVEL:INFO}
     org.hibernate: ERROR
 telegram:
   bot:
@@ -10,7 +10,7 @@ spring:
   main:
     web-application-type: none
   jpa:
-    show-sql: true
+    show-sql: ${SHUFFLER_SHOW_SQL:false}
     hibernate:
       ddl-auto: validate
     properties:
@@ -43,7 +43,7 @@ application:
     word-generator:
       url: ${SHUFFLER_WORD_GENERATOR_API:https://random-word-api.herokuapp.com}
   statistics:
-    url: ${SHUFFLER_STATISTICS_HOST:localhost:3000}
+    url: ${SHUFFLER_STATISTICS_HOST:http://127.0.0.1:3000}
   users:
     root: ${SHUFFLER_ROOT_USERS}
   media:

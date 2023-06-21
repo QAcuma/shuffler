@@ -30,6 +30,7 @@ public class ProfilePictureService {
 
     private final UserService userService;
     private final BotProperties botProperties;
+    private final ExecuteService executeService;
 
     @Value("${application.media.location}")
     private String mediaLocation;
@@ -81,14 +82,11 @@ public class ProfilePictureService {
     private UserProfilePhotos findUserPictures(Long getUserPhotos) {
         var method = new GetUserProfilePhotos(getUserPhotos);
 
-//        return executeService.executeApi(method);
-        return null;
+        return executeService.executeApi(method);
     }
 
     @SneakyThrows
     private File loadUserProfilePicture(GetFile getFile) {
-//        return executeService.executeApi(getFile);
-        return null;
+        return executeService.executeApi(getFile);
     }
-
 }
