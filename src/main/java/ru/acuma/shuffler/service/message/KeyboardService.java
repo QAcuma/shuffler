@@ -54,6 +54,10 @@ public class KeyboardService {
         return buildKeyboard(gameButtons);
     }
 
+    public InlineKeyboardMarkup getEmptyKeyboard() {
+        return buildKeyboard(List.of());
+    }
+
     private InlineKeyboardMarkup buildKeyboard(final List<KeyboardButton> buttons) {
         return buttons.isEmpty()
                ? new InlineKeyboardMarkup(Collections.emptyList())

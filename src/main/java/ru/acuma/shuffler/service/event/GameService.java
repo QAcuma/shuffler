@@ -1,5 +1,6 @@
 package ru.acuma.shuffler.service.event;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -99,6 +100,10 @@ public class GameService {
         teamService.fillLastGameMate(game.getLoserTeam());
     }
 
+    public void callPlayers(final TGame currentGame, final Long id) {
+        currentGame.setCalledBy(id);
+    }
+
     @Transactional(propagation = Propagation.MANDATORY)
     public Game find(final Long id) {
         return gameRepository.findById(id)
@@ -130,7 +135,7 @@ public class GameService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public Game getReference(Long gameId) {
+    public Game getReference(final Long gameId) {
         return referenceService.getReference(Game.class, gameId);
     }
 }

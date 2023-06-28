@@ -48,6 +48,13 @@ public class Keyboards {
         ShufflerButton.BUTTON_BEGIN
     );
 
+    public static final List<KeyboardButton> NEW_GAME_BUTTONS = List.of(
+        ShufflerButton.BUTTON_RED,
+        ShufflerButton.BUTTON_BLUE,
+        ShufflerButton.BUTTON_CANCEL_GAME,
+        ShufflerButton.BUTTON_CALL_GAME
+    );
+
     public static final List<KeyboardButton> GAME_BUTTONS = List.of(
         ShufflerButton.BUTTON_RED,
         ShufflerButton.BUTTON_BLUE,

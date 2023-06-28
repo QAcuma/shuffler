@@ -30,6 +30,7 @@ public class TGame implements Serializable, Storable {
     private TTeam blueTeam;
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
+    private Long calledBy;
 
     public List<TEventPlayer> getPlayers() {
         List<TEventPlayer> players = new ArrayList<>();

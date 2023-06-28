@@ -12,6 +12,7 @@ public enum Command {
     JOIN("join"),
     LEAVE("leave"),
     KICK("kick"),
+    CALL("call"),
     EVICT("evict"),
     CANCEL("cancel"),
     IDLE("idle"),

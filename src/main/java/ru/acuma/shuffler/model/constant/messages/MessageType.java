@@ -10,6 +10,7 @@ public enum MessageType {
     MENU,
     LOBBY,
     GAME,
+    CALL,
     CANCELLED,
     STAT
 }

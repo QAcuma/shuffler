@@ -16,6 +16,7 @@ import ru.acuma.shuffler.model.domain.TMenu;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -71,10 +72,10 @@ public class ButtonService {
 
     public List<KeyboardButton> buildGameButtons(final TGame game) {
         return switch (game.getStatus()) {
-            case ACTIVE -> Keyboards.GAME_BUTTONS;
+            case ACTIVE -> Objects.isNull(game.getCalledBy()) ? Keyboards.NEW_GAME_BUTTONS : Keyboards.GAME_BUTTONS;
             case EVICT_CHECKING -> buildEvictButtons(game);
             case RED_CHECKING, BLUE_CHECKING, CANCEL_CHECKING -> Keyboards.CHECKING_BUTTONS;
-            default -> Collections.emptyList();
+            default -> List.of();
         };
     }
 

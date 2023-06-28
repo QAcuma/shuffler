@@ -19,6 +19,7 @@ public enum ShufflerButton implements KeyboardButton {
     BUTTON_RED(Command.RED.getName(), RED_CIRCLE_EMOJI, 1),
     BUTTON_BLUE(Command.BLUE.getName(), BLUE_CIRCLE_EMOJI, 1),
     BUTTON_CANCEL_GAME(Command.CANCEL_GAME.getName(), "Отменить", 2),
+    BUTTON_CALL_GAME(Command.CALL.getName(), "Позвать", 2),
     BUTTON_IDLE_3(Command.IDLE.getName(), "3️⃣", 1),
     BUTTON_IDLE_2(Command.IDLE.getName(), "2️⃣", 1),
     BUTTON_IDLE_1(Command.IDLE.getName(), "1️⃣", 1),

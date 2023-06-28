@@ -13,6 +13,7 @@ public class ContentService {
     private final MenuContent menuContent;
     private final LobbyContent lobbyContent;
     private final GameContent gameContent;
+    private final CallContent callContent;
     private final CancelledContent cancelledContent;
     private final StatContent statContent;
 
@@ -29,6 +30,7 @@ public class ContentService {
             case MENU -> menuContent.fill(render, chatId);
             case LOBBY -> lobbyContent.fill(render, chatId);
             case GAME -> gameContent.fill(render, chatId);
+            case CALL -> callContent.fill(render, chatId);
             case CANCELLED -> cancelledContent.fill(render, chatId);
             case STAT -> statContent.fill(render, chatId);
         }

@@ -8,8 +8,10 @@ import ru.acuma.shuffler.model.domain.TEvent;
 import ru.acuma.shuffler.model.domain.TEventPlayer;
 import ru.acuma.shuffler.model.domain.TGame;
 import ru.acuma.shuffler.model.domain.TMenu;
+import ru.acuma.shuffler.model.domain.TUserInfo;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.acuma.shuffler.model.constant.messages.EventConstant.EVICT_MESSAGE_TEXT;
@@ -52,6 +54,15 @@ public class MessageTextService {
             + EventConstant.SPACE_MESSAGE.getText()
             + System.lineSeparator()
             + buildGameText(game);
+    }
+
+    public String buildCallText(final TGame game) {
+        return game.getPlayers().stream()
+            .filter(player -> !Objects.equals(player.getUserId(), game.getCalledBy()))
+            .map(TEventPlayer::getUserInfo)
+            .map(TUserInfo::getUserName)
+            .map(name -> "@" + name)
+            .collect(Collectors.joining(", "));
     }
 
     public String buildCancelledContent() {
