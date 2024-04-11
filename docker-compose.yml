@@ -1,41 +1,55 @@
-version: "3.9"
+version: "3.8"
+name: shuffler
+
 services:
-  redis:
+  shuffler-postgres:
+    container_name: shuffler-postgres
+    image: postgres:15.2-alpine
+    volumes:
+      - postgres-db:/data/postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${SHUFFLER_DB_PASSWORD}
+    expose:
+      - "5432"
+    ports:
+      - "8432:5432"
+    networks:
+      - shuffler
+
+  shuffler-redis:
     container_name: shuffler-redis
     image: redis:7.0.9-alpine
     environment:
-      REDIS_PASSWORD: "${SHUFFLER_REDIS_PASSWORD}"
+      REDIS_PASSWORD: ${SHUFFLER_REDIS_PASSWORD}
     ports:
-      - "6379:6379"
-  postgres:
-    container_name: shuffler-postgres
-    image: postgres:15.2-alpine
-    environment:
-      POSTGRES_DB: "shuffler_local"
-      POSTGRES_USER: "local"
-      POSTGRES_PASSWORD: "root"
-      PGDATA: "/var/lib/postgresql/data"
-    volumes:
-      - postgres-db:/data/postgres
-    ports:
-      - "5432:5432"
+      - "8479:6379"
+    expose:
+      - "6379"
+    networks:
+      - shuffler
+
   shuffler:
     container_name: shuffler
     build:
       dockerfile: Dockerfile
     environment:
-      SHUFFLER_BOT_NAME: "${SHUFFLER_BOT_NAME}"
-      SHUFFLER_TOKEN: "${SHUFFLER_BOT_TOKEN}"
-      SHUFFLER_AVATAR_PATH: "${SHUFFLER_AVATAR_PATH}"
-      SHUFFLER_DB_SERVER_HOST: "${SHUFFLER_DB_HOST}"
-      SHUFFLER_DB_SERVER_PORT: "${SHUFFLER_DB_PORT}"
-      SHUFFLER_DB_PASSWORD: "${SHUFFLER_DB_PASSWORD}"
-      SHUFFLER_DB_NAME: "${SHUFFLER_DB_NAME}"
-      SHUFFLER_DB_USER: "${SHUFFLER_DB_USER}"
-      SHUFFLER_REDIS_HOST: "${SHUFFLER_REDIS_HOST}"
-      SHUFFLER_REDIS_PORT: "${SHUFFLER_REDIS_PORT}"
-      SHUFFLER_REDIS_PASSWORD: "${SHUFFLER_REDIS_PASSWORD}"
-      SHUFFLER_MEDIA_LOCATION: "/media/avatar/"
+      SHUFFLER_BOT_TOKEN: ${SHUFFLER_BOT_TOKEN}
+      SHUFFLER_REDIS_PASSWORD: ${SHUFFLER_REDIS_PASSWORD}
+      SHUFFLER_DB_PASSWORD: ${SHUFFLER_DB_PASSWORD}
+    env_file:
+      - .env
+    networks:
+      - shuffler
+    depends_on:
+      - shuffler-postgres
+      - shuffler-redis
+
 volumes:
   postgres-db:
-    driver: local
+    name: ${SHUFFLER_DB_NAME}
+
+networks:
+  shuffler:
+    driver: bridge
