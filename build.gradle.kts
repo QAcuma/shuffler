@@ -8,8 +8,8 @@ plugins {
 
 val dbHost = System.getenv("SHUFFLER_DB_HOST") ?: "localhost" as String?
 val dbPort = System.getenv("SHUFFLER_DB_PORT") ?: "5432" as String?
-val dbName = System.getenv("SHUFFLER_DB_NAME") ?: "shuffler_local" as String?
-val dbUser = System.getenv("SHUFFLER_DB_USER") ?: "local" as String?
+val dbName = System.getenv("SHUFFLER_DB_NAME") ?: "shuffler_db" as String?
+val dbUser = System.getenv("SHUFFLER_DB_USER") ?: "shuffler" as String?
 val dbPassword = System.getenv("SHUFFLER_DB_PASSWORD") ?: "root" as String?
 
 group = "ru.acuma"
