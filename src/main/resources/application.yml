@@ -24,8 +24,8 @@ spring:
     hikari:
       schema: public
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${SHUFFLER_DB_HOST:localhost}:${SHUFFLER_DB_PORT:5432}/${SHUFFLER_DB_NAME:shuffler_db}${SHUFFLER_DB_URL_PARAMS:}
-    username: ${SHUFFLER_DB_USER:local}
+    url: jdbc:postgresql://${SHUFFLER_DB_HOST:shuffler-postgres}:${SHUFFLER_DB_PORT:5432}/${SHUFFLER_DB_NAME:shuffler_db}${SHUFFLER_DB_URL_PARAMS:}
+    username: ${SHUFFLER_DB_USER:shuffler}
     password: ${SHUFFLER_DB_PASSWORD:root}
   flyway:
     enabled: true

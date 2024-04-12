@@ -10,6 +10,8 @@ services:
     env_file:
       - .env
     environment:
+      POSTGRES_DB: ${SHUFFLER_DB_NAME}
+      POSTGRES_PORT: ${SHUFFLER_DB_PORT}
       POSTGRES_PASSWORD: ${SHUFFLER_DB_PASSWORD}
     expose:
       - "5432"
@@ -52,4 +54,4 @@ volumes:
 
 networks:
   shuffler:
-    driver: bridge
+    driver: local
