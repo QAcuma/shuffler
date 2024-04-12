@@ -40,6 +40,9 @@ services:
       SHUFFLER_BOT_TOKEN: ${SHUFFLER_BOT_TOKEN}
       SHUFFLER_REDIS_PASSWORD: ${SHUFFLER_REDIS_PASSWORD}
       SHUFFLER_DB_PASSWORD: ${SHUFFLER_DB_PASSWORD}
+    links:
+      - shuffler-redis
+      - shuffler-postgres
     env_file:
       - .env
     networks:
