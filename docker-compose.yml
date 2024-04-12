@@ -54,4 +54,4 @@ volumes:
 
 networks:
   shuffler:
-    driver: local
+    driver: bridge
