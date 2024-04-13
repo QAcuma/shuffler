@@ -13,7 +13,7 @@ val dbUser = System.getenv("SHUFFLER_DB_USER") ?: "shuffler" as String?
 val dbPassword = System.getenv("SHUFFLER_DB_PASSWORD") ?: "root" as String?
 
 group = "ru.acuma"
-version = "2.0.1"
+version = "2.0.2"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17

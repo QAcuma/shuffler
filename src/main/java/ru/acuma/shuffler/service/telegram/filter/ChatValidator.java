@@ -1,6 +1,7 @@
 package ru.acuma.shuffler.service.telegram.filter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -8,6 +9,7 @@ import ru.acuma.shuffler.exception.IdleException;
 import ru.acuma.shuffler.model.constant.ExceptionCause;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ChatValidator implements UpdateValidator {
 
@@ -26,6 +28,7 @@ public class ChatValidator implements UpdateValidator {
         var chat = message.getChat();
 
         if (PRIVATE_CHAT.equals(chat.getType())) {
+            log.warn("Message in chat {} skipped. {}", message.getChatId(), ExceptionCause.CHAT_IS_PRIVATE);
             throw new IdleException(ExceptionCause.CHAT_IS_PRIVATE);
         }
 
