@@ -1,7 +1,20 @@
-version: "3.8"
+version: "3.7"
 name: shuffler
 
 services:
+  shuffler:
+    container_name: shuffler
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    links:
+      - shuffler-postgres
+      - shuffler-redis
+    depends_on:
+      - shuffler-postgres
+      - shuffler-redis
+
   shuffler-postgres:
     container_name: shuffler-postgres
     image: postgres:15.2-alpine
@@ -11,14 +24,9 @@ services:
       - .env
     environment:
       POSTGRES_DB: ${SHUFFLER_DB_NAME}
-      POSTGRES_PORT: ${SHUFFLER_DB_PORT}
       POSTGRES_PASSWORD: ${SHUFFLER_DB_PASSWORD}
-    expose:
-      - "5432"
     ports:
       - "8432:5432"
-    networks:
-      - shuffler
 
   shuffler-redis:
     container_name: shuffler-redis
@@ -27,34 +35,7 @@ services:
       REDIS_PASSWORD: ${SHUFFLER_REDIS_PASSWORD}
     ports:
       - "8479:6379"
-    expose:
-      - "6379"
-    networks:
-      - shuffler
-
-  shuffler:
-    container_name: shuffler
-    build:
-      dockerfile: Dockerfile
-    environment:
-      SHUFFLER_BOT_TOKEN: ${SHUFFLER_BOT_TOKEN}
-      SHUFFLER_REDIS_PASSWORD: ${SHUFFLER_REDIS_PASSWORD}
-      SHUFFLER_DB_PASSWORD: ${SHUFFLER_DB_PASSWORD}
-    links:
-      - shuffler-redis
-      - shuffler-postgres
-    env_file:
-      - .env
-    networks:
-      - shuffler
-    depends_on:
-      - shuffler-postgres
-      - shuffler-redis
 
 volumes:
   postgres-db:
     name: ${SHUFFLER_DB_NAME}
-
-networks:
-  shuffler:
-    driver: bridge
