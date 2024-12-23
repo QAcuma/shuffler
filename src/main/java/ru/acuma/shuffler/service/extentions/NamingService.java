@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -20,10 +21,11 @@ public class NamingService {
     private String generatorUrl;
 
     public String getWord() {
-        var response = restTemplate.getForEntity(generatorUrl + WORD, String.class);
+//        var response = restTemplate.getForEntity(generatorUrl + WORD, String.class);
+        return RandomStringUtils.random(6, true, true);
 
-        return Objects.equals(response.getStatusCode().value(), 200) && response.getBody() != null
-               ? response.getBody().replaceAll("\\W", "")
-               : RandomStringUtils.randomAlphanumeric(6);
+//        return Objects.equals(response.getStatusCode().value(), 200) && response.getBody() != null
+//               ? response.getBody().replaceAll("\\W", "")
+//               : RandomStringUtils.randomAlphanumeric(6);
     }
 }

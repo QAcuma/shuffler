@@ -31,15 +31,19 @@ public abstract class BaseCommandHandler<T extends BaseBotCommand> {
     public final void handle(final Message message, final String... args) {
         Optional.ofNullable(eventContext.findEvent(message.getChatId()))
             .ifPresentOrElse(
-                event -> Optional.of(event)
-                    .filter(this::isCommandSupported)
-                    .ifPresent(activeEvent -> {
-                        var statusBefore = activeEvent.getEventStatus();
-                        invokeEventCommand(message.getFrom(), activeEvent, args);
-                        log.info("User: {}, command: {}, status: {} -> {}", message.getFrom().getUserName(), getClass().getSimpleName(), statusBefore, activeEvent.getEventStatus());
-                    }),
+                event -> processMessage(message, args, event),
                 () -> invokeChatCommand(message, args)
             );
+    }
+
+    private void processMessage(Message message, String[] args, TEvent event) {
+        Optional.of(event)
+            .filter(this::isCommandSupported)
+            .ifPresent(activeEvent -> {
+                var statusBefore = activeEvent.getEventStatus();
+                invokeEventCommand(message.getFrom(), activeEvent, args);
+                log.info("User: {}, command: {}, status: {} -> {}", message.getFrom().getUserName(), getClass().getSimpleName(), statusBefore, activeEvent.getEventStatus());
+            });
     }
 
     private boolean isCommandSupported(final TEvent event) {

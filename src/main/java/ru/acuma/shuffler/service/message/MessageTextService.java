@@ -83,7 +83,8 @@ public class MessageTextService {
     }
 
     private String getStatisticsLink(TEvent event) {
-        return "\n <i>" + shufflerHost + "/" + event.getChatName() + "</i>";
+        // TODO: "/" + event.getChatName() +
+        return "\n <i>" + shufflerHost +  "</i>";
     }
 
     private String getEventHeader(final TEvent event) {
